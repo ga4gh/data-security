@@ -238,7 +238,7 @@ The effectiveness of the _Security Technology Infrastructure_ ultimately is depe
 *   Each service provider that transmits unencrypted genomic or health-related data will protect the transport using either the IPsec [19, 20] or Transport Layer Security (TLS) protocol [21]. 
 *   Any electronic mail containing genomic, health-related, or other sensitive data will be secured using S/MIME Version 2 [22, 23]. 
 
-<a name="operational-assurance></a>    **4. Operational Assurance \
+<a name="operational-assurance"></a>    **4. Operational Assurance \
 <a name="physical-and-environmental-security"></a>4.1 Physical and Environmental Security**
 
 *   Each stakeholder who stores or processes genomic or health-related data is responsible for providing physical and environmental safeguards to protect those data in accordance with applicable laws and regulations, institutional policies, and individual consents. 
@@ -255,7 +255,7 @@ The effectiveness of the _Security Technology Infrastructure_ ultimately is depe
 *   Each service provider will implement privacy and security technology to support adherence to the Fair Information Practices Principles, as articulated in Part Two of the Organisation for Economic Co-operation and Development (OECD) _Guidelines on the Protection of Privacy and Transborder Flows of Personal Data_[24]. 
 *   Each service provider will document and enforce written operational procedures for protecting the confidentiality and integrity of data, the availability of services, and the privacy of individuals who contribute their personal data. 
 
-<a name="service-assurances"></a>    **4.3 Service Assurances**
+<a name="service-supplier-assurances"></a>    **4.3 Service Supplier Assurances**
 
 
 Entities that provide data and application services within the GA4GH ecosystem are encouraged to implement defense-in-depth architectural assurances that their services can be relied upon to perform their functions as advertised, while resisting malicious attack, adapting to changes, continuing to operate through unanticipated disruptions, and recovering from interruptions and outages. Architectural safeguards include design principles that contribute to the trustworthiness of end-user devices, servers, and networks, including but not limited to ability of a system or network to protect the confidentiality and integrity of genomic and health-related data, the availability of data and services, and the privacy of individuals whose data are shared. 
