@@ -126,7 +126,7 @@ The GA4GH leadership expects that in many cases, one organization may behave in 
 
 
 
-***Insert Table 1***
+![Figure 1](https://github.com/ga4gh/data-security/blob/master/Security_Infra_Figure1.png)
 
 
 **Figure 1. Allocation of responsibility for security protections.** Those functions listed in the vertical block are the responsibilities of the GA4GH community as a whole. Functions listed in other blocks are allocated to data stewards, service providers, service consumers, and GA4GH.  
@@ -143,7 +143,7 @@ The key is to implement a concept known as "defense in depth," in which layers o
 
 
 
-***Insert Table 2***
+![Figure 2](https://github.com/ga4gh/data-security/blob/master/Security_Infra_Figure2.png)
   
 
 **Figure 2.  Basic Reference Model showing assurance dependencies.** While the GA4GH standards are implemented at higher layers, assurance of the data and application services within which the standards are used is ultimately dependent on the trustworthiness of the underlying interconnected infrastructure.  
