@@ -17,7 +17,7 @@ Standards and implementation practices for protecting the privacy and security o
 [2.0 – Security Foundation](#security-foundation) \
 [2.1 – Risk Assessment](#risk-assessment) \
 [2.2 – Privacy and Security Policy](#privacy-and-security-policy) \
-[2.3 – Guiding Principles]((#guiding-principles) \
+[2.3 – Guiding Principles](#guiding-principles) \
 [2.4 – Information Security Responsibilities](#information-security-responsibilities) 
 
 [2.5 – GA4GH Assurance Dependencies](#ga4gh-assurance-dependencies) 
@@ -28,25 +28,25 @@ Standards and implementation practices for protecting the privacy and security o
 [3.2 – Authorization and Access Management](#authorization-and-access-management)
 
 [3.3 – Privacy Protection](#privacy-protection) \
-3.4 – Audit Logs \
-3.5 – Data Integrity \
-3.6 – Non-repudiation \
-3.7 – Cryptographic Controls 
+[3.4 – Audit Logs](#audit-logs) \
+[3.5 – Data Integrity](#data-integrity) \
+[3.6 – Non-repudiation](#non-repudiation) \
+[3.7 – Cryptographic Controls](#cryptographic-controls) 
 
-3.8 – Communications Security 
+[3.8 – Communications Security](#communications-security) 
 
-4.0 – Operational Assurance \
-4.1 – Physical and Environmental Security 
+[4.0 – Operational Assurance](#operational-assurance) \
+[4.1 – Physical and Environmental Security](#physical-and-environmental-security) 
 
-4.2 – Operations Security \
-4.3 – Service Supplier Assurances \
-4.4 – Information Security Oversight and Accountability 
+[4.2 – Operations Security](#operations-security) \
+[4.3 – Service Supplier Assurances](#service-supplier-assurances) \
+[4.4 – Information Security Oversight and Accountability](#information-security-oversight-and-accountability) 
 
-4.5 – Compliance
+[4.5 – Compliance](#compliance)
 
-5.0 Definitions
+[5.0 Definitions](#definitions)
 
-6.0 References
+[6.0 References](#references)
 
 <a name="introduction"></a> **1. Introduction**
 
@@ -152,7 +152,7 @@ The key is to implement a concept known as "defense in depth," in which layers o
 
 This section provides guidance on implementing security services within a stakeholder's organization and across the GA4GH interconnected community. 
 
-**3.1 Identity Management**
+<a name="identity-management"></a>**3.1 Identity Management**
 
 The effectiveness of the _Security Technology Infrastructure_ ultimately is dependent upon the degree to which the actors (individuals and software services) are known and can be trusted to conform to applicable policy. 
 
@@ -164,7 +164,7 @@ The effectiveness of the _Security Technology Infrastructure_ ultimately is depe
 *   The level of assurance to which individual identities will be established (i.e., identity proofing) and authenticated will be consistent with the level of risk associated with the actions to be performed by that individual. Each data and application service provider is encouraged to use the US National Institute of Standards and Technology (NIST) Special Publication 800-63-3 [9] as guidance in determining the appropriate level of assurance required for identity proofing, authentication, and federation. 
 *   Service providers are encouraged to federate identity authentication and service authorization using OpenID Connect (OIDC) [10] for authentication and security attribute sharing, and OAuth 2.0 [11] for authorization.   Service providers are also encouraged to use GA4GH standards for representing researcher identity attributes in OIDC claims, and data use ontology (DUO) for representing security and privacy attributes of shared data.   
 
-**3.2 Authorization and Access Management**
+<a name="authorization-and-access-management"></a>**3.2 Authorization and Access Management**
 
 
 
@@ -184,7 +184,7 @@ The effectiveness of the _Security Technology Infrastructure_ ultimately is depe
 *   Access authorization through application programming interfaces (APIs) should be implemented using the [OAuth 2.0 Authorization Framework (RFC 6749) [11].](https://tools.ietf.org/html/rfc6749)   
 *   
 
-**3.3 Privacy Protection**
+<a name="privacy-protection"></a>**3.3 Privacy Protection**
 
 *   Each data steward and service provider should use consent-management, access control, usage monitoring, auditing mechanisms, and other privacy-protecting mechanisms to help ensure that private and sensitive data are collected, used, shared, and reused only in accordance with the permissions granted by the individual (or authorized representative) to whom the data pertain, and in accordance with applicable law and institutional policies.   Private and sensitive data include both personal data, such as genomic and health-related data, and data considered private and confidential by the data holder or jurisdictional law, such as data governed under the European General Data Protection Regulation (GDPR) [25].  
 *   Each data steward should ensure that any procedures used to eliminate or minimize direct and/or indirect identifiers from data (e.g., pseudonymisation, de-identification, anonymisation) are performed at the earliest practical point in the workflow to minimize potential exposure of individual identity. 
@@ -196,7 +196,7 @@ The effectiveness of the _Security Technology Infrastructure_ ultimately is depe
 *   The User Managed Access (UMA) profile [14] of the OAuth 2.0 [11] authorization protocol may be useful in mediating access based on user permissions. 
 *   Each data steward is responsible for updating provenance and confidentiality metadata associated with the data under its control, preferably using HL7 FHIR provenance[15] and confidentiality[16] codes. 
 
-**3.4 Audit Logs**
+<a name="audit-logs"></a>**3.4 Audit Logs**
 
 
 
@@ -207,7 +207,7 @@ The effectiveness of the _Security Technology Infrastructure_ ultimately is depe
 *   Service providers' audit log records should be integratable with existing enterprise security monitoring tools. 
 *   Data stewards and their service providers are jointly responsible for implementing the capability to generate an accounting of accesses to and disclosures of data that may be associated with the individual's identity. 
 
-    **3.5 Data Integrity**
+<a name="data-integrity"></a>    **3.5 Data Integrity**
 
 *   Each service provider is responsible for protecting the integrity of genomic and health- related data that it holds, uses, or transmits. 
 *   Each service provider that transmits or receives transmissions containing genomic or health-related data will generate a IETF SHA-2 hash function [18] to verify the integrity of the transmission. 
@@ -215,14 +215,14 @@ The effectiveness of the _Security Technology Infrastructure_ ultimately is depe
 *   Each data steward is responsible for ensuring the accuracy and verifiability of data and associated metadata. 
 *   Each data steward is responsible for assuring that data provenance information is associated with data made available to service consumers. 
 
-    **3.6 Non-repudiation**
+<a name="non-repudiation"></a>    **3.6 Non-repudiation**
 
 
 ● Each service provider will have the capability to digitally sign content using a qualified electronic signature, as defined in Regulation (EU) No 910/2014 of the European Parliament and of the Council of 23 July 2014 on electronic identification and trust services for electronic transactions in the internal market and repealing Directive 1999/93/EC. [8]. 
 
 ● GA4GH participants who offer downloadable software will digitally sign the downloadable files using a qualified electronic signature, as defined in Regulation (EU) No 910/2014 of the European Parliament and of the Council of 23 July 2014 on electronic identification and trust services for electronic transactions in the internal market and repealing Directive 1999/93/EC.  [8]. 
 
-**3.7 Cryptographic Controls**
+<a name="cryptographic-controls"></a>**3.7 Cryptographic Controls**
 
 
 
@@ -232,19 +232,19 @@ The effectiveness of the _Security Technology Infrastructure_ ultimately is depe
 *   Each service provider will use end-to-end transport-level encryption (see section 4.9) to encrypt and integrity-protect data during transmission. 
 *   Service providers are encouraged to use privacy-preserving encryption methods (e.g., homomorphic encryption, multi-party computation) when applicable and practical.  
 
-    **3.8 Communications Security**
+<a name="communications-security"></a>    **3.8 Communications Security**
 
 *   Each service provider will assure that communication channels are secured commensurate with the level of risk associated with the content being transmitted. 
 *   Each service provider that transmits unencrypted genomic or health-related data will protect the transport using either the IPsec [19, 20] or Transport Layer Security (TLS) protocol [21]. 
 *   Any electronic mail containing genomic, health-related, or other sensitive data will be secured using S/MIME Version 2 [22, 23]. 
 
-    **4. Operational Assurance \
-4.1 Physical and Environmental Security**
+<a name="operational-assurance></a>    **4. Operational Assurance \
+<a name="physical-and-environmental-security"></a>4.1 Physical and Environmental Security**
 
 *   Each stakeholder who stores or processes genomic or health-related data is responsible for providing physical and environmental safeguards to protect those data in accordance with applicable laws and regulations, institutional policies, and individual consents. 
 *   Each stakeholder who uses a third party to store or process genomic or health-related data is responsible for assuring that business agreements include an obligation to provide physical and environmental data protection. 
 
-**4.2 Operations Security**
+<a name="operations-security"></a>**4.2 Operations Security**
 
 
 
@@ -255,7 +255,7 @@ The effectiveness of the _Security Technology Infrastructure_ ultimately is depe
 *   Each service provider will implement privacy and security technology to support adherence to the Fair Information Practices Principles, as articulated in Part Two of the Organisation for Economic Co-operation and Development (OECD) _Guidelines on the Protection of Privacy and Transborder Flows of Personal Data_[24]. 
 *   Each service provider will document and enforce written operational procedures for protecting the confidentiality and integrity of data, the availability of services, and the privacy of individuals who contribute their personal data. 
 
-    **4.3 Service Assurances**
+<a name="service-assurances"></a>    **4.3 Service Assurances**
 
 
 Entities that provide data and application services within the GA4GH ecosystem are encouraged to implement defense-in-depth architectural assurances that their services can be relied upon to perform their functions as advertised, while resisting malicious attack, adapting to changes, continuing to operate through unanticipated disruptions, and recovering from interruptions and outages. Architectural safeguards include design principles that contribute to the trustworthiness of end-user devices, servers, and networks, including but not limited to ability of a system or network to protect the confidentiality and integrity of genomic and health-related data, the availability of data and services, and the privacy of individuals whose data are shared. 
@@ -269,7 +269,7 @@ All data, application, and infrastructure service providers to the GA4GH communi
 *   Infrastructure security – security features and processes provided as part of the data or application service offering GA4GH service providers and user organizations should assure that their networks, operating systems, applications, and database management systems isolate software processes and datasets to prevent interference and side-channel attacks. A "least privileges" approach should be used to harden execution environments. 
 *   Data stewards should assure that their service suppliers offer the levels of availability, scalability, and infrastructure security necessary to protect the data entrusted to them. Similarly, service consumers should assure that data and application services and platforms, including their own personal devices, are trustworthy. 
 
-    **4.4 Information Security Oversight and Accountability**
+<a name="information-security-oversight-and-accountability"></a>    **4.4 Information Security Oversight and Accountability**
 
 *   Each GA4GH team that proposes a standards work product will complete an initial security risk-assessment at the start of product development.  Prerequisite to approval as a GA4GH standard, the product will undergo a security evaluation that will include a final security risk assessment review and assurance testing, as appropriate.     
 *   Each stakeholder will have documented procedures for monitoring system activities, detecting potential threats, and responding to potential security incidents. 
@@ -283,7 +283,7 @@ All data, application, and infrastructure service providers to the GA4GH communi
 *   Each data steward who experiences, suspects, or receives a report of a data breach involving the disclosure of potentially identifiable data is responsible for expeditiously reporting the breach to the individuals whose data were breached. 
 *   Each data steward should work with its service providers to assess risks associated with the storage, use, and transmission of genomic and health-related data, and should contractually require appropriate technical mechanisms and procedures for preventing, detecting, and recovering from data breaches, consistent with the assessed risks. 
 
-**4.5 Compliance**
+<a name="compliance"></a>**4.5 Compliance**
 
 
 
@@ -293,7 +293,7 @@ All data, application, and infrastructure service providers to the GA4GH communi
 *   Each stakeholder is responsible for implementing, and attesting to having implemented, security and privacy processes, procedures, and technology to enforce compliance with relevant legislation, regulations, contractual clauses, and the _GA4GH Privacy and Security Policy._ 
 *   GA4GH stakeholders may individually or collectively engage third parties to assess compliance with the GA4GH _Security Technology Infrastructure_, and to evaluate the effectiveness of implemented protections. 
 
-    **5. Definitions**
+<a name="definitions"></a>    **5. Definitions**
 
 
 
@@ -443,7 +443,7 @@ All data, application, and infrastructure service providers to the GA4GH communi
 </table>
 
 
-**6. References**
+<a name="references"></a>**6. References**
 
 [1] Global Alliance for Genomics and Health. _Privacy and Security Policy._ 26 May 2015. Available from https://www.ga4gh.org/wp-content/uploads/Privacy-and-Security-Policy.pdf (accessed 6 Oct 2018). 
 
