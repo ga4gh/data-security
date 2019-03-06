@@ -12,7 +12,7 @@ Standards and implementation practices for protecting the privacy and security o
 
 **Outline**
 
-1.0  Introduction
+[1.0  Introduction](#introduction)
 
 2.0 – Security Foundation \
 2.1 – Risk Assessment \
@@ -48,7 +48,7 @@ Standards and implementation practices for protecting the privacy and security o
 
 6.0 References
 
-**1. Introduction**
+<a name="introduction"></a> **1. Introduction**
 
 This document describes the security technology infrastructure recommended for stakeholders (see section 2.4 below) in the _Global Alliance for Genomics and Health_ (GA4GH) community. As a living document, the _Security Technology Infrastructure_ will be revised and updated over time, in response to changes in the _[GA4GH Privacy and Security Policy](https://www.ga4gh.org/wp-content/uploads/Privacy-and-Security-Policy.pdf)_ [1], and as technology and biomedical science continue to advance. 
 
