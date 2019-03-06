@@ -14,20 +14,20 @@ Standards and implementation practices for protecting the privacy and security o
 
 [1.0  Introduction](#introduction)
 
-2.0 – Security Foundation \
-2.1 – Risk Assessment \
-2.2 – Privacy and Security Policy \
-2.3 – Guiding Principles \
-2.4 – Information Security Responsibilities 
+[2.0 – Security Foundation](#security-foundation) \
+[2.1 – Risk Assessment](#risk-assessment) \
+[2.2 – Privacy and Security Policy](#privacy-and-security-policy) \
+[2.3 – Guiding Principles]((#guiding-principles) \
+[2.4 – Information Security Responsibilities](#information-security-responsibilities) 
 
-2.5 – GA4GH Assurance Dependencies 
+[2.5 – GA4GH Assurance Dependencies](#ga4gh-assurance-dependencies) 
 
-3.0 – Security Technology Building Blocks 
+[3.0 – Security Technology Building Blocks](#security-technology-building-blocks) 
 
-3.1 – Identity Management \
-3.2 – Authorization and Access Management
+[3.1 – Identity Management](#identity-management) \
+[3.2 – Authorization and Access Management](#authorization-and-access-management)
 
-3.3 – Privacy Protection \
+[3.3 – Privacy Protection](#privacy-protection) \
 3.4 – Audit Logs \
 3.5 – Data Integrity \
 3.6 – Non-repudiation \
@@ -64,9 +64,9 @@ The technology infrastructure defined herein seeks to reflect the prevailing sta
 
 We strongly encourage organizations to adhere to a recognized security framework, such as ISO/IEC 27001 [3] or the U.S. National Institute of Standards and Technology Special Publication 800-30 [4] to accomplish the control and assurance objectives arising from identified risks to data sensitivity and integrity, and to the availability of services. 
 
-**2. Security Foundation**
+<a name="security-foundation"></a>**2. Security Foundation**
 
-**2.1 Risk Assessment**
+<a name="risk-assessment"></a>**2.1 Risk Assessment**
 
 The _GA4GH Security Technology Infrastructure_ is based on a balanced approach to risk management that relies on each individual stakeholder to help protect the security, integrity, and trustworthiness of the GA4GH ecosystem. Each stakeholder should assess its individual risk on an on-going basis and assure that its own implemented policies, procedures, and technology protections are appropriate and sufficient for managing the identified risks not only to the enterprise, but to the GA4GH ecosystem.  Each stakeholder should perform a comprehensive risk assessment at least annually and should assess potential risk impacts whenever significant changes are made to network and system software or hardware.   
 
@@ -80,7 +80,7 @@ To be successful, the GA4GH ecosystem needs to effectively manage the following 
 *   Disruption in availability of data and services necessary to maintain appropriate access to clinical and genomic data. 
 *   Unethical, illegal, or inappropriate actions that attempt to breach security controls, surreptitiously obtain or derive information in an unauthorized manner, or otherwise undermine the trust fabric of the GA4GH. 
 
-    **2.2 Privacy and Security Policy**
+<a name="privacy-and-security-policy"></a>    **2.2 Privacy and Security Policy**
 
 
     The _Privacy and Security Policy_ specifically builds upon the _Framework's_ Core Element: "Privacy, Data Protection and Confidentiality." The _Security Technology Infrastructure_ recommends technical safeguards, standards, and practices to enforce the _Policy_ across the technology implementations that together comprise the GA4GH enterprise. 
@@ -97,13 +97,13 @@ To be successful, the GA4GH ecosystem needs to effectively manage the following 
 *   _Control Objective 4_: Implement technology safeguards to prevent disruption, degradation, and interruption of services enabling access to data. 
 *   _Control Objective 5_: Implement technology safeguards to prevent and detect potential security attacks and misuse of authorized accesses and privileges. 
 
-    **2.3 Guiding Principles**
+<a name="guiding-principles"></a>    **2.3 Guiding Principles**
 
 
     The _Security Technology Infrastructure_ is consistent with the _[Framework for Responsible Sharing of Genomic and Health-Related Data](https://www.ga4gh.org/ga4ghtoolkit/regulatoryandethics/framework-for-responsible-sharing-genomic-and-health-related-data/)_, and seeks to enforce the policy articulated in the _[GA4GH Privacy and Security Policy](https://www.ga4gh.org/docs/ga4ghtoolkit/data-security/Privacy-and-Security-Policy.pdf)._
 
 
-    **2.4 Information Security Responsibilities**
+<a name="information-security-responsibilities"></a>    **2.4 Information Security Responsibilities**
 
 
     As a virtual ecosystem, the GA4GH assigns roles and responsibilities for information security to stakeholders within this ecosystem. From a security and privacy perspective, the principal stakeholders are: 
@@ -131,7 +131,7 @@ The GA4GH leadership expects that in many cases, one organization may behave in 
 
 **Figure 1. Allocation of responsibility for security protections.** Those functions listed in the vertical block are the responsibilities of the GA4GH community as a whole. Functions listed in other blocks are allocated to data stewards, service providers, service consumers, and GA4GH.  
 
-**2.5  GA4GH Assurance Dependencies**
+<a name="ga4gh-assurance-dependencies"></a>**2.5  GA4GH Assurance Dependencies**
 
 Figure 2 depicts the ISO/IEC Open Systems Interconnection Basic Reference Model [6] that for decades has provided a common basis for the coordination of standards developed to interconnect systems – the essential infrastructure for a federated GA4GH ecosystem.  The model is not intended to serve as an implementation specification, but rather provides a structure for the development of standard interconnection protocols, and represents functional dependencies from the highest level, software applications, to the lowest level, the physical network.  As shown in Figure 2, GA4GH standards generally address functions needed at the highest three levels – application (e.g., APIs, semantic data representation), presentation (e.g., syntax), and session (e.g., workflow orchestration).   
 
@@ -148,7 +148,7 @@ The key is to implement a concept known as "defense in depth," in which layers o
 
 **Figure 2.  Basic Reference Model showing assurance dependencies.** While the GA4GH standards are implemented at higher layers, assurance of the data and application services within which the standards are used is ultimately dependent on the trustworthiness of the underlying interconnected infrastructure.  
 
-**3. Security Technology Building Blocks**
+<a name="security-technology-building-blocks"></a>**3. Security Technology Building Blocks**
 
 This section provides guidance on implementing security services within a stakeholder's organization and across the GA4GH interconnected community. 
 
