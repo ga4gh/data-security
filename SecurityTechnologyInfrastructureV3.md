@@ -80,16 +80,16 @@ To be successful, the GA4GH ecosystem needs to effectively manage the following 
 *   Disruption in availability of data and services necessary to maintain appropriate access to clinical and genomic data. 
 *   Unethical, illegal, or inappropriate actions that attempt to breach security controls, surreptitiously obtain or derive information in an unauthorized manner, or otherwise undermine the trust fabric of the GA4GH. 
 
-<a name="privacy-and-security-policy"></a>    **2.2 Privacy and Security Policy**
+<a name="privacy-and-security-policy"></a>  **2.2 Privacy and Security Policy**
 
 
-    The _Privacy and Security Policy_ specifically builds upon the _Framework's_ Core Element: "Privacy, Data Protection and Confidentiality." The _Security Technology Infrastructure_ recommends technical safeguards, standards, and practices to enforce the _Policy_ across the technology implementations that together comprise the GA4GH enterprise. 
+The _Privacy and Security Policy_ specifically builds upon the _Framework's_ Core Element: "Privacy, Data Protection and Confidentiality." The _Security Technology Infrastructure_ recommends technical safeguards, standards, and practices to enforce the _Policy_ across the technology implementations that together comprise the GA4GH enterprise. 
 
 
-    The _Security Technology Infrastructure_ recommends technical safeguards, standards, guidelines, and best practices for implementing and operating a technology infrastructure that will enable individual stakeholders to implement GA4GH standards safety, and to enforce the _Policy_ defined for the GA4GH ecosystem. 
+The _Security Technology Infrastructure_ recommends technical safeguards, standards, guidelines, and best practices for implementing and operating a technology infrastructure that will enable individual stakeholders to implement GA4GH standards safety, and to enforce the _Policy_ defined for the GA4GH ecosystem. 
 
 
-    Thus, the _Security Technology Infrastructure_ is defined to meet the following five control objectives, responsive to the risks identified above. 
+Thus, the _Security Technology Infrastructure_ is defined to meet the following five control objectives, responsive to the risks identified above. 
 
 *   _Control Objective 1_: Implement technology safeguards to prevent unauthorized access, use, or disclosure of confidential and private data. 
 *   _Control Objective 2_: Implement technology safeguards to prevent the discovery, access, and use of individuals' clinical and genomic data, and individual identities, other than as authorized by applicable jurisdictional law, institutional policy, and individual consents. 
@@ -100,13 +100,13 @@ To be successful, the GA4GH ecosystem needs to effectively manage the following 
 <a name="guiding-principles"></a>    **2.3 Guiding Principles**
 
 
-    The _Security Technology Infrastructure_ is consistent with the _[Framework for Responsible Sharing of Genomic and Health-Related Data](https://www.ga4gh.org/ga4ghtoolkit/regulatoryandethics/framework-for-responsible-sharing-genomic-and-health-related-data/)_, and seeks to enforce the policy articulated in the _[GA4GH Privacy and Security Policy](https://www.ga4gh.org/docs/ga4ghtoolkit/data-security/Privacy-and-Security-Policy.pdf)._
+The _Security Technology Infrastructure_ is consistent with the _[Framework for Responsible Sharing of Genomic and Health-Related Data](https://www.ga4gh.org/ga4ghtoolkit/regulatoryandethics/framework-for-responsible-sharing-genomic-and-health-related-data/)_, and seeks to enforce the policy articulated in the _[GA4GH Privacy and Security Policy](https://www.ga4gh.org/docs/ga4ghtoolkit/data-security/Privacy-and-Security-Policy.pdf)._
 
 
 <a name="information-security-responsibilities"></a>    **2.4 Information Security Responsibilities**
 
 
-    As a virtual ecosystem, the GA4GH assigns roles and responsibilities for information security to stakeholders within this ecosystem. From a security and privacy perspective, the principal stakeholders are: 
+As a virtual ecosystem, the GA4GH assigns roles and responsibilities for information security to stakeholders within this ecosystem. From a security and privacy perspective, the principal stakeholders are: 
 
 1. Individuals – people who enable their genomic and health-related data to be used and shared within the GA4GH ecosystem 
 2. Data stewards – entities responsible for assuring the quality and integrity of data made available to the GA4GH community, and for managing the metadata that preserves context and associated business rules, including privacy and security attributes, consistent with GA4GH standards, applicable law, institutional policy, and individual permissions. 
@@ -182,7 +182,6 @@ The effectiveness of the _Security Technology Infrastructure_ ultimately is depe
 *   Each service and infrastructure provider should assure that security-critical functions and responsibilities are delegated among multiple roles and multiple individuals to help avoid conflicts of interest and prevent inappropriate activities. 
 *   Each service provider should provide publicly accessible documentation of its policies and procedures for adjudicating requests for access to data and services. 
 *   Access authorization through application programming interfaces (APIs) should be implemented using the [OAuth 2.0 Authorization Framework (RFC 6749) [11].](https://tools.ietf.org/html/rfc6749)   
-*   
 
 <a name="privacy-protection"></a>**3.3 Privacy Protection**
 
@@ -218,9 +217,8 @@ The effectiveness of the _Security Technology Infrastructure_ ultimately is depe
 <a name="non-repudiation"></a>    **3.6 Non-repudiation**
 
 
-● Each service provider will have the capability to digitally sign content using a qualified electronic signature, as defined in Regulation (EU) No 910/2014 of the European Parliament and of the Council of 23 July 2014 on electronic identification and trust services for electronic transactions in the internal market and repealing Directive 1999/93/EC. [8]. 
-
-● GA4GH participants who offer downloadable software will digitally sign the downloadable files using a qualified electronic signature, as defined in Regulation (EU) No 910/2014 of the European Parliament and of the Council of 23 July 2014 on electronic identification and trust services for electronic transactions in the internal market and repealing Directive 1999/93/EC.  [8]. 
+* Each service provider will have the capability to digitally sign content using a qualified electronic signature, as defined in Regulation (EU) No 910/2014 of the European Parliament and of the Council of 23 July 2014 on electronic identification and trust services for electronic transactions in the internal market and repealing Directive 1999/93/EC. [8]. 
+* GA4GH participants who offer downloadable software will digitally sign the downloadable files using a qualified electronic signature, as defined in Regulation (EU) No 910/2014 of the European Parliament and of the Council of 23 July 2014 on electronic identification and trust services for electronic transactions in the internal market and repealing Directive 1999/93/EC.  [8]. 
 
 <a name="cryptographic-controls"></a>**3.7 Cryptographic Controls**
 
