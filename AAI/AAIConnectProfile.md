@@ -120,7 +120,7 @@ Clearinghouses MUST be protected using TLS.
 
 ### Flow of Claims 
 
-![](media/9fc91973e6e478aad524bcb346094ac7.png)
+![FlowOfClaims](https://github.com/ga4gh/data-security/blob/master/AAI/aai%20flow%20of%20claims.png)
 
 ### Profile Requirements 
 
