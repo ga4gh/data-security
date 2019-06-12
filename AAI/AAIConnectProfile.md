@@ -29,22 +29,22 @@ others that specify the syntax and semantics of the claims exchanged.
 [Relevant Specifications](#relevant-specifications)\
 [Flow of Claims](#flow-of-claims)\
 [Profile Requirements](#profile-requirements)\
-       Client/Application Conformance (user-Agent/Relying Party)
-       [Conformance for Brokers](#conformance-for-brokers)\\
-       Conformance for Claim Clearinghouses (consuming Access Tokens to give access to data)\
+       - [Client/Application Conformance (user-Agent/Relying Party)](#clientapplication-conformance-user-agentrelying-party)
+       - [Conformance for Brokers](#conformance-for-brokers)\
+       - [Conformance for Claim Clearinghouses (consuming Access Tokens to give access to data)](#conformance-for-claim-clearinghouses-consuming-access-tokens-to-give-access-to-data)\
 [GA4GH JWT Format](#ga4gh-jwt-format)\
-       [Access_token issued by broker](#access_token-issued-by-broker)\
-       Claims sent to Data Holder by a Broker via /userinfo\
-       Authorization/Claims\
+       - [Access_token issued by broker](#access_token-issued-by-broker)\
+       - [Claims sent to Data Holder by a Broker via /userinfo](#claims-sent-to-data-holder-by-a-broker-via-userinfo)\
+       - [Authorization/Claims](#authorizationclaims)\
 [**Token Revocation**](#token-revocation)\
-       [Claim Authority Revokes Claim](#claim-authority-revokes-claim)\
-       [Revoking Access from Bad Actors](#revoking-access-from-bad-actors)\
-       [Limited Damage of Leaked Tokens](#limited-damage-of-leaked-tokens)\
+       - [Claim Authority Revokes Claim](#claim-authority-revokes-claim)\
+       - [Revoking Access from Bad Actors](#revoking-access-from-bad-actors)\
+       - [Limited Damage of Leaked Tokens](#limited-damage-of-leaked-tokens)\
 [**Appendix**](#appendix)\
-       [Examples of broker technologies](#examples-of-broker-technologies)\
-       [Why Brokers?](#why-brokers?)\
-       [Services parties are responsible for providing](#services-parties-are-responsible-for-providing)\
-       [Future topics to explore](#future-topics-to-explore)
+       - [Examples of broker technologies](#examples-of-broker-technologies)\
+       - [Why Brokers?](#why-brokers?)\
+       - [Services parties are responsible for providing](#services-parties-are-responsible-for-providing)\
+       - [Future topics to explore](#future-topics-to-explore)
 
 
 ### Introduction
