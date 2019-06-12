@@ -22,32 +22,29 @@ others that specify the syntax and semantics of the claims exchanged.
 
 ### Table of Contents
 
-[Abstract](#abstract)
-
-[Introduction](#introduction)
-
-[Requirements Notation and Conventions](#requirements-notation-and-conventions)
-
-Terminology
-Relevant Specifications
-Flow of Claims
-Profile Requirements
+[Abstract](#abstract)\
+[Introduction](#introduction)\
+[Requirements Notation and Conventions](#requirements-notation-and-conventions)\
+[Terminology](#terminology)\
+[Relevant Specifications](#relevant-specifications)\
+[Flow of Claims](#flow-of-claims)\
+[Profile Requirements](#profile-requirements)\
     Client/Application Conformance (user-Agent/Relying Party)
-    Conformance for Brokers
+    [Conformance for Brokers](#conformance-for-brokers)\
     Conformance for Claim Clearinghouses (consuming Access Tokens to give access to data)
-GA4GH JWT Format
-    Access_token issued by broker
+[GA4GH JWT Format](#ga4gh-jwt-format)\
+    [Access_token issued by broker](#access_token-issued-by-broker)\
     Claims sent to Data Holder by a Broker via /userinfo
     Authorization/Claims
-**Token Revocation**
-    Claim Authority Revokes Claim
-    Revoking Access from Bad Actors
-    Limited Damage of Leaked Tokens
-**Appendix**
-    Examples of broker technologies
-    Why Brokers?
-    Services parties are responsible for providing
-    Future topics to explore
+[**Token Revocation**](#token-revocation)\
+    [Claim Authority Revokes Claim](#claim-authority-revokes-claim)\
+    [Revoking Access from Bad Actors](#revoking-access-from-bad-actors)\
+    [Limited Damage of Leaked Tokens](#limited-damage-of-leaked-tokens)\
+[**Appendix**](#appendix)\
+    [Examples of broker technologies](#examples-of-broker-technologies)\
+    [Why Brokers?](#why-brokers?)\
+    [Services parties are responsible for providing](#services-parties-are-responsible-for-providing)\
+    [Future topics to explore](#future-topics-to-explore)
 
 
 ### Introduction
