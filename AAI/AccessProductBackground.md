@@ -181,7 +181,7 @@ contained the following 5 main categories
 
 5.  General Research Use.
 
-![](media/a8ba778c9e5e9cf21e070ef5282a3dd9.png)
+![fig 2](https://github.com/ga4gh/data-security/blob/master/AAI/aai%20background%20fig%202.png)
 
 We propose that this effort be used as the starting point for developing a
 full-blown data use ontology that can be reduced to practice and used by data
