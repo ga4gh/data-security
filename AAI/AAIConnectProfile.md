@@ -451,7 +451,7 @@ Here is a diagram:
 <https://www.lucidchart.com/invitations/accept/68f3089b-0c9b-4e64-acd2-abffae3c0c43>
 of a full-broker. This is one possible way to use this spec.
 
-![](media/3d60fe7ffcc3ed0e54cb3f73eff00840.png)
+![flow](https://github.com/ga4gh/data-security/blob/master/AAI/flow.png)
 
 In this diagram, the Data Owner Claim Clearinghouse, the Data Holder Claim
 Clearinghouse and the Identity Broker are all different entities. However, in
