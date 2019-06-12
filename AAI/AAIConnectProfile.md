@@ -22,6 +22,32 @@ others that specify the syntax and semantics of the claims exchanged.
 
 ### Table of Contents
 
+[Abstract](#abstract)
+Table of Contents
+Introduction
+Requirements Notation and Conventions
+Terminology
+Relevant Specifications
+Flow of Claims
+Profile Requirements
+    Client/Application Conformance (user-Agent/Relying Party)
+    Conformance for Brokers
+    Conformance for Claim Clearinghouses (consuming Access Tokens to give access to data)
+GA4GH JWT Format
+    Access_token issued by broker
+    Claims sent to Data Holder by a Broker via /userinfo
+    Authorization/Claims
+**Token Revocation**
+    Claim Authority Revokes Claim
+    Revoking Access from Bad Actors
+    Limited Damage of Leaked Tokens
+**Appendix**
+    Examples of broker technologies
+    Why Brokers?
+    Services parties are responsible for providing
+    Future topics to explore
+
+
 ### Introduction
 
 This document profiles using OpenID Connect (OIDC) Servers for use in
