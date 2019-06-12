@@ -35,6 +35,8 @@ facilitate access to data sets by addressing these challenges.*
 
 At a concrete level, data from human subjects has two axes of access control:
 
+![fig 1](https://github.com/ga4gh/data-security/blob/master/AAI/aai%20background%20fig%201.JPG)
+
 1.  Authentication and Authorization Infrastructure (AAI) - These specify the
     collection of researchers that may access the dataset at any given time. For
     example, it may be the case that only researchers that are members of a
