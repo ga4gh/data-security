@@ -23,9 +23,11 @@ others that specify the syntax and semantics of the claims exchanged.
 ### Table of Contents
 
 [Abstract](#abstract)
-Table of Contents
-Introduction
-Requirements Notation and Conventions
+
+[Introduction](#introduction)
+
+[Requirements Notation and Conventions](#requirements-notation-and-conventions)
+
 Terminology
 Relevant Specifications
 Flow of Claims
