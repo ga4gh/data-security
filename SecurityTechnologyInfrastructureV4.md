@@ -249,7 +249,7 @@ privacy perspective, the principal stakeholders are:
 5.  *Data Consumers* – individuals and software clients that use data and
     application services available to the GA4GH community.
 
-![](media/ffc0392bca7a055d3572f78e2ceb00a6.png)
+![Fig 1](https://github.com/ga4gh/data-security/blob/master/STI%20Fig1.png)
 
 **Figure 1. Data security roles and their relationships.**
 
@@ -275,6 +275,8 @@ activities.
 Figure 1 below is a graphical representation of the delegation of
 responsibilities for implementing and operating in accordance with the GA4GH
 *Security Technology Infrastructure*.
+
+![Fig 2](https://github.com/ga4gh/data-security/blob/master/STI%20Fig2.jpg)
 
 **Figure 2. Allocation of responsibility for security protections.** Those
 functions listed in the vertical block are the responsibilities of the GA4GH
