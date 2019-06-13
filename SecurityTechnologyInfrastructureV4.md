@@ -41,7 +41,7 @@ of shared genomic and clinical data
 
 5.0 – References
 
-**1. Introduction**
+### **1. Introduction**
 
 This document describes the security technology infrastructure recommended for
 stakeholders (see section 2.4 below) in the *Global Alliance for Genomics and
@@ -110,9 +110,9 @@ and Technology Special Publication 800-53 [4] to accomplish the control and
 assurance objectives arising from identified risks to data sensitivity and
 integrity, and to the availability of services.
 
-**2. Security Foundation**
+### **2. Security Foundation**
 
-**2.1 Risk Assessment**
+### **2.1 Risk Assessment**
 
 The *GA4GH Security Technology Infrastructure* is based on a balanced approach
 to risk management that relies on each individual stakeholder to help protect
@@ -149,7 +149,7 @@ risks. [5]
 From a software point of view, and if applicable, we also encourage stakeholders
 to use the OWASP top 10 risks [6] to track other potential sources of threats.
 
-   **2.2 Privacy and Security Policy**
+   ### **2.2 Privacy and Security Policy**
 
 The *Privacy and Security Policy* specifically builds upon the *Framework’s*
 Core Element: “Privacy, Data Protection and Confidentiality.” The *Security
@@ -185,7 +185,7 @@ sub-section.
 -   *Control Objective 5*: Implement technology safeguards to prevent and detect
     potential security attacks and misuse of authorized accesses and privileges.
 
->   **2.3 Guiding Principles**
+   ### **2.3 Guiding Principles**
 
 The *Security Technology Infrastructure* is consistent with the [Framework for
 Responsible Sharing of Genomic and Health-Related
@@ -193,7 +193,7 @@ Data](https://www.ga4gh.org/ga4ghtoolkit/regulatoryandethics/framework-for-respo
 and seeks to enforce the policy articulated in the [GA4GH Privacy and Security
 Policy](https://www.ga4gh.org/docs/ga4ghtoolkit/data-security/Privacy-and-Security-Policy.pdf)*.*
 
->   **2.4 Information Security Responsibilities**
+   ### **2.4 Information Security Responsibilities**
 
 As a virtual ecosystem, the GA4GH assigns roles and responsibilities for
 information security to stakeholders within this ecosystem. From a security and
@@ -292,12 +292,12 @@ will depend upon the specific services provided, as well as the contractual
 agreements established between infrastructure service providers and their
 customers.
 
-**3. Security Technology Building Blocks**
+### **3. Security Technology Building Blocks**
 
 This section provides guidance on implementing security services within a
 stakeholder’s organization and across the GA4GH interconnected community.
 
-**3.1 Identity Management**
+### **3.1 Identity Management**
 
 The effectiveness of the *Security Technology Infrastructure* ultimately is
 dependent upon the degree to which the actors (individuals and software
@@ -333,7 +333,7 @@ services) are known and can be trusted to conform to applicable policy.
     attributes in OpenID Connect (OIDC) claims [10], and data use ontology (DUO)
     [11] for representing security and privacy attributes of shared data.
 
-**3.2 Authorization and Access Control**
+### **3.2 Authorization and Access Control**
 
 -   Each service provider and service consumer will implement access control
     policies and mechanisms to ensure that only authorized users (human user or
@@ -399,7 +399,7 @@ services) are known and can be trusted to conform to applicable policy.
     its policies and procedures for adjudicating requests for access to data and
     services.
 
-   **3.3 Privacy Protection**
+   ### **3.3 Privacy Protection**
 
 -   Each data steward and service provider should use consent-management, access
     control, usage monitoring, auditing mechanisms, and other privacy-protecting
@@ -450,7 +450,7 @@ services) are known and can be trusted to conform to applicable policy.
     metadata associated with the data under its control, preferably using HL7
     FHIR provenance [22] and confidentiality [23] codes.
 
-**3.4 Audit Logs**
+### **3.4 Audit Logs**
 
 -   Each service provider is responsible for recording and maintaining a log of
     security- relevant events involving access to or use of application and data
@@ -486,7 +486,7 @@ services) are known and can be trusted to conform to applicable policy.
     implementing the capability to generate an accounting of accesses to and
     disclosures of data that may be associated with the individual’s identity.
 
-   **3.5 Data Integrity**
+   ### **3.5 Data Integrity**
 
 -   Each service provider is responsible for protecting the integrity of genomic
     and health- related data that it holds, uses, or transmits.
@@ -505,7 +505,7 @@ services) are known and can be trusted to conform to applicable policy.
 -   Each service provider who distributes software will ensure that it is free
     from malicious code prior to making it available for distribution.
 
-   **3.6 Non-repudiation**
+   ### **3.6 Non-repudiation**
 
 -   Each service provider will have the capability to digitally sign content
     using a qualified electronic signature, as defined in Regulation (EU)
@@ -519,7 +519,7 @@ services) are known and can be trusted to conform to applicable policy.
     23 July 2014 on electronic identification and trust services for electronic
     transactions in the internal market and repealing Directive 1999/93/EC [7].
 
-**3.7 Cryptographic Controls**
+### **3.7 Cryptographic Controls**
 
 -   Each stakeholder will ensure that any cryptographic controls used are
     compliant with all applicable standards, agreements, laws, and regulations.
@@ -538,7 +538,7 @@ services) are known and can be trusted to conform to applicable policy.
     methods (e.g., homomorphic encryption [28], secure multi-party computation
     [29]) when applicable and practical.
 
-   **3.8 Communications Security**
+   ### **3.8 Communications Security**
 
 -   Each service provider will ensure that communication channels are secured
     commensurate with the level of risk associated with the content being
@@ -551,9 +551,9 @@ services) are known and can be trusted to conform to applicable policy.
 -   Any electronic mail containing genomic, health-related, or other sensitive
     data will be secured (e.g., using S/MIME Version 2 [33, 34]).
 
-   **4. Operational Assurances**
+   ### **4. Operational Assurances**
 
-   **4.1 Physical and Environmental Security**
+   ### **4.1 Physical and Environmental Security**
 
 -   Each stakeholder who stores or processes genomic or health-related data is
     responsible for providing physical and environmental safeguards to protect
@@ -564,7 +564,7 @@ services) are known and can be trusted to conform to applicable policy.
     health-related data is responsible for assuring that business agreements
     include an obligation to provide physical and environmental data protection.
 
-**4.3 Service Assurances**
+### **4.3 Service Assurances**
 
 All data, application, and infrastructure service providers to the GA4GH
 community are responsible for implementing appropriate defense-in-depth
@@ -658,7 +658,7 @@ Thus:
     availability of services, and the privacy of individuals who contribute
     their personal data.
 
->   **4.4 Information Security Oversight and Accountability**
+   ### **4.4 Information Security Oversight and Accountability**
 
 -   Each GA4GH team that proposes a standard work product will complete an
     initial security risk-assessment at the start of product development.
@@ -713,7 +713,7 @@ Thus:
         technical mechanisms and procedures for preventing, detecting, and
         recovering from data breaches, consistent with the assessed risks.
 
-**4.5 Regulatory and Policy Compliance**
+### **4.5 Regulatory and Policy Compliance**
 
 -   Each stakeholder is individually responsible for implementing protections
     consistent with this infrastructure, and for assuring that contracts with
@@ -738,7 +738,7 @@ Thus:
     assess compliance with the GA4GH *Security Technology Infrastructure*, and
     to evaluate the effectiveness of implemented protections.
 
-**5. References**
+### **5. References**
 
 [1] Global Alliance for Genomics and Health. *Privacy and Security Policy.* 26
 May 2015. Available from
