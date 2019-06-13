@@ -733,7 +733,7 @@ Thus:
     assess compliance with the GA4GH *Security Technology Infrastructure*, and
     to evaluate the effectiveness of implemented protections.
 
-### **5. References**
+## **5. References**
 
 [1] Global Alliance for Genomics and Health. *Privacy and Security Policy.* 26
 May 2015. Available from
