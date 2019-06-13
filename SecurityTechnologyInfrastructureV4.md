@@ -11,13 +11,13 @@ of shared genomic and clinical data
 
 ## **Outline**
 
-1.0 – [Introduction](#introduction)
+1.0 – [Introduction](#1-introduction)
 
-2.0 – [Security Foundation](#security-foundation)  
-2.1 – [Risk Assessment](#risk-assessment)  
-2.2 – [Privacy and Security Policy](#privacy-and-security-policy)  
-2.3 – [Guiding Principles](#guiding-principles)  
-2.4 – [Information Security Responsibilities](#information-security-responsibilities)
+2.0 – [Security Foundation](#2-security-foundation)  
+2.1 – [Risk Assessment](#21-risk-assessment)  
+2.2 – [Privacy and Security Policy](#22-privacy-and-security-policy)  
+2.3 – [Guiding Principles](#23-guiding-principles)  
+2.4 – [Information Security Responsibilities](#24-information-security-responsibilities)
 
 3.0 – Security Technology Building Blocks
 
