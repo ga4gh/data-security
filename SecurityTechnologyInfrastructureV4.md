@@ -18,7 +18,7 @@ Global Alliance for Genomics and Health Security Technology Infrastructure
 2.3 – [Guiding Principles](#23-guiding-principles)  
 2.4 – [Information Security Responsibilities](#24-information-security-responsibilities)
 
-3.0 – [Security Technology Building Blocks](#3-security-technology-building-blocks)
+3.0 – [Security Technology Building Blocks](#3-security-technology-building-blocks)  
 3.1 – [Identity Management](#31-identity-management)  
 3.2 – [Authorization and Access Control](#32-authorization-and-access-control)  
 3.3 – [Privacy Protection](#33-privacy-protection)  
@@ -36,7 +36,7 @@ Global Alliance for Genomics and Health Security Technology Infrastructure
 
 5.0 – [References](#5-references)
 
-### **1. Introduction**
+## **1. Introduction**
 
 This document describes the security technology infrastructure recommended for
 stakeholders (see section 2.4 below) in the *Global Alliance for Genomics and
@@ -105,7 +105,7 @@ and Technology Special Publication 800-53 [4] to accomplish the control and
 assurance objectives arising from identified risks to data sensitivity and
 integrity, and to the availability of services.
 
-### **2. Security Foundation**
+## **2. Security Foundation**
 
 ### **2.1 Risk Assessment**
 
@@ -287,7 +287,7 @@ will depend upon the specific services provided, as well as the contractual
 agreements established between infrastructure service providers and their
 customers.
 
-### **3. Security Technology Building Blocks**
+## **3. Security Technology Building Blocks**
 
 This section provides guidance on implementing security services within a
 stakeholder’s organization and across the GA4GH interconnected community.
@@ -546,7 +546,7 @@ services) are known and can be trusted to conform to applicable policy.
 -   Any electronic mail containing genomic, health-related, or other sensitive
     data will be secured (e.g., using S/MIME Version 2 [33, 34]).
 
-   ### **4. Operational Assurances**
+   ## **4. Operational Assurances**
 
    ### **4.1 Physical and Environmental Security**
 
