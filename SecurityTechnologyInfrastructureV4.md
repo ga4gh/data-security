@@ -19,27 +19,23 @@ of shared genomic and clinical data
 2.3 – [Guiding Principles](#23-guiding-principles)  
 2.4 – [Information Security Responsibilities](#24-information-security-responsibilities)
 
-3.0 – Security Technology Building Blocks
+3.0 – [Security Technology Building Blocks](#3-security-technology-building-blocks)
+3.1 – [Identity Management](#31-identity-management)  
+3.2 – [Authorization and Access Control](#32-authorization-and-access-control)  
+3.3 – [Privacy Protection](#33-privacy-protection)  
+3.4 – [Audit Logs](#34-audit-logs)  
+3.5 – [Data Integrity](#35-data-integrity)  
+3.6 – [Non-repudiation](#36-non-repudiation)  
+3.7 – [Cryptographic Controls](#37-cryptographic-controls)  
+3.8 – [Communications Security](#38-communications-security)
 
-3.1 – Identity Management  
-3.2 – Authorization and Access Control
+4.0 – [Operational Assurance](#4-operational-assurance)  
+4.1 – [Physical and Environmental Security](#41-physical-and-environmental-security)  
+4.2 – [Service Assurances](#42-service-assurances)  
+4.3 – [Information Security Oversight and Accountability](#43-information-security-oversight-and-accountability)  
+4.4 – [Regulatory and Policy Compliance](#44-regulatory-and-policy-compliance)
 
-3.3 – Privacy Protection  
-3.4 – Audit Logs  
-3.5 – Data Integrity  
-3.6 – Non-repudiation  
-3.7 – Cryptographic Controls
-
-3.8 – Communications Security
-
-4.0 – Operational Assurance  
-4.1 – Physical and Environmental Security  
-4.2 – Service Assurances  
-4.3 – Information Security Oversight and Accountability
-
-4.4 – Regulatory and Policy Compliance
-
-5.0 – References
+5.0 – [References](#5-references)
 
 ### **1. Introduction**
 
