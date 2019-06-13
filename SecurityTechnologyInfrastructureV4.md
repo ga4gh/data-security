@@ -1,15 +1,15 @@
 Global Alliance for Genomics and Health Security Technology Infrastructure
 
-**Global Alliance for Genomics and Health**
+## **Global Alliance for Genomics and Health**
 
-**SECURITY TECHNOLOGY INFRASTRUCTURE**
+# **SECURITY TECHNOLOGY INFRASTRUCTURE**
 
-Standards and implementation practices for protecting the privacy and security
+## Standards and implementation practices for protecting the privacy and security
 of shared genomic and clinical data
 
-**VERSION 4.0, June 12, 2019**
+## **VERSION 4.0, June 12, 2019**
 
-**Outline**
+## **Outline**
 
 1.0 Introduction
 
