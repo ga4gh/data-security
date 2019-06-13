@@ -4,8 +4,7 @@ Global Alliance for Genomics and Health Security Technology Infrastructure
 
 # **SECURITY TECHNOLOGY INFRASTRUCTURE**
 
-## Standards and implementation practices for protecting the privacy and security
-of shared genomic and clinical data
+## Standards and implementation practices for protecting the privacy and security of shared genomic and clinical data
 
 ## **VERSION 4.0, June 12, 2019**
 
@@ -268,7 +267,7 @@ functions and responsibilities are delegated among multiple roles and multiple
 individuals to help avoid conflicts of interest and prevent inappropriate
 activities.
 
-Figure 1 below is a graphical representation of the delegation of
+Figure 2 below is a graphical representation of the delegation of
 responsibilities for implementing and operating in accordance with the GA4GH
 *Security Technology Infrastructure*.
 
