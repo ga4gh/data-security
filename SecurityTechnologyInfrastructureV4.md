@@ -149,7 +149,7 @@ risks. [5]
 From a software point of view, and if applicable, we also encourage stakeholders
 to use the OWASP top 10 risks [6] to track other potential sources of threats.
 
->   **2.2 Privacy and Security Policy**
+   **2.2 Privacy and Security Policy**
 
 The *Privacy and Security Policy* specifically builds upon the *Framework’s*
 Core Element: “Privacy, Data Protection and Confidentiality.” The *Security
@@ -399,7 +399,7 @@ services) are known and can be trusted to conform to applicable policy.
     its policies and procedures for adjudicating requests for access to data and
     services.
 
->   **3.3 Privacy Protection**
+   **3.3 Privacy Protection**
 
 -   Each data steward and service provider should use consent-management, access
     control, usage monitoring, auditing mechanisms, and other privacy-protecting
@@ -486,7 +486,7 @@ services) are known and can be trusted to conform to applicable policy.
     implementing the capability to generate an accounting of accesses to and
     disclosures of data that may be associated with the individual’s identity.
 
->   **3.5 Data Integrity**
+   **3.5 Data Integrity**
 
 -   Each service provider is responsible for protecting the integrity of genomic
     and health- related data that it holds, uses, or transmits.
@@ -505,7 +505,7 @@ services) are known and can be trusted to conform to applicable policy.
 -   Each service provider who distributes software will ensure that it is free
     from malicious code prior to making it available for distribution.
 
->   **3.6 Non-repudiation**
+   **3.6 Non-repudiation**
 
 -   Each service provider will have the capability to digitally sign content
     using a qualified electronic signature, as defined in Regulation (EU)
@@ -538,7 +538,7 @@ services) are known and can be trusted to conform to applicable policy.
     methods (e.g., homomorphic encryption [28], secure multi-party computation
     [29]) when applicable and practical.
 
->   **3.8 Communications Security**
+   **3.8 Communications Security**
 
 -   Each service provider will ensure that communication channels are secured
     commensurate with the level of risk associated with the content being
@@ -551,9 +551,9 @@ services) are known and can be trusted to conform to applicable policy.
 -   Any electronic mail containing genomic, health-related, or other sensitive
     data will be secured (e.g., using S/MIME Version 2 [33, 34]).
 
->   **4. Operational Assurances**
+   **4. Operational Assurances**
 
->   **4.1 Physical and Environmental Security**
+   **4.1 Physical and Environmental Security**
 
 -   Each stakeholder who stores or processes genomic or health-related data is
     responsible for providing physical and environmental safeguards to protect
