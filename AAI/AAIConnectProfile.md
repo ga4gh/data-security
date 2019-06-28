@@ -326,7 +326,7 @@ Payload:
 [“ga4gh”] : indicates that some RI claims are available beyond what is included in the access token but does not indicate which ones.
 [“ga4gh.ControlledAccessGrants”, “ga4gh.AffiliationAndRoles”] : indicates that only those two specific RI claims that exist within the “ga4gh” claim object would have additional content not included within the access token.
 
--   <ga4gh-spec-claims> : Claims included as part of a GA4GH standard specification based on the scopes provided. This content MAY be incomplete (i.e. a subset of data elements) and more may be fetched as indicated by ga4gh_userinfo_claims. A non-normative example of <ga4gh-spec-claims> is: "ga4gh": {[ga4gh claims](https://docs.google.com/document/d/11Wg-uL75ypU5eNu2p_xh9gspmbGtmLzmdq5VfPHBirE)}
+-   `<ga4gh-spec-claims>`: Claims included as part of a GA4GH standard specification based on the scopes provided. This content MAY be incomplete (i.e. a subset of data elements) and more may be fetched as indicated by ga4gh_userinfo_claims. A non-normative example of `<ga4gh-spec-claims>` is: "ga4gh": {[ga4gh claims](https://docs.google.com/document/d/11Wg-uL75ypU5eNu2p_xh9gspmbGtmLzmdq5VfPHBirE)}
 
 #### Claims sent to Data Holder by a Broker via /userinfo
 
