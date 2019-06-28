@@ -145,7 +145,9 @@ Clearinghouses MUST be protected using TLS.
 
 ### Flow of Claims 
 
-![FlowOfClaims](https://github.com/ga4gh/data-security/blob/master/AAI/aai%20flow%20of%20claims.png)
+![FlowOfClaims](https://github.com/ga4gh/data-security/blob/master/AAI/aai%20flow%20of%20claims.png) 
+
+Note: the above diagram shows how claims flow from a Claim Source (e.g. database) to a Claim Clearinghouse that uses them. This does not label all of the Relying Party relationships along this chain, where each recipient in the chain is typically -- but not always -- the relying party of the auth flow that fetches the claims from upstream.
 
 ### Profile Requirements 
 
@@ -217,7 +219,7 @@ Clearinghouses MUST be protected using TLS.
 
     2.  MAY implement the [OIDC claims request
         parameter](https://openid.net/specs/openid-connect-core-1_0.html#ClaimsParameter)
-        on /userinfo to subset which claim information will be returned.
+        on /userinfo to subset which claim information will be returned. If the Broker does not support the OIDC claims request parameter, then the Broker MUST NOT include claims_parameter_supported in the discovery service and all claims for the provided scopes eligible for release to the requestor MUST be returned.
 
 #### Conformance for Claim Clearinghouses (consuming Access Tokens to give access to data)
 
@@ -274,94 +276,75 @@ This profile is agnostic to the format of the id_token.
 #### Access_token issued by broker
 
 Header:
-
+```
 {
-
-"typ": "JWT",
-
-"alg": "RS256",
-
-["kid": "xxxxx"](https://tools.ietf.org/html/rfc7515#section-4.1.4)
-
+ "typ": "JWT",
+ "alg": "RS256",
+ ["kid": "xxxxx"](https://tools.ietf.org/html/rfc7515#section-4.1.4)
 }
+```
 
 Payload:
-
+```
 {
-
-"iss": "https://\<issuer website\>/",
-
-"sub": "<someone@someone.com>",
-
-“idp”: “google”,
-
-"aud": [
-
-"client_id",
-
-"client_id2"
-
-],
-
-"iat": 1553545136,
-
-"exp": 1553631536,
-
-"scope": "openid \<ga4gh-spec-scopes\>",
-
-"ga4gh_userinfo_claims": ["claim_name_1", "claim_name_2"]
-
+ "iss": "https://\<issuer website\>/",
+ "sub": "<someone@someone.com>",
+ “idp”: “google”,
+ "aud": [
+  "client_id",
+  "client_id2"
+ ],
+ "iat": 1553545136,
+ "exp": 1553631536,
+ "scope": "openid \<ga4gh-spec-scopes\>",
+ "ga4gh_userinfo_claims": ["claim_name_1", "claim_name_2.substructure_name"],
+ <ga4gh-spec-claims>
 }
-
--   Iss: MUST be able to be appended with .well-known/openid-configuration to
+```
+-   iss: MUST be able to be appended with .well-known/openid-configuration to
     get spec of broker.
 
--   Sub: authenticated user unique identifier
+-   sub: authenticated user unique identifier
 
--   Idp: (optional) SHOULD contain the IDP the user used to auth with. Such as
+-   idp: (optional) SHOULD contain the IDP the user used to auth with. Such as
     “Google”. This does not have to be unique and can be used just to help
     inform if that’s what a data owner or data holder needs.
 
--   Aud: MUST contain the Oauth Client ID of the relying party. MAY contain
+-   aud: MUST contain the Oauth Client ID of the relying party. MAY contain
     other strings or identifiers as well.
 
--   Iat: time issued
+-   iat: time issued
 
--   Exp: time expired
+-   exp: time expired
 
--   Scope: scopes verified. Must include “openid”. Will also include any
+-   scope: scopes verified. Must include “openid”. Will also include any
     \<ga4gh-spec-scopes\> needed for the GA4GH compliant environment (e.g.
     “ga4gh” is the [scope for RI
     claims](https://docs.google.com/document/d/11Wg-uL75ypU5eNu2p_xh9gspmbGtmLzmdq5VfPHBirE/edit#bookmark=id.6jhrok8dem8m)).
 
+-   ga4gh_userinfo_claims: A list of OIDC claim names that are present from the /userinfo endpoint that are incomplete in <ga4gh-spec-claims> that are attached to this access token. For complex OIDC claims with substructure, a dot-notation MAY be used to more precisely indicate which sub-claims contain more information within the /userinfo endpoint. Non-normative examples include:
+[“ga4gh”] : indicates that some RI claims are available beyond what is included in the access token but does not indicate which ones.
+[“ga4gh.ControlledAccessGrants”, “ga4gh.AffiliationAndRoles”] : indicates that only those two specific RI claims that exist within the “ga4gh” claim object would have additional content not included within the access token.
+
+-   `<ga4gh-spec-claims>`: Claims included as part of a GA4GH standard specification based on the scopes provided. This content MAY be incomplete (i.e. a subset of data elements) and more may be fetched as indicated by ga4gh_userinfo_claims. A non-normative example of `<ga4gh-spec-claims>` is: "ga4gh": {[ga4gh claims](https://docs.google.com/document/d/11Wg-uL75ypU5eNu2p_xh9gspmbGtmLzmdq5VfPHBirE)}
+
 #### Claims sent to Data Holder by a Broker via /userinfo
 
-Only the GA4GH claims truly must be as proscribed here iss,sub, idp,aud,etc are
-all optional.
-
+Only the GA4GH claims truly must be as proscribed here. Refer to OIDC Spec for more information.
+```
 {
-
-"iss": "https://\<issuer website\>/",
-
-"sub": "<someone@someone.com>",
-
-"Idp": "Google",
-
-"aud": [
-
-"client_id",
-
-"client_id2"
-
-],
-
-"iat": 1553545136,
-
-"exp": 1553631536,
-
-\<ga4gh-spec-claims\>
-
+ "iss": "https://\<issuer website\>/",
+ "sub": "<someone@someone.com>",
+ "idp": "google",
+ "aud": [
+  "client_id",
+  "client_id2"
+ ],
+ "iat": 1553545136,
+ "exp": 1553631536,
+ \<ga4gh-spec-claims\>
 }
+```
 
 As a non-normative example, a valid \<ga4gh-spec-claims\> entry would be:
 
