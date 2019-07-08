@@ -4,6 +4,7 @@
 
 | Version | Date  | Editor                                     | Notes                   |
 |---------|-------|--------------------------------------------|-------------------------|
+| 0.91    | 2017- | Craig Voisin                               | Added terminology links |
 | 0.9     | 2017- | Mikael Linden, Craig Voisin, David Bernick | Initial working version |
 
 ### Abstract
@@ -82,15 +83,15 @@ be interpreted as described in [RFC2119](https://www.ietf.org/rfc/rfc2119.txt).
 
 ### Terminology
 
-**Claim source** service -- a service that manages claims and delivers them to
+<a name="term-claim-source"></a> **Claim source** service -- a service that manages claims and delivers them to
 OIDC identity brokers. For instance, a data owner.
 
-**Identity provider (IdP)** service - a service that provides to users an
+<a name="term-identity-provider"></a> **Identity provider (IdP)** service - a service that provides to users an
 identity, authenticates it; and provides claims to a broker using standard
 protocols, such as OpenID Connect, SAML or other federation protocols. Example:
 eduGAIN, Google Identity, Facebook, NIH ERACommons. IdPs MAY be claims sources.
 
-**OIDC Identity Broker** service (aka “identity broker”, sometimes called an
+<a name="term-identity-broker"></a> **OIDC Identity Broker** service (aka “identity broker”, sometimes called an
 “IdP proxy”) - An OIDC Provider service that authenticates a user (potentially
 by an Identity Provider), collects their claims from internal and/or upstream
 claim sources and issues conformant OIDC claims to be consumed by [Claim
@@ -98,7 +99,7 @@ Clearinghouses](#jyzwlgoay5dq). Brokers may also be Claim Clearinghouses of
 other upstream Brokers (i.e. create a chain of brokers like in the [Flow of
 Claims diagram](#flow-of-claims)).
 
-**OIDC Claim Clearinghouse service** (aka “Claim Clearinghouse” aka “claim
+<a name="term-claim-clearinghouse"></a> **OIDC Claim Clearinghouse service** (aka “Claim Clearinghouse” aka “claim
 consumer”) - A consumer of Identity Broker claims (an OIDC Relying Party or a
 service downstream) that makes an authorization decision at least in part based
 on inspecting GA4GH claims and allows access to a specific set of underlying
@@ -112,12 +113,12 @@ Claim Clearinghouses may issue access tokens that contain a new set of GA4GH
 claims and/or a subset of GA4GH claims that they received for downstream
 consumption.
 
-**Data Holder** - An organization that protects a specific set of data. They
+<a name="term-data-holder"></a> **Data Holder** - An organization that protects a specific set of data. They
 hold data (or its copy) and respects and enforces the data owner's decisions on
 who can access it. A data owner can also be a data holder. Data holders run an
 [OIDC Claim Clearinghouse Server](#jyzwlgoay5dq) at a minimum.
 
-**Data Owner** - An organization that manages data and, in that role, has
+<a name="term-data-owner"></a> **Data Owner** - An organization that manages data and, in that role, has
 capacity to decide who can access it. For instance, a Data Access Committee. A
 Data owner is likely to be a claim source.
 
