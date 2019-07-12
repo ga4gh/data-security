@@ -303,7 +303,7 @@ Payload:
 -   iss: MUST be able to be appended with .well-known/openid-configuration to
     get spec of broker.
 
--   sub: authenticated user unique identifier. email is suggested but another identifier may be used for privacy reasons.
+-   sub: authenticated user unique identifier. email is suggested but another identifier MAY be used for privacy reasons.
 
 -   idp: (optional) SHOULD contain the IDP the user used to auth with. Such as
     “Google”. This does not have to be unique and can be used just to help
