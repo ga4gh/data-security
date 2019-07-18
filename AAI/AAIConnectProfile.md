@@ -303,7 +303,7 @@ Payload:
 -   iss: MUST be able to be appended with .well-known/openid-configuration to
     get spec of broker.
 
--   sub: authenticated user unique identifier. email is suggested but another identifier MAY be used for privacy reasons.
+-   sub: authenticated user unique identifier. A broker MAY abstract the suggested user email address with a unique identifier provided it maintains a way to map the user. See the [ELIXIR](https://docs.google.com/document/d/1vOyW4dLVozy7oQvINYxHheVaLvwNsvvghbiKTLg7RbY) for an implementation example. The sub in this case is a unique identifier issued by ELIXIR that abstracts the user's "real" email. Downstream Clearinghouses will need to know how to handle the `sub` attribute.
 
 -   idp: (optional) SHOULD contain the IDP the user used to auth with. Such as
     “Google”. This does not have to be unique and can be used just to help
