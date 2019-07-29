@@ -321,7 +321,7 @@ Payload:
     “ga4gh” is the [scope for RI
     claims](https://docs.google.com/document/d/11Wg-uL75ypU5eNu2p_xh9gspmbGtmLzmdq5VfPHBirE/edit#bookmark=id.6jhrok8dem8m)).
 
--   ga4gh_userinfo_claims: Required but MAY be empty. A list of OIDC claim names that are present from the /userinfo endpoint that are incomplete in <ga4gh-spec-claims> that MAY be attached to this access token. For complex OIDC claims with substructure, a dot-notation MAY be used to more precisely indicate which sub-claims contain more information within the /userinfo endpoint. Non-normative examples include:
+-   ga4gh_userinfo_claims: Required but MAY be an empty array. A list of GA4GH claim names that are available from the OIDC /userinfo endpoint as per the [User Info JWT Format](#claims-sent-to-data-holder-by-a-broker-via-userinfo) section of the specification. For complex GA4GH claims with substructure,  a dot-notation MAY be used to more precisely indicate which sub-claims contain content within the /userinfo endpoint. Non-normative examples include:
 [“ga4gh”] : indicates that some RI claims are available beyond what is included in the access token but does not indicate which ones.
 [“ga4gh.ControlledAccessGrants”, “ga4gh.AffiliationAndRoles”] : indicates that only those two specific RI claims that exist within the “ga4gh” claim object would have additional content not included within the access token.
 
