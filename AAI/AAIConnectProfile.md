@@ -199,7 +199,7 @@ Note: the above diagram shows how claims flow from a Claim Source (e.g. database
         2.  MAY have a limited set of claims with a larger list of claims
             accessed in /userinfo
 
-        3.  Broker MAY include a “ga4gh_userinfo_claims” claim as an array of
+        3.  Broker MUST include a “ga4gh_userinfo_claims” claim as an array of
             string claim names that can be retrieved via /userinfo in the
             [GA4GH-specified format](#ga4gh-jwt-format), or include the empty
             list if there are no further claims.
@@ -214,7 +214,7 @@ Note: the above diagram shows how claims flow from a Claim Source (e.g. database
 
 3.  Broker MUST support public-facing /userinfo endpoint
 
-    1.  When presented with a valid access token /userinfo MUST return claims
+    1.  When presented with a valid access token, the /userinfo endpoint MUST return claims in the specified [User Info Format](#claims-sent-to-data-holder-by-a-broker-via-userinfo) using either an `application/json` or `application/jwt` encoding.
 
     2.  MAY implement the [OIDC claims request
         parameter](https://openid.net/specs/openid-connect-core-1_0.html#ClaimsParameter)
@@ -249,7 +249,7 @@ Note: the above diagram shows how claims flow from a Claim Source (e.g. database
         functionality of accepting tokens from multiple OIDC brokers.
 
 3.  Claim Clearinghouse or downstream applications MAY use /userinfo endpoint (derived
-    from the access_token JWT’s *iss*) to request more claims and MAY make use
+    from the access_token JWT’s *iss*) to request claims and MAY make use
     of the [OIDC claims request
     parameter](https://openid.net/specs/openid-connect-core-1_0.html#ClaimsParameter)
     to subset which claims are requested.
@@ -329,7 +329,7 @@ Payload:
 
 #### Claims sent to Data Holder by a Broker via /userinfo
 
-Only the GA4GH claims truly must be as proscribed here. Refer to OIDC Spec for more information. The /userinfo endpoint MAY use `application/json`, but `application/jwt` is preferred and `application/jwt` MUST be signed. [UserInfo](https://openid.net/specs/openid-connect-core-1_0.html#UserInfoResponse)
+Only the GA4GH claims truly must be as proscribed here. Refer to OIDC Spec for more information. The /userinfo endpoint MAY use `application/json`, but `application/jwt` is preferred and `application/jwt` MUST be signed as per [UserInfo](https://openid.net/specs/openid-connect-core-1_0.html#UserInfoResponse) .
 ```
 {
  "iss": "https://\<issuer website\>/",
