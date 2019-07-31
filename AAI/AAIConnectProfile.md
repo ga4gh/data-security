@@ -350,12 +350,12 @@ Only the GA4GH claims truly must be as proscribed here. Refer to OIDC Spec for m
 As a non-normative example, a valid \<ga4gh-spec-claims\> entry would be:
 
 >   "ga4gh": {[ga4gh
->   claims](https://docs.google.com/document/d/11Wg-uL75ypU5eNu2p_xh9gspmbGtmLzmdq5VfPHBirE)}
+>   claims](https://github.com/ga4gh-duri/ga4gh-duri.github.io/blob/master/researcher_ids/RI_Claims_V1.md)}
 
 #### Authorization/Claims 
 
 User attributes and claims are being developed in [GA4GH Researcher Identity
-Claims](https://docs.google.com/document/d/11Wg-uL75ypU5eNu2p_xh9gspmbGtmLzmdq5VfPHBirE)
+Claims](https://github.com/ga4gh-duri/ga4gh-duri.github.io/blob/master/researcher_ids/RI_Claims_V1.md)
 document by the DURI work stream.
 
 Token Revocation
