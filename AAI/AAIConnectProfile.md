@@ -325,6 +325,8 @@ Payload:
 [“ga4gh”] : indicates that some RI claims are available beyond what is included in the access token but does not indicate which ones.
 [“ga4gh.ControlledAccessGrants”, “ga4gh.AffiliationAndRoles”] : indicates that only those two specific RI claims that exist within the “ga4gh” claim object would have additional content not included within the access token.
 
+-   <ga4gh-spec-claims>: (optional) See description in `/userinfo` response below.
+
 #### Claims sent to Data Holder by a Broker via /userinfo
 
 Only the GA4GH claims truly must be as proscribed here. Refer to OIDC Spec for more information. The /userinfo endpoint MAY use `application/json`, but `application/jwt` is preferred and `application/jwt` MUST be signed as per [UserInfo](https://openid.net/specs/openid-connect-core-1_0.html#UserInfoResponse) .
