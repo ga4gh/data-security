@@ -2,10 +2,11 @@
 ## GA4GH Authentication and Authorization Infrastructure (AAI) OpenID Connect Profile (DRAFT RFC)
 ---
 
-| Version | Date  | Editor                                     | Notes                   |
-|---------|-------|--------------------------------------------|-------------------------|
-| 0.91    | 2017- | Craig Voisin                               | Added terminology links |
-| 0.9     | 2017- | Mikael Linden, Craig Voisin, David Bernick | Initial working version |
+| Version | Date   | Editor                                     | Notes                   |
+|---------|--------|--------------------------------------------|-------------------------|
+| 0.92    | 2019-07| David Bernick                              | Made changes based on feedback from review|
+| 0.91    | 2019-06| Craig Voisin                               | Added terminology links |
+| 0.9     | 2017-  | Mikael Linden, Craig Voisin, David Bernick | Initial working version |
 
 ### Abstract
 
@@ -14,7 +15,7 @@ This specification profiles the OpenID Connect protocol to provide a federated
 interoperability between Genomics institutions in a manner specifically
 applicable to (but not limited to) the sharing of restricted datasets.
 
-In particular, this specification introduces a JWT syntax for an access token to
+In particular, this specification introduces a JSON Web Token ([JWT] (#relevant-specifications)) syntax for an access token to
 enable an OIDC provider (called an OIDC broker) to embed some key claims to the
 access token and to enable a downstream access token consumer (called a Claims
 Clearinghouse) to locate the OIDC broker’s userinfo endpoint for requesting the
@@ -109,7 +110,7 @@ access to resources. Access can be granted by either issuing new access tokens
 for downstream services (i.e. the Claim Clearinghouse may act like an
 authorization server) or by providing access to the underlying resources
 directly (i.e. the Claim Clearinghouse may act like a resource server). Some
-Claim Clearinghouses may issue access tokens that contain a new set of GA4GH
+Claim Clearinghouses may issue access tokens that may contain a new set of GA4GH
 claims and/or a subset of GA4GH claims that they received for downstream
 consumption.
 
@@ -128,14 +129,13 @@ Data owner is likely to be a claim source.
 Authorization Code Flow and Implicit Flow will generate id_tokens and
 access_tokens from the OIDC Broker.
 
-[JWT](https://tools.ietf.org/html/rfc7519) - Both the access_token and the
-resultant claims are in a JWT format. Specific implementations MAY extend this
+[JWT](https://tools.ietf.org/html/rfc7519) - The access_token is in JSON Web Token (JWT) format. Specific implementations MAY extend this
 structure with their own service-specific response names as top-level members of
 this JSON object. Recommended “extensions” are in the
 [Permissions](#authorizationclaims) section. The JWT specified here follows JWS
 headers specification. <https://tools.ietf.org/html/rfc7515>
 
-[JWS](https://tools.ietf.org/html/rfc7515) - The specific JWT to use for this
+[JWS](https://tools.ietf.org/html/rfc7515) - JSON Web Signature (JWS) is the specific JWT to use for this
 spec.
 
 [Transport Layer Security (TLS, RFC 5246](https://tools.ietf.org/html/rfc5246)).
@@ -189,10 +189,9 @@ Note: the above diagram shows how claims flow from a Claim Source (e.g. database
 
     1.  A broker MUST issue both id_tokens and access_tokens.
 
-        1.  Brokers SHOULD issue tokens as JWTs in [GA4GH-specified
-            format](#ga4gh-jwt-format)
+        1.  This document makes no specifications for id_tokens.
 
-    2.  Access_tokens MUST be in JWT
+    2.  Access_tokens MUST be in JWS format  
 
         1.  Access tokens for GA4GH use MUST be in [this
             format](#ga4gh-jwt-format).
@@ -200,7 +199,7 @@ Note: the above diagram shows how claims flow from a Claim Source (e.g. database
         2.  MAY have a limited set of claims with a larger list of claims
             accessed in /userinfo
 
-        3.  Broker SHOULD include a “ga4gh_userinfo_claims” claim as an array of
+        3.  Broker MUST include a “ga4gh_userinfo_claims” claim as an array of
             string claim names that can be retrieved via /userinfo in the
             [GA4GH-specified format](#ga4gh-jwt-format), or include the empty
             list if there are no further claims.
@@ -215,8 +214,7 @@ Note: the above diagram shows how claims flow from a Claim Source (e.g. database
 
 3.  Broker MUST support public-facing /userinfo endpoint
 
-    1.  When presented with a valid access token /userinfo MAY return claims in
-        a specified [JWT format ](#ga4gh-jwt-format)
+    1.  When presented with a valid access token, the /userinfo endpoint MUST return claims in the specified [User Info Format](#claims-sent-to-data-holder-by-a-broker-via-userinfo) using either an `application/json` or `application/jwt` encoding.
 
     2.  MAY implement the [OIDC claims request
         parameter](https://openid.net/specs/openid-connect-core-1_0.html#ClaimsParameter)
@@ -250,8 +248,8 @@ Note: the above diagram shows how claims flow from a Claim Source (e.g. database
         advance where to find a corresponding /userinfo. This limits the
         functionality of accepting tokens from multiple OIDC brokers.
 
-3.  Claim Clearinghouse or downstream applications MAY use /userinfo (derived
-    from the access_token JWT’s *iss*) to request more claims and MAY make use
+3.  Claim Clearinghouse or downstream applications MAY use /userinfo endpoint (derived
+    from the access_token JWT’s *iss*) to request claims and MAY make use
     of the [OIDC claims request
     parameter](https://openid.net/specs/openid-connect-core-1_0.html#ClaimsParameter)
     to subset which claims are requested.
@@ -270,7 +268,7 @@ A well-formed JSON Web Token (JWT) consists of three concatenated
 Base64url-encoded strings, separated by dots (.) The three sections are: header,
 payload and signature. The access token and JWT with full claims use the same
 format, though the JWT with the full claims will have extended claims. These
-JWTs follow <https://tools.ietf.org/html/rfc7515> (JWKS).
+JWTs follow <https://tools.ietf.org/html/rfc7515> (JWS).
 
 This profile is agnostic to the format of the id_token.
 
@@ -305,7 +303,7 @@ Payload:
 -   iss: MUST be able to be appended with .well-known/openid-configuration to
     get spec of broker.
 
--   sub: authenticated user unique identifier
+-   sub: authenticated user unique identifier. A broker MAY abstract the suggested user email address with a unique identifier provided it maintains a way to map the user. See the [ELIXIR](https://docs.google.com/document/d/1vOyW4dLVozy7oQvINYxHheVaLvwNsvvghbiKTLg7RbY) for an implementation example. The sub in this case is a unique identifier issued by ELIXIR that abstracts the user's "real" email. Downstream Clearinghouses will need to know how to handle the `sub` attribute.
 
 -   idp: (optional) SHOULD contain the IDP the user used to auth with. Such as
     “Google”. This does not have to be unique and can be used just to help
@@ -323,15 +321,15 @@ Payload:
     “ga4gh” is the [scope for RI
     claims](https://docs.google.com/document/d/11Wg-uL75ypU5eNu2p_xh9gspmbGtmLzmdq5VfPHBirE/edit#bookmark=id.6jhrok8dem8m)).
 
--   ga4gh_userinfo_claims: A list of OIDC claim names that are present from the /userinfo endpoint that are incomplete in <ga4gh-spec-claims> that are attached to this access token. For complex OIDC claims with substructure, a dot-notation MAY be used to more precisely indicate which sub-claims contain more information within the /userinfo endpoint. Non-normative examples include:
+-   ga4gh_userinfo_claims: Required but MAY be an empty array. A list of GA4GH claim names that are available from the OIDC /userinfo endpoint as per the [User Info JWT Format](#claims-sent-to-data-holder-by-a-broker-via-userinfo) section of the specification. For complex GA4GH claims with substructure,  a dot-notation MAY be used to more precisely indicate which sub-claims contain content within the /userinfo endpoint. Non-normative examples include:
 [“ga4gh”] : indicates that some RI claims are available beyond what is included in the access token but does not indicate which ones.
 [“ga4gh.ControlledAccessGrants”, “ga4gh.AffiliationAndRoles”] : indicates that only those two specific RI claims that exist within the “ga4gh” claim object would have additional content not included within the access token.
 
--   `<ga4gh-spec-claims>`: Claims included as part of a GA4GH standard specification based on the scopes provided. This content MAY be incomplete (i.e. a subset of data elements) and more may be fetched as indicated by ga4gh_userinfo_claims. A non-normative example of `<ga4gh-spec-claims>` is: "ga4gh": {[ga4gh claims](https://docs.google.com/document/d/11Wg-uL75ypU5eNu2p_xh9gspmbGtmLzmdq5VfPHBirE)}
+-   <ga4gh-spec-claims>: (optional) See description in `/userinfo` response below.
 
 #### Claims sent to Data Holder by a Broker via /userinfo
 
-Only the GA4GH claims truly must be as proscribed here. Refer to OIDC Spec for more information.
+Only the GA4GH claims truly must be as proscribed here. Refer to OIDC Spec for more information. The /userinfo endpoint MAY use `application/json`, but `application/jwt` is preferred and `application/jwt` MUST be signed as per [UserInfo](https://openid.net/specs/openid-connect-core-1_0.html#UserInfoResponse) .
 ```
 {
  "iss": "https://\<issuer website\>/",
@@ -346,16 +344,18 @@ Only the GA4GH claims truly must be as proscribed here. Refer to OIDC Spec for m
  \<ga4gh-spec-claims\>
 }
 ```
+-   `<ga4gh-spec-claims>`: Claims included as part of a GA4GH standard specification based on the scopes provided. This content MAY be incomplete (i.e. a subset of data elements) and more may be fetched as indicated by ga4gh_userinfo_claims. A non-normative example of `<ga4gh-spec-claims>` is: "ga4gh": {[ga4gh claims](https://docs.google.com/document/d/11Wg-uL75ypU5eNu2p_xh9gspmbGtmLzmdq5VfPHBirE)}
+
 
 As a non-normative example, a valid \<ga4gh-spec-claims\> entry would be:
 
 >   "ga4gh": {[ga4gh
->   claims](https://docs.google.com/document/d/11Wg-uL75ypU5eNu2p_xh9gspmbGtmLzmdq5VfPHBirE)}
+>   claims](https://github.com/ga4gh-duri/ga4gh-duri.github.io/blob/master/researcher_ids/RI_Claims_V1.md)}
 
 #### Authorization/Claims 
 
 User attributes and claims are being developed in [GA4GH Researcher Identity
-Claims](https://docs.google.com/document/d/11Wg-uL75ypU5eNu2p_xh9gspmbGtmLzmdq5VfPHBirE)
+Claims](https://github.com/ga4gh-duri/ga4gh-duri.github.io/blob/master/researcher_ids/RI_Claims_V1.md)
 document by the DURI work stream.
 
 Token Revocation
