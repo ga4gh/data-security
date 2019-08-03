@@ -152,12 +152,12 @@ Note: the above diagram shows how claims flow from a Claim Source (e.g. database
 
 ### Profile Requirements 
 
-#### Client/Application Conformance (user-Agent/Relying Party)
+#### Client/Application Conformance 
 
-1.  Confidential clients MUST implement OIDC Authorization Code Flow (with
+1.  Confidential clients (keep the client secret secure - typically server-side web-applications) MUST implement OIDC Authorization Code Flow (with
     Confidential Client) <http://openid.net/specs/openid-connect-basic-1_0.html>
 
-2.  Public Clients MAY implement OIDC Implicit Flow
+2.  Public Clients (typically javascript browser clients or mobile apps) MAY implement OIDC Implicit Flow
     (<http://openid.net/specs/openid-connect-implicit-1_0.html>)
 
     1.  MUST use “id_token token” response_type for authentication.
@@ -167,19 +167,15 @@ Note: the above diagram shows how claims flow from a Claim Source (e.g. database
 4.  Protection of Confidential Information
 
     1.  Sensitive information (e.g., including client secrets, authorization
-        codes, id_tokens, access_tokens) will be passed over HTTP and MUST be
-        protected using transport layer security (TLS).
+        codes, id_tokens, access_tokens) will be passed over encrypted channels as per [OpenIDC Implementation Guide](https://openid.net/specs/openid-connect-basic-1_0.html).
 
     2.  All responses that contain tokens, secrets, or other sensitive
         information MUST include the following HTTP response header fields and
-        values:
+        values (as per [OpenIDC Implementation Guide](https://openid.net/specs/openid-connect-basic-1_0.html)). 
 
         1.  Cache-Control: no-store
 
         2.  Pragma: no-cache
-
-5.  An application MAY choose to use multiple access tokens coming from a set of
-    Brokers to get access to all the resources an application may need.
 
 #### Conformance for Brokers 
 
