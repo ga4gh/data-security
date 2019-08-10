@@ -4,9 +4,10 @@
 
 | Version | Date   | Editor                                     | Notes                   |
 |---------|--------|--------------------------------------------|-------------------------|
-| 0.92    | 2019-07| David Bernick                              | Made changes based on feedback from review|
-| 0.91    | 2019-06| Craig Voisin                               | Added terminology links |
-| 0.9     | 2017-  | Mikael Linden, Craig Voisin, David Bernick | Initial working version |
+| 0.9.3   | 2019-08| Craig Voisin                               | Support for RI's embedded tokens |
+| 0.9.2   | 2019-07| David Bernick                              | Made changes based on feedback from review |
+| 0.9.1   | 2019-06| Craig Voisin                               | Added terminology links |
+| 0.9.0   | 2017-  | Mikael Linden, Craig Voisin, David Bernick | Initial working version |
 
 ### Abstract
 
@@ -144,6 +145,8 @@ Clearinghouses MUST be protected using TLS.
 
 [OIDC Discovery](https://openid.net/specs/openid-connect-discovery-1_0.html)
 
+[OAuth 2.0 Threat Model and Security Considerations (RFC 6819)](https://tools.ietf.org/html/rfc6819).
+
 ### Flow of Claims 
 
 ![FlowOfClaims](https://github.com/ga4gh/data-security/blob/master/AAI/aai%20flow%20of%20claims.png) 
@@ -176,6 +179,8 @@ Note: the above diagram shows how claims flow from a Claim Source (e.g. database
         1.  Cache-Control: no-store
 
         2.  Pragma: no-cache
+        
+5.  MUST provide protection againt Client attacks as outlined in [RFC 6819](https://tools.ietf.org/html/rfc6819).
 
 #### Conformance for Brokers 
 
@@ -212,9 +217,12 @@ Note: the above diagram shows how claims flow from a Claim Source (e.g. database
 
     1.  When presented with a valid access token, the /userinfo endpoint MUST return claims in the specified [User Info Format](#claims-sent-to-data-holder-by-a-broker-via-userinfo) using either an `application/json` or `application/jwt` encoding.
 
-    2.  MAY implement the [OIDC claims request
+    2.  The Broker MUST include the claims_parameter_supported in the discovery service to indicate whether or not the Broker
+        supports the [OIDC claims request
         parameter](https://openid.net/specs/openid-connect-core-1_0.html#ClaimsParameter)
-        on /userinfo to subset which claim information will be returned. If the Broker does not support the OIDC claims request parameter, then the Broker MUST NOT include claims_parameter_supported in the discovery service and all claims for the provided scopes eligible for release to the requestor MUST be returned.
+        on /userinfo to subset which claim information will be returned. If the Broker does not support the OIDC claims request parameter, then all claims for the provided scopes eligible for release to the requestor MUST be returned.
+        
+4.  Broker MUST provide protection againt attacks as outlined in [RFC 6819](https://tools.ietf.org/html/rfc6819).
 
 #### Conformance for Claim Clearinghouses (consuming Access Tokens to give access to data)
 
@@ -257,6 +265,9 @@ Note: the above diagram shows how claims flow from a Claim Source (e.g. database
 
 4.  Claim Clearinghouses service can be a broker itself and would follow the
     [Conformance For Brokers](#conformance-for-brokers).
+
+5.  Claim Clearinghouses MUST provide protection againt attacks as outlined in
+    [RFC 6819](https://tools.ietf.org/html/rfc6819).
 
 ### GA4GH JWT Format
 
@@ -321,7 +332,7 @@ Payload:
 [“ga4gh”] : indicates that some RI claims are available beyond what is included in the access token but does not indicate which ones.
 [“ga4gh.ControlledAccessGrants”, “ga4gh.AffiliationAndRoles”] : indicates that only those two specific RI claims that exist within the “ga4gh” claim object would have additional content not included within the access token.
 
--   <ga4gh-spec-claims>: (optional) See description in `/userinfo` response below.
+-   \<ga4gh-spec-claims\>: (optional) See description in `/userinfo` response below.
 
 #### Claims sent to Data Holder by a Broker via /userinfo
 
@@ -337,7 +348,7 @@ Only the GA4GH claims truly must be as proscribed here. Refer to OIDC Spec for m
  ],
  "iat": 1553545136,
  "exp": 1553631536,
- \<ga4gh-spec-claims\>
+ <ga4gh-spec-claims>
 }
 ```
 -   `<ga4gh-spec-claims>`: Claims included as part of a GA4GH standard specification based on the scopes provided. This content MAY be incomplete (i.e. a subset of data elements) and more may be fetched as indicated by ga4gh_userinfo_claims. A non-normative example of `<ga4gh-spec-claims>` is: "ga4gh": {[ga4gh claims](https://docs.google.com/document/d/11Wg-uL75ypU5eNu2p_xh9gspmbGtmLzmdq5VfPHBirE)}
@@ -422,6 +433,10 @@ following:
 3.  Limit the life of refresh tokens or long lived keys before an auth challenge
     occurs or otherwise the refresh token simply fails to generate more access
     tokens.
+
+4.  Any signed tokens that may be stored by participating services MUST be
+    encrypted and follow best practices to limit the ability of administrators
+    from decrypting this content.
 
 Appendix
 --------
