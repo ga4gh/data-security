@@ -19,7 +19,7 @@ applicable to (but not limited to) the sharing of restricted datasets.
 In particular, this specification introduces a JSON Web Token
 ([JWT] (#relevant-specifications)) syntax for an access token to
 enable an OIDC provider (called an OIDC broker) to embed some key claims to the
-access token and to enable a downstream access token consumer (called a Claims
+access token and to enable a downstream access token consumer (called a Claim
 Clearinghouse) to locate the OIDC broker’s userinfo endpoint for requesting the
 rest of the claims. This specification is suggested to be used together with
 others that specify the syntax and semantics of the claims exchanged.
@@ -258,10 +258,16 @@ Note: the above diagram shows how claims flow from a Claim Source (e.g. database
                 content.
                 
         4.  An Identity Broker, by signing an access token provides its authority
-            that the GA4GH claims, within the token and those provided by the
-            /userinfo endpoint for the token, were collected correctly, are
-            ligitimently derived from their [Claim Sources](#term-claim-source),
-            and are presented accurately.
+            as the Root Claim Broker that the related GA4GH claims, within the
+            token and those provided by the /userinfo endpoint for the token,
+            were collected correctly, are ligitimently derived from their
+            [Claim Sources](#term-claim-source), and are presented accurately.
+            
+            When a Broker provides Embeded Tokens from other Brokers, it is
+            providing them "as is" (i.e. it provides no further authority as to
+            the quality, authenticity, or trustworthiness of the claims from such
+            tokens and any such assurances are made by the Root Claim Broker of
+            the Embedded Tokens alone).
 
 2.  Broker MUST support [OIDC Discovery
     spec](https://openid.net/specs/openid-connect-discovery-1_0.html)
@@ -320,9 +326,22 @@ Note: the above diagram shows how claims flow from a Claim Source (e.g. database
 
             1.  A metadata URL (.well-known URL) SHOULD be used here to use the
                 jwks_uri parameter.
+                
+            2.  This includes checking the signature of Embedded Tokens that
+                the Claim Clearinghouse may wish to use.
 
         2.  Check iss attribute to ensure a trusted broker has generated the
             token
+            
+            1.  If evaluating an Embedded Token, trust MUST be established based
+                on the signer of the Embedded Token itself. In Claim
+                Clearinghouses participating in open federation, the Claim
+                Clearinghouse does not necessarily have to trust the Broker that
+                includes Embedded Tokens within another token in order to use
+                the Embedded Token (although the Claim Clearinghouse MAY require
+                any other Broker involved in the propagation of the claims to
+                also be trusted if the Claim Clearinghouse needs to restrict its
+                trust model).
 
         3.  Check exp to ensure the token has not expired
 
