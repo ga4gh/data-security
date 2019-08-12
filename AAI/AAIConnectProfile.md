@@ -256,6 +256,12 @@ Note: the above diagram shows how claims flow from a Claim Source (e.g. database
                 "ga4gh_passports" claim even if the Passport’s
                 "ga4gh_userinfo_claims" strings hinted that such a claim may have
                 content.
+                
+        4.  An Identity Broker, by signing an access token provides its authority
+            that the GA4GH claims, within the token and those provided by the
+            /userinfo endpoint for the token, were collected correctly, are
+            ligitimently derived from their [Claim Sources](#term-claim-source),
+            and are presented accurately.
 
 2.  Broker MUST support [OIDC Discovery
     spec](https://openid.net/specs/openid-connect-discovery-1_0.html)
