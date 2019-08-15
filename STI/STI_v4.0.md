@@ -1,15 +1,15 @@
 Global Alliance for Genomics and Health Security Technology Infrastructure
 
-**Global Alliance for Genomics and Health**
+## Global Alliance for Genomics and Health
 
-**SECURITY TECHNOLOGY INFRASTRUCTURE**
+# SECURITY TECHNOLOGY INFRASTRUCTURE
 
 Standards and implementation practices for protecting the privacy and security
 of shared genomic and clinical data
 
-**VERSION 4.0, August 15, 2019**
+## VERSION 4.0, August 15, 2019
 
-**Outline**
+## **Outline**
 
 1.0 – Introduction
 
@@ -45,7 +45,7 @@ of shared genomic and clinical data
 
 6.0 – References
 
-**1. Introduction**
+## 1. Introduction
 
 This document describes the security technology infrastructure recommended for
 stakeholders (see section 2.4 below) in the *Global Alliance for Genomics and
@@ -113,9 +113,9 @@ and Technology Special Publication 800-53 [4] to accomplish the control and
 assurance objectives arising from identified risks concerning data sensitivity
 and integrity, and services availability.
 
-**2. Security Foundation**
+## 2. Security Foundation
 
-**2.1 Risk Assessment**
+### 2.1 Risk Assessment
 
 The *GA4GH Security Technology Infrastructure* is based on a balanced approach
 to risk management that relies on each individual stakeholder to help protect
@@ -151,7 +151,7 @@ risks. [5]
     controls, surreptitiously obtain or derive information in an unauthorized
     manner, or otherwise undermine the trust fabric of the GA4GH.
 
->   **2.2 Control Objectives**
+### 2.2 Control Objectives
 
 The *Privacy and Security Policy* specifically builds upon the *Framework’s*
 Core Element: “Privacy, Data Protection and Confidentiality”. The *Security
@@ -182,7 +182,7 @@ sub-section.
 -   *Control Objective 5*: Implement technology safeguards to prevent and detect
     potential security attacks and misuse of authorized accesses and privileges.
 
->   **2.3 Guiding Principles**
+### 2.3 Guiding Principles
 
 The *Security Technology Infrastructure* is consistent with the [Framework for
 Responsible Sharing of Genomic and Health-Related
@@ -190,7 +190,7 @@ Data](https://www.ga4gh.org/ga4ghtoolkit/regulatoryandethics/framework-for-respo
 and seeks to enforce the policy articulated in the [GA4GH Privacy and Security
 Policy](https://www.ga4gh.org/docs/ga4ghtoolkit/data-security/Privacy-and-Security-Policy.pdf)*.*
 
->   **2.4 Information Security Stakeholders**
+### 2.4 Information Security Stakeholders
 
 As a virtual ecosystem, the GA4GH assigns roles and responsibilities for
 information security to stakeholders within this ecosystem. From a security and
@@ -278,7 +278,7 @@ depend upon the specific services provided, as well as the contractual
 agreements established between infrastructure service providers and their
 customers.
 
-**3. Security Technology Building Blocks**
+## 3. Security Technology Building Blocks
 
 This section provides guidance on implementing security services within an
 operational stakeholder’s organization and across the GA4GH interconnected
@@ -288,7 +288,7 @@ Each stakeholder should perform a comprehensive risk assessment at least
 annually and should assess potential risk impacts whenever significant changes
 are made to network and system software or hardware.
 
-**3.1 Identity Management**
+### 3.1 Identity Management
 
 The effectiveness of the *Security Technology Infrastructure* ultimately is
 dependent upon the degree to which the actors (individuals and software
@@ -323,7 +323,7 @@ services) are known and can be trusted to conform to applicable policy.
     OpenID Connect (OIDC) claims [9], and data use ontology (DUO) [10] for
     representing security and privacy attributes of shared data.
 
-**3.2 Authorization and Access Control**
+### 3.2 Authorization and Access Control
 
 -   Each data user and data consumer will implement access control policies and
     mechanisms to ensure that only authorized users (human user or software
@@ -387,7 +387,7 @@ services) are known and can be trusted to conform to applicable policy.
     policies and procedures for adjudicating requests for access to data and
     services.
 
->   **3.3 Privacy Protection**
+### 3.3 Privacy Protection
 
 -   Each data steward and data user should use consent-management, access
     control, usage monitoring, auditing mechanisms, and other privacy-protecting
@@ -438,7 +438,7 @@ services) are known and can be trusted to conform to applicable policy.
     metadata associated with the data under its control, preferably using HL7
     FHIR provenance [21] and confidentiality [22] codes.
 
-**3.4 Audit Logs**
+### 3.4 Audit Logs
 
 -   Each data user is responsible for recording and maintaining a log of
     security-relevant events involving access to or use of application and data
@@ -474,7 +474,7 @@ services) are known and can be trusted to conform to applicable policy.
     capability to generate an accounting of accesses to and disclosures of data
     that may be associated with the individual’s identity.
 
->   **3.5 Data Integrity**
+### 3.5 Data Integrity
 
 -   Each data user is responsible for protecting the integrity of genomic and
     health-related data that it holds, uses, or transmits.
@@ -490,7 +490,7 @@ services) are known and can be trusted to conform to applicable policy.
 -   Each data steward is responsible for assuring that data provenance
     information is associated with data made available to consumers.
 
->   **3.6 Non-repudiation**
+### 3.6 Non-repudiation
 
 -   Each data user will have the capability to digitally sign content using a
     qualified electronic signature, as defined in Regulation (EU) No 910/2014 of
@@ -504,7 +504,7 @@ services) are known and can be trusted to conform to applicable policy.
     23 July 2014 on electronic identification and trust services for electronic
     transactions in the internal market and repealing Directive 1999/93/EC [6].
 
-**3.7 Cryptographic Controls**
+### 3.7 Cryptographic Controls
 
 -   Each data user will ensure that any cryptographic controls used are
     compliant with all applicable standards, agreements, laws, and regulations.
@@ -523,7 +523,7 @@ services) are known and can be trusted to conform to applicable policy.
     (e.g., homomorphic encryption [27], secure multi-party computation [28])
     when applicable and practical.
 
->   **3.8 Communications Security**
+### 3.8 Communications Security
 
 -   Each data user will ensure that communication channels are secured
     commensurate with the level of risk associated with the content being
@@ -536,9 +536,9 @@ services) are known and can be trusted to conform to applicable policy.
 -   Any electronic mail containing genomic, health-related, or other sensitive
     data will be secured (e.g., using S/MIME Version 2 [32, 33]).
 
->   **4. Operational Assurances**
+## 4. Operational Assurances
 
->   **4.1 Physical and Environmental Security**
+### 4.1 Physical and Environmental Security
 
 -   A data user that stores or processes genomic or health-related data is
     responsible for providing physical and environmental safeguards to protect
@@ -549,7 +549,7 @@ services) are known and can be trusted to conform to applicable policy.
     health-related data is responsible for assuring that business agreements
     include an obligation to provide physical and environmental data protection.
 
-**4.2 Service Assurances**
+### 4.2 Service Assurances
 
 All data users are responsible for implementing appropriate defense-in-depth
 architectural assurances that will enable them to provide a high level of
@@ -601,7 +601,7 @@ service expectations, including:
     permanently to minimize storage and an organization’s risk to a breach of
     data.
 
->   **4.3 Information Security Oversight and Accountability**
+### 4.3 Information Security Oversight and Accountability
 
 -   Each data steward will document the privacy and security practices and
     procedures it uses to make its data and services available within the GA4GH
@@ -682,7 +682,7 @@ service expectations, including:
     security evaluation that will include a final security risk assessment
     review and assurance testing, as appropriate.
 
-**4.4 Regulatory and Policy Compliance**
+### 4.4 Regulatory and Policy Compliance
 
 -   Each data user is responsible for assuring that data are transmitted,
     persisted, and protected in compliance with all applicable legal and ethical
@@ -712,7 +712,7 @@ service expectations, including:
     Infrastructure*, and to evaluate the effectiveness of implemented
     protections.
 
-**5. Conclusion**
+## 5. Conclusion
 
 This document provides a series of guidelines in an attempt to ensure that all
 products/standards coming out of GA4GH uphold the basic security best practices
@@ -722,14 +722,14 @@ changes have to be made in the meantime (e.g. new technologies that have to be
 contemplated). For those wishing to provide some feedback please contact us by
 email at: <security-leads@ga4gh.org>.
 
-**5.1. Next version inclusions**
+### 5.1. Next version inclusions
 
 The next revision of the “Security Technology Infrastructure” will include
 sections on developer code security such as secrets’ management, dependency
 analysis and static code analysis. It will also include a support document with
 guidance and language on runtime protections for running application code.
 
-**6. References**
+## 6. References
 
 [1] Global Alliance for Genomics and Health. *Privacy and Security Policy.* 26
 May 2015. Available from
