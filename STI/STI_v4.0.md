@@ -232,7 +232,7 @@ privacy perspective, the principal stakeholders are:
 4.  *Data Consumers* – individuals and software clients that use data and
     application services available to the GA4GH community.
 
-*Global Alliance* – a collaborative community of individuals and organizations
+*Global Alliance of Genomics and Health* – a collaborative community of individuals and organizations
 that collectively provide foundational policy, technology standards, leadership,
 and sustainment to enable the ethical and productive processing and use of
 genomic and health-related data.
