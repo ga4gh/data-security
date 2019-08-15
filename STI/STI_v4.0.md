@@ -257,6 +257,7 @@ responsibilities for implementing and operating in accordance with the GA4GH
 *Security Technology Infrastructure*.
 
 ![Fig 2](https://github.com/ga4gh/data-security/blob/master/STI/Fig.2-responsibilities.png)
+
 **Figure 2. Allocation of responsibility for security protections.** Those
 functions listed in the vertical block are shared by all operational
 stakeholders, albeit in a different way for each actor (e.g data consumers
