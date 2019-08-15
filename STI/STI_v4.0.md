@@ -237,7 +237,7 @@ that collectively provide foundational policy, technology standards, leadership,
 and sustainment to enable the ethical and productive processing and use of
 genomic and health-related data.
 
-![](media/bf2a4a8fe95aa1aec5100c374b6d46f2.png)
+![Fig 1](https://github.com/ga4gh/data-security/blob/master/STI/Fig.1-stakeholders.png)
 
 **Figure 1. Data security roles and their relationships.**
 
@@ -256,6 +256,8 @@ inappropriate activities, provide broader coverage and reduce key person risk.
 Figure 2 below is a graphical representation of the delegation of
 responsibilities for implementing and operating in accordance with the GA4GH
 *Security Technology Infrastructure*.
+
+![Fig 2](https://github.com/ga4gh/data-security/blob/master/STI/Fig.2-responsibilities.png)
 
 **Figure 2. Allocation of responsibility for security protections.** Those
 functions listed in the vertical block are shared by all operational
