@@ -238,7 +238,6 @@ and sustainment to enable the ethical and productive processing and use of
 genomic and health-related data.
 
 ![Fig 1](https://github.com/ga4gh/data-security/blob/master/STI/Fig.1-stakeholders.png)
-
 **Figure 1. Data security roles and their relationships.**
 
 The GA4GH expects that in many cases, one organization may behave in more than
@@ -258,7 +257,6 @@ responsibilities for implementing and operating in accordance with the GA4GH
 *Security Technology Infrastructure*.
 
 ![Fig 2](https://github.com/ga4gh/data-security/blob/master/STI/Fig.2-responsibilities.png)
-
 **Figure 2. Allocation of responsibility for security protections.** Those
 functions listed in the vertical block are shared by all operational
 stakeholders, albeit in a different way for each actor (e.g data consumers
