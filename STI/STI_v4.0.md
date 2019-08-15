@@ -14,10 +14,10 @@ of shared genomic and clinical data
 1.0 – [Introduction](#1-introduction)
 
 2.0 – [Security Foundation](#2-security-foundation)   
-2.1 – [Risk Assessment](#21-risk-assessment) 
-2.2 – [Privacy and Security Policy](#22-privacy-and-security-policy)   
+2.1 – [Risk Assessment](#21-risk-assessment)   
+2.2 – [Control Objectives](#22-control-objectives)   
 2.3 – [Guiding Principles](#23-guiding-principles)   
-2.4 – [Information Security Responsibilities](#24-information-security-responsibilities)
+2.4 – [Information Security Stakeholders](#24-information-security-stakeholders)
 
 3.0 – [Security Technology Building Blocks](#3-security-technology-building-blocks)  
 3.1 – [Identity Management](#31-identity-management)  
@@ -29,13 +29,13 @@ of shared genomic and clinical data
 3.7 – [Cryptographic Controls](#37-cryptographic-controls)  
 3.8 – [Communications Security](#38-communications-security)
 
-4.0 – [Operational Assurance](#4-operational-assurance)  
+4.0 – [Operational Assurances](#4-operational-assurances)  
 4.1 – [Physical and Environmental Security](#41-physical-and-environmental-security)  
 4.2 – [Service Assurances](#42-service-assurances)  
 4.3 – [Information Security Oversight and Accountability](#43-information-security-oversight-and-accountability)  
 4.4 – [Regulatory and Policy Compliance](#44-regulatory-and-policy-compliance)
 
-5.0 – [Conclusion](#5-conculsion)
+5.0 – [Conclusion](#5-conclusion)   
 5.1 – [Next Version Inclusions](#51-next-version-inclusions)
 
 6.0 – [References](#6-references)
