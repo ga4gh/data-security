@@ -423,7 +423,7 @@ This profile is agnostic to the format of the id_token.
 
 #### Access_token issued by broker
 
-Header - The `kid` parameter must be included and `alg` must be `RS256`.
+Header - The `kid` parameter must be included and `alg` must be `RS256`. Optionally, [jku](https://tools.ietf.org/html/rfc7515#section-4.1.2) can also be included.
 ```
 {
  "typ": "JWT",
