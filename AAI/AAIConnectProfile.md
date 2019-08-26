@@ -4,6 +4,7 @@
 
 | Version | Date   | Editor                                     | Notes                   |
 |---------|--------|--------------------------------------------|-------------------------|
+| 0.9.4   | 2019-08| Craig Voisin                               | Embedded tokens for signed RI Claim Objects |
 | 0.9.3   | 2019-08| Craig Voisin                               | Support for RI's embedded tokens |
 | 0.9.2   | 2019-07| David Bernick                              | Made changes based on feedback from review |
 | 0.9.1   | 2019-06| Craig Voisin                               | Added terminology links |
@@ -116,17 +117,6 @@ claims to be consumed by [Claim Clearinghouses](#jyzwlgoay5dq). Brokers may
 also be Claim Clearinghouses of other upstream Brokers (i.e. create a chain of
 brokers like in the [Flow of Claims diagram](#flow-of-claims)).
 
-<a name="term-root-claim-broker"></a>  **Root Claim Broker** - The original
-[Identity Broker](#term-identity-broker) that encodes a claim directly from a
-Claim Authority or directly from a data store that contains a Claim Authority’s
-assertion is the Root Claim Broker for that claim or claim object.
-
--   For example, an Identity Broker that reads assertions from a SQL database
-    and presents them as a claim in a token is the Root Claim Broker for such
-    a claim whereas an Identity Broker that receives a claim from an upstream
-    Identity Broker and propagates it within a newly minted token is not the
-    Root Claim Broker.
-
 <a name="term-claim-clearinghouse"></a> **OIDC Claim Clearinghouse service**
 (aka "Claim Clearinghouse" aka "claim consumer") - A consumer of Identity
 Broker claims (an OIDC Relying Party or a service downstream) that makes an
@@ -153,13 +143,13 @@ instance, a Data Access Committee. A Data owner is likely to be a claim
 source.
 
 <a name="term-embedded-token"></a> **Embedded Token** - A claim value or
-entry within a list or object of a claim that contains a JWT string that
-itself also meeting the requirements indicated in this specification and is
-signed by an upstream Identity Broker. This token MAY provide GA4GH claims
+entry within a list or object of a claim that contains a JWT string. It may
+be signed by an upstream Identity Broker or the same broker that signs the
+token in which it is embedded. This token MAY provide GA4GH claims
 within the token or available at the /userinfo endpoint. In this way, an
-Embedded Token can pass along GA4GH claims as needed while retaining the token
-signing authority of a Root Claim Broker despite being repackaged in downstream
-tokens.
+Embedded Token can pass along GA4GH claims as needed while retaining the
+signature of the original broker that introduced the claim or an object
+within the claim.
 
 ### Relevant Specifications
 
@@ -236,7 +226,7 @@ Note: the above diagram shows how claims flow from a Claim Source (e.g. database
             format](#ga4gh-jwt-format).
 
         2.  MAY have a limited set of claims with a larger list of claims
-            accessed in /userinfo
+            accessed in /userinfo.
 
         3.  Broker MUST include a "ga4gh_userinfo_claims" claim as an array of
             string claim names that can be retrieved via /userinfo in the
@@ -256,18 +246,6 @@ Note: the above diagram shows how claims flow from a Claim Source (e.g. database
                 "ga4gh_passports" claim even if the Passport’s
                 "ga4gh_userinfo_claims" strings hinted that such a claim may have
                 content.
-                
-        4.  An Identity Broker, by signing an access token provides its authority
-            as the Root Claim Broker that the related GA4GH claims, within the
-            token and those provided by the /userinfo endpoint for the token,
-            were collected correctly, are ligitimently derived from their
-            [Claim Sources](#term-claim-source), and are presented accurately.
-            
-            When a Broker provides Embeded Tokens from other Brokers, it is
-            providing them "as is" (i.e. it provides no further authority as to
-            the quality, authenticity, or trustworthiness of the claims from such
-            tokens and any such assurances are made by the Root Claim Broker of
-            the Embedded Tokens alone).
 
 2.  Broker MUST support [OIDC Discovery
     spec](https://openid.net/specs/openid-connect-discovery-1_0.html)
@@ -310,6 +288,47 @@ Note: the above diagram shows how claims flow from a Claim Source (e.g. database
 
     3.  A user's withdrawal of this agreement does not need to apply to
         previously generated access tokens.
+
+6.  If an Identity Broker includes Embedded Tokens as part of its token
+    payload or the /userinfo payload:
+
+    1. Embedded Tokens MUST contain one of the following, but not both:
+
+       1.  Header contains "jku"; or
+
+       2.  Body contains the "openid" scope: has a "scope" claim that contains
+           "openid" as a space-delimited substring.
+
+    2. If the Embedded Token header contains "jku":
+
+       1.  The token is not treated as an OIDC access token, but validity
+           checks outlined elsewhere in this specification still apply.
+
+       2.  The "exp" must not exceed 30 days after the "iat".
+
+    3. If the Embedded Token body contains the "openid" scope:
+
+       1.  The token MUST conform with the specification for access tokens,
+           except that the GA4GH Claims MAY be included directly within the
+           token and the /userinfo endpoint MAY not return any GA4GH claims.
+          
+       2.  If the "exp" exceeds the "iat" by more than 1 hour, the Identity
+           Broker MUST provide an introspection_endpoint and publish its URL
+           within the Discovery service endpoint. The introspection endpoint
+           MUST be able to support returning the revocation status of the
+           Embedded Token.
+
+7.  An Identity Broker, by signing an access token provides its authority to
+    the GA4GH claims, either within the token and those provided by the
+    /userinfo endpoint for the token but not including Embedded Tokens signed
+    by other parties, and asserts that these GA4GH claims were legitimately
+    derived from their [Claim Sources](#term-claim-source), and are presented
+    accurately.
+            
+    When a Broker provides Embeded Tokens from other Brokers, it is providing
+    them "as is" (i.e. it provides no further authority as to the quality,
+    authenticity, or trustworthiness of the claims from such tokens and any
+    such assurances are made by the issuer of the Embedded Token).
 
 #### Conformance for Claim Clearinghouses (consuming Access Tokens to give access to data)
 
@@ -375,22 +394,36 @@ Note: the above diagram shows how claims flow from a Claim Source (e.g. database
     1.  The Claim Clearinghouse MUST validate that all token checks pass (such as
         the token hasn’t expired) as described elsewhere in this specification and
         the underlying OIDC specifications.
+
+    2.  If the Embedded Token header contains "jku":
+
+        1.  Fetching the public keys using the "jku" is not required if a Claim
+            Clearinghouse has received the keys for the given "iss" via a trusted,
+            out-of-band process.
+
+        2.  If a Claim Clearinghouse is to use the "jku" URL to fetch the public
+            keys to verify the signature, then it MUST verify that the "jku" is
+            trusted for the given "iss" as part of the Claim Clearinghouse's
+            trusted issuer configuration. This check MUST be performed before
+            using the "jku" in a request.
+
+    3.  If the body contains the "openid" scope:
     
-    2.  When collecting claims from a nested set of /userinfo endpoints, the client
-        MUST detect and avoid fetch loops and avoid fetching redundant entries that
-        may appear at any level in the chain of Embedded Tokens. At a minimum,
-        detection of redundant fetches MUST be based on the "iss" claim within a
-        token (e.g. do not call /userinfo twice for the same "iss" to resolve the
-        set of claims within a single token). Additional filtering MAY also be
-        used.
+        1. The token MUST conform with the access token specification, except
+           that the /userinfo endpoint MAY not contain GA4GH claims.
+    
+        2. In addition to other validation checks, an Embedded Token is considered
+           invalid if it is more than 1 hour old (as per the "iat" claim) AND the
+           OIDC introspection endpoint does not confirm that the token is still
+           active. If the token is being multiple times by the same Claim
+           Clearinghouse, it SHOULD only call the introspect endpoint at most once
+           per hour on the same token.
 
-    3.  When a client resolves a set of claims, it MUST limit the number of RPC
-        calls to at most 20 /userinfo requests related to a single token, including
-        both direct Embedded Tokens and more deeply nested Embedded Tokens.
-
-7.  Clients MAY use access tokens, including Embedded Tokens, to occasionally
-    check which claims are still valid at the associated /userinfo endpoint in
-    order to establish whether the user still meets the access requirements.
+7.  <a name="claim-polling"></a> **Claim Polling**: Clients MAY use access tokens,
+    including Embedded Tokens, to occasionally check which claims are still valid
+    at the associated /introspect or /userinfo endpoint in order to establish
+    whether the user still meets the access requirements.
+    
     This MUST NOT be done more than once per hour (excluding any optional retries).
     Any request retries MUST include exponential backoff delays based on best
     practices (e.g. include appropriate jitter). At a minimum, the client MUST stop
@@ -410,6 +443,9 @@ Note: the above diagram shows how claims flow from a Claim Source (e.g. database
 
     4.  The /userinfo endpoint returns an HTTP status that is not retryable.
         For example, /userinfo returns HTTP status 400.
+
+    5.  The /introspect endpoint returns an HTTP status that is not retryable or
+        indicates that the token is no longer active.
 
 ### GA4GH JWT Format
 
@@ -444,6 +480,7 @@ Payload:
  ],
  "iat": 1553545136,
  "exp": 1553631536,
+ "jti": "xxxx-xxxx-xxxx",
  "scope": "openid \<ga4gh-spec-scopes\>",
  "ga4gh_userinfo_claims": ["claim_name_1", "claim_name_2.substructure_name"],
  <ga4gh-spec-claims>
@@ -467,6 +504,9 @@ Payload:
 
 -   exp: time expired
 
+-   jti: RECOMMENDED. a unique identifier for the token as per
+    [RFC7519 Section 4.1.7](https://tools.ietf.org/html/rfc7519#section-4.1.7)
+
 -   scope: scopes verified. Must include "openid". Will also include any
     \<ga4gh-spec-scopes\> needed for the GA4GH compliant environment (e.g.
     "ga4gh" is the [scope for RI
@@ -476,7 +516,7 @@ Payload:
 ["ga4gh"] : indicates that some RI claims are available beyond what is included in the access token but does not indicate which ones.
 ["ga4gh.ControlledAccessGrants", "ga4gh.AffiliationAndRoles"] : indicates that only those two specific RI claims that exist within the "ga4gh" claim object would have additional content not included within the access token.
 
--   \<ga4gh-spec-claims\>: (optional) See description in `/userinfo` response below.
+-   \<ga4gh-spec-claims\>: OPTIONAL. See description in `/userinfo` response below.
 
 #### Claims sent to Data Holder by a Broker via /userinfo
 
@@ -502,6 +542,40 @@ As a non-normative example, a valid \<ga4gh-spec-claims\> entry would be:
 
 >   "ga4gh": {[ga4gh
 >   claims](https://github.com/ga4gh-duri/ga4gh-duri.github.io/blob/master/researcher_ids/RI_Claims_V1.md#example-ri-claims)}
+
+#### Embedded Token issued by broker
+
+There are two supported formats for Embedded Tokens:
+
+1.   Conforms with the [Access Token](#access-token-issued-by-broker) format,
+     and MUST NOT contain a "jku" in the header. However, MAY NOT include
+     "aud", "idp", "scope", "ga4gh_userinfo_claims".
+     
+2.   Follows the [Access Token](#access-token-issued-by-broker) format, except
+     it does contain a "jku" in the header and MUST NOT have "openid" in the
+     "scope" claim. When a "jku" is present, only the following headers and
+     claims are REQUIRED:
+
+     ```
+     {
+       "typ": "JWT",
+       "alg": "RS256",
+       "jku": "https://\<jwk URL\>",
+       "kid": "xxxxx"
+     }.
+     {
+       "iss": "https://\<issuer website\>/",
+       "sub": "\<subject identifier\>",
+       "iat": 1553545136,
+       "exp": 1553631536
+     }.
+     \<signature\>
+     ```
+     
+     -   `jti` is RECOMMENDED.
+     
+     -   The /userinfo endpoint MAY NOT return `<ga4gh-spec-claims>` when
+         it is returned directly in the token itself.
 
 #### Authorization/Claims 
 
@@ -531,8 +605,12 @@ servers involved with access may employ one or more of the following options:
     being issued. Expiry dates would require users to log in occasionally via an
     Identity Broker in order to refresh claims. On a refresh, expiry timestamps
     can be extended from what the previous claim may have indicated.
+    
+2.  Provide GA4GH claims in the form of Embedded Tokens with the "openid" scope
+    to allow downstream Claim Clearinghouses to periodically check the
+    /introspect endpoint as per [Claim Polling](#claim-polling).
 
-2.  Provide refresh tokens at every level in the system hierarchy and use
+3.  Provide refresh tokens at every level in the system hierarchy and use
     short-lived access tokens. This may require all contributing system to
     support [OIDC offline
     access](https://openid.net/specs/openid-connect-core-1_0.html#OfflineAccess)
@@ -543,7 +621,7 @@ servers involved with access may employ one or more of the following options:
     level of delay to reach out to a user to try to resolve the issue may be
     desirable).
 
-3.  Provide some other means for downstream Claim Clearinghouses or other
+4.  Provide some other means for downstream Claim Clearinghouses or other
     systems that create downstream access tokens to be informed of a material
     change in upstream claims such that action can be taken to revoke the token,
     revoke the refresh token, or revoke the access privileges associated with
@@ -551,20 +629,22 @@ servers involved with access may employ one or more of the following options:
 
 #### Revoking Access from Bad Actors
 
-In the event that a system detects that a user is misbehaving or has falsified
-claims despite previous assurances that access was appropriate, there MUST be a
-mechanism to withdrawal access from existing tokens and update claims to prevent
-further tokens from being minted.
+In the event that a system or user detects that a specific user is misbehaving or
+has falsified claims despite previous assurances that access was appropriate,
+there MUST be a mechanism to withdrawal access from existing tokens and update
+claims to prevent further tokens from being minted.
 
 1.  Systems MUST have a means to revoke existing refresh tokens or remove
     permissions from access tokens that are sufficiently long-lived enough to
     warrant taking action.
     
-    -   If an access token, in the form of an Embedded Token or otherwise, is
-        long-lived, then the access token MUST be revocable, and once revoked
-        the /userinfo endpoint MUST NOT return claims. In this event, an
-        appropriate error status MUST be returned as per
+    -   If an access token is long-lived, then the access token MUST be
+        revocable, and once revoked the /userinfo endpoint MUST NOT return
+        claims. In this event, an appropriate error status MUST be returned as per
         [section 5.3.3 of the OIDC specification](https://openid.net/specs/openid-connect-core-1_0.html#UserInfoError).
+        
+    -   [Claim Polling](#claim-polling) can allow downstream systems to detect
+        token revocation and remove access accordingly.
 
 2.  A process MUST exist, manual or automated, to eventually remove related
     claims from the claim issuer’s repository.
@@ -574,8 +654,8 @@ further tokens from being minted.
 In order to limit damage of leaked tokens, systems MUST provide all of the
 following:
 
-1.  Be able to leverage mechanisms in place for revoking claims to also limit
-    exposure of leaked tokens.
+1.  Be able to leverage mechanisms in place for revoking claims and tokens for
+    for other purposes to also limit exposure of leaked tokens.
 
 2.  Follow best practices for the safekeeping of refresh tokens or longer lived
     tokens (should longer lived tokens be needed).
