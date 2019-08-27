@@ -548,7 +548,7 @@ As a non-normative example, a valid \<ga4gh-spec-claims\> entry would be:
 There are two supported formats for Embedded Tokens:
 
 1.   Conforms with the [Access Token](#access-token-issued-by-broker) format,
-     and MUST NOT contain a "jku" in the header. However, MAY NOT include
+     and MUST NOT contain a "jku" in the header. However, MUST NOT include
      "aud", "idp", "scope", "ga4gh_userinfo_claims".
      
 2.   Follows the [Access Token](#access-token-issued-by-broker) format, except
@@ -574,7 +574,7 @@ There are two supported formats for Embedded Tokens:
      
      -   `jti` is RECOMMENDED.
      
-     -   The /userinfo endpoint MAY NOT return `<ga4gh-spec-claims>` when
+     -   The /userinfo endpoint MUST NOT return `<ga4gh-spec-claims>` when
          it is returned directly in the token itself.
 
 #### Authorization/Claims 
