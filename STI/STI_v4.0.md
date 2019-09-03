@@ -773,7 +773,9 @@ Technology. June 2017. DOI: 10.6028/NIST.SP.800-63-3. Available from
 <https://pages.nist.gov/800-63-3/sp800-63-3.html> (accessed 23 April 2019).
 
 [9] Authentication and Authorization Infrastructure standard (AAI). Currently
-under submission to the GA4GH Product Review Committee.
+under submission to the GA4GH Product Review Committee. The standard is expected to be approved before 2020 and it should
+be assumed that it will be.
+
 
 [10] OpenID Connect. Available from <http://openid.net/connect/> (accessed 26
 April 2019).
