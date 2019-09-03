@@ -165,12 +165,7 @@ sub-section.
 -   *Control Objective 1*: Implement technology safeguards to minimize the risk of
     unauthorized access, use, or disclosure of confidential and private data.
 
--   *Control Objective 2*: Implement technology safeguards to minimize the risk of the discovery, 
-
-access, and use of individuals’ clinical and genomic data, and individual identities, other than as 
-
-authorized by applicable jurisdictional law, institutional policy, and individual consents.
-
+-   *Control Objective 2*: Implement technology safeguards to minimize the risk of the discovery, access, and use of individuals’ clinical and genomic data, and individual identities, other than as authorized by applicable jurisdictional law, institutional policy, and individual consents.
 
 -   *Control Objective 3*: Implement technology safeguards minimize the risk of
 and detect accidental or malicious corruption or destruction of data.
