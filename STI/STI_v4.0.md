@@ -94,6 +94,9 @@ Technology Infrastructure* defines guidelines, best practices, and standards for
 building and operating a technology infrastructure that adheres to the GA4GH
 *Framework* principles and enforces the GA4GH *Privacy and Security Policy*.
 
+![Fig 1](https://github.com/ga4gh/data-security/blob/master/STI/Figures/Fig.3-documents.png)
+**Figure 1. Framework, Data Privacy and Security Policy, and Security Tecnology Infrastructure relationships.**
+
 The technology infrastructure defined herein aims to reflect the prevailing
 state of practice, while enabling emerging approaches to processing sensitive
 information on a massive scale. It is intended to support a broad range of
@@ -159,22 +162,23 @@ Thus, the *Security Technology Infrastructure* is defined to meet the following
 five control objectives that respond to the risks identified in the above
 sub-section.
 
--   *Control Objective 1*: Implement technology safeguards to prevent
+-   *Control Objective 1*: Implement technology safeguards to minimize the risk of
     unauthorized access, use, or disclosure of confidential and private data.
 
--   *Control Objective 2*: Implement technology safeguards to prevent the
-    discovery, access, and use of individuals’ clinical and genomic data, and
-    individual identities, other than as authorized by applicable jurisdictional
-    law, institutional policy, and individual consents.
+-   *Control Objective 2*: Implement technology safeguards to minimize the risk of the discovery, 
 
--   *Control Objective 3*: Implement technology safeguards to prevent and detect
-    accidental or malicious corruption or destruction of data.
+access, and use of individuals’ clinical and genomic data, and individual identities, other than as 
 
--   *Control Objective 4*: Implement technology safeguards to prevent
-    disruption, degradation, and interruption of services enabling access to
-    data.
+authorized by applicable jurisdictional law, institutional policy, and individual consents.
 
--   *Control Objective 5*: Implement technology safeguards to prevent and detect
+
+-   *Control Objective 3*: Implement technology safeguards minimize the risk of
+and detect accidental or malicious corruption or destruction of data.
+
+-   *Control Objective 4*: Implement technology safeguards to minimize the risk of
+    disruption, degradation, and interruption of services enabling access to data.
+
+-   *Control Objective 5*: Implement technology safeguards to minimize the risk of and detect
     potential security attacks and misuse of authorized accesses and privileges.
 
 ### 2.3 Guiding Principles
@@ -237,8 +241,8 @@ that collectively provide foundational policy, technology standards, leadership,
 and sustainment to enable the ethical and productive processing and use of
 genomic and health-related data.
 
-![Fig 1](https://github.com/ga4gh/data-security/blob/master/STI/Fig.1-stakeholders.png)
-**Figure 1. Data security roles and their relationships.**
+![Fig 2](https://github.com/ga4gh/data-security/blob/master/STI/Fig.1-stakeholders.png)
+**Figure 2. Data security roles and their relationships.**
 
 The GA4GH expects that in many cases, one organization may behave in more than
 one operational stakeholder role. For example, a data steward may also be a data
@@ -256,9 +260,9 @@ Figure 2 below is a graphical representation of the delegation of
 responsibilities for implementing and operating in accordance with the GA4GH
 *Security Technology Infrastructure*.
 
-![Fig 2](https://github.com/ga4gh/data-security/blob/master/STI/Fig.2-responsibilities.png)
+![Fig 3](https://github.com/ga4gh/data-security/blob/master/STI/Fig.2-responsibilities.png)
 
-**Figure 2. Allocation of responsibility for security protections.** Those
+**Figure 3. Allocation of responsibility for security protections.** Those
 functions listed in the vertical block are shared by all operational
 stakeholders, albeit in a different way for each actor (e.g data consumers
 should notify if any breach occurs, but they are not responsible to act upon it)
@@ -293,10 +297,10 @@ services) are known and can be trusted to conform to applicable policy.
 -   Each API exposed by data and application services within the GA4GH community
     will have the capability to electronically authenticate its fully qualified
     domain name using a server certificate or, within the EU, a qualified
-    electronic signature, as defined in Regulation (EU) No 910/2014 of the
-    European Parliament and of the Council of 23 July 2014 on electronic
+    electronic signature, as defined in Regulation (EU) No 910/2014 of the
+    European Parliament and of the Council of 23 July 2014 on electronic
     identification and trust services for electronic transactions in the
-    internal market and repealing Directive 1999/93/EC [6].
+    internal market and repealing Directive 1999/93/EC [7].
 
 -   Each data user will authenticate the identity of individuals and software
     accessing data and services under that provider’s control.
@@ -308,15 +312,15 @@ services) are known and can be trusted to conform to applicable policy.
     (i.e., identity proofing) and authenticated will be consistent with the
     level of risk associated with the actions to be performed by that
     individual. Each data user is encouraged to use the US National Institute of
-    Standards and Technology (NIST) Special Publication 800-63-3 [7] as guidance
+    Standards and Technology (NIST) Special Publication 800-63-3 [8] as guidance
     in determining the appropriate level of assurance required for identity
     proofing, authentication, and federation.
 
 -   Data users are encouraged to make use of the *GA4GH Authentication and
-    Authorization Infrastructure* (AAI) standard [8] to federate identity
+    Authorization Infrastructure* (AAI) standard [9] to federate identity
     authentication and service authorization. Data users are also encouraged to
     use GA4GH standards for representing researcher identity attributes in
-    OpenID Connect (OIDC) claims [9], and data use ontology (DUO) [10] for
+    OpenID Connect (OIDC) claims [10], and data use ontology (DUO) [11] for
     representing security and privacy attributes of shared data.
 
 ### 3.2 Authorization and Access Control
@@ -352,11 +356,11 @@ services) are known and can be trusted to conform to applicable policy.
 
 -   Requests for access to data through an API should be communicated in a JSON
     structure, as specified in the *GA4GH Authentication and Authorization
-    Infrastructure* (AAI) standard [8], and should include, at a minimum: (1)
+    Infrastructure* (AAI) standard [9], and should include, at a minimum: (1)
     the authenticated identity and attributes of the requester (packaged in
-    OpenID Connect tokens, using GA4GH *Researcher Identity* semantics [11]);
+    OpenID Connect tokens, using GA4GH *Researcher Identity* semantics [12]);
     (2) identification of requested resource; and (3) a description of intended
-    use, represented in accordance with *GA4GH Data-Use* semantics [10].
+    use, represented in accordance with *GA4GH Data-Use* semantics [11].
 
 -   As a prerequisite to obtaining data access, each data consumer should have
     attested that (1) data will be used only by the authorized requester; and
@@ -375,7 +379,7 @@ services) are known and can be trusted to conform to applicable policy.
 -   OpenID Connect tokens issued by trusted identity providers or brokers may be
     used as a basis for authorizing data consumers access rights and privileges.
     For example, a Research Passport issued through the UK National Institute of
-    Health Research (NIHR) Research Passport System [12], might be used as the
+    Health Research (NIHR) Research Passport System [13], might be used as the
     basis for authorizing researchers access rights and privileges to passport
     holders.
 
@@ -394,11 +398,11 @@ services) are known and can be trusted to conform to applicable policy.
     sensitive data include both personal data, such as genomic and
     health-related data, and data considered private and confidential by the
     data holder or jurisdictional law, such as, for example, data governed under
-    the European General Data Protection Regulation (GDPR) [13], under the
-    Health Insurance Portability and Accountability Act (HIPAA) [14], under
+    the European General Data Protection Regulation (GDPR) [14], under the
+    Health Insurance Portability and Accountability Act (HIPAA) [15], under
     appendix J of the Security and Privacy Controls for Federal Information
-    Systems and Organizations [15], under the Australian Information
-    Commissioner Act (AICA) [16], or any other similar law.
+    Systems and Organizations [16], under the Australian Information
+    Commissioner Act (AICA) [17], or any other similar law.
 
 -   Each data steward should ensure that any procedure used to eliminate or
     minimize direct and/or indirect identifiers from data (e.g.,
@@ -421,9 +425,9 @@ services) are known and can be trusted to conform to applicable policy.
 -   Each data steward and data user should implement safeguards to reduce the
     likelihood that de-identified, pseudonymized, or anonymised data can be
     re-identified through the query results or data record linkage (to prevent
-    attacks such as Bustamante [17] and Homer [18]). The use of
-    privacy-preserving record linkage methods [19] and/or any other methods to
-    ensure differential privacy [20] are encouraged.
+    attacks such as Bustamante [18] and Homer [19]). The use of
+    privacy-preserving record linkage methods [20] and/or any other methods to
+    ensure differential privacy [21] are encouraged.
 
 -   Each data steward is responsible for obtaining the individual authorisations
     (e.g., consents) required by applicable law and institutional policy, and
@@ -432,7 +436,7 @@ services) are known and can be trusted to conform to applicable policy.
 
 -   Each data steward is responsible for updating provenance and confidentiality
     metadata associated with the data under its control, preferably using HL7
-    FHIR provenance [21] and confidentiality [22] codes.
+    FHIR provenance [22] and confidentiality [23] codes.
 
 ### 3.4 Audit Logs
 
@@ -443,7 +447,7 @@ services) are known and can be trusted to conform to applicable policy.
 -   For each security-relevant event, the data user should record the following
     data elements: user identity, type of event, date and time, success or
     failure indication, origination of event, name of affected data, system
-    component, or resource [23].
+    component, or resource [24].
 
 -   Each data user should retain the audit log history for at least one year,
     with a minimum of three months immediately available for analysis (for
@@ -477,8 +481,8 @@ services) are known and can be trusted to conform to applicable policy.
 
 -   Each data user that transmits or receives transmissions containing genomic
     or health-related data is encouraged to use any collision-resistant hash
-    function that complies with the Secure Hash Standard [24] by NIST (e.g.,
-    IETF SHA-2 [25]) to verify the integrity of the transmission.
+    function that complies with the Secure Hash Standard [25] by NIST (e.g.,
+    IETF SHA-2 [26]) to verify the integrity of the transmission.
 
 -   Each data steward is responsible for ensuring the accuracy and verifiability
     of data and associated metadata.
@@ -489,16 +493,16 @@ services) are known and can be trusted to conform to applicable policy.
 ### 3.6 Non-repudiation
 
 -   Each data user will have the capability to digitally sign content using a
-    qualified electronic signature, as defined in Regulation (EU) No 910/2014 of
-    the European Parliament and of the Council of 23 July 2014 on electronic
+    qualified electronic signature, as defined in Regulation (EU) No 910/2014 of
+    the European Parliament and of the Council of 23 July 2014 on electronic
     identification and trust services for electronic transactions in the
-    internal market and repealing Directive 1999/93/EC [6].
+    internal market and repealing Directive 1999/93/EC [7].
 
 -   Data users who offer downloadable software will digitally sign the
     downloadable files using a qualified electronic signature, as defined in
-    Regulation (EU) No 910/2014 of the European Parliament and of the Council of
-    23 July 2014 on electronic identification and trust services for electronic
-    transactions in the internal market and repealing Directive 1999/93/EC [6].
+    Regulation (EU) No 910/2014 of the European Parliament and of the Council of
+    23 July 2014 on electronic identification and trust services for electronic
+    transactions in the internal market and repealing Directive 1999/93/EC [7].
 
 ### 3.7 Cryptographic Controls
 
@@ -508,7 +512,7 @@ services) are known and can be trusted to conform to applicable policy.
 -   Each data user that stores genomic or health-related data will use strong
     encryption (cryptography based on industry-tested and accepted algorithms,
     along with strong key lengths and proper key-management practices) to
-    encrypt the data for storage [26].
+    encrypt the data for storage [27].
 
 -   Each data user will ensure that plaintext data encryption keys are stored
     outside the system in which data encrypted with those keys are persisted.
@@ -516,7 +520,7 @@ services) are known and can be trusted to conform to applicable policy.
     separately on the system storing data encryption keys.
 
 -   Data users are encouraged to use privacy-preserving encryption methods
-    (e.g., homomorphic encryption [27], secure multi-party computation [28])
+    (e.g., homomorphic encryption [28], secure multi-party computation [29])
     when applicable and practical.
 
 ### 3.8 Communications Security
@@ -526,11 +530,11 @@ services) are known and can be trusted to conform to applicable policy.
     transmitted.
 
 -   Each data user that transmits unencrypted genomic or health-related data
-    will protect its transmission (e.g., using IPsec [29, 30] or Transport Layer
-    Security (TLS) protocol [31]).
+    will protect its transmission (e.g., using IPsec [30, 31] or Transport Layer
+    Security (TLS) protocol [32]).
 
 -   Any electronic mail containing genomic, health-related, or other sensitive
-    data will be secured (e.g., using S/MIME Version 2 [32, 33]).
+    data will be secured (e.g., using S/MIME Version 2 [33, 34]).
 
 ## 4. Operational Assurances
 
@@ -623,7 +627,7 @@ service expectations, including:
     services, and the privacy of individuals who contribute their personal data.
 
 -   Each data user is strongly encouraged to engage an independent third party
-    to conduct penetration testing of, but not exclusively, its service
+    to conduct penetration testing of its service
     infrastructure at least annually. Any necessary remediation activities
     should be conducted as quickly as possible, and subjected to both functional
     and assurance testing.
@@ -639,7 +643,7 @@ service expectations, including:
     data loss, disruption of data and application services.
 
 -   Each operational stakeholder will report any breaches in a way consistent
-    with the *GA4GH Breach Response Strategy* [34]. Data stewards, in
+    with the *GA4GH Breach Response Strategy* [35]. Data stewards, in
     collaboration with the other operational stakeholders, will also respond to
     these breaches. In particular:
 
@@ -756,8 +760,8 @@ notification under Regulation 2016/679. Available from
 <https://ec.europa.eu/newsroom/document.cfm?doc_id=47741> (accessed 9 August
 2019)
 
-[7] European Commission. Regulation (EU) No 910/2014 of the European Parliament
-and of the Council of 23 July 2014 on electronic identification and trust
+[7] European Commission. Regulation (EU) No 910/2014 of the European Parliament
+and of the Council of 23 July 2014 on electronic identification and trust
 services for electronic transactions in the internal market and repealing
 Directive 1999/93/EC. Available from
 <https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=uriserv%3AOJ.L_.2014.257.01.0073.01.ENG>
