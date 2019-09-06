@@ -2,13 +2,14 @@
 ## GA4GH Authentication and Authorization Infrastructure (AAI) OpenID Connect Profile (DRAFT RFC)
 ---
 
-| Version | Date   | Editor                                     | Notes                   |
-|---------|--------|--------------------------------------------|-------------------------|
-| 0.9.4   | 2019-08| Craig Voisin                               | Embedded tokens for signed RI Claim Objects |
-| 0.9.3   | 2019-08| Craig Voisin                               | Support for RI's embedded tokens |
-| 0.9.2   | 2019-07| David Bernick                              | Made changes based on feedback from review |
-| 0.9.1   | 2019-06| Craig Voisin                               | Added terminology links |
-| 0.9.0   | 2017-  | Mikael Linden, Craig Voisin, David Bernick | Initial working version |
+| Version | Date    | Editor                                     | Notes                   |
+|---------|---------|--------------------------------------------|-------------------------|
+| 0.9.5   | 2019-09 | Craig Voisin                               | Update claim flow diagram and definitions |
+| 0.9.4   | 2019-08 | Craig Voisin                               | Embedded tokens for signed RI Claim Objects |
+| 0.9.3   | 2019-08 | Craig Voisin                               | Support for RI's embedded tokens |
+| 0.9.2   | 2019-07 | David Bernick                              | Made changes based on feedback from review |
+| 0.9.1   | 2019-06 | Craig Voisin                               | Added terminology links |
+| 0.9.0   | 2017-   | Mikael Linden, Craig Voisin, David Bernick | Initial working version |
 
 ### Abstract
 
@@ -75,7 +76,7 @@ a federated approach. An organization can still use this spec and not support
 multiple brokers, though they will find in that case that it’s just using a
 prescriptive version of OIDC.
 
-### Requirements Notation and Conventions 
+### Requirements Notation and Conventions
 
 This specification inherits terminology from the [OpenID
 Connect](http://openid.net/specs/openid-connect-core-1_0.html) and the [OAuth
@@ -87,11 +88,18 @@ be interpreted as described in [RFC2119](https://www.ietf.org/rfc/rfc2119.txt).
 
 ### Terminology
 
-<a name="term-claim-source"></a> **Claim source** service -- a service that
-manages claims and delivers them to OIDC identity brokers. For instance, a data
-owner.
+<a name="term-claim-management-system"></a> **Claim Management System** -- a service
+that allows [Claim Source](#term-claim-source) users to manage claims and update one
+or more [Claim Repositories](#term-claim-repository). For instance, a data owner
+of a controlled access dataset would typically interact with a Claim Management
+System to add or remove claims from a [Claim Repository](#term-claim-repository).
 
-<a name="term-claim-authority"></a> **Claim Authority** - the source
+<a name="term-claim-repository"></a> **Claim Repository** -- a service that
+manages the durable storage and retrieval of claims (such as a database),
+along with any metadata and/or audit logs related to claim creation,
+modification, and deletion.
+
+<a name="term-claim-source"></a> **Claim Source** (aka "Claim Authority") - the source
 organization of a claim assertion which at a minimum includes the organization
 associated with asserting the claim, although can optionally identify a
 sub-organization or a specific assignment within the organization that made the
@@ -142,6 +150,13 @@ data and, in that role, has capacity to decide who can access it. For
 instance, a Data Access Committee. A Data owner is likely to be a claim
 source.
 
+<a name="term-embedded-claim-signatory"></a> **Embedded Claim Signatory**
+(aka "Claim Signatory") -- a service that signs
+[Embedded Tokens](#term-embedded-token). This service may be an
+[Identity Broker](#term-identity-broker) itself, or it may have an
+Identity Broker use this service as part of collecting claims that the
+Broker includes in its tokens and/or /userinfo endpoint.
+
 <a name="term-embedded-token"></a> **Embedded Token** - A claim value or
 entry within a list or object of a claim that contains a JWT string. It may
 be signed by an upstream Identity Broker or the same broker that signs the
@@ -179,7 +194,12 @@ Clearinghouses MUST be protected using TLS.
 
 ![FlowOfClaims](https://github.com/ga4gh/data-security/blob/master/AAI/aai%20flow%20of%20claims.png) 
 
-Note: the above diagram shows how claims flow from a Claim Source (e.g. database) to a Claim Clearinghouse that uses them. This does not label all of the Relying Party relationships along this chain, where each recipient in the chain is typically -- but not always -- the relying party of the auth flow that fetches the claims from upstream.
+Note: the above diagram shows how claims flow from a
+[Claim Source](#term-claim-source) to a Claim Clearinghouse that uses
+them. This does not label all of the Relying Party relationships along
+this chain, where each recipient in the chain is typically -- but not
+always -- the relying party of the auth flow that fetches the claims from
+upstream.
 
 ### Profile Requirements 
 
@@ -595,23 +615,24 @@ revocation capabilities across highly federated and loosely coupled systems.
 During the lifetime of the downstream access token, some systems may require
 that claims are no longer inspected nor updated.
 
-In the event that a claim’s authority revokes a claim within the claim’s source
-system, downstream Brokers, Claim Clearinghouses, and other Authorization or
-Resource Servers MUST at a minimum provide a means to limit the lifespan of any
-given access tokens generated as a result of claims. To achieve this goal,
-servers involved with access may employ one or more of the following options:
+In the event that a [Claim Source](#term-claim-source) revokes a claim within
+a [Claim Repository](#term-claim-repository), downstream Brokers, Claim
+Clearinghouses, and other Authorization or Resource Servers MUST at a minimum
+provide a means to limit the lifespan of any given access tokens generated as a
+result of claims. To achieve this goal, servers involved with access may employ
+one or more of the following options:
 
-1.  Have each claim authorization be paired with an expiry date and a time of
-    being issued. Expiry dates would require users to log in occasionally via an
-    Identity Broker in order to refresh claims. On a refresh, expiry timestamps
-    can be extended from what the previous claim may have indicated.
+1.  Have each claim authorization be paired with an expiry timestamp. Expiry
+    timestamps would require users to log in occasionally via an Identity Broker
+    in order to refresh claims. On a refresh, expiry timestamps can be extended
+    from what the previous claim may have indicated.
     
 2.  Provide GA4GH claims in the form of Embedded Tokens with the "openid" scope
     to allow downstream Claim Clearinghouses to periodically check the
     /introspect endpoint as per [Claim Polling](#claim-polling).
 
 3.  Provide refresh tokens at every level in the system hierarchy and use
-    short-lived access tokens. This may require all contributing system to
+    short-lived access tokens. This may require all contributing systems to
     support [OIDC offline
     access](https://openid.net/specs/openid-connect-core-1_0.html#OfflineAccess)
     refresh tokens to deal with execution of processes where the user is no
@@ -647,7 +668,7 @@ claims to prevent further tokens from being minted.
         token revocation and remove access accordingly.
 
 2.  A process MUST exist, manual or automated, to eventually remove related
-    claims from the claim issuer’s repository.
+    claims from the [Claim Respository](#term-claim-respository).
 
 #### Limited Damage of Leaked Tokens
 
