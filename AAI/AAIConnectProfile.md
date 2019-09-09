@@ -192,15 +192,22 @@ Clearinghouses MUST be protected using TLS.
 
 [OAuth 2.0 Threat Model and Security Considerations (RFC 6819)](https://tools.ietf.org/html/rfc6819).
 
-### Flow of Claims 
+### Flow of Claims
+
+Embedded Claim Signatories, Identity Brokers, Claim Clearinghouses and their
+related clients can be configured to operate in many different ways. The diagram
+shows some non-normative ways these components can interoperate. Near the bottom
+of the diagram, three separate example application use cases are outlined sharing
+the same ecosystem of servers from above (see notes and use case descriptions
+below).
 
 ![FlowOfClaims](https://github.com/ga4gh/data-security/blob/master/AAI/aai%20flow%20of%20claims.png) 
 
 Notes:
 
--   The above diagram shows how claims flow from a
-    [Claim Source](#term-claim-source) to a Claim Clearinghouse that uses them.
-   
+-   The diagram above shows how claims flow from a
+    [Claim Source](#term-claim-source) to Claim Clearinghouses that uses them.
+
 -   This does not label all of the Relying Party relationships along this chain
     to the Identity Broker or Claim Signatory, where each recipient in the chain
     is typically -- but not always -- the relying party of the auth flow that
@@ -212,6 +219,29 @@ Notes:
 -   The interfaces between an Identity Broker and any Claim Signatories and/or
     Claim Repositories is beyond the scope of this version of the GA4GH AAI
     specification. It may be proprietary.
+
+Use Cases illistrated (related data flow arrows are color-coded by user color and
+labelled by the user -- A, B, C -- that made the original application request):
+
+-   `User A`: `Relying Party 1` is an application that uses claims directly from
+    brokers, then acts as a Claim Clearinghouse by checking to see if the user's
+    claims meet some policy requirements for `User A`'s request, and then takes
+    some action that requires specific authorization (e.g. allowing application
+    data to be returned as the response).
+
+-   `User B`: `Claim Clearinghouse 1` can exchange a GA4GH claims access token
+    for a native cloud access token to directly access data on the cloud. After
+    GA4GH claims are matched to access policies on `Hosted Dataset 1`, the
+    clearinghouse updates ACLs on the cloud data storage and returns a
+    cloud-specific access token (and refresh token) for the user to make requests
+    directly from the cloud data storage API.
+
+-   `User C`: `Claim Clearinghouse 2` and `Relying Party 3` work together to
+    perform a CRUD operation on a dataset, however the GA4GH Claims come via
+    `Claim Clearinghouse 1` and the GA4GH access token is allocated by
+    `Relying Party 3`. The GA4GH access token has an "azp" and "aud" referring
+    to `Claim Clearinghouse 2` (in addition to having an "aud" of
+    `Relying Party 3`) such that `Claim Clearinghouse 2` will accept the token.
 
 ### Profile Requirements 
 
