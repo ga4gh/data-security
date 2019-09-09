@@ -37,6 +37,7 @@ others that specify the syntax and semantics of the claims exchanged.
 - [Profile Requirements](#profile-requirements)
        - [Client/Application Conformance (user-Agent/Relying Party)](#clientapplication-conformance-user-agentrelying-party)
        - [Conformance for Brokers](#conformance-for-brokers)\
+       - [Conformance for Embedded Claim Signatories](#conformance-for-embedded-claim-signatories)\
        - [Conformance for Claim Clearinghouses (consuming Access Tokens to give access to data)](#conformance-for-claim-clearinghouses-consuming-access-tokens-to-give-access-to-data)
 - [GA4GH JWT Format](#ga4gh-jwt-format)
        - [Access_token issued by broker](#access_token-issued-by-broker)\
@@ -377,7 +378,7 @@ upstream.
     preferred to have the Claim Repository provide more accurate `iat`
     information.
 
-6.  By signing an Embedded Token, an Embedded Claim Signatory asserts that
+7.  By signing an Embedded Token, an Embedded Claim Signatory asserts that
     the GA4GH claims that token makes available were legitimately derived
     from their [Claim Sources](#term-claim-source), and the content is
     presented accurately (allowing for timestamps to be represented as
