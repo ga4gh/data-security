@@ -155,16 +155,17 @@ source.
 [Embedded Tokens](#term-embedded-token). This service may be an
 [Identity Broker](#term-identity-broker) itself, or it may have an
 Identity Broker use this service as part of collecting claims that the
-Broker includes in its tokens and/or /userinfo endpoint.
+Broker includes in responses from its /userinfo endpoint.
 
 <a name="term-embedded-token"></a> **Embedded Token** - A claim value or
 entry within a list or object of a claim that contains a JWT string. It may
-be signed by an upstream Identity Broker or the same broker that signs the
-token in which it is embedded. This token MAY provide GA4GH claims
-within the token or available at the /userinfo endpoint. In this way, an
-Embedded Token can pass along GA4GH claims as needed while retaining the
-signature of the original broker that introduced the claim or an object
-within the claim.
+be signed by an upstream
+[Embedded Claim Signatory](#term-embedded-claim-signatory) or the same
+Broker that mints the access token (i.e. a Broker that is also acting as
+an Embedded Claim Signatory). This Embedded Token MAY provide GA4GH claims
+within the token. In this way, an Embedded Token can pass along GA4GH
+claims as needed while retaining the signature of the original Embedded
+Claim Signatory that introduced the claim or a sub-object within the claim.
 
 ### Relevant Specifications
 
@@ -314,44 +315,73 @@ upstream.
     3.  A user's withdrawal of this agreement does not need to apply to
         previously generated access tokens.
 
-6.  If an Identity Broker includes Embedded Tokens as part of its /userinfo
-    payload:
-
-    1. Embedded Tokens MUST contain one of the following, but not both:
-
-       1.  Header contains `jku`; or
-
-       2.  Body contains the "openid" scope: has a `scope` claim that contains
-           "openid" as a space-delimited substring.
-
-    2. If the Embedded Token header contains `jku`:
-
-       1.  The token is not treated as an OIDC access token, but validity
-           checks outlined elsewhere in this specification still apply.
-
-       2.  The `exp` must not exceed 30 days after the `iat`.
-
-    3. If the Embedded Token body contains the "openid" scope:
-
-       1.  The token MUST conform with the specification for access tokens.
-          
-       2.  If the `exp` exceeds the `iat` by more than 1 hour, the Identity
-           Broker MUST provide an introspection_endpoint and publish its URI
-           within the Discovery service endpoint. The introspection endpoint
-           MUST be able to support returning the revocation status of the
-           Embedded Token.
-
-7.  By signing an access token, an Identity Broker asserts that the GA4GH
+6.  By signing an access token, an Identity Broker asserts that the GA4GH
     claims that token makes available at the /userinfo endpoint -- not
-    including any Embedded Tokens from other Brokers in those claims -- were
-    legitimately derived from their [Claim Sources](#term-claim-source), and
-    are presented accurately. These assurances apply to any Embedded Tokens
-    that the Identity Broker signs as well.
+    including any Embedded Tokens from other Claim Signatories in those claims
+    -- were legitimately derived from their
+    [Claim Sources](#term-claim-source), and are presented accurately. These
+    assurances apply to any Embedded Tokens that the Identity Broker signs as
+    well when it is acting as an Embedded Claim Signatory.
             
-    When a Broker provides Embeded Tokens from other Brokers, it is providing
-    them "as is" (i.e. it provides no additional assurance as to the quality,
-    authenticity, or trustworthiness of the claims from such tokens and any
-    such assurances are made by the issuer of the Embedded Token).
+    When a Broker provides Embeded Tokens from other Embedded Claim
+    Signatories, it is providing them "as is" (i.e. it provides no additional
+    assurance as to the quality, authenticity, or trustworthiness of the
+    claims from such tokens and any such assurances are made by the issuer of
+    the Embedded Token).
+
+#### Conformance for Embedded Claim Signatories
+
+1.  Embedded Tokens MUST contain one of the following, but not both:
+
+    1.  Header contains `jku`; or
+
+    2.  Body contains the "openid" scope: has a `scope` claim that contains
+        "openid" as a space-delimited substring.
+
+2.  If the Embedded Token header contains `jku`:
+
+    1.  The token is not treated as an OIDC access token, but validity
+        checks outlined elsewhere in this specification still apply.
+
+    2.  The `exp` must not exceed 30 days after the `iat`.
+
+3.  If the Embedded Token body contains the "openid" scope:
+
+    1.  The token MUST conform with the specification for access tokens.
+        The Claim Signatory MUST meet conformance requirements of an
+        Identity Broker as it pertains to Embedded Tokens with "openid"
+        scope.
+          
+    2.  If the `exp` exceeds the `iat` by more than 1 hour, the Claim
+        Signatory MUST provide an introspection_endpoint and publish its URI
+        within its Discovery service endpoint. The introspection endpoint
+        MUST be able to support returning the revocation status of the
+        Embedded Token.
+
+4.  Embedded Tokens MUST conform to the [Embedded Token
+    Format](#embedded-token-issued-by-embedded-claim-signatory).
+    
+5.  A Claim Signatory MAY reduce the `exp` timestamp to have the claim
+    expire sooner than any expiry that the source data may have in the
+    Claim Repository. As a non-normative example, if a claim expires in
+    25 years or even never expires explictly in the Claim Repository, the
+    Claim Signatory could set the `exp` to 14 days into the future to force
+    a user authentication flow to be redone if a downstream Claim
+    Clearinghouse is still interested in using such a claim.
+
+6.  If a Claim Repository does not include enough information to construct
+    an `iat` timestamp, a Claim Signatory MAY use a recent timestamp (for
+    example, the current timestamp) if the Claim Repository is kept up to
+    date such that the Claim Signatory can ensure that the claim is valid
+    at the time of minting the Embedded Token. However, generally it is
+    preferred to have the Claim Repository provide more accurate `iat`
+    information.
+
+6.  By signing an Embedded Token, an Embedded Claim Signatory asserts that
+    the GA4GH claims that token makes available were legitimately derived
+    from their [Claim Sources](#term-claim-source), and the content is
+    presented accurately (allowing for timestamps to be represented as
+    indicated above).
 
 #### Conformance for Claim Clearinghouses (consuming Access Tokens to give access to data)
 
@@ -438,7 +468,7 @@ upstream.
         2. In addition to other validation checks, an Embedded Token is considered
            invalid if it is more than 1 hour old (as per the `iat` claim) AND the
            OIDC introspection endpoint does not confirm that the token is still
-           active. If the token is being multiple times by the same Claim
+           active. If the token is being used multiple times by the same Claim
            Clearinghouse, it SHOULD only call the introspect endpoint at most once
            per hour on the same token.
 
@@ -557,7 +587,7 @@ Only the GA4GH claims truly must be as prescribed here. Refer to OIDC Spec for m
 ```
 -   `<ga4gh-spec-claims>`: Claims included as part of a GA4GH standard specification based on the scopes provided. This content MAY be incomplete (i.e. a subset of data elements) and more may be fetched as indicated by ga4gh_userinfo_claims. A non-normative example of `<ga4gh-spec-claims>` is: "ga4gh": {[ga4gh claims](https://github.com/ga4gh-duri/ga4gh-duri.github.io/blob/master/researcher_ids/RI_Claims_V1.md)}
 
-#### Embedded Token issued by broker
+#### Embedded Token issued by Embedded Claim Signatory
 
 There are two supported formats for Embedded Tokens:
 
@@ -611,16 +641,16 @@ During the lifetime of the downstream access token, some systems may require
 that claims are no longer inspected nor updated.
 
 In the event that a [Claim Source](#term-claim-source) revokes a claim within
-a [Claim Repository](#term-claim-repository), downstream Brokers, Claim
-Clearinghouses, and other Authorization or Resource Servers MUST at a minimum
-provide a means to limit the lifespan of any given access tokens generated as a
-result of claims. To achieve this goal, servers involved with access may employ
-one or more of the following options:
+a [Claim Repository](#term-claim-repository), downstream Claim Signatories,
+Brokers, Claim Clearinghouses, and other Authorization or Resource Servers MUST
+at a minimum provide a means to limit the lifespan of any given access tokens
+generated as a result of claims. To achieve this goal, servers involved with
+access may employ one or more of the following options:
 
-1.  Have each claim authorization be paired with an expiry timestamp. Expiry
-    timestamps would require users to log in occasionally via an Identity Broker
-    in order to refresh claims. On a refresh, expiry timestamps can be extended
-    from what the previous claim may have indicated.
+1.  Have each authorization claim or sub-object be paired with an expiry
+    timestamp. Expiry timestamps would require users to log in occasionally via
+    an Identity Broker in order to refresh claims. On a refresh, expiry
+    timestamps can be extended from what the previous claim may have indicated.
     
 2.  Provide GA4GH claims in the form of Embedded Tokens with the "openid" scope
     to allow downstream Claim Clearinghouses to periodically check the
@@ -662,8 +692,8 @@ claims to prevent further tokens from being minted.
     -   [Claim Polling](#claim-polling) can allow downstream systems to detect
         token revocation and remove access accordingly.
 
-2.  A process MUST exist, manual or automated, to eventually remove related
-    claims from the [Claim Respository](#term-claim-respository).
+2.  A process MUST exist, manual or automated, to eventually remove or invalidate
+    related claims from the [Claim Respository](#term-claim-respository).
 
 #### Limited Damage of Leaked Tokens
 
