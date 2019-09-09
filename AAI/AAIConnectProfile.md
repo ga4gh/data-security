@@ -196,12 +196,22 @@ Clearinghouses MUST be protected using TLS.
 
 ![FlowOfClaims](https://github.com/ga4gh/data-security/blob/master/AAI/aai%20flow%20of%20claims.png) 
 
-Note: the above diagram shows how claims flow from a
-[Claim Source](#term-claim-source) to a Claim Clearinghouse that uses
-them. This does not label all of the Relying Party relationships along
-this chain, where each recipient in the chain is typically -- but not
-always -- the relying party of the auth flow that fetches the claims from
-upstream.
+Notes:
+
+-   The above diagram shows how claims flow from a
+    [Claim Source](#term-claim-source) to a Claim Clearinghouse that uses them.
+   
+-   This does not label all of the Relying Party relationships along this chain
+    to the Identity Broker or Claim Signatory, where each recipient in the chain
+    is typically -- but not always -- the relying party of the auth flow that
+    fetches the claims from upstream.
+
+-   Claim Signatories are not always used, and in other cases they can be
+    deployed as part of the Identity Broker service.
+    
+-   The interfaces between an Identity Broker and any Claim Signatories and/or
+    Claim Repositories is beyond the scope of this version of the GA4GH AAI
+    specification. It may be proprietary.
 
 ### Profile Requirements 
 
