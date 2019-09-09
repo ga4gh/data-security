@@ -220,8 +220,11 @@ Notes:
     Claim Repositories is beyond the scope of this version of the GA4GH AAI
     specification. It may be proprietary.
 
-Use Cases illistrated (related data flow arrows are color-coded by user color and
-labelled by the user -- A, B, C -- that made the original application request):
+-   User-related data flow arrows are color-coded by user color and labelled by
+    the user (A, B, C) that made the original application request. For example,
+    `B1` is the first data flow initiated by `User B`.
+
+Use Cases illistrated:
 
 -   `User A`: `Relying Party 1` is an application that uses claims directly from
     brokers, then acts as a Claim Clearinghouse by checking to see if the user's
