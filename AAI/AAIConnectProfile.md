@@ -34,8 +34,8 @@ others that specify the syntax and semantics of the claims exchanged.
 - [Terminology](#terminology)
 - [Relevant Specifications](#relevant-specifications)
 - [Flow of Claims](#flow-of-claims)
-- [Profile Requirements](#profile-requirements)
-       - [Client/Application Conformance (user-Agent/Relying Party)](#clientapplication-conformance-user-agentrelying-party)
+- [Profile Requirements](#profile-requirements)\
+       - [Client/Application Conformance](#clientapplication-conformance)\
        - [Conformance for Brokers](#conformance-for-brokers)\
        - [Conformance for Embedded Claim Signatories](#conformance-for-embedded-claim-signatories)\
        - [Conformance for Claim Clearinghouses (consuming Access Tokens to give access to data)](#conformance-for-claim-clearinghouses-consuming-access-tokens-to-give-access-to-data)
