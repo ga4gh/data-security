@@ -384,8 +384,8 @@ Use Cases illistrated:
 
 2.  If the Embedded Token header contains `jku`:
 
-    1.  The token is not treated as an OIDC access token, but validity
-        checks outlined elsewhere in this specification still apply.
+    1.  The token is not treated as an access token, but validity checks
+        outlined elsewhere in this specification still apply.
 
     2.  The `exp` must not exceed 30 days after the `iat`.
 
