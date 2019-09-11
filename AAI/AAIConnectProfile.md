@@ -203,7 +203,7 @@ relying party of the auth flow that fetches the claims from upstream.
 
         2.  Pragma: no-cache
         
-5.  MUST provide protection againt Client attacks as outlined in
+5.  MUST provide protection against Client attacks as outlined in
     [RFC 6819](https://tools.ietf.org/html/rfc6819).
 
 #### Conformance for Brokers 
@@ -264,7 +264,7 @@ relying party of the auth flow that fetches the claims from upstream.
         does not support the OIDC claims request parameter, then all claim information
         for the provided scopes eligible for release to the requestor MUST be returned.
         
-4.  Broker MUST provide protection againt attacks as outlined in
+4.  Broker MUST provide protection against attacks as outlined in
     [RFC 6819](https://tools.ietf.org/html/rfc6819).
 
 5.  The user represented by the identity of the access token MUST have agreed to
@@ -420,7 +420,7 @@ relying party of the auth flow that fetches the claims from upstream.
 4.  Claim Clearinghouses service can be a Broker itself and would follow the
     [Conformance For Brokers](#conformance-for-brokers).
 
-5.  Claim Clearinghouses MUST provide protection againt attacks as outlined in
+5.  Claim Clearinghouses MUST provide protection against attacks as outlined in
     [RFC 6819](https://tools.ietf.org/html/rfc6819).
     
 6.  If making use of [Embedded Tokens](#term-embedded-token):
