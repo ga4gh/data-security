@@ -20,11 +20,11 @@ applicable to (but not limited to) the sharing of restricted datasets.
 
 In particular, this specification introduces a JSON Web Token
 ([JWT](#relevant-specifications)) syntax for an access token to
-enable an OIDC provider (called an OIDC broker) to embed some key claims to the
-access token and to enable a downstream access token consumer (called a Claim
-Clearinghouse) to locate the OIDC broker’s userinfo endpoint for requesting the
-rest of the claims. This specification is suggested to be used together with
-others that specify the syntax and semantics of the claims exchanged.
+enable an OIDC provider (called a Broker) allow a downstream access token
+consumer (called a Claim Clearinghouse) to locate the Broker’s /userinfo
+endpoint as a means to fetch GA4GH Claims. This specification is suggested to
+be used together with others that specify the syntax and semantics of the
+GA4GH Claims exchanged.
 
 ### Table of Contents
 
@@ -37,14 +37,15 @@ others that specify the syntax and semantics of the claims exchanged.
 - [**Profile Requirements**](#profile-requirements)\
        - [Client/Application Conformance](#clientapplication-conformance)\
        - [Conformance for Brokers](#conformance-for-brokers)\
-       - [Conformance for Embedded Claim Signatories](#conformance-for-embedded-claim-signatories)\
+       - [Conformance for Embedded Token Signatories](#conformance-for-embedded-token-signatories)\
        - [Conformance for Claim Clearinghouses (consuming Access Tokens to give access to data)](#conformance-for-claim-clearinghouses-consuming-access-tokens-to-give-access-to-data)
 - [**GA4GH JWT Format**](#ga4gh-jwt-format)\
        - [Access_token issued by broker](#access_token-issued-by-broker)\
        - [Claims sent to Data Holder by a Broker via /userinfo](#claims-sent-to-data-holder-by-a-broker-via-userinfo)\
+       - [Embedded Token issued by Embedded Token Signatory](#embedded-token-issued-by-embedded-token-signatory)\
        - [Authorization/Claims](#authorizationclaims)
 - [**Token Revocation**](#token-revocation)\
-       - [Claim Authority Revokes Claim](#claim-authority-revokes-claim)\
+       - [Claim Source Revokes Claim](#claim-source-revokes-claim)\
        - [Revoking Access from Bad Actors](#revoking-access-from-bad-actors)\
        - [Limited Damage of Leaked Tokens](#limited-damage-of-leaked-tokens)
 - [**Appendix**](#appendix)\
@@ -66,16 +67,16 @@ implemented by GA4GH Driver Projects, and shared broadly.
 To help assure the authenticity of identities used to access data from GA4GH
 Driver Projects, and other projects that adopt GA4GH standards, the Data Use and
 Researcher Identity (DURI) Work Stream is in the process of developing a
-standard of "claims". This standard assumes that some claims provided by brokers
-described in this document will conform to the DURI researcher-identity policy
-and standard. This standard does NOT assume that GA4GH Claims will be the only
-ones used.
+standard of GA4GH Claims. This standard assumes that some GA4GH Claims provided
+by Brokers described in this document will conform to the DURI researcher-identity
+policy and standard. This standard does NOT assume that DURI's GA4GH Claims will be
+the only ones used.
 
-In this standard, we aim at developing an approach that enables data holders’
-systems to recognize and accept identities from multiple brokers -- allowing for
-a federated approach. An organization can still use this spec and not support
-multiple brokers, though they will find in that case that it’s just using a
-prescriptive version of OIDC.
+This standard aims at developing an approach that enables data holders’
+systems to recognize and accept identities from multiple Brokers -- allowing for
+a federated approach. An organization can still use this specification and not
+support multiple Brokers, though they may find in that case that it’s just using
+a prescriptive version of OIDC.
 
 ### Requirements Notation and Conventions
 
@@ -89,6 +90,11 @@ be interpreted as described in [RFC2119](https://www.ietf.org/rfc/rfc2119.txt).
 
 ### Terminology
 
+<a name="term-ga4gh-claim> **GA4GH Claim** -- A JWT claim as defined by a GA4GH
+documented technical standard that is making use of this AAI specification. Note
+that GA4GH is not the organization making the claim nor taking responsibility for
+the claim as this is a reference to a GA4GH documented standard only.
+
 <a name="term-claim-management-system"></a> **Claim Management System** -- a service
 that allows [Claim Source](#term-claim-source) users to manage claims and update one
 or more [Claim Repositories](#term-claim-repository). For instance, a data owner
@@ -100,86 +106,78 @@ manages the durable storage and retrieval of claims (such as a database),
 along with any metadata and/or audit logs related to claim creation,
 modification, and deletion.
 
-<a name="term-claim-source"></a> **Claim Source** (aka "Claim Authority") - the source
-organization of a claim assertion which at a minimum includes the organization
-associated with asserting the claim, although can optionally identify a
-sub-organization or a specific assignment within the organization that made the
-claim.
+<a name="term-claim-source"></a> **Claim Source** -- the source organization of
+a claim assertion which at a minimum includes the organization associated with
+asserting the claim, although can optionally identify a sub-organization or a
+specific assignment within the organization that made the claim.
 
 -   This is NOT necessarily the organization that stores the claim, nor the
-    [Identity Broker](#term-identity-broker)’s organization that signs the
-    token; it is the organization that has the authority to assert the claim
-    on behalf of the user and is responsible for making and maintaining the
-    assertion.
+    [Broker](#term-broker)’s organization that signs the token; it is the
+    organization that has the authority to assert the claim on behalf of the
+    user and is responsible for making and maintaining the assertion.
 
-<a name="term-identity-provider"></a> **Identity provider (IdP)** - a
+<a name="term-identity-provider"></a> **Identity Provider (IdP)** -- a
 service that provides to users an identity, authenticates it; and provides
-claims to a broker using standard protocols, such as OpenID Connect, SAML or
+claims to a Broker using standard protocols, such as OpenID Connect, SAML or
 other federation protocols. Example: eduGAIN, Google Identity, Facebook, NIH
 ERACommons. IdPs MAY be claims sources.
 
-<a name="term-identity-broker"></a> **OIDC Identity Broker** (aka
-"Identity Broker", sometimes called an "IdP proxy") - An OIDC Provider service
-that authenticates a user (potentially by an Identity Provider), collects their
+<a name="term-broker"></a> **Broker** -- An OIDC Provider service that
+authenticates a user (potentially by an Identity Provider), collects their
 claims from internal and/or upstream claim sources and issues conformant OIDC
-claims to be consumed by [Claim Clearinghouses](#jyzwlgoay5dq). Brokers may
-also be Claim Clearinghouses of other upstream Brokers (i.e. create a chain of
-brokers like in the [Flow of Claims diagram](#flow-of-claims)).
+claims to be consumed by [Claim Clearinghouses](#term-claim-clearinghouse).
+Brokers may also be Claim Clearinghouses of other upstream Brokers (i.e.
+create a chain of Brokers like in the
+[Flow of Claims diagram](#flow-of-claims)).
 
-<a name="term-claim-clearinghouse"></a> **OIDC Claim Clearinghouse service**
-(aka "Claim Clearinghouse" aka "Claim Consumer") - A consumer of Identity
-Broker claims (an OIDC Relying Party or a service downstream) that makes an
-authorization decision at least in part based on inspecting GA4GH claims and
-allows access to a specific set of underlying resources in the target
-environment or platform. This abstraction allows for a variety of models for
-how systems consume these claims in order to provide access to resources.
-Access can be granted by either issuing new access tokens for downstream
-services (i.e. the Claim Clearinghouse may act like an authorization server)
-or by providing access to the underlying resources directly (i.e. the Claim
-Clearinghouse may act like a resource server). Some Claim Clearinghouses may
-issue access tokens that may contain a new set of GA4GH claims and/or a
-subset of GA4GH claims that they received for downstream consumption.
+<a name="term-claim-clearinghouse"></a> **Claim Clearinghouse** -- A consumer
+of Broker GA4GH claims (an OIDC Relying Party or a service downstream) that
+makes an authorization decision at least in part based on inspecting GA4GH
+claims and allows access to a specific set of underlying resources in the
+target environment or platform. This abstraction allows for a variety of
+models for how systems consume these claims in order to provide access to
+resources. Access can be granted by either issuing new access tokens for
+downstream services (i.e. the Claim Clearinghouse may act like an
+authorization server) or by providing access to the underlying resources
+directly (i.e. the Claim Clearinghouse may act like a resource server).
+Some Claim Clearinghouses may issue access tokens that may contain a new
+set of GA4GH claims and/or a subset of GA4GH claims that they received for
+downstream consumption.
 
-<a name="term-data-holder"></a> **Data Holder** - An organization that
+<a name="term-data-holder"></a> **Data Holder** -- An organization that
 protects a specific set of data. They hold data (or its copy) and respects
 and enforces the data owner's decisions on who can access it. A data owner
 can also be a data holder. Data holders run an
-[OIDC Claim Clearinghouse Server](#jyzwlgoay5dq) at a minimum.
+[Claim Clearinghouse Server](#term-claim-clearinghouse) at a minimum.
 
-<a name="term-data-owner"></a> **Data Owner** - An organization that manages
+<a name="term-data-owner"></a> **Data Owner** -- An organization that manages
 data and, in that role, has capacity to decide who can access it. For
-instance, a Data Access Committee. A Data owner is likely to be a claim
-source.
+instance, a Data Access Committee. A Data owner is likely to be a Claim
+Source.
 
-<a name="term-embedded-claim-signatory"></a> **Embedded Claim Signatory**
-(aka "Claim Signatory") -- a service that signs
-[Embedded Tokens](#term-embedded-token). This service may be an
-[Identity Broker](#term-identity-broker) itself, or it may have an
-Identity Broker use this service as part of collecting claims that the
-Broker includes in responses from its /userinfo endpoint.
+<a name="term-embedded-token-signatory"></a> **Embedded Token Signatory** --
+a service that signs [Embedded Tokens](#term-embedded-token). This service
+may be a [Broker](#term-broker) itself, or it may have a Broker use this
+service as part of collecting GA4GH Claims that the Broker includes in
+responses from its /userinfo endpoint.
 
-<a name="term-embedded-token"></a> **Embedded Token** - A claim value or
-entry within a list or object of a claim that contains a JWT string. It may
-be signed by an upstream
-[Embedded Claim Signatory](#term-embedded-claim-signatory) or the same
-Broker that mints the access token (i.e. a Broker that is also acting as
-an Embedded Claim Signatory). This Embedded Token MAY provide GA4GH claims
-within the token. In this way, an Embedded Token can pass along GA4GH
-claims as needed while retaining the signature of the original Embedded
-Claim Signatory that introduced the claim or a sub-object within the claim.
+<a name="term-embedded-token"></a> **Embedded Token** -- A GA4GH Claim value
+or entry within a list or object of a GA4GH Claim that contains a JWS string.
+It MUST be signed by an [Embedded Token Signatory](#term-embedded-token-signatory).
+An Embedded Token can pass GA4GH Claims through various Brokers as needed
+while retaining the token signature of the original Embedded Token Signatory.
 
 ### Relevant Specifications
 
 [OIDC Spec](http://openid.net/specs/openid-connect-core-1_0.html) -
 Authorization Code Flow and Implicit Flow will generate id_tokens and
-access_tokens from the OIDC Broker.
+access_tokens from the Broker.
 
-[JWT](https://tools.ietf.org/html/rfc7519) - The access_token is in JSON Web
-Token (JWT) format. Specific implementations MAY extend this structure with
-their own service-specific response names as top-level members of this JSON
-object. Recommended "extensions" are in the [Permissions](#authorizationclaims)
-section. The JWT specified here follows JWS headers specification.
-<https://tools.ietf.org/html/rfc7515>
+[JWT](https://tools.ietf.org/html/rfc7519) - Specific implementations MAY extend
+this structure with their own service-specific response names as top-level
+members of this JSON object. Recommended "extensions" are in the
+[Permissions](#authorizationclaims) section. The JWT specified here follows JWS
+headers specification from [RFC7515](https://tools.ietf.org/html/rfc7515).
 
 [JWS](https://tools.ietf.org/html/rfc7515) - JSON Web Signature (JWS) is the
 specific JWT to use for this spec.
@@ -197,20 +195,23 @@ Clearinghouses MUST be protected using TLS.
 ![FlowOfClaims](https://github.com/ga4gh/data-security/blob/master/AAI/aai%20flow%20of%20claims.png) 
 
 Note: the above diagram shows how claims flow from a
-[Claim Source](#term-claim-source) to a Claim Clearinghouse that uses
-them. This does not label all of the Relying Party relationships along
-this chain, where each recipient in the chain is typically -- but not
-always -- the relying party of the auth flow that fetches the claims from
-upstream.
+[Claim Source](#term-claim-source) to a
+[Claim Clearinghouse](#term-claim-clearinghouse) that uses them. This
+does not label all of the Relying Party relationships along this chain,
+where each recipient in the chain is typically -- but not always -- the
+relying party of the auth flow that fetches the claims from upstream.
 
 ### Profile Requirements 
 
 #### Client/Application Conformance 
 
-1.  Confidential clients (keep the client secret secure - typically server-side web-applications) MUST implement OIDC Authorization Code Flow (with
-    Confidential Client) <http://openid.net/specs/openid-connect-basic-1_0.html>
+1.  Confidential clients (keep the client secret secure - typically
+    server-side web-applications) MUST implement OIDC Authorization Code
+    Flow (with Confidential Client)
+    <http://openid.net/specs/openid-connect-basic-1_0.html>
 
-2.  Public Clients (typically javascript browser clients or mobile apps) MAY implement OIDC Implicit Flow
+2.  Public Clients (typically javascript browser clients or mobile apps)
+    MAY implement OIDC Implicit Flow
     (<http://openid.net/specs/openid-connect-implicit-1_0.html>)
 
     1.  MUST use "id_token token" response_type for authentication.
@@ -219,8 +220,10 @@ upstream.
 
 4.  Protection of Confidential Information
 
-    1.  Sensitive information (e.g., including client secrets, authorization
-        codes, id_tokens, access_tokens) will be passed over encrypted channels as per [OpenIDC Implementation Guide](https://openid.net/specs/openid-connect-basic-1_0.html).
+    1.  Sensitive information (e.g., including client secrets,
+        authorization codes, id_tokens, access_tokens) will be passed over
+        encrypted channels as per
+        [OpenIDC Implementation Guide](https://openid.net/specs/openid-connect-basic-1_0.html).
 
     2.  All responses that contain tokens, secrets, or other sensitive
         information MUST include the following HTTP response header fields and
@@ -230,15 +233,16 @@ upstream.
 
         2.  Pragma: no-cache
         
-5.  MUST provide protection againt Client attacks as outlined in [RFC 6819](https://tools.ietf.org/html/rfc6819).
+5.  MUST provide protection againt Client attacks as outlined in
+    [RFC 6819](https://tools.ietf.org/html/rfc6819).
 
 #### Conformance for Brokers 
 
-1.  Identity Brokers operate downstream from IdPs or provide their own IdP
-    service. They issue id_tokens and access_tokens (and potentially refresh
-    tokens) for consumption within the GA4GH compliant environment.
+1.  Brokers operate downstream from IdPs or provide their own IdP service. They
+    issue id_tokens and access_tokens (and potentially refresh tokens) for
+    consumption within the GA4GH compliant environment.
 
-    1.  A broker MUST issue both id_tokens and access_tokens.
+    1.  A Broker MUST issue both id_tokens and access_tokens.
 
         1.  This document makes no specifications for id_tokens.
 
@@ -251,20 +255,20 @@ upstream.
             token.
 
         3.  Broker MUST include a `ga4gh_userinfo_claims` claim as an array of
-            string claim names that can be retrieved via /userinfo in the
+            string GA4GH Claim names that can be retrieved via /userinfo in the
             [GA4GH-specified format](#ga4gh-jwt-format), or include the empty
-            list if there are no further claims.
+            list if there are no further GA4GH Claims.
             
-            1.  The Identity Broker MAY return a subset of claims indicated by
-                `ga4gh_userinfo_claims`. If a claim is an array or an object,
-                the Identity Broker MAY return a subset of elements or fields.
+            1.  The Broker MAY return a subset of GA4GH Claims indicated by
+                `ga4gh_userinfo_claims`. If a GA4GH Claim is encoded as an array
+                or an object, the Broker MAY return a subset of elements or fields.
 
             2.  For example, the user may not agree to release some claims or some
-                items within a list, or the token may have expired, or the broker
+                items within a list, or the token may have expired, or the Broker
                 may wish to filter tokens if it is enforcing a particular trust
                 model.
 
-            3.  Therefore the response from /userinfo may not have a GA4GH claim
+            3.  Therefore the response from /userinfo may not have a GA4GH Claim
                 even if the access token's `ga4gh_userinfo_claims` strings hinted
                 that such a claim may have content.
 
@@ -273,7 +277,7 @@ upstream.
 
     1.  MUST include and support proper
         [Metadata](https://openid.net/specs/openid-connect-discovery-1_0.html#ProviderMetadata)
-        (ie must have a jwks_uri as required that’s reachable by a Claim
+        (ie must have a `jwks_uri` as required that’s reachable by a Claim
         Clearinghouse)
 
 3.  Broker MUST support public-facing /userinfo endpoint
@@ -295,8 +299,8 @@ upstream.
 
 5.  The user represented by the identity of the access token MUST have agreed to
     release claims related to the requested scopes as part of generating tokens
-    that can expose GA4GH claims that represent user data or permissions.
-    Identity Brokers MUST adhere to
+    that can expose GA4GH Claims that represent user data or permissions.
+    Brokers MUST adhere to
     [section 3.1.2.4 of the OIDC specification](https://openid.net/specs/openid-connect-core-1_0.html#Consent).
 
     1.  The user represented by a Researcher Identity MUST approve the release
@@ -316,21 +320,21 @@ upstream.
     3.  A user's withdrawal of this agreement does not need to apply to
         previously generated access tokens.
 
-6.  By signing an access token, an Identity Broker asserts that the GA4GH
-    claims that token makes available at the /userinfo endpoint -- not
-    including any Embedded Tokens from other Claim Signatories in those claims
-    -- were legitimately derived from their
-    [Claim Sources](#term-claim-source), and are presented accurately. These
-    assurances apply to any Embedded Tokens that the Identity Broker signs as
-    well when it is acting as an Embedded Claim Signatory.
+6.  By signing an access token, an Broker asserts that the GA4GH Claims that
+    token makes available at the /userinfo endpoint -- not including any
+    Embedded Tokens from other Embedded Token Signatories in those claims --
+    were legitimately derived from their [Claim Sources](#term-claim-source),
+    and are presented accurately. These assurances apply to any Embedded Tokens
+    that the Broker signs as well when it is acting as an Embedded Token
+    Signatory.
             
-    When a Broker provides Embeded Tokens from other Embedded Claim
+    When a Broker provides Embeded Tokens from other Embedded Token
     Signatories, it is providing them "as is" (i.e. it provides no additional
     assurance as to the quality, authenticity, or trustworthiness of the
     claims from such tokens and any such assurances are made by the issuer of
-    the Embedded Token).
+    the Embedded Token, i.e. the Embedded Claim Signatory).
 
-#### Conformance for Embedded Claim Signatories
+#### Conformance for Embedded Token Signatories
 
 1.  Embedded Tokens MUST contain one of the following, but not both:
 
@@ -346,39 +350,45 @@ upstream.
 
     2.  The `exp` must not exceed 30 days after the `iat`.
 
+    3.  The `scope` claim, if included, MUST NOT contain "openid" as a
+        space-delimited substring.
+
 3.  If the Embedded Token body contains the "openid" scope:
 
     1.  The token MUST conform with the specification for access tokens.
-        The Claim Signatory MUST meet conformance requirements of an
-        Identity Broker as it pertains to Embedded Tokens with "openid"
-        scope.
+        The Embedded Token Signatory MUST meet conformance requirements of an
+        Broker as it pertains to Embedded Tokens with "openid" scope.
           
-    2.  If the `exp` exceeds the `iat` by more than 1 hour, the Claim
-        Signatory MUST provide an introspection_endpoint and publish its URI
-        within its Discovery service endpoint. The introspection endpoint
-        MUST be able to support returning the revocation status of the
-        Embedded Token.
+    2.  If the `exp` exceeds the `iat` by more than 1 hour, the Embedded
+        Token Signatory MUST provide an introspection_endpoint and publish
+        its URI within its Discovery service endpoint. The introspection
+        endpoint MUST be able to support returning the revocation status of
+        the Embedded Token.
+
+    3.  The header MUST NOT have `jku` specified.
 
 4.  Embedded Tokens MUST conform to the [Embedded Token
-    Format](#embedded-token-issued-by-embedded-claim-signatory).
+    Format](#embedded-token-issued-by-embedded-token-signatory).
     
-5.  A Claim Signatory MAY reduce the `exp` timestamp to have the claim
-    expire sooner than any expiry that the source data may have in the
-    Claim Repository. As a non-normative example, if a claim expires in
-    25 years or even never expires explictly in the Claim Repository, the
-    Claim Signatory could set the `exp` to 14 days into the future to force
-    a user authentication flow to be redone if a downstream Claim
-    Clearinghouse is still interested in using such a claim.
+5.  An Embedded Token Signatory MAY generate the `exp` timestamp to enforce
+    its policies and allow Claim Clearinghouses to understand the intent of
+    how long the claim may be used before needing to return to the Embedded
+    Token Signatory to refesh the claim. As a non-normative example, if a
+    GA4GH claim expires in 25 years (or even never expires explictly in the
+    Claim Repository), the Embedded Token Signatory could set the `exp` to
+    14 days into the future to force a user authentication flow to be redone
+    if a downstream Claim Clearinghouse is still interested in using such a
+    claim.
 
 6.  If a Claim Repository does not include enough information to construct
-    an `iat` timestamp, a Claim Signatory MAY use a recent timestamp (for
-    example, the current timestamp) if the Claim Repository is kept up to
-    date such that the Claim Signatory can ensure that the claim is valid
-    at the time of minting the Embedded Token. However, generally it is
-    preferred to have the Claim Repository provide more accurate `iat`
-    information.
+    an `iat` timestamp, an Embedded Token Signatory MAY use a recent
+    timestamp (for example, the current timestamp) if the Claim Repository is
+    kept up to date such that the Embedded Token Signatory can ensure that
+    the claim is valid at the time of minting the Embedded Token. However,
+    generally it is preferred to have the Claim Repository provide more
+    accurate `iat` information.
 
-7.  By signing an Embedded Token, an Embedded Claim Signatory asserts that
+7.  By signing an Embedded Token, an Embedded Token Signatory asserts that
     the GA4GH claims that token makes available were legitimately derived
     from their [Claim Sources](#term-claim-source), and the content is
     presented accurately (allowing for timestamps to be represented as
@@ -386,7 +396,7 @@ upstream.
 
 #### Conformance for Claim Clearinghouses (consuming Access Tokens to give access to data)
 
-1.  Claim Clearinghouses MUST trust at least one OIDC Identity Broker.
+1.  Claim Clearinghouses MUST trust at least one Broker.
 
     1.  Claim Clearinghouses MAY trust more than one Broker
 
@@ -403,7 +413,7 @@ upstream.
             2.  This includes checking the signature of Embedded Tokens that
                 the Claim Clearinghouse may wish to use.
 
-        2.  Check `iss` attribute to ensure a trusted broker has generated the
+        2.  Check `iss` attribute to ensure a trusted Broker has generated the
             token
             
             1.  If evaluating an Embedded Token, trust MUST be established based
@@ -423,13 +433,13 @@ upstream.
 
     2.  If treating the token as an opaque a Claim Clearinghouse MUST know in
         advance where to find a corresponding /userinfo. This limits the
-        functionality of accepting tokens from multiple OIDC brokers.
+        functionality of accepting tokens from multiple Brokers.
 
 3.  Claim Clearinghouse or downstream applications MAY use /userinfo endpoint (derived
     from the access_token JWT’s `iss`) to request claims and MAY make use
     of the [OIDC claims request
     parameter](https://openid.net/specs/openid-connect-core-1_0.html#ClaimsParameter)
-    to subset which claims are requested if supported by the Identity Broker for the
+    to subset which claims are requested if supported by the Broker for the
     claims in question.
 
     1.  Claim Clearinghouses or downstream applications MAY check for a
@@ -437,7 +447,7 @@ upstream.
         [GA4GH-specified format](#ga4gh-jwt-format) that may assist in making an
         access decision.
 
-4.  Claim Clearinghouses service can be a broker itself and would follow the
+4.  Claim Clearinghouses service can be a Broker itself and would follow the
     [Conformance For Brokers](#conformance-for-brokers).
 
 5.  Claim Clearinghouses MUST provide protection againt attacks as outlined in
@@ -511,7 +521,7 @@ JWTs follow <https://tools.ietf.org/html/rfc7515> (JWS).
 
 This profile is agnostic to the format of the id_token.
 
-#### Access_token issued by broker
+#### Access_token issued by Broker
 
 Header - The `kid` parameter must be included and `alg` must be `RS256`.
 ```
@@ -540,9 +550,14 @@ Payload:
 }
 ```
 -   iss: MUST be able to be appended with .well-known/openid-configuration to
-    get spec of broker.
+    get spec of Broker.
 
--   sub: authenticated user unique identifier. A broker MAY abstract the suggested user email address with a unique identifier provided it maintains a way to map the user. See the ELIXIR for an implementation example. The sub in this case is a unique identifier issued by ELIXIR that abstracts the user's "real" email. Downstream Clearinghouses will need to know how to handle the `sub` attribute.
+-   sub: authenticated user unique identifier. A Broker MAY abstract the
+    suggested user email address with a unique identifier provided it maintains
+    a way to map the user. See the ELIXIR for an implementation example. The
+    sub in this case is a unique identifier issued by ELIXIR that abstracts the
+    user's "real" email. Downstream Claim Clearinghouses will need to know how
+    to handle the `sub` attribute.
 
 -   idp: (optional) SHOULD contain the IDP the user used to auth with. Such as
     "Google". This does not have to be unique and can be used just to help
@@ -565,13 +580,28 @@ Payload:
     "ga4gh" is the [scope for RI
     claims](https://github.com/ga4gh-duri/ga4gh-duri.github.io/blob/master/researcher_ids/RI_Claims_V1.md#requirement-7)).
 
--   ga4gh_userinfo_claims: Required but MAY be an empty array. A list of GA4GH claim names that are available from the OIDC /userinfo endpoint as per the [User Info JWT Format](#claims-sent-to-data-holder-by-a-broker-via-userinfo) section of the specification. For complex GA4GH claims with substructure,  a dot-notation MAY be used to more precisely indicate which sub-claims contain content within the /userinfo endpoint. Non-normative examples include:
-["ga4gh"] : indicates that some RI claims are available beyond what is included in the access token but does not indicate which ones.
-["ga4gh.ControlledAccessGrants", "ga4gh.AffiliationAndRoles"] : indicates that only those two specific RI claims that exist within the "ga4gh" claim object would have additional content not included within the access token.
+-   ga4gh_userinfo_claims: Required but MAY be an empty array. A list of GA4GH
+    claim names that are available from the OIDC /userinfo endpoint as per the
+    [User Info JWT Format](#claims-sent-to-data-holder-by-a-broker-via-userinfo)
+    section of the specification. For complex GA4GH claims with substructure,  a
+    dot-notation MAY be used to more precisely indicate which sub-claims contain
+    content within the /userinfo endpoint. Non-normative examples include:
+    
+    -   ["ga4gh"] : indicates that some RI claims are available beyond what is
+        included in the access token but does not indicate which ones.
+
+    -   ["ga4gh.ControlledAccessGrants", "ga4gh.AffiliationAndRoles"] : indicates
+        that only those two specific RI claims that exist within the "ga4gh"
+        claim object would have additional content not included within the access
+        token.
 
 #### Claims sent to Data Holder by a Broker via /userinfo
 
-Only the GA4GH claims truly must be as prescribed here. Refer to OIDC Spec for more information. The /userinfo endpoint MAY use `application/json`, but `application/jwt` is preferred and `application/jwt` MUST be signed as per [UserInfo](https://openid.net/specs/openid-connect-core-1_0.html#UserInfoResponse) .
+Only the GA4GH claims truly must be as prescribed here. Refer to OIDC Spec for
+more information. The /userinfo endpoint MAY use `application/json` or
+`application/jwt`. If `application/jwt` is returned, it MUST be signed as per
+[UserInfo](https://openid.net/specs/openid-connect-core-1_0.html#UserInfoResponse).
+
 ```
 {
  "iss": "https://\<issuer website\>/",
@@ -586,20 +616,26 @@ Only the GA4GH claims truly must be as prescribed here. Refer to OIDC Spec for m
  <ga4gh-spec-claims>
 }
 ```
--   `<ga4gh-spec-claims>`: Claims included as part of a GA4GH standard specification based on the scopes provided. This content MAY be incomplete (i.e. a subset of data elements) and more may be fetched as indicated by ga4gh_userinfo_claims. A non-normative example of `<ga4gh-spec-claims>` is: "ga4gh": {[ga4gh claims](https://github.com/ga4gh-duri/ga4gh-duri.github.io/blob/master/researcher_ids/RI_Claims_V1.md)}
 
-#### Embedded Token issued by Embedded Claim Signatory
+-   `<ga4gh-spec-claims>`: Claims included as part of a GA4GH standard
+    specification based on the scopes provided. This content MAY be incomplete
+    (i.e. a subset of data elements) and more may be fetched as indicated by
+    `ga4gh_userinfo_claims`. A non-normative example of `<ga4gh-spec-claims>`
+    is: "ga4gh": {[ga4gh claims](https://github.com/ga4gh-duri/ga4gh-duri.github.io/blob/master/researcher_ids/RI_Claims_V1.md)}
+
+#### Embedded Token issued by Embedded Token Signatory
 
 There are two supported formats for Embedded Tokens:
 
 1.   Conforms with the [Access Token](#access-token-issued-by-broker) format,
-     and MUST NOT contain a `jku` in the header. However, MUST NOT include
-     `aud`, `idp`, `scope`, `ga4gh_userinfo_claims`.
+     and MUST NOT contain a `jku` in the header. However, the body MUST NOT
+     include `aud`, `idp`, `scope`, `ga4gh_userinfo_claims`. The body MUST
+     contain at least one GA4GH claim.
      
 2.   Follows the [Access Token](#access-token-issued-by-broker) format, except
      it does contain a `jku` in the header and MUST NOT have "openid" in the
-     `scope` claim. When a `jku` is present, only the following headers and
-     claims are REQUIRED:
+     `scope` claim. The body MUST contain at least one GA4GH claim. When a
+     `jku` is present, only the following headers and claims are REQUIRED:
 
      ```
      {
@@ -632,7 +668,7 @@ document by the DURI work stream.
 Token Revocation
 ----------------
 
-#### Claim Authority Revokes Claim
+#### Claim Source Revokes Claim
 
 Given that claims can cause downstream access tokens to be minted by Claim
 Clearinghouses and such downstream access tokens may have little knowledge or no
@@ -642,16 +678,16 @@ During the lifetime of the downstream access token, some systems may require
 that claims are no longer inspected nor updated.
 
 In the event that a [Claim Source](#term-claim-source) revokes a claim within
-a [Claim Repository](#term-claim-repository), downstream Claim Signatories,
-Brokers, Claim Clearinghouses, and other Authorization or Resource Servers MUST
-at a minimum provide a means to limit the lifespan of any given access tokens
-generated as a result of claims. To achieve this goal, servers involved with
-access may employ one or more of the following options:
+a [Claim Repository](#term-claim-repository), downstream Embedded Token
+Signatories, Brokers, Claim Clearinghouses, and other Authorization or Resource
+Servers MUST at a minimum provide a means to limit the lifespan of any given
+access tokens generated as a result of claims. To achieve this goal, servers
+involved with access may employ one or more of the following options:
 
-1.  Have each authorization claim or sub-object be paired with an expiry
-    timestamp. Expiry timestamps would require users to log in occasionally via
-    an Identity Broker in order to refresh claims. On a refresh, expiry
-    timestamps can be extended from what the previous claim may have indicated.
+1.  Have each GA4GH claim or sub-object be paired with an expiry timestamp.
+    Expiry timestamps would require users to log in occasionally via
+    an Broker in order to refresh claims. On a refresh, expiry timestamps can
+    be extended from what the previous claim may have indicated.
     
 2.  Provide GA4GH claims in the form of Embedded Tokens with the "openid" scope
     to allow downstream Claim Clearinghouses to periodically check the
@@ -751,7 +787,7 @@ of a full-broker. This is one possible way to use this spec.
 ![flow](https://github.com/ga4gh/data-security/blob/master/AAI/flow.png)
 
 In this diagram, the Data Owner Claim Clearinghouse, the Data Holder Claim
-Clearinghouse and the Identity Broker are all different entities. However, in
+Clearinghouse and the Broker are all different entities. However, in
 many cases, we expect the OIDC Broker and Data Owner to be the same entity and
 even be operated in the same OIDC stack.
 
@@ -761,7 +797,7 @@ Claim Clearinghouse services are:
 [Auth0](http://auth0.com), [Keycloak](http://keycloak.org), [Globus
 auth](https://www.globus.org/tags/globus-auth), [Okta](https://www.okta.com/),
 [Hydra](https://github.com/ory/hydra), [AWS
-Cognito](https://aws.amazon.com/cognito/). These can be Identity Brokers and/or
+Cognito](https://aws.amazon.com/cognito/). These can be Brokers and/or
 Claim Clearinghouses. They’re not usually only used for Claim consumption (akin
 to a OAuth2 Resource Server in many ways). NGINX and Apache both offer reverse
 proxies for "Claim Consumption Only" functionality --
@@ -786,14 +822,14 @@ then in some downstream application that protects data.*
 **Data Owners:**
 
 Data owners are expected to run an OIDC Broker that has /userinfo endpoint. A
-valid access token from a OIDC Identity Broker trusted by the data owner can be
+valid access token from a Broker trusted by the data owner can be
 used and claims sent back to the user wishing to access data.
 
 Data owners are not required to implement or operate an Identity Provider
 (though they may choose to do so) or an Identity Broker.
 
 Data Owners may choose to operate an OIDC Claim Clearinghouse Server configured
-to consume access_tokens from an upstream Identity Broker and then hand out JWT
+to consume access_tokens from an upstream Broker and then hand out JWT
 claims to relying parties and other Claim Clearinghouses.
 
 Some data owners will own the whole "chain" providing all of the different kinds
@@ -802,19 +838,19 @@ data owner and might provide Cloud Buckets and operate an IDP and Identity
 Broker to utilize ERACommons and other identity resources.
 
 A Data Owner should be able to, based on an Identity from an Identity Provider,
-express some sort of [permissions](#ga4gh-jwt-format) via the Clearinghouse
-Claims. It is the responsibility of the Data Owner to provide these permissions
-to their OIDC Claim Clearinghouse to be expressed claims within a standard
+express some sort of [permissions](#ga4gh-jwt-format) via the Claim Clearinghouse
+GA4GH claims. It is the responsibility of the Data Owner to provide these
+permissions to their Claim Clearinghouse to be expressed claims within a standard
 /userinfo process for downstream use.
 
-It is possible that the IdPs might have special claims. The OIDC Claim
-Clearinghouse being operated by the Data Owner should be "looking" for those
-claims and incorporating them, if desired, into the claims that it eventually
-sends to the user.
+It is possible that the IdPs might have special claims. The Claim Clearinghouse
+being operated by the Data Owner should be "looking" for those claims and
+incorporating them, if desired, into the claims that it eventually sends to the
+user.
 
 A data owner is expected to maintain the [operational
-security](https://github.com/ga4gh/data-security) of their OIDC Claim
-Clearinghouse Server and hold it to the GA4GH spec for [operational
+security](https://github.com/ga4gh/data-security) of their Claim Clearinghouse
+server and hold it to the GA4GH spec for [operational
 security](https://github.com/ga4gh/data-security). It is also acceptable to
 align the security to a known and accepted framework such as NIST-800-53,
 ISO-27001/ISO-27002.
