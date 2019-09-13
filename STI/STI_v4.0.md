@@ -94,7 +94,8 @@ Technology Infrastructure* defines guidelines, best practices, and standards for
 building and operating a technology infrastructure that adheres to the GA4GH
 *Framework* principles and enforces the GA4GH *Privacy and Security Policy*.
 
-![Fig 1](https://github.com/ga4gh/data-security/blob/master/STI/Figures/Fig.3-documents.png)
+![Fig 1](https://github.com/ga4gh/data-security/blob/dev/STI/Figures/Fig.1-documents%20structure.png)
+
 **Figure 1. Framework, Data Privacy and Security Policy, and Security Tecnology Infrastructure relationships.**
 
 The technology infrastructure defined herein aims to reflect the prevailing
@@ -236,7 +237,7 @@ that collectively provide foundational policy, technology standards, leadership,
 and sustainment to enable the ethical and productive processing and use of
 genomic and health-related data.
 
-![Fig 2](https://github.com/ga4gh/data-security/blob/master/STI/Fig.1-stakeholders.png)
+![Fig 2](https://github.com/ga4gh/data-security/blob/dev/STI/Figures/Fig.2-stakeholders.png)
 **Figure 2. Data security roles and their relationships.**
 
 The GA4GH expects that in many cases, one organization may behave in more than
@@ -255,7 +256,7 @@ Figure 2 below is a graphical representation of the delegation of
 responsibilities for implementing and operating in accordance with the GA4GH
 *Security Technology Infrastructure*.
 
-![Fig 3](https://github.com/ga4gh/data-security/blob/master/STI/Fig.2-responsibilities.png)
+![Fig 3](https://github.com/ga4gh/data-security/blob/dev/STI/Figures/Fig.3-responsibilities.png)
 
 **Figure 3. Allocation of responsibility for security protections.** Those
 functions listed in the vertical block are shared by all operational
