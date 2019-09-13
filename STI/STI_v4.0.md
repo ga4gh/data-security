@@ -94,7 +94,9 @@ Technology Infrastructure* defines guidelines, best practices, and standards for
 building and operating a technology infrastructure that adheres to the GA4GH
 *Framework* principles and enforces the GA4GH *Privacy and Security Policy*.
 
-![Fig 1](https://github.com/ga4gh/data-security/blob/dev/STI/Figures/Fig.1-documents%20structure.png =250x250)
+<p align="center">
+    <img src="https://github.com/ga4gh/data-security/blob/dev/STI/Figures/Fig.1-documents%20structure.png" width="450">
+</p>
 
 **Figure 1. Framework, Data Privacy and Security Policy, and Security Tecnology Infrastructure relationships.**
 
@@ -257,6 +259,7 @@ responsibilities for implementing and operating in accordance with the GA4GH
 *Security Technology Infrastructure*.
 
 ![Fig 3](https://github.com/ga4gh/data-security/blob/dev/STI/Figures/Fig.3-responsibilities.png)
+
 **Figure 3. Allocation of responsibility for security protections.** Those
 functions listed in the vertical block are shared by all operational
 stakeholders, albeit in a different way for each actor (e.g data consumers
