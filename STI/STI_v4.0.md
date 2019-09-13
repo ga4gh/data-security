@@ -2,7 +2,7 @@ Global Alliance for Genomics and Health Security Technology Infrastructure
 
 ## Global Alliance for Genomics and Health
 
-# SECURITY TECHNOLOGY INFRASTRUCTURE
+# GA4GH Data Security Guidelines
 
 Standards and implementation practices for protecting the privacy and security
 of shared genomic and clinical data
