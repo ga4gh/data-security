@@ -532,31 +532,28 @@ Payload:
  "scope": "openid <ga4gh-spec-scopes>"
 }
 ```
--   iss: MUST be able to be appended with .well-known/openid-configuration to
-    get spec of Broker.
+-   `iss`: REQUIRED. MUST be able to be appended with
+    .well-known/openid-configuration to get spec of Broker.
 
--   sub: authenticated user unique identifier.
+-   `sub`: REQUIRED. Authenticated user unique identifier.
 
--   idp: (optional) SHOULD contain the IDP the user used to auth with.
+-   `idp`: OPTIONAL. SHOULD contain the IDP the user used to auth with.
     A non-normative example is "google". This does not have to be unique and
     can be used just to help inform if that is what a data owner or data holder
     needs.
 
--   aud: MUST contain the Oauth Client ID of the relying party except when
-    allowing the token to be used as an open federation Embedded Token where
-    `aud` MUST NOT be included. When included, it MAY contain other strings or
-    identifiers as well.
+-   `aud`: REQUIRED. MUST contain the Oauth Client ID of the relying party.
 
--   iat: time issued.
+-   `iat`: REQUIRED. Time issued.
 
--   exp: time expired.
+-   `exp`: REQUIRED. Time expired.
 
--   jti: RECOMMENDED. a unique identifier for the token as per
+-   `jti`: RECOMMENDED. a unique identifier for the token as per
     [RFC7519 Section 4.1.7](https://tools.ietf.org/html/rfc7519#section-4.1.7)
 
--   scope: scopes verified. MUST include "openid". Will also include any
-    `<ga4gh-spec-scopes>` needed for the GA4GH compliant environment (e.g.
-    "ga4gh" is the [scope for RI
+-   `scope`: REQUIRED. Includes verified scopes. MUST include "openid". Will also
+    include any `<ga4gh-spec-scopes>` needed for the GA4GH compliant environment
+    (e.g. "ga4gh" is the [scope for RI
     claims](https://github.com/ga4gh-duri/ga4gh-duri.github.io/blob/master/researcher_ids/RI_Claims_V1.md#requirement-7)).
 
 #### Claims sent to Data Holder by a Broker via /userinfo
@@ -578,14 +575,15 @@ more information. The /userinfo endpoint MAY use `application/json` or
 }
 ```
 
--   Of the above /userinfo format, only `aud` and `<ga4gh-spec-claims>` are
-    OPTIONAL and all other JWT claims are REQUIRED.
+-   `iss` and `sub`: REQUIRED.
 
--   `<ga4gh-spec-claims>`: GA4GH Claims are generally included as part of
-    one or more GA4GH standard specifications based on the scopes provided.
-    Even when requested by the appropriate scopes, these GA4GH Claims may
-    not be included in the response for various reasons, such as if the user
-    does not have any GA4GH Claims. See
+-   `aud`: OPTIONAL.
+
+-   `<ga4gh-spec-claims>`: OPTIONAL. GA4GH Claims are generally included as
+    part of one or more GA4GH standard specifications based on the scopes
+    provided. Even when requested by the appropriate scopes, these GA4GH Claims
+    may not be included in the response for various reasons, such as if the
+    user does not have any GA4GH Claims. See
     [Authorization/Claims](#authorizationclaims) for an example of a GA4GH
     Claim.
 
@@ -602,9 +600,7 @@ with the following caveats:
 
 2.  The body MUST NOT include `aud`.
 
-3.  May not include `idp`.
-     
-4.  The body MUST contain at least one GA4GH Claim.
+3.  The body MUST contain at least one GA4GH Claim.
 
 ##### Embedded Document Token Format
 
@@ -637,15 +633,18 @@ Signatory.
    }.
    <signature>
    ```
+
+   -   `typ`: MUST be "JWT".
+
+   -   `alg`: MUST be "RS256".
      
-   -   `alg` MUST be "RS256".
-     
-   -   `jti`: a unique identifier for the token as per
+   -   `jti`: RECOMMENDED. A unique identifier for the token as per
        [RFC7519 Section 4.1.7](https://tools.ietf.org/html/rfc7519#section-4.1.7)
        is RECOMMENDED.
      
-   -   `<ga4gh-spec-claims>`: one or more GA4GH Claims MUST be provided.
-       See [Authorization/Claims](#authorizationclaims) for an example.
+   -   `<ga4gh-spec-claims>`: REQUIRED. One or more GA4GH Claims MUST be
+       provided. See [Authorization/Claims](#authorizationclaims) for an
+       example.
 
 #### Authorization/Claims 
 
