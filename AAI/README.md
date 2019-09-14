@@ -75,7 +75,7 @@ of a full-broker. This is one possible way to use this spec.
 
 In this diagram, the Data Owner Claim Clearinghouse, the Data Holder Claim
 Clearinghouse and the Broker are all different entities. However, in
-many cases, we expect the OIDC Broker and Data Owner to be the same entity and
+many cases, we expect the Broker and Data Owner to be the same entity and
 even be operated in the same OIDC stack.
 
 Examples of implementations that provide both Identity Brokering and Data Owner
@@ -108,7 +108,7 @@ then in some downstream application that protects data.*
 
 **Data Owners:**
 
-Data owners are expected to run an OIDC Broker that has /userinfo endpoint. A
+Data owners are expected to run an Broker that has /userinfo endpoint. A
 valid access token from a Broker trusted by the data owner can be
 used and claims sent back to the user wishing to access data.
 
