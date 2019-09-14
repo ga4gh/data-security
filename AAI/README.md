@@ -115,7 +115,7 @@ used and claims sent back to the user wishing to access data.
 Data owners are not required to implement or operate an Identity Provider
 (though they may choose to do so) or an Broker.
 
-Data Owners may choose to operate an OIDC Claim Clearinghouse Server configured
+Data Owners may choose to operate a Claim Clearinghouse server configured
 to consume access_tokens from an upstream Broker and then hand out JWT
 claims to relying parties and other Claim Clearinghouses.
 
