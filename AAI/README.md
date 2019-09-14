@@ -113,7 +113,7 @@ valid access token from a Broker trusted by the data owner can be
 used and claims sent back to the user wishing to access data.
 
 Data owners are not required to implement or operate an Identity Provider
-(though they may choose to do so) or an Identity Broker.
+(though they may choose to do so) or an Broker.
 
 Data Owners may choose to operate an OIDC Claim Clearinghouse Server configured
 to consume access_tokens from an upstream Broker and then hand out JWT
@@ -121,8 +121,8 @@ claims to relying parties and other Claim Clearinghouses.
 
 Some data owners will own the whole "chain" providing all of the different kinds
 of brokers and will also operate Claim Clearinghouses. For instance, NIH is a
-data owner and might provide Cloud Buckets and operate an IDP and Identity
-Broker to utilize ERACommons and other identity resources.
+data owner and might provide Cloud Buckets and operate an IDP and Broker to
+utilize ERACommons and other identity resources.
 
 A Data Owner should be able to, based on an Identity from an Identity Provider,
 express some sort of [permissions](#ga4gh-jwt-format) via the Claim Clearinghouse
