@@ -274,12 +274,16 @@ relying party of the auth flow that fetches the claims from upstream.
 
 6.  By signing an access token, an Broker asserts that the GA4GH Claims that
     token makes available at the /userinfo endpoint -- not including any
-    Embedded Tokens from other Embedded Token Signatories in those claims --
-    were legitimately derived from their [Claim Sources](#term-claim-source),
-    and are presented accurately. These assurances apply to any Embedded Tokens
-    that the Broker signs as well when it is acting as an Embedded Token
-    Signatory.
-            
+    Embedded Tokens -- were legitimately derived from their [Claim
+    Sources](#term-claim-source), and the content is presented and/or
+    transformed without misrepresenting the original intent.
+    
+    When a Broker acts as a Embedded Token Signatory and signs Embedded
+    Tokens, then those signatures adhere to the same assertion criteria as
+    outlined in the [Conformance for Embedded Token
+    Signatories](#conformance-for-embedded-token-signatories)
+    section of this specification.
+
     When a Broker provides Embeded Tokens from other Embedded Token
     Signatories, it is providing them "as is" (i.e. it provides no additional
     assurance as to the quality, authenticity, or trustworthiness of the
@@ -323,9 +327,10 @@ relying party of the auth flow that fetches the claims from upstream.
             more than 1 hour, the Embedded Token Signatory should expect
             Claim Clearinghouses to use [Claim Polling](#claim-polling) and
             MUST provide a means to revoke Embedded Access Tokens. The
-            /userinfo endpoint MUST return an HTTP status 403 when provided
-            an Embedded Access Token that has completed the revocation
-            process.
+            /userinfo endpoint MUST return an HTTP status 401 as per
+            [RFC6750 section 3.1](https://tools.ietf.org/html/rfc6750#section-3.1)
+            when provided an Embedded Access Token that has completed the
+            revocation process.
 
         6.  The JWS header MUST NOT have `jku` specified.
 
@@ -366,19 +371,12 @@ relying party of the auth flow that fetches the claims from upstream.
     be redone if a downstream Claim Clearinghouse is still interested in using
     such a claim after this period elapses.
 
-3.  If a Claim Repository does not include enough information to construct
-    an `iat` timestamp, an Embedded Token Signatory MAY use a recent
-    timestamp (for example, the current timestamp) if the Claim Repository is
-    kept up to date such that the Embedded Token Signatory can ensure that
-    the claim is valid at the time of minting the Embedded Token. However,
-    generally it is preferred to have the Claim Repository provide more
-    accurate `iat` information.
-
-4.  By signing an Embedded Token, an Embedded Token Signatory asserts that
+3.  By signing an Embedded Token, an Embedded Token Signatory asserts that
     the GA4GH claims made available by the token were legitimately derived
     from their [Claim Sources](#term-claim-source), and the content is
-    presented accurately (allowing for timestamps to be represented as
-    indicated above).
+    presented and/or transformed without misrepresenting the original intent,
+    except for accommodating for `exp` timestamps to be represented as
+    indicated above.
 
 #### Conformance for Claim Clearinghouses (consuming Access Tokens to give access to data)
 
@@ -441,7 +439,17 @@ relying party of the auth flow that fetches the claims from upstream.
         the token hasn’t expired) as described elsewhere in this specification and
         the underlying OIDC specifications.
 
-    2.  If the Embedded Token header contains `jku`:
+    2.  If making use of [Embedded Access Tokens](#term-embedded-access-token):
+    
+        1. Token checks MUST be performed to ensure it complies with the access
+           token specification.
+    
+        2. In addition to other validation checks, an Embedded Token is considered
+           invalid if it is more than 1 hour old (as per the `iat` claim) AND
+           [Claim Polling](#claim-polling) does not confirm that the token is still
+           valid (e.g. provide a success status code).
+                      
+    3.  If making use of [Embedded Document Tokens](#term-embedded-document-token):
 
         1.  Fetching the public keys using the `jku` is not required if a Claim
             Clearinghouse has received the keys for the given `iss` via a trusted,
@@ -451,29 +459,17 @@ relying party of the auth flow that fetches the claims from upstream.
             keys to verify the signature, then it MUST verify that the `jku` is
             trusted for the given `iss` as part of the Claim Clearinghouse's
             trusted issuer configuration. This check MUST be performed before
-            using the `jku` in a request.
-
-    3.  If the body contains the "openid" scope:
-    
-        1. The token MUST conform with the access token specification, except
-           that the /userinfo endpoint MAY not contain GA4GH claims.
-    
-        2. In addition to other validation checks, an Embedded Token is considered
-           invalid if it is more than 1 hour old (as per the `iat` claim) AND the
-           OIDC introspection endpoint does not confirm that the token is still
-           active. If the token is being used multiple times by the same Claim
-           Clearinghouse, it SHOULD only call the introspect endpoint at most once
-           per hour on the same token.
+            calling the `jku` endpoint.
 
 7.  <a name="claim-polling"></a> **Claim Polling**: Clients MAY use access tokens,
     including Embedded Tokens, to occasionally check which claims are still valid
-    at the associated /introspect or /userinfo endpoint in order to establish
-    whether the user still meets the access requirements.
+    at the associated /userinfo endpoint in order to establish whether the user
+    still meets the access requirements.
     
-    This MUST NOT be done more than once per hour (excluding any optional retries).
-    Any request retries MUST include exponential backoff delays based on best
-    practices (e.g. include appropriate jitter). At a minimum, the client MUST stop
-    checking once any of the following occurs:
+    This MUST NOT be done more than once per hour (excluding any optional retries)
+    per Claim Clearinghouse. Any request retries MUST include exponential backoff
+    delays based on best practices (e.g. include appropriate jitter). At a
+    minimum, the client MUST stop checking once any of the following occurs:
 
     1.  The system can reasonably determine that authorization related to these
         claims is not longer needed by the user. For example, all downstream cloud
@@ -490,8 +486,12 @@ relying party of the auth flow that fetches the claims from upstream.
     4.  The /userinfo endpoint returns an HTTP status that is not retryable.
         For example, /userinfo returns HTTP status 400.
 
-    5.  The /introspect endpoint returns an HTTP status that is not retryable or
-        indicates that the token is no longer active.
+    5.  If the /userinfo endpoint returns an updated set of GA4GH Claims (this is
+        an OPTIONAL feature of an Embedded Token Signatory), then the Claim
+        Clearinghouse MUST use the updated GA4GH Claims and ignore the original
+        GA4GH Claim values in the Embedded Access Token. If the Claim
+        Clearinghouse is unable to adjust for the the updated GA4GH Claims, then
+        it MUST act as though the the token was revoked.
 
 ### GA4GH JWT Format
 
