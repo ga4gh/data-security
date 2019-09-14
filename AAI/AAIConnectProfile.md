@@ -681,14 +681,15 @@ Servers MUST at a minimum provide a means to limit the lifespan of any given
 access tokens generated as a result of claims. To achieve this goal, servers
 involved with access may employ one or more of the following options:
 
-1.  Have each GA4GH claim or sub-object be paired with an expiry timestamp.
+1.  Have each GA4GH Claim or sub-object be paired with an expiry timestamp.
     Expiry timestamps would require users to log in occasionally via
     an Broker in order to refresh claims. On a refresh, expiry timestamps can
     be extended from what the previous claim may have indicated.
     
-2.  Provide GA4GH claims in the form of Embedded Tokens with the "openid" scope
-    to allow downstream Claim Clearinghouses to periodically check the
-    /introspect endpoint as per [Claim Polling](#claim-polling).
+2.  Provide GA4GH Claims in the form of [Embedded Access
+    Tokens](#term-embedded-access-token) to allow downstream Claim
+    Clearinghouses to periodically check the validity of the token via calls
+    to the /userinfo endpoint as per [Claim Polling](#claim-polling).
 
 3.  Provide refresh tokens at every level in the system hierarchy and use
     short-lived access tokens. This may require all contributing systems to
