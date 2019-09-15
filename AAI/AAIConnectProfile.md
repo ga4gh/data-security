@@ -301,8 +301,8 @@ relying party of the auth flow that fetches the claims from upstream.
         and issues OIDC-compliant access tokens in a specific format that can
         be used as an Embedded Token.
     
-        1.  The Embedded Token body MUST contain the "openid" scope. That is,
-            it has a `scope` JWT claim that contains "openid" as a
+        1.  The Embedded Token payload MUST contain the "openid" scope. That
+            is, it has a `scope` JWT claim that contains "openid" as a
             space-delimited substring.
             
         2.  Embedded Token is a JWS string and follows the [Embedded Access
@@ -598,9 +598,9 @@ with the following caveats:
      
 1.  MUST NOT contain a `jku` in the header.
 
-2.  The body MUST NOT include `aud`.
+2.  The payload claims MUST NOT include `aud`.
 
-3.  The body MUST contain at least one GA4GH Claim.
+3.  The payload claims MUST contain at least one GA4GH Claim.
 
 ##### Embedded Document Token Format
 
@@ -614,8 +614,8 @@ Signatory.
 3. MUST NOT contain "openid" as a space-delimited substring of the `scope`
    JWT claim, if the `scope` claim is provided.
    
-4. The following headers and JWT claims in the body are REQUIRED (here
-   shown in its decoded form):
+4. The following headers and JWT claims in the payload are REQUIRED
+   (here shown in its decoded JSON form):
 
    ```
    {
