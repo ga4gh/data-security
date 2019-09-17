@@ -593,14 +593,50 @@ There are two supported formats for Embedded Tokens.
 
 ##### Embedded Access Token Format
 
-Follows the [Broker access token](#access-token-issued-by-broker) format
-with the following caveats:
-     
-1.  MUST NOT contain a `jku` in the header.
+Header format:
 
-2.  The payload claims MUST NOT include `aud`.
+```
+{
+ "typ": "JWT",
+ "alg": "RS256",
+ "kid": "<key-identifier>"
+}
+```
 
-3.  The payload claims MUST contain at least one GA4GH Claim.
+where:
+
+1.  `alg` MUST be "RS256".
+
+2.  The header MUST NOT contain a `jku`.
+
+Payload format:
+
+```
+{
+ "iss": "https://<issuer-website>/",
+ "sub": "<subject-identifier>",
+ "iat": <seconds-since-epoch>,
+ "exp": <seconds-since-epoch>,
+ "jti": <token-identifier>,
+ "scope": "openid <ga4gh-spec-scopes>"
+ <ga4gh-spec-claims>
+}
+```
+
+where:
+
+1.  The standard JWT payload claims `iss`, `sub`, `iat` are
+    all REQUIRED.
+
+2.  `jti` is RECOMMENDED.
+
+3.  `scope` is REQUIRED and MUST NOT contain "openid" as a
+    space-delimited string.
+
+4.  The payload claims MUST contain at least one GA4GH Claim
+    (`<ga4gh-spec-claims>`).
+
+5.  The payload claims MUST NOT include `aud`.
 
 ##### Embedded Document Token Format
 
