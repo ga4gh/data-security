@@ -542,7 +542,8 @@ Payload:
     can be used just to help inform if that is what a data owner or data holder
     needs.
 
--   `aud`: REQUIRED. MUST contain the Oauth Client ID of the relying party.
+-   `aud`: OPTIONAL. If provided, it MUST contain the Oauth Client ID of the
+    relying party.
 
 -   `iat`: REQUIRED. Time issued.
 
