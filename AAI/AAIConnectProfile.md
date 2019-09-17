@@ -554,8 +554,8 @@ Payload:
 
 -   `scope`: REQUIRED. Includes verified scopes. MUST include "openid". Will also
     include any `<ga4gh-spec-scopes>` needed for the GA4GH compliant environment
-    (e.g. "ga4gh" is the [scope for RI
-    claims](https://github.com/ga4gh-duri/ga4gh-duri.github.io/blob/master/researcher_ids/RI_Claims_V1.md#requirement-7)).
+    (e.g. "ga4gh_passport_v1" is the [scope for GA4GH
+    Passports](https://github.com/ga4gh-duri/ga4gh-duri.github.io/blob/master/researcher_ids/RI_Claims_V1.md#requirement-7)).
 
 #### Claims sent to Data Holder by a Broker via /userinfo
 
@@ -626,13 +626,13 @@ Payload format:
 
 where:
 
-1.  The standard JWT payload claims `iss`, `sub`, `iat` are
+1.  The standard JWT payload claims `iss`, `sub`, `iat`, `exp` are
     all REQUIRED.
 
 2.  `jti` is RECOMMENDED.
 
-3.  `scope` is REQUIRED and MUST NOT contain "openid" as a
-    space-delimited string.
+3.  `scope` is REQUIRED and MUST be a string containing a space-delimited set of
+    scope names. "openid" MUST be included as a scope name.
 
 4.  The payload claims MUST contain at least one GA4GH Claim
     (`<ga4gh-spec-claims>`).
@@ -694,8 +694,8 @@ in as `<ga4gh-spec-claims>` within the JWT formatting sections of this
 specification, is:
 
 ```
-"ga4gh": {
-  <[ga4gh RI claims value](https://github.com/ga4gh-duri/ga4gh-duri.github.io/blob/master/researcher_ids/RI_Claims_V1.md)>
+"ga4gh_passport_v1": {
+  <[ga4gh passport value](https://github.com/ga4gh-duri/ga4gh-duri.github.io/blob/master/researcher_ids/RI_Claims_V1.md)>
 }
 ```
 
