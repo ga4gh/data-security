@@ -384,7 +384,7 @@ relying party of the auth flow that fetches the claims from upstream.
 
     1.  Claim Clearinghouses MAY trust more than one Broker
 
-2.  Claim Clearinghouses MUST either check the validity of the JWT or treat the
+2.  Claim Clearinghouses MUST either check the validity of the access token or treat the access
     token as opaque.
 
     1.  If treating the token as a JWT a Claim Clearinghouse:
