@@ -772,7 +772,7 @@ claims to prevent further tokens from being minted.
 In order to limit damage of leaked tokens, systems MUST provide all of the
 following:
 
-1.  Be able to leverage mechanisms in place for revoking claims and tokens for
+1.  Be able to leverage mechanisms in place for revoking claims and tokens 
     for other purposes to also limit exposure of leaked tokens.
 
 2.  Follow best practices for the safekeeping of refresh tokens or longer lived
