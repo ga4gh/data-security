@@ -288,16 +288,16 @@ relying party of the auth flow that fetches the claims from upstream.
     Signatories, it is providing them "as is" (i.e. it provides no additional
     assurance as to the quality, authenticity, or trustworthiness of the
     claims from such tokens and any such assurances are made by the issuer of
-    the Embedded Token, i.e. the Embedded Claim Signatory).
+    the Embedded Token, i.e. the Embedded Token Signatory).
 
 #### Conformance for Embedded Token Signatories
 
-1.  An [Embedded Claim Signatory](#term-embedded-claim-signatory) MUST
+1.  An [Embedded Token Signatory](#term-embedded-token-signatory) MUST
     provide one or more of the following types of [Embedded
     Tokens](#term-embedded-token):
 
     1.  <a href="term-embedded-access-token"></a> **Embedded Access Token**
-        -- The Embedded Claim Signatory is providing an OIDC provider service
+        -- The Embedded Token Signatory is providing an OIDC provider service
         and issues OIDC-compliant access tokens in a specific format that can
         be used as an Embedded Token.
     
@@ -339,7 +339,7 @@ relying party of the auth flow that fetches the claims from upstream.
             6819](https://tools.ietf.org/html/rfc6819).
         
     2.  <a href="term-embedded-document-token"></a> **Embedded Document
-        Token** -- The Embedded Claim Signatory does not need to be a
+        Token** -- The Embedded Token Signatory does not need to be a
         be a OIDC provider, and MAY provide tokens of this type without any
         revocation process.
         
@@ -641,7 +641,7 @@ where:
 
 ##### Embedded Document Token Format
 
-Conforms with JWS format requirements and is signed by an Embedded Claim
+Conforms with JWS format requirements and is signed by an Embedded Token
 Signatory.
 
 1. MUST be a JWS string.
