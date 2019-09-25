@@ -62,7 +62,7 @@ be interpreted as described in [RFC2119](https://www.ietf.org/rfc/rfc2119.txt).
 
 ### Terminology
 
-<a name="term-ga4gh-claim></a> **GA4GH Claim** -- A JWT claim as defined by a GA4GH
+<a name="term-ga4gh-claim"></a> **GA4GH Claim** -- A JWT claim as defined by a GA4GH
 documented technical standard that is making use of this AAI specification. Note
 that GA4GH is not the organization making the claim nor taking responsibility for
 the claim as this is a reference to a GA4GH documented standard only.
