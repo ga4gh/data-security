@@ -164,14 +164,26 @@ Clearinghouses MUST be protected using TLS.
 
 ### Flow of Claims 
 
-![FlowOfClaims](https://github.com/ga4gh/data-security/blob/master/AAI/aai%20flow%20of%20claims.png) 
+![FlowOfClaims](/AAI/claim_flow_of_data_basic.svg) 
 
-Note: the above diagram shows how claims flow from a
-[Claim Source](#term-claim-source) to a
-[Claim Clearinghouse](#term-claim-clearinghouse) that uses them. This
-does not label all of the Relying Party relationships along this chain,
-where each recipient in the chain is typically -- but not always -- the
+The above diagram shows how claims flow from a [Claim
+Source](#term-claim-source) to a [Claim
+Clearinghouse](#term-claim-clearinghouse) that uses them. This does not
+label all of the Relying Party relationships along this chain, where
+each recipient in the chain is typically -- but not always -- the
 relying party of the auth flow that fetches the claims from upstream.
+
+Implementations may introduce clients, additional services, and protocols --
+not detailed in the above diagram -- to provide the mechanisms to move the data
+between the Claim Respository and the [Broker](#term-broker).
+These mechanisms are unspecified by the scope of this specification except that
+they MUST adhere to security and privacy best practices, such as those outlined
+in this specification, in their handling of protocols, claims, tokens and
+related data. The flow between these components (represented by black arrows)
+MAY not be direct or conversely services shown as being separate MAY be
+combined into one service. For example, some implementations MAY deploy one
+service that handles the responsibilities of both the Embedded Token Issuer and
+the Broker.
 
 ### Profile Requirements 
 
