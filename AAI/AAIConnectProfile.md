@@ -36,12 +36,12 @@ with others that specify the syntax and semantics of the GA4GH Claims exchanged.
 - [**Profile Requirements**](#profile-requirements)\
        - [Client/Application Conformance](#clientapplication-conformance)\
        - [Conformance for Brokers](#conformance-for-brokers)\
-       - [Conformance for Embedded Token Signatories](#conformance-for-embedded-token-signatories)\
+       - [Conformance for Embedded Token Issuers](#conformance-for-embedded-token-issuers)\
        - [Conformance for Claim Clearinghouses (consuming Access Tokens to give access to data)](#conformance-for-claim-clearinghouses-consuming-access-tokens-to-give-access-to-data)
 - [**GA4GH JWT Format**](#ga4gh-jwt-format)\
        - [Access_token issued by broker](#access_token-issued-by-broker)\
        - [Claims sent to Data Holder by a Broker via /userinfo](#claims-sent-to-data-holder-by-a-broker-via-userinfo)\
-       - [Embedded Token issued by Embedded Token Signatory](#embedded-token-issued-by-embedded-token-signatory)\
+       - [Embedded Token issued by Embedded Token Issuer](#embedded-token-issued-by-embedded-token-issuer)\
             - [Embedded Access Token Format](#embedded-access-token-format)\
             - [Embedded Document Token Format](#embedded-document-token-format)\
        - [Authorization/Claims](#authorizationclaims)
@@ -127,7 +127,7 @@ data and, in that role, has capacity to decide who can access it. For
 instance, a Data Access Committee. A Data owner is likely to be a Claim
 Source.
 
-<a name="term-embedded-token-signatory"></a> **Embedded Token Signatory** --
+<a name="term-embedded-token-issuer"></a> **Embedded Token Issuer** --
 a service that signs [Embedded Tokens](#term-embedded-token). This service
 may be a [Broker](#term-broker) itself, or it may have a Broker use this
 service as part of collecting GA4GH Claims that the Broker includes in
@@ -135,9 +135,9 @@ responses from its /userinfo endpoint.
 
 <a name="term-embedded-token"></a> **Embedded Token** -- A GA4GH Claim value
 or entry within a list or object of a GA4GH Claim that contains a JWS string.
-It MUST be signed by an [Embedded Token Signatory](#term-embedded-token-signatory).
+It MUST be signed by an [Embedded Token Issuer](#term-embedded-token-issuer).
 An Embedded Token can pass GA4GH Claims through various Brokers as needed
-while retaining the token signature of the original Embedded Token Signatory.
+while retaining the token signature of the original Embedded Token Issuer.
 
 ### Relevant Specifications
 
@@ -278,26 +278,26 @@ relying party of the auth flow that fetches the claims from upstream.
     Sources](#term-claim-source), and the content is presented and/or
     transformed without misrepresenting the original intent.
     
-    When a Broker acts as a Embedded Token Signatory and signs Embedded
+    When a Broker acts as a Embedded Token Issuer and signs Embedded
     Tokens, then those signatures adhere to the same assertion criteria as
     outlined in the [Conformance for Embedded Token
-    Signatories](#conformance-for-embedded-token-signatories)
+    Issuers](#conformance-for-embedded-token-issuers)
     section of this specification.
 
     When a Broker provides Embeded Tokens from other Embedded Token
-    Signatories, it is providing them "as is" (i.e. it provides no additional
+    Issuers, it is providing them "as is" (i.e. it provides no additional
     assurance as to the quality, authenticity, or trustworthiness of the
     claims from such tokens and any such assurances are made by the issuer of
-    the Embedded Token, i.e. the Embedded Token Signatory).
+    the Embedded Token, i.e. the Embedded Token Issuer).
 
-#### Conformance for Embedded Token Signatories
+#### Conformance for Embedded Token Issuers
 
-1.  An [Embedded Token Signatory](#term-embedded-token-signatory) MUST
+1.  An [Embedded Token Issuer](#term-embedded-token-issuer) MUST
     provide one or more of the following types of [Embedded
     Tokens](#term-embedded-token):
 
     1.  <a href="term-embedded-access-token"></a> **Embedded Access Token**
-        -- The Embedded Token Signatory is providing an OIDC provider service
+        -- The Embedded Token Issuer is providing an OIDC provider service
         and issues OIDC-compliant access tokens in a specific format that can
         be used as an Embedded Token.
     
@@ -309,13 +309,13 @@ relying party of the auth flow that fetches the claims from upstream.
             Token Format](#embedded-access-token-format). This includes
             having GA4GH Claims as JWT claims directly in the Embedded Token.
             
-        3.  Embedded Token Signatory MUST support [OIDC Discovery
+        3.  Embedded Token Issuer MUST support [OIDC Discovery
             spec](https://openid.net/specs/openid-connect-discovery-1_0.html),
             and provide `jwks_uri` as
             [Metadata](https://openid.net/specs/openid-connect-discovery-1_0.html#ProviderMetadata)
             that is reachable by a Claim Clearinghouse.
         
-        4.  Embedded Token Signatory MUST support public-facing
+        4.  Embedded Token Issuer MUST support public-facing
             /userinfo endpoint. When presented with a valid Embedded Access
             Token, the /userinfo endpoint MUST return a success status
             and MAY return the current values for GA4GH Claims that were
@@ -324,7 +324,7 @@ relying party of the auth flow that fetches the claims from upstream.
             Tokens is OPTIONAL.
             
         5.  If the Embedded Access Token's `exp` exceeds the `iat` by
-            more than 1 hour, the Embedded Token Signatory should expect
+            more than 1 hour, the Embedded Token Issuer should expect
             Claim Clearinghouses to use [Claim Polling](#claim-polling) and
             MUST provide a means to revoke Embedded Access Tokens. The
             /userinfo endpoint MUST return an HTTP status 401 as per
@@ -334,12 +334,12 @@ relying party of the auth flow that fetches the claims from upstream.
 
         6.  The JWS header MUST NOT have `jku` specified.
 
-        7.  Embedded Token Signatory MUST provide protection against
+        7.  Embedded Token Issuer MUST provide protection against
             attacks as outlined in [RFC
             6819](https://tools.ietf.org/html/rfc6819).
         
     2.  <a href="term-embedded-document-token"></a> **Embedded Document
-        Token** -- The Embedded Token Signatory does not need to be a
+        Token** -- The Embedded Token Issuer does not need to be a
         be a OIDC provider, and MAY provide tokens of this type without any
         revocation process.
         
@@ -361,17 +361,17 @@ relying party of the auth flow that fetches the claims from upstream.
         5.  The `scope` JWT claim, if included, MUST NOT contain "openid" as
             a space-delimited substring.
     
-2.  An Embedded Token Signatory MAY generate the `exp` timestamp to enforce
+2.  An Embedded Token Issuer MAY generate the `exp` timestamp to enforce
     its policies and allow Claim Clearinghouses to understand the intent of
     how long the claim may be used before needing to return to the Embedded
-    Token Signatory to refesh the claim. As a non-normative example, if a
+    Token Issuer to refesh the claim. As a non-normative example, if a
     GA4GH claim expires in 25 years (or even never expires explictly in the
-    Claim Repository), the Embedded Token Signatory could set the `exp` to
+    Claim Repository), the Embedded Token Issuer could set the `exp` to
     14 days into the future in order to force a user authentication flow to
     be redone if a downstream Claim Clearinghouse is still interested in using
     such a claim after this period elapses.
 
-3.  By signing an Embedded Token, an Embedded Token Signatory asserts that
+3.  By signing an Embedded Token, an Embedded Token Issuer asserts that
     the GA4GH claims made available by the token were legitimately derived
     from their [Claim Sources](#term-claim-source), and the content is
     presented and/or transformed without misrepresenting the original intent,
@@ -487,7 +487,7 @@ relying party of the auth flow that fetches the claims from upstream.
         For example, /userinfo returns HTTP status 400.
 
     5.  If the /userinfo endpoint returns an updated set of GA4GH Claims (this is
-        an OPTIONAL feature of an Embedded Token Signatory), then the Claim
+        an OPTIONAL feature of an Embedded Token Issuer), then the Claim
         Clearinghouse MUST use the updated GA4GH Claims and ignore the original
         GA4GH Claim values in the Embedded Access Token. If the Claim
         Clearinghouse is unable to adjust for the the updated GA4GH Claims, then
@@ -588,7 +588,7 @@ more information. The /userinfo endpoint MAY use `application/json` or
     [Authorization/Claims](#authorizationclaims) for an example of a GA4GH
     Claim.
 
-#### Embedded Token issued by Embedded Token Signatory
+#### Embedded Token issued by Embedded Token Issuer
 
 There are two supported formats for Embedded Tokens.
 
@@ -642,7 +642,7 @@ where:
 ##### Embedded Document Token Format
 
 Conforms with JWS format requirements and is signed by an Embedded Token
-Signatory.
+Issuer.
 
 1. MUST be a JWS string.
 
@@ -713,7 +713,7 @@ that claims are no longer inspected nor updated.
 
 In the event that a [Claim Source](#term-claim-source) revokes a claim within
 a [Claim Repository](#term-claim-repository), downstream Embedded Token
-Signatories, Brokers, Claim Clearinghouses, and other Authorization or Resource
+Issuers, Brokers, Claim Clearinghouses, and other Authorization or Resource
 Servers MUST at a minimum provide a means to limit the lifespan of any given
 access tokens generated as a result of claims. To achieve this goal, servers
 involved with access may employ one or more of the following options:
