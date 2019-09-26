@@ -641,7 +641,7 @@ where:
 3.  `scope` is REQUIRED and MUST be a string containing a space-delimited set of
     scope names. "openid" MUST be included as a scope name.
 
-4.  The payload claims MUST contain at least one GA4GH Claim
+4.  The payload claims MAY contain at least one GA4GH Claim
     (`<ga4gh-spec-claims>`).
 
 5.  The payload claims MUST NOT include `aud`.
@@ -687,7 +687,7 @@ Issuer.
        [RFC7519 Section 4.1.7](https://tools.ietf.org/html/rfc7519#section-4.1.7)
        is RECOMMENDED.
      
-   -   `<ga4gh-spec-claims>`: REQUIRED. One or more GA4GH Claims MUST be
+   -   `<ga4gh-spec-claims>`: OPTIONAL. One or more GA4GH Claims MAY be
        provided. See [Authorization/Claims](#authorizationclaims) for an
        example.
 
