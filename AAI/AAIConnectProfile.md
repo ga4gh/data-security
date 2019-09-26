@@ -494,9 +494,7 @@ relying party of the auth flow that fetches the claims from upstream.
 
 A well-formed JWS-Encoded JSON Web Token (JWT) consists of three concatenated
 Base64url-encoded strings, separated by dots (.) The three sections are: header,
-payload and signature. The access token and JWT with full claims use the same
-format, though the JWT with the full claims will have extended claims. These
-JWTs follow <https://tools.ietf.org/html/rfc7515> (JWS).
+payload and signature. These JWTs follow <https://tools.ietf.org/html/rfc7515> (JWS).
 
 This profile is agnostic to the format of the id_token.
 
