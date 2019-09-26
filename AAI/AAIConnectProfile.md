@@ -389,15 +389,12 @@ relying party of the auth flow that fetches the claims from upstream.
 
     1.  If treating the token as a JWT a Claim Clearinghouse:
 
-        1.  MUST check the Token’s signature via JWKS or having stored the
+        1. Even though JWTs are expected to be submitted against /userinfo, a Claim Clearinghouse SHOULD check the Token’s signature via JWKS or having stored the
             public key.
 
             1.  A metadata URL (.well-known URL) SHOULD be used here to use the
                 jwks_uri parameter.
                 
-            2.  This includes checking the signature of Embedded Tokens that
-                the Claim Clearinghouse may wish to use.
-
         2.  MUST check `iss` attribute to ensure a trusted Broker has generated
             the token.
             
