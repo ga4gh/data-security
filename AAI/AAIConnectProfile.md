@@ -379,9 +379,9 @@ the Broker.
     Token Issuer to refesh the claim. As a non-normative example, if a
     GA4GH claim expires in 25 years (or even never expires explictly in the
     Claim Repository), the Embedded Token Issuer could set the `exp` to
-    14 days into the future in order to force a user authentication flow to
-    be redone if a downstream Claim Clearinghouse is still interested in using
-    such a claim after this period elapses.
+    1 day into the future plus issue a refresh token in order to force the
+    refresh token to be used when a downstream Claim Clearinghouse is still
+    interested in using such a claim after 1 day elapses.
 
 3.  By signing an Embedded Token, an Embedded Token Issuer asserts that
     the GA4GH claims made available by the token were legitimately derived
