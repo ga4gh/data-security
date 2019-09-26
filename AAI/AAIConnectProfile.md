@@ -661,6 +661,7 @@ Signatory.
      "sub": "<subject-identifier>",
      "iat": <seconds-since-epoch>,
      "exp": <seconds-since-epoch>,
+     "jti": <token-identifier>,
      <ga4gh-spec-claims>
    }.
    <signature>
