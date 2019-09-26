@@ -325,7 +325,7 @@ relying party of the auth flow that fetches the claims from upstream.
             
         5.  If the Embedded Access Token's `exp` exceeds the `iat` by
             more than 1 hour, the Embedded Token Signatory should expect
-            Claim Clearinghouses to use [Claim Polling](#claim-polling) and
+            Claim Clearinghouses to use [Access Token Polling](#at-polling) and
             MUST provide a means to revoke Embedded Access Tokens. The
             /userinfo endpoint MUST return an HTTP status 401 as per
             [RFC6750 section 3.1](https://tools.ietf.org/html/rfc6750#section-3.1)
@@ -389,15 +389,12 @@ relying party of the auth flow that fetches the claims from upstream.
 
     1.  If treating the token as a JWT a Claim Clearinghouse:
 
-        1.  MUST check the Token’s signature via JWKS or having stored the
+        1. Even though JWTs are expected to be submitted against /userinfo, a Claim Clearinghouse SHOULD check the Token’s signature via JWKS or having stored the
             public key.
 
             1.  A metadata URL (.well-known URL) SHOULD be used here to use the
                 jwks_uri parameter.
                 
-            2.  This includes checking the signature of Embedded Tokens that
-                the Claim Clearinghouse may wish to use.
-
         2.  MUST check `iss` attribute to ensure a trusted Broker has generated
             the token.
             
@@ -446,7 +443,7 @@ relying party of the auth flow that fetches the claims from upstream.
     
         2. In addition to other validation checks, an Embedded Token is considered
            invalid if it is more than 1 hour old (as per the `iat` claim) AND
-           [Claim Polling](#claim-polling) does not confirm that the token is still
+           [Access Token Polling](#at-polling) does not confirm that the token is still
            valid (e.g. provide a success status code).
                       
     3.  If making use of [Embedded Document Tokens](#term-embedded-document-token):
@@ -461,7 +458,7 @@ relying party of the auth flow that fetches the claims from upstream.
             trusted issuer configuration. This check MUST be performed before
             calling the `jku` endpoint.
 
-7.  <a name="claim-polling"></a> **Claim Polling**: Clients MAY use access tokens,
+7.  <a name="at-polling"></a> **Access Token Polling**: Clients MAY use access tokens,
     including Embedded Tokens, to occasionally check which claims are still valid
     at the associated /userinfo endpoint in order to establish whether the user
     still meets the access requirements.
@@ -497,9 +494,7 @@ relying party of the auth flow that fetches the claims from upstream.
 
 A well-formed JWS-Encoded JSON Web Token (JWT) consists of three concatenated
 Base64url-encoded strings, separated by dots (.) The three sections are: header,
-payload and signature. The access token and JWT with full claims use the same
-format, though the JWT with the full claims will have extended claims. These
-JWTs follow <https://tools.ietf.org/html/rfc7515> (JWS).
+payload and signature. These JWTs follow <https://tools.ietf.org/html/rfc7515> (JWS).
 
 This profile is agnostic to the format of the id_token.
 
@@ -666,6 +661,7 @@ Signatory.
      "sub": "<subject-identifier>",
      "iat": <seconds-since-epoch>,
      "exp": <seconds-since-epoch>,
+     "jti": <token-identifier>,
      <ga4gh-spec-claims>
    }.
    <signature>
@@ -726,7 +722,7 @@ involved with access may employ one or more of the following options:
 2.  Provide GA4GH Claims in the form of [Embedded Access
     Tokens](#term-embedded-access-token) to allow downstream Claim
     Clearinghouses to periodically check the validity of the token via calls
-    to the /userinfo endpoint as per [Claim Polling](#claim-polling).
+    to the /userinfo endpoint as per [Access Token Polling](#at-polling).
 
 3.  Provide refresh tokens at every level in the system hierarchy and use
     short-lived access tokens. This may require all contributing systems to
@@ -761,7 +757,7 @@ claims to prevent further tokens from being minted.
         claims. In this event, an appropriate error status MUST be returned as per
         [section 5.3.3 of the OIDC specification](https://openid.net/specs/openid-connect-core-1_0.html#UserInfoError).
         
-    -   [Claim Polling](#claim-polling) can allow downstream systems to detect
+    -   [Access Token Polling](#at-polling) can allow downstream systems to detect
         token revocation and remove access accordingly.
 
 2.  A process MUST exist, manual or automated, to eventually remove or invalidate
