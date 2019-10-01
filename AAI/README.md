@@ -3,7 +3,7 @@
 ## Quick Links
 
 - Specification: [GA4GH Authentication and Authorization Infrastructure (AAI) OpenID Connect Profile](https://github.com/ga4gh/data-security/blob/master/AAI/AAIConnectProfile.md)
-- Other specifications that use the AAI profile: [GA4GH RI Claims](https://bit.ly/ga4gh-ri-v1)
+- Other specifications that use the AAI profile: [GA4GH Passport](https://bit.ly/ga4gh-passport-v1)
 
 ### Table of Contents
 
