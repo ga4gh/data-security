@@ -336,7 +336,7 @@ the Broker.
             Tokens is OPTIONAL.
             
         5.  If the Embedded Access Token's `exp` exceeds the `iat` by
-            more than 1 hour, the Embedded Token Signatory should expect
+            more than 1 hour, the Embedded Token Issuer should expect
             Claim Clearinghouses to use [Access Token Polling](#at-polling) and
             MUST provide a means to revoke Embedded Access Tokens. The
             /userinfo endpoint MUST return an HTTP status 401 as per
