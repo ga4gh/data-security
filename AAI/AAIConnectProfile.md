@@ -308,7 +308,7 @@ the Broker.
     provide one or more of the following types of [Embedded
     Tokens](#term-embedded-token):
 
-    1.  <a href="term-embedded-access-token"></a> **Embedded Access Token**
+    1.  <a name="term-embedded-access-token"></a> **Embedded Access Token**
         -- The Embedded Token Issuer is providing an OIDC provider service
         and issues OIDC-compliant access tokens in a specific format that can
         be used as an Embedded Token.
@@ -350,7 +350,7 @@ the Broker.
             attacks as outlined in [RFC
             6819](https://tools.ietf.org/html/rfc6819).
         
-    2.  <a href="term-embedded-document-token"></a> **Embedded Document
+    2.  <a name="term-embedded-document-token"></a> **Embedded Document
         Token** -- The Embedded Token Issuer does not need to be a
         be a OIDC provider, and MAY provide tokens of this type without any
         revocation process.
