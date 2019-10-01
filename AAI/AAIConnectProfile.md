@@ -562,7 +562,7 @@ Payload:
 -   `scope`: REQUIRED. Includes verified scopes. MUST include "openid". Will also
     include any `<ga4gh-spec-scopes>` needed for the GA4GH compliant environment
     (e.g. "ga4gh_passport_v1" is the [scope for GA4GH
-    Passports](https://github.com/ga4gh-duri/ga4gh-duri.github.io/blob/master/researcher_ids/RI_Claims_V1.md#requirement-7)).
+    Passports](https://github.com/ga4gh-duri/ga4gh-duri.github.io/blob/master/researcher_ids/ga4gh_passport_v1.md#requirement-7)).
 
 #### Claims sent to Data Holder by a Broker via /userinfo
 
@@ -693,19 +693,23 @@ Issuer.
 
 #### Authorization/Claims 
 
-User attributes and claims are being developed in [GA4GH Researcher Identity
-Claims](https://github.com/ga4gh-duri/ga4gh-duri.github.io/blob/master/researcher_ids/RI_Claims_V1.md)
-document by the DURI work stream.
+User attributes and claims are being developed in the [GA4GH Passport
+specification](https://github.com/ga4gh-duri/ga4gh-duri.github.io/blob/master/researcher_ids/ga4gh_passport_v1.md)
+by the DURI work stream.
 
-A non-normative example of a GA4GH Researcher Identity Claim, as referred to
+A non-normative example of a GA4GH Passport, as referred to
 in as `<ga4gh-spec-claims>` within the JWT formatting sections of this
 specification, is:
 
 ```
-"ga4gh_passport_v1": {
-  <[ga4gh passport value](https://github.com/ga4gh-duri/ga4gh-duri.github.io/blob/master/researcher_ids/RI_Claims_V1.md)>
-}
+"ga4gh_passport_v1": [
+  <ga4gh passport value>
+]
 ```
+
+See the [GA4GH Passport
+Claim Format](https://github.com/ga4gh-duri/ga4gh-duri.github.io/blob/master/researcher_ids/ga4gh_passport_v1.md#passport-claim-format)
+for more details.
 
 Token Revocation
 ----------------
