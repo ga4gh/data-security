@@ -244,7 +244,8 @@ the Broker.
         (i.e. must have a `jwks_uri` as required that’s reachable by a Claim
         Clearinghouse)
 
-3.  Broker MUST support public-facing /userinfo endpoint
+3.  Broker MUST support public-facing /userinfo endpoint as per [section 5.3 of the OIDC
+    specification](https://openid.net/specs/openid-connect-core-1_0.html#UserInfo).
 
     1.  When presented with a valid access token, the /userinfo endpoint MUST return
         claims in the specified
@@ -429,7 +430,8 @@ the Broker.
         advance where to find a corresponding /userinfo. This may limit the
         functionality of accepting tokens from some Brokers.
 
-3.  Claim Clearinghouse or downstream applications MAY use /userinfo endpoint
+3.  Claim Clearinghouse or downstream applications MAY use [/userinfo
+    endpoint](https://openid.net/specs/openid-connect-core-1_0.html#UserInfo)
     (derived from the access_token JWT’s `iss`) to request claims and MAY make
     use of the [OIDC claims request
     parameter](https://openid.net/specs/openid-connect-core-1_0.html#ClaimsParameter)
