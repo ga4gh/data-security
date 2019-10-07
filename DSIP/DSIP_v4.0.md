@@ -94,7 +94,7 @@ building and operating a technology infrastructure that adheres to the GA4GH
 *Framework* principles and enforces the GA4GH *Privacy and Security Policy*.
 
 ![Fig 1](https://github.com/ga4gh/data-security/blob/master/DSIP/Figures/Fig.1-documents-structure-1.png)
-**Figure 1. Framework, Data Privacy and Security Policy, and Security Tecnology Infrastructure relationships.**
+**Figure 1. Framework, Data Privacy and Security Policy, and Data Security Infrastructure Policy relationships.**
 
 The technology infrastructure defined herein aims to reflect the prevailing
 state of practice, while enabling emerging approaches to processing sensitive
