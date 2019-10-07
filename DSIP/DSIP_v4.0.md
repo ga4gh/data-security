@@ -273,7 +273,7 @@ services) are known and can be trusted to conform to applicable policy.
 
 -   Data processors should use the *GA4GH Authentication and
     Authorization Infrastructure* (AAI) standard [9] to federate identity
-    authentication and service authorization. Data users are also encouraged to
+    authentication and service authorization. Data processors should also
     use GA4GH standards for representing researcher identity attributes in
     OpenID Connect (OIDC) claims [10], and data use ontology (DUO) [11] for
     representing security and privacy attributes of shared data.
@@ -313,7 +313,7 @@ services) are known and can be trusted to conform to applicable policy.
     uses and accesses.
 
 -   OpenID Connect tokens issued by trusted identity providers or brokers may be
-    used as a basis for authorizing data consumers access rights and privileges.
+    used as a basis for authorizing data processors access rights and privileges.
     For example, a Research Passport issued through the UK National Institute of
     Health Research (NIHR) Research Passport System [13], might be used as the
     basis for authorizing researchers access rights and privileges to passport
@@ -346,7 +346,7 @@ services) are known and can be trusted to conform to applicable policy.
 
 -   Each data controller and data processor should implement mechanisms to prevent the identity of individuals from being leaked through covert means such as metadata, URLs, message headers, and inference attacks.
 
--   Each data steward and data user should implement safeguards to reduce the
+-   Each data controller and data processor should implement safeguards to reduce the
     likelihood that de-identified, pseudonymized, or anonymised data can be
     re-identified through the query results or data record linkage (to prevent
     attacks such as Bustamante [18] and Homer [19]). To this end, they should use privacy-preserving record linkage methods  [20] and/or any other methods to reduce the risk of re-identification under formal frameworks such as differential privacy [21].
@@ -487,14 +487,14 @@ All data processors are responsible for implementing appropriate defense-in-dept
 
 -   Each data controller must document the privacy and security practices and
     procedures it uses to make its data and services available within the GA4GH
-    community, consistent with the *GA4GH Privacy and Security Policy*, and must
-    ensure that its data users make this documentation conveniently available to
+    community, consistent with the GA4GH *Privacy and Security Policy*, and must
+    ensure that its processors make this documentation conveniently available to
     data subjects.
 
 -   At the request of a data subject whose data are being stored and shared within the GA4GH community, the responsible data controller should provide the data subject information about how and by whom their data are being accessed and used and for what purposes.
 
 -   Each data controller must document the behavioral standards associated with the
-    use of data and services made available to data consumers, consistent with
+    use of data and services made available to data processors, consistent with
     GA4GH *Privacy and Security Policy*, and must require data processors to attest
     to their understanding of, and commitment to adhere to these standards.
 
