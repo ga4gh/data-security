@@ -93,7 +93,7 @@ health-related data to be discovered, accessed, and used. The *Data Security Inf
 building and operating a technology infrastructure that adheres to the GA4GH
 *Framework* principles and enforces the GA4GH *Privacy and Security Policy*.
 
-![Fig 1](https://github.com/ga4gh/data-security/blob/master/STI/Figures/Fig.3-documents.png)
+![Fig 1](https://github.com/ga4gh/data-security/blob/master/DSIP/Figures/Fig.1-documents structure-1.png)
 **Figure 1. Framework, Data Privacy and Security Policy, and Security Tecnology Infrastructure relationships.**
 
 The technology infrastructure defined herein aims to reflect the prevailing
@@ -229,7 +229,7 @@ that collectively provide foundational policy, technology standards, leadership,
 and sustainment to enable the ethical and productive processing and use of
 genomic and health-related data.
 
-![Fig 2](https://github.com/ga4gh/data-security/blob/master/STI/Fig.1-stakeholders.png)
+![Fig 2](https://github.com/ga4gh/data-security/blob/master/DSIP/Figures/Fig.2-stakeholders.png)
 **Figure 2. Data security roles and their relationships.**
 
 The GA4GH expects that in many cases, one organization may behave in more than one operational stakeholder role. For example, a data controller may also be a data service provider; an infrastructure service provider might also offer application and data services hosted on the infrastructure they support. In such cases, the organization as a whole is responsible for demonstrating control effectiveness for the applicable controls. The expectation is that operational stakeholders should document the roles and responsibilities as appropriate within that community. Furthermore, such organization should assure that security-critical functions and responsibilities are delegated among multiple roles and multiple individuals to help avoid conflicts of interest, prevent inappropriate activities, provide broader coverage and reduce key person-risk.
@@ -238,7 +238,7 @@ Figure 3 below is a graphical representation of the delegation of
 responsibilities for implementing and operating in accordance with the GA4GH
 *Data Security Infrastructure Policy*.
 
-![Fig 3](https://github.com/ga4gh/data-security/blob/master/STI/Fig.2-responsibilities.png)
+![Fig 3](https://github.com/ga4gh/data-security/blob/master/SDIP/Figures/Fig.3-responsibilities.png)
 
 **Figure 3. Allocation of responsibility for security protections.** The functions listed in the vertical leftmost block are shared by all operational stakeholders, albeit in a different way for each actor (e.g data processors should notify if any breach occurs, but they are not responsible to act upon it) . Functions listed in the other blocks are allocated to data controllers, data processors, and GA4GH.
 
@@ -271,7 +271,7 @@ services) are known and can be trusted to conform to applicable policy.
     in determining the appropriate level of assurance required for identity
     proofing, authentication, and federation.
 
--   Data processors are encouraged to make use of the *GA4GH Authentication and
+-   Data processors should use the *GA4GH Authentication and
     Authorization Infrastructure* (AAI) standard [9] to federate identity
     authentication and service authorization. Data users are also encouraged to
     use GA4GH standards for representing researcher identity attributes in
@@ -557,8 +557,7 @@ All data processors are responsible for implementing appropriate defense-in-dept
     contractual clauses, and the *GA4GH Privacy and Security Policy.*
 
 -   Operational stakeholders may individually or collectively engage third
-    parties to assess compliance with the GA4GH *Security Technology
-    Infrastructure*, and to evaluate the effectiveness of implemented
+    parties to assess compliance with the GA4GH *Data Security Infrastructure*, and to evaluate the effectiveness of implemented
     protections.
 
 ## 5. Conclusion
