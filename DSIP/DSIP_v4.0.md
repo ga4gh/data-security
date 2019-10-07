@@ -93,7 +93,7 @@ health-related data to be discovered, accessed, and used. The *Data Security Inf
 building and operating a technology infrastructure that adheres to the GA4GH
 *Framework* principles and enforces the GA4GH *Privacy and Security Policy*.
 
-![Fig 1](https://github.com/ga4gh/data-security/blob/master/DSIP/Figures/Fig.1-documents structure-1.png)
+![Fig 1](https://github.com/ga4gh/data-security/blob/master/DSIP/Figures/Fig.1-documents-structure-1.png)
 **Figure 1. Framework, Data Privacy and Security Policy, and Security Tecnology Infrastructure relationships.**
 
 The technology infrastructure defined herein aims to reflect the prevailing
@@ -238,7 +238,7 @@ Figure 3 below is a graphical representation of the delegation of
 responsibilities for implementing and operating in accordance with the GA4GH
 *Data Security Infrastructure Policy*.
 
-![Fig 3](https://github.com/ga4gh/data-security/blob/master/SDIP/Figures/Fig.3-responsibilities.png)
+![Fig 3](https://github.com/ga4gh/data-security/blob/master/DSIP/Figures/Fig.3-responsibilities.png)
 
 **Figure 3. Allocation of responsibility for security protections.** The functions listed in the vertical leftmost block are shared by all operational stakeholders, albeit in a different way for each actor (e.g data processors should notify if any breach occurs, but they are not responsible to act upon it) . Functions listed in the other blocks are allocated to data controllers, data processors, and GA4GH.
 
