@@ -124,8 +124,7 @@ can also be a data holder. Data holders run an
 
 <a name="term-data-owner"></a> **Data Owner** -- An organization that manages
 data and, in that role, has capacity to decide who can access it. For
-instance, a Data Access Committee. A Data owner is likely to be a Claim
-Source.
+instance, a Data Access Committee (DAC).
 
 <a name="term-embedded-token-issuer"></a> **Embedded Token Issuer** --
 a service that signs [Embedded Tokens](#term-embedded-token). This service
@@ -136,7 +135,7 @@ responses from its /userinfo endpoint.
 <a name="term-embedded-token"></a> **Embedded Token** -- A GA4GH Claim value
 or entry within a list or object of a GA4GH Claim that contains a JWS string.
 It MUST be signed by an [Embedded Token Issuer](#term-embedded-token-issuer).
-An Embedded Token can pass GA4GH Claims through various Brokers as needed
+An Embedded Token can pass [GA4GH Claims](#term-ga4gh-claim) through various Brokers as needed
 while retaining the token signature of the original Embedded Token Issuer.
 
 ### Relevant Specifications
@@ -194,11 +193,13 @@ the Broker.
     Flow (with Confidential Client)
     <http://openid.net/specs/openid-connect-basic-1_0.html>
 
-2.  Public Clients (typically javascript browser clients or mobile apps)
+2.  Public Clients (typically javascript browser clients)
     SHOULD implement OIDC Implicit Flow
     (<http://openid.net/specs/openid-connect-implicit-1_0.html>)
 
     1.  MUST use "id_token token" response_type for authentication.
+
+    2.  Public Clients like mobile apps that use Authorization Code Grant SHOULD implement some additional protection such as PKCE (<https://tools.ietf.org/html/rfc7636>) .
 
 3.  Conform to [revocation requirements](#token-revocation).
 
