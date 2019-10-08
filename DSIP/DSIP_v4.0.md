@@ -206,7 +206,7 @@ privacy perspective, the principal stakeholders are:
 
 3.  *Data Processors*: the entities who process the data provided by Data
     Contributors according to the business and security policies set by Data
-    Stewards, and which put in place all the needed technical safeguards to
+    Controllers, and which put in place all the needed technical safeguards to
     enforce them. These include:
 
     1.  Infrastructure service providers - entities that provide technology
