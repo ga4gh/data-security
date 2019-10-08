@@ -17,7 +17,7 @@ of shared genomic and clinical data
 2.1 – [Risk Assessment](#21-risk-assessment)   
 2.2 – [Control Objectives](#22-control-objectives)   
 2.3 – [Guiding Principles](#23-guiding-principles)   
-2.4 – [Information Security Stakeholders](#24-information-security-stakeholders)
+2.4 – [Data Security Stakeholders](#24-data-security-stakeholders)
 
 3.0 – [Security Technology Building Blocks](#3-security-technology-building-blocks)  
 3.1 – [Identity Management](#31-identity-management)  
@@ -180,7 +180,7 @@ Data](https://www.ga4gh.org/ga4ghtoolkit/regulatoryandethics/framework-for-respo
 and seeks to enforce the policy articulated in the [GA4GH Privacy and Security
 Policy](https://www.ga4gh.org/docs/ga4ghtoolkit/data-security/Privacy-and-Security-Policy.pdf)*.*
 
-### 2.4 Information Security Stakeholders
+### 2.4 Data Security Stakeholders
 
 As a virtual ecosystem, the GA4GH assigns roles and responsibilities for
 information security to stakeholders within this ecosystem. From a security and
