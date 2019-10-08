@@ -199,7 +199,7 @@ the Broker.
 
     1.  MUST use "id_token token" response_type for authentication.
 
-    2.  Public Clients like mobile apps that use Authorization Code Grant SHOULD implement PKCE (<https://tools.ietf.org/html/draft-ietf-oauth-spop-15>)
+    2.  Public Clients like mobile apps that use Authorization Code Grant SHOULD implement some additional protection such as PKCE (<https://tools.ietf.org/html/rfc7636>) .
 
 3.  Conform to [revocation requirements](#token-revocation).
 
