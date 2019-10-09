@@ -232,7 +232,7 @@ genomic and health-related data.
 ![Fig 2](https://github.com/ga4gh/data-security/blob/master/DSIP/Figures/Fig.2-stakeholders.png)
 **Figure 2. Data security roles and their relationships.**
 
-The GA4GH expects that in many cases, one organization may behave in more than one operational stakeholder role. For example, a data controller may also be a data service provider; an infrastructure service provider might also offer application and data services hosted on the infrastructure they support. In such cases, the organization as a whole is responsible for demonstrating control effectiveness for the applicable controls. The expectation is that operational stakeholders should document the roles and responsibilities as appropriate within that community. Furthermore, such organization should assure that security-critical functions and responsibilities are delegated among multiple roles and multiple individuals to help avoid conflicts of interest, prevent inappropriate activities, provide broader coverage and reduce key person-risk.
+The GA4GH expects that in many cases, one organization may behave in more than one operational stakeholder role. For example, a data controller may also be a data service provider; an infrastructure service provider might also offer application and data services hosted on the infrastructure they support. In such cases, the organization as a whole must demosntrate control effectiveness for the applicable controls. The expectation is that operational stakeholders should document the roles and responsibilities as appropriate within that community. Furthermore, such organization should assure that security-critical functions and responsibilities are delegated among multiple roles and multiple individuals to help avoid conflicts of interest, prevent inappropriate activities, provide broader coverage and reduce key person-risk.
 
 Figure 3 below is a graphical representation of the delegation of
 responsibilities for implementing and operating in accordance with the GA4GH
@@ -353,7 +353,7 @@ services) are known and can be trusted to conform to applicable policy.
 
 -   Each data controller must obtain the individual authorisations (e.g., consents) required by applicable law and institutional policy, and for conveying these authorisations, or a link to these authorisations, along with the associated data.
 
--   Each data controller is responsible for updating provenance and confidentiality
+-   Each data controller must update provenance and confidentiality
     metadata associated with the data under its control, preferably using HL7
     FHIR provenance [22] and confidentiality [23] codes.
 
@@ -379,7 +379,7 @@ services) are known and can be trusted to conform to applicable policy.
 -   Data processors’ audit log records should be integratable with existing
     enterprise security monitoring tools.
 
--   Data controllers and their processors are jointly responsible for implementing the
+-   Data controllers and their processors must jointly implement the
     capability to generate an accounting of accesses to and disclosures of data
     that may be associated with the individual’s identity.
 
@@ -435,7 +435,7 @@ services) are known and can be trusted to conform to applicable policy.
 
 ### 4.2 Service Assurances
 
-All data processors are responsible for implementing appropriate defense-in-depth architectural assurances that enable them to provide a high level of service expectations, including:
+All data processors must implement appropriate defense-in-depth architectural assurances that enable them to provide a high level of service expectations, including:
 
 -   *Availability* – the service should be able to perform its functions over a
     specified period of time, generally expressed as the proportion of time that
@@ -522,8 +522,8 @@ All data processors are responsible for implementing appropriate defense-in-dept
         damage the reputation and trustworthiness of the GA4GH community.
 
     -   Each data processor who experiences or suspects a data breach involving the
-        disclosure of potentially identifiable data is responsible for
-        expeditiously reporting the breach to the data controller responsible for
+        disclosure of potentially identifiable data must
+        expeditiously report the breach to the data controller responsible for
         the breached data.
 
     -   Each data controller who experiences, suspects, or receives a report of a
