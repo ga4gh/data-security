@@ -798,5 +798,5 @@ following:
     tokens.
 
 4.  Any signed tokens that may be stored by participating services SHOULD be
-    encrypted at rest and MUST follow best practices to limit the ability of
+    encrypted at rest and follow best practices to limit the ability of
     administrators from decrypting this content.
