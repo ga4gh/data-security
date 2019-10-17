@@ -101,8 +101,7 @@ The way this chain of brokers and trust is maintained is through "embedded token
 
 Embedded Access Tokens are claims in a Broker's token that can then be sent to OTHER brokers' `/userinfo` endpoints for further user claims. 
 
-Embedded Document Tokens are not expected to be used with a provider's `/userinfo` endpoint and will have everything in them to verify their provenance and will have the necessary claims in them already.
-
+Embedded Document Tokens cannot be revoked and no `/userinfo` endpoint is provided for them, however they stilll offer a signature that can be used to verify their provenance and always contain the necessary claims in them already.
 
 #### Services parties are responsible for providing 
 
