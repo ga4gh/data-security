@@ -34,7 +34,7 @@ policy and standard. This standard does NOT assume that DURI's GA4GH Claims will
 the only ones used.
 
 This AAI standard aims at developing an approach that enables data holders’ and data owners 
-systems to recognize and accept identities from multiple Brokers -- allowing for
+systems to have systems that recognize and accept identities from multiple Brokers -- allowing for
 a federated approach. An organization can still use this specification and not
 support multiple Brokers, though they may find in that case that it’s just using
 a prescriptive version of OIDC.
