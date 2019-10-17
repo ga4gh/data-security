@@ -69,8 +69,7 @@ of a full-broker. This is one possible way to use this spec.
 ![flow](https://github.com/ga4gh/data-security/blob/master/AAI/flow.png)
 
 In this diagram, the Data Owner Claim Clearinghouse, the Data Holder Claim
-Clearinghouse and the Broker are all different entities. However, in
-many cases, we expect the Broker and Data Owner to be the same entity and
+Clearinghouse and the Broker are all different entities. However, some cases, the Broker and Data Owner might be the same entity and
 even be operated with the same OIDC Provider Software.
 
 Examples of implementations that provide both Identity Brokering and Data Owner
