@@ -99,7 +99,7 @@ In this example, Google Passport Clearinghouse makes access decisions based on E
 
 The way this chain of brokers and trust is maintained is through "embedded tokens". There are two types of embedded tokens: Embedded Access Tokens and Embedded Document Tokens. 
 
-Embedded Access Tokens are claims in a Broker's token that can then be sent to OTHER brokers' `/userinfo` endpoints for further user claims. 
+Embedded Access Tokens are claims in a Broker's token that can then be sent to OTHER brokers' `/userinfo` endpoints for further user claims. In GA4GH Passports, embedded access tokens will usually carry full claims so as not to interrogate /userinfo each time.
 
 Embedded Document Tokens cannot be revoked and no `/userinfo` endpoint is provided for them, however they stilll offer a signature that can be used to verify their provenance and always contain the necessary claims in them already.
 
