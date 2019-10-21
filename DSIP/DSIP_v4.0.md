@@ -157,7 +157,7 @@ infrastructure that will enable individual stakeholders to implement GA4GH
 standards safely, and to enforce the *Policy* defined for the GA4GH ecosystem.
 
 Thus, the *Data Security Infrastructure Policy* is defined to meet the following
-five control objectives that respond to the risks identified in the above
+six control objectives that respond to the risks identified in the above
 sub-section.
 
 -   *Control Objective 1*: Implement technology safeguards to minimize the risk of unauthorized access, use, or disclosure of confidential and private data.
