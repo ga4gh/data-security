@@ -539,7 +539,8 @@ Payload:
  "iat": <seconds-since-epoch>,
  "exp": <seconds-since-epoch>,
  "jti": <token-identifier>,
- "scope": "openid <ga4gh-spec-scopes>"
+ "scope": "openid <ga4gh-spec-scopes>",
+ <additional claims>
 }
 ```
 -   `iss`: REQUIRED. MUST be able to be appended with
@@ -566,6 +567,8 @@ Payload:
     include any `<ga4gh-spec-scopes>` needed for the GA4GH compliant environment
     (e.g. "ga4gh_passport_v1" is the [scope for GA4GH
     Passports](https://github.com/ga4gh-duri/ga4gh-duri.github.io/blob/master/researcher_ids/ga4gh_passport_v1.md#requirement-7)).
+
+-   `addtional claims`: OPTIONAL. Any other additional claims not specified are allowed.
 
 #### Claims sent to Data Holder by a Broker via /userinfo
 
