@@ -238,6 +238,8 @@ the Broker.
 
         2.  Access tokens do not contain GA4GH Claims directly in the access token.
 
+        3.  Access tokens MAY contain non-GA4GH Claims directly in the access token.
+
 2.  Broker MUST support [OIDC Discovery
     spec](https://openid.net/specs/openid-connect-discovery-1_0.html)
 
