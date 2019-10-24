@@ -571,7 +571,7 @@ Payload:
     (e.g. "ga4gh_passport_v1" is the [scope for GA4GH
     Passports](https://github.com/ga4gh-duri/ga4gh-duri.github.io/blob/master/researcher_ids/ga4gh_passport_v1.md#requirement-7)).
 
--   `addtional claims`: OPTIONAL. Any other additional claims not specified are allowed.
+-   `addtional claims`: OPTIONAL. Any other additional non-GA4GH claims are allowed. This specification does not dictate the format of other claims.
 
 #### Claims sent to Data Holder by a Broker via /userinfo
 
