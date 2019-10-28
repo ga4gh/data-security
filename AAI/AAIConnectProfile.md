@@ -4,7 +4,9 @@
 
 | Version | Date    | Editor                                     | Notes                   |
 |---------|---------|--------------------------------------------|-------------------------|
+| 1.0.1   | 2019-10 | David Bernick                              | Clarify that non-GA4GH claims are allowed in tokens |
 | 1.0.0   | 2019-10 | Approved by GA4GH Steering Committee       |                         |
+| 0.9.9   | 2019-10 | David Bernick, Craig Voisin, Mikael Linden | Approved standard       |
 | 0.9.5   | 2019-09 | Craig Voisin                               | Update claim flow diagram and definitions |
 | 0.9.4   | 2019-08 | Craig Voisin                               | Embedded tokens for signed RI Claim Objects |
 | 0.9.3   | 2019-08 | Craig Voisin                               | Support for RI's embedded tokens |
@@ -237,6 +239,8 @@ the Broker.
         1.  Access tokens for GA4GH use MUST be in [this format](#ga4gh-jwt-format).
 
         2.  Access tokens do not contain GA4GH Claims directly in the access token.
+
+        3.  Access tokens MAY contain non-GA4GH Claims directly in the access token.
 
 2.  Broker MUST support [OIDC Discovery
     spec](https://openid.net/specs/openid-connect-discovery-1_0.html)
@@ -540,7 +544,8 @@ Payload:
  "iat": <seconds-since-epoch>,
  "exp": <seconds-since-epoch>,
  "jti": <token-identifier>,
- "scope": "openid <ga4gh-spec-scopes>"
+ "scope": "openid <ga4gh-spec-scopes>",
+ <additional claims>
 }
 ```
 -   `iss`: REQUIRED. MUST be able to be appended with
@@ -567,6 +572,8 @@ Payload:
     include any `<ga4gh-spec-scopes>` needed for the GA4GH compliant environment
     (e.g. "ga4gh_passport_v1" is the [scope for GA4GH
     Passports](https://github.com/ga4gh-duri/ga4gh-duri.github.io/blob/master/researcher_ids/ga4gh_passport_v1.md#requirement-7)).
+
+-   `addtional claims`: OPTIONAL. Any other additional non-GA4GH claims are allowed. This specification does not dictate the format of other claims.
 
 #### Claims sent to Data Holder by a Broker via /userinfo
 
