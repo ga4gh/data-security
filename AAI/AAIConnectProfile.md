@@ -4,6 +4,7 @@
 
 | Version | Date    | Editor                                     | Notes                   |
 |---------|---------|--------------------------------------------|-------------------------|
+| 1.0.0   | 2019-10 | Approved by GA4GH Steering Committee       |                         |
 | 0.9.5   | 2019-09 | Craig Voisin                               | Update claim flow diagram and definitions |
 | 0.9.4   | 2019-08 | Craig Voisin                               | Embedded tokens for signed RI Claim Objects |
 | 0.9.3   | 2019-08 | Craig Voisin                               | Support for RI's embedded tokens |
