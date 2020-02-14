@@ -398,7 +398,7 @@ the Broker.
     indicated above.
     
 3.  An Embedded Token Issuer MAY include the `aud` field to indicate which
-    [Brokers](#term-broker) were consented by the user. The values of the `aud`
+    [Brokers](#term-broker) were consented by the user. The values within the `aud`
     field must match the `iss` field of OIDC access tokens issued by consented Brokers.
 
 #### Conformance for Claim Clearinghouses (consuming Access Tokens to give access to data)
@@ -431,7 +431,7 @@ the Broker.
                 also be trusted if the Claim Clearinghouse needs to restrict its
                 trust model).
             2.  If Embedded Token contains `aud` field, Clearinghouse MUST check
-                that `aud` contains `iss` of access token provided by Broker.
+                that the Embedded Token's `aud` contains `iss` of access token provided by Broker.
 
         3.  MUST check `exp` to ensure the token has not expired.
 
@@ -634,6 +634,8 @@ where:
 
 2.  The header MUST NOT contain a `jku`.
 
+3. JWT payload MAY contain `aud` to list approved brokers.
+
 Payload format:
 
 ```
@@ -707,6 +709,8 @@ Issuer.
    -   `<ga4gh-spec-claims>`: OPTIONAL. One or more GA4GH Claims MAY be
        provided. See [Authorization/Claims](#authorizationclaims) for an
        example.
+       
+   - MAY contain `aud` to list approved brokers
 
 #### Authorization/Claims 
 
