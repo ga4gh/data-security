@@ -4,6 +4,7 @@
 
 | Version | Date    | Editor                                     | Notes                   |
 |---------|---------|--------------------------------------------|-------------------------|
+| 1.0.2   | 2020-02 | David Bernick                              | Clarify risk scenarios  |
 | 1.0.1   | 2019-10 | David Bernick                              | Clarify that non-GA4GH claims are allowed in tokens |
 | 1.0.0   | 2019-10 | Approved by GA4GH Steering Committee       |                         |
 | 0.9.9   | 2019-10 | David Bernick, Craig Voisin, Mikael Linden | Approved standard       |
@@ -222,7 +223,7 @@ the Broker.
         2.  Pragma: no-cache
         
 5.  MUST provide protection against Client attacks as outlined in
-    [RFC 6819](https://tools.ietf.org/html/rfc6819).
+    [RFC 6819](https://tools.ietf.org/html/rfc6819) section-4.1.
 
 #### Conformance for Brokers 
 
@@ -402,6 +403,8 @@ the Broker.
 1.  Claim Clearinghouses MUST trust at least one Broker.
 
     1.  Claim Clearinghouses MAY trust more than one Broker
+    
+    2.  The burden of risk assessment is on the Claim Clearinghouse to trust an access token from multiple brokers. This workflow IS allowed by JWS though it is not commonly used.  
 
 2.  Claim Clearinghouses MUST either check the validity of the access token or treat the access
     token as opaque.
@@ -449,7 +452,9 @@ the Broker.
 
 5.  Claim Clearinghouses MUST provide protection against attacks as outlined in
     [RFC 6819](https://tools.ietf.org/html/rfc6819).
-    
+
+    1. Section 5.1.6 of RFC 6819 contains a SHOULD section that states `Ensure that client applications do not share tokens with 3rd parties.` This profile allows for Clearinghouses to consume access tokens from multiple brokers. 
+        
 6.  If making use of [Embedded Tokens](#term-embedded-token):
 
     1.  The Claim Clearinghouse MUST validate that all token checks pass (such as
