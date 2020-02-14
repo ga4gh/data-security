@@ -4,6 +4,7 @@
 
 | Version | Date    | Editor                                     | Notes                   |
 |---------|---------|--------------------------------------------|-------------------------|
+| 1.0.2   | 2020-02 | Douglas Voet                               | Add audiences to embedded tokens |
 | 1.0.1   | 2019-10 | David Bernick                              | Clarify that non-GA4GH claims are allowed in tokens |
 | 1.0.0   | 2019-10 | Approved by GA4GH Steering Committee       |                         |
 | 0.9.9   | 2019-10 | David Bernick, Craig Voisin, Mikael Linden | Approved standard       |
