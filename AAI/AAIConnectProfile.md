@@ -396,6 +396,10 @@ the Broker.
     presented and/or transformed without misrepresenting the original intent,
     except for accommodating for `exp` timestamps to be represented as
     indicated above.
+    
+3.  An Embedded Token Issuer MAY include the `aud` field to indicate which
+    [Brokers](#term-broker) were consented by the user. The values of the `aud`
+    field must match the `iss` field of OIDC access tokens issued by consented Brokers.
 
 #### Conformance for Claim Clearinghouses (consuming Access Tokens to give access to data)
 
@@ -426,6 +430,8 @@ the Broker.
                 any other Broker involved in the propagation of the claims to
                 also be trusted if the Claim Clearinghouse needs to restrict its
                 trust model).
+            2.  If Embedded Token contains `aud` field, Clearinghouse MUST check
+                that `aud` contains `iss` of access token provided by Broker.
 
         3.  MUST check `exp` to ensure the token has not expired.
 
