@@ -404,7 +404,7 @@ the Broker.
 
     1.  Claim Clearinghouses MAY trust more than one Broker
     
-    2.  The burden of risk assessment is on the Claim Clearinghouse to trust an access token from a broker. RECOMENDED that only a small number of Brokers are trusted by any one Clearinghouse in order to lessen this burden. 
+    2.  The burden of risk assessment is on the Claim Clearinghouse to trust an access token from a Broker. RECOMMENDED that only a small number of Brokers are trusted by any one Clearinghouse in order to lessen this burden. 
     
 2.  Claim Clearinghouses MUST either check the validity of the access token or treat the access
     token as opaque.
@@ -453,7 +453,7 @@ the Broker.
 5.  Claim Clearinghouses MUST provide protection against attacks as outlined in
     [RFC 6819](https://tools.ietf.org/html/rfc6819).
 
-    1. Section 5.1.6 of RFC 6819 contains a SHOULD section that states `Ensure that client applications do not share tokens with 3rd parties.` This profile allows for Clearinghouses to consume access tokens from multiple brokers which are not considered 3rd parties. 
+    1. Section 5.1.6 of RFC 6819 contains a SHOULD section that states `Ensure that client applications do not share tokens with 3rd parties.` This profile provides a mechanism for Clearinghouses to consume access tokens from multiple brokers in a manner that does not involve 3rd parties. Client applications should take care to not spread the tokens to any other services that would be considered 3rd parties.
         
 6.  If making use of [Embedded Tokens](#term-embedded-token):
 
