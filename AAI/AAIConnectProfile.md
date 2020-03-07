@@ -223,7 +223,7 @@ the Broker.
         2.  Pragma: no-cache
         
 5.  MUST provide protection against Client attacks as outlined in
-    [RFC 6819](https://tools.ietf.org/html/rfc6819) section-4.1.
+    [RFC 6819](https://tools.ietf.org/html/rfc6819).
 
 #### Conformance for Brokers 
 
@@ -404,7 +404,7 @@ the Broker.
 
     1.  Claim Clearinghouses MAY trust more than one Broker
     
-    2.  The burden of risk assessment is on the Claim Clearinghouse to trust an access token from a Broker. RECOMMENDED that only a small number of Brokers are trusted by any one Clearinghouse in order to lessen this burden. 
+    2.  The burden of risk assessment is on the Claim Clearinghouse to trust an access token from a Broker. It is RECOMMENDED that only a small number of Brokers are trusted by any one Clearinghouse in order to lessen this burden. 
     
 2.  Claim Clearinghouses MUST either check the validity of the access token or treat the access
     token as opaque.
