@@ -404,7 +404,7 @@ the Broker.
 
     1.  Claim Clearinghouses MAY trust more than one Broker
     
-    2.  The burden of risk assessment is on the Claim Clearinghouse to trust an access token from a Broker. It is RECOMMENDED that only a small number of Brokers are trusted by any one Clearinghouse in order to lessen this burden. 
+    2.  Risk assessment of a Broker is on the Claim Clearinghouse to trust an access token. RECOMMENDED to trust the minimum set of Brokers required to obtain the access token payload.
     
 2.  Claim Clearinghouses MUST either check the validity of the access token or treat the access
     token as opaque.
