@@ -398,9 +398,11 @@ the Broker.
     except for accommodating for `exp` timestamps to be represented as
     indicated above.
     
-3.  An Embedded Token Issuer MAY include the `aud` field to indicate which
-    [Brokers](#term-broker) were consented by the user. The values within the `aud`
-    field must match the `iss` field of OIDC access tokens issued by consented Brokers.
+3.  An Embedded Token Issuer MAY include the `aud` field to identify the 
+    [Brokers](#term-broker) as the intended audience as specified by 
+    [RFC 7523 Section 3](https://tools.ietf.org/html/rfc7523#section-3).
+    The values within the `aud` field must match the `iss` field of access tokens 
+    issued by consented Brokers.
 
 #### Conformance for Claim Clearinghouses (consuming Access Tokens to give access to data)
 
@@ -431,8 +433,11 @@ the Broker.
                 any other Broker involved in the propagation of the claims to
                 also be trusted if the Claim Clearinghouse needs to restrict its
                 trust model).
-            2.  If Embedded Token contains `aud` field, Clearinghouse MUST check
-                that the Embedded Token's `aud` contains `iss` of access token provided by Broker.
+            2.  If an Embedded Token contains an `aud` field, Clearinghouse MUST check
+                that one of the Embedded Token's `aud` entries 
+                [matches](https://tools.ietf.org/html/rfc3986#section-6.2.1) the Broker's 
+                `iss` claim (i.e. a Broker's access token `iss` claim must match the `aud`
+                claim within its Embedded Tokens if the Embedded Token aud claim is provided).
 
         3.  MUST check `exp` to ensure the token has not expired.
 
@@ -635,8 +640,6 @@ where:
 
 2.  The header MUST NOT contain a `jku`.
 
-3. JWT payload MAY contain `aud` to list approved brokers.
-
 Payload format:
 
 ```
@@ -664,7 +667,7 @@ where:
 4.  The payload claims MAY contain at least one GA4GH Claim
     (`<ga4gh-spec-claims>`).
 
-5.  The payload claims MUST NOT include `aud`.
+5.  The payload claims MAY include `aud` to list approved brokers
 
 ##### Embedded Document Token Format
 
@@ -711,7 +714,7 @@ Issuer.
        provided. See [Authorization/Claims](#authorizationclaims) for an
        example.
        
-   - MAY contain `aud` to list approved brokers
+   -   MAY contain `aud` to list approved brokers
 
 #### Authorization/Claims 
 
