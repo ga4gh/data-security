@@ -398,11 +398,11 @@ the Broker.
     except for accommodating for `exp` timestamps to be represented as
     indicated above.
     
-3.  An Embedded Token Issuer MAY include the `aud` field to identify the 
+3.  An Embedded Token Issuer MAY include the `aud` claim to identify the 
     [Brokers](#term-broker) as the intended audience as specified by 
     [RFC 7523 Section 3](https://tools.ietf.org/html/rfc7523#section-3).
-    The values within the `aud` field must match the `iss` field of access tokens 
-    issued by consented Brokers.
+    When an `aud` claim is specified, the values within the `aud` claim MUST 
+    match the `iss` claim of access tokens issued by consented Brokers.
 
 #### Conformance for Claim Clearinghouses (consuming Access Tokens to give access to data)
 
@@ -433,7 +433,7 @@ the Broker.
                 any other Broker involved in the propagation of the claims to
                 also be trusted if the Claim Clearinghouse needs to restrict its
                 trust model).
-            2.  If an Embedded Token contains an `aud` field, Clearinghouse MUST check
+            2.  If an Embedded Token contains an `aud` claim, Clearinghouse MUST check
                 that one of the Embedded Token's `aud` entries 
                 [matches](https://tools.ietf.org/html/rfc3986#section-6.2.1) the Broker's 
                 `iss` claim (i.e. a Broker's access token `iss` claim must match the `aud`
