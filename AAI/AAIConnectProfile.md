@@ -4,7 +4,8 @@
 
 | Version | Date    | Editor                                     | Notes                   |
 |---------|---------|--------------------------------------------|-------------------------|
-| 1.0.2   | 2020-02 | Douglas Voet                               | Add audiences to embedded tokens |
+| 1.0.3   | 2020-04 | Douglas Voet                               | Add audiences to embedded tokens |
+| 1.0.2   | 2020-02 | David Bernick                              | Clarify risk scenarios  |
 | 1.0.1   | 2019-10 | David Bernick                              | Clarify that non-GA4GH claims are allowed in tokens |
 | 1.0.0   | 2019-10 | Approved by GA4GH Steering Committee       |                         |
 | 0.9.9   | 2019-10 | David Bernick, Craig Voisin, Mikael Linden | Approved standard       |
@@ -409,7 +410,9 @@ the Broker.
 1.  Claim Clearinghouses MUST trust at least one Broker.
 
     1.  Claim Clearinghouses MAY trust more than one Broker
-
+    
+    2.  Risk assessment of a Broker is on the Claim Clearinghouse to trust an access token. RECOMMENDED to trust the minimum set of Brokers required to obtain the access token payload.
+    
 2.  Claim Clearinghouses MUST either check the validity of the access token or treat the access
     token as opaque.
 
@@ -461,7 +464,9 @@ the Broker.
 
 5.  Claim Clearinghouses MUST provide protection against attacks as outlined in
     [RFC 6819](https://tools.ietf.org/html/rfc6819).
-    
+
+    1. Section 5.1.6 of RFC 6819 contains a SHOULD section that states `Ensure that client applications do not share tokens with 3rd parties.` This profile provides a mechanism for Clearinghouses to consume access tokens from multiple brokers in a manner that does not involve 3rd parties. Client applications SHOULD take care to not spread the tokens to any other services that would be considered 3rd parties.
+        
 6.  If making use of [Embedded Tokens](#term-embedded-token):
 
     1.  The Claim Clearinghouse MUST validate that all token checks pass (such as
