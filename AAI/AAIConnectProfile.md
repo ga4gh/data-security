@@ -4,6 +4,7 @@
 
 | Version | Date    | Editor                                     | Notes                   |
 |---------|---------|--------------------------------------------|-------------------------|
+| 1.0.3   | 2020-09 | David Bernick                              | Clarify allowance of JWT-only Authn |
 | 1.0.2   | 2020-02 | David Bernick                              | Clarify risk scenarios  |
 | 1.0.1   | 2019-10 | David Bernick                              | Clarify that non-GA4GH claims are allowed in tokens |
 | 1.0.0   | 2019-10 | Approved by GA4GH Steering Committee       |                         |
@@ -405,6 +406,8 @@ the Broker.
     1.  Claim Clearinghouses MAY trust more than one Broker
     
     2.  Risk assessment of a Broker is on the Claim Clearinghouse to trust an access token. RECOMMENDED to trust the minimum set of Brokers required to obtain the access token payload.
+        
+        1. A Claim Clearinghouse MAY accept and validate an access token (JWT) from a client without a direct Broker or Claim Clearinghouse relationship or without being part of the OAuth Consent process. The Claim Clearinghouse in this case is accepting this risk and this specification assumes that getting consent from the User happens upstream.
     
 2.  Claim Clearinghouses MUST either check the validity of the access token or treat the access
     token as opaque.
