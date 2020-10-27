@@ -4,6 +4,7 @@
 
 | Version | Date    | Editor                                     | Notes                   |
 |---------|---------|--------------------------------------------|-------------------------|
+| 1.0.3   | 2020-10 | Kurt Rodarmer                              | Clarify /userinfo format for Pasport |
 | 1.0.2   | 2020-02 | David Bernick                              | Clarify risk scenarios  |
 | 1.0.1   | 2019-10 | David Bernick                              | Clarify that non-GA4GH claims are allowed in tokens |
 | 1.0.0   | 2019-10 | Approved by GA4GH Steering Committee       |                         |
@@ -257,7 +258,10 @@ the Broker.
     1.  When presented with a valid access token, the /userinfo endpoint MUST return
         claims in the specified
         [User Info Format](#claims-sent-to-data-holder-by-a-broker-via-userinfo) using
-        either an `application/json` or `application/jwt` encoding.
+        either an `application/json` or `application/jwt` encoding. In the case of a
+        [GA4GH Passport](https://github.com/ga4gh-duri/ga4gh-duri.github.io/blob/master/researcher_ids/ga4gh_passport_v1.md),
+        the format MUST be `application/jwt` and the tokens MUST conform to the
+        [GA4GH JWT Format](#ga4gh-jwt-format).
 
     2.  The Broker MUST include the claims_parameter_supported in the discovery service
         to indicate whether or not the Broker supports the [OIDC claims request
