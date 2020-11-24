@@ -407,7 +407,9 @@ the Broker.
     
     2.  Risk assessment of a Broker is on the Claim Clearinghouse to trust an access token. RECOMMENDED to trust the minimum set of Brokers required to obtain the access token payload.
         
-        1. A Claim Clearinghouse MAY accept and validate an access token (JWT) from a client without a direct Broker or Claim Clearinghouse relationship or without being part of the OAuth Consent process. The Claim Clearinghouse in this case is accepting this risk and this specification assumes that getting consent from the User happens upstream.
+        1. A Claim Clearinghouse MAY accept and validate an access token (JWT) from a client without a direct Broker or Claim Clearinghouse relationship or without being part of the OAuth Consent process. The Claim Clearinghouse in this case is accepting this risk and this specification assumes that validating consent from the User happens upstream.
+        
+        2. A Claim Clearinghouse MAY accept and validate a GA4GH Passport if that Passport is formatted as a JWT and is properly validated outside of a OAuth Consent process. The Claim Clearinghouse in this case is accepting this risk and this specification assumes that validating consent from the User happens upstream.
     
 2.  Claim Clearinghouses MUST either check the validity of the access token or treat the access
     token as opaque.
