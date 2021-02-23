@@ -407,8 +407,6 @@ the Broker.
     1.  Claim Clearinghouses MAY trust more than one Broker
     
     2.  The responsibility of risk assessment of a Broker is on the Claim Clearinghouse to trust an access token. RECOMMENDED to trust the minimum set of Brokers required to obtain the access token payload.
-        
-        1. A Claim Clearinghouse MAY accept and validate a /userinfo output if formatted as JWT and is properly validated. This MAY happen outside of an OIDC flow process. The JWT should be bound to a Claim Clearinghouse with a reasonable expiry or otherwise accept this risk for a particular use-case. This specification assumes that validating consent from the User happens upstream and the user has been informed. Note that Claim Clearinghouses outside of an explicit contractual trust relationship MUST not accept these kinds of tokens unless they're fully bound.
     
 2.  Claim Clearinghouses MUST either check the validity of the access token or treat the access
     token as opaque.
