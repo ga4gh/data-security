@@ -4,7 +4,7 @@
 
 | Version | Date    | Editor                                     | Notes                   |
 |---------|---------|--------------------------------------------|-------------------------|
-| 1.0.3   | 2020-09 | David Bernick                              | Clarify allowance of JWT-only Authn |
+| 1.0.3   | 2021-02 | David Bernick                              | Clarify allowance of JWT-only Authn |
 | 1.0.2   | 2020-02 | David Bernick                              | Clarify risk scenarios  |
 | 1.0.1   | 2019-10 | David Bernick                              | Clarify that non-GA4GH claims are allowed in tokens |
 | 1.0.0   | 2019-10 | Approved by GA4GH Steering Committee       |                         |
@@ -54,6 +54,7 @@ with others that specify the syntax and semantics of the GA4GH Claims exchanged.
        - [Claim Source Revokes Claim](#claim-source-revokes-claim)\
        - [Revoking Access from Bad Actors](#revoking-access-from-bad-actors)\
        - [Limited Damage of Leaked Tokens](#limited-damage-of-leaked-tokens)
+- [**Appendix**](#Appendix)
 
 ### Requirements Notation and Conventions
 
@@ -405,7 +406,7 @@ the Broker.
 
     1.  Claim Clearinghouses MAY trust more than one Broker
     
-    2.  Risk assessment of a Broker is on the Claim Clearinghouse to trust an access token. RECOMMENDED to trust the minimum set of Brokers required to obtain the access token payload.
+    2.  The responsibility of risk assessment of a Broker is on the Claim Clearinghouse to trust an access token. RECOMMENDED to trust the minimum set of Brokers required to obtain the access token payload.
         
         1. A Claim Clearinghouse MAY accept and validate a /userinfo output if formatted as JWT and is properly validated. This MAY happen outside of an OIDC flow process. The JWT should be bound to a Claim Clearinghouse with a reasonable expiry or otherwise accept this risk for a particular use-case. This specification assumes that validating consent from the User happens upstream and the user has been informed. Note that Claim Clearinghouses outside of an explicit contractual trust relationship MUST not accept these kinds of tokens unless they're fully bound.
     
@@ -816,3 +817,21 @@ following:
 4.  Any signed tokens that may be stored by participating services SHOULD be
     encrypted at rest and follow best practices to limit the ability of
     administrators from decrypting this content.
+
+Appendix
+---------------- 
+#### Can the output of `/userinfo` be used as a JWT for Authentication?
+
+The spec says that `/userinfo` may be formatted as a JWT. A Clearinghouse that sends an access token to a `/userinfo` endpoint might get either JSON or a formatted and signed JWT from a broker. It can then use that JWT downstream as an authentication mechanism if downstream services like Clearinghouses support it and know what to do with it. 
+
+It is probable that a special token endpoint will exist in a future version of this profile that should prevent the `/userinfo` endpoint from being overloaded.
+
+#### Can a JWT alone be used for authentication even if the spec mostly talks about OIDC Flow?
+
+Yes. This specification allows for groups to organize themselves in many ways. 
+
+A trusted group of Brokers and Claims Clearinghouses are permitted to format `/userinfo` output as a JWT and use that as the primary means of how their services communicate or to take `/userinfo` output and format it through some other means into a JWT. Proper due-dilligence and handling of tokens must be followed.
+
+This specification does not prohibit services from using JWTs as authentication outside of an OIDC flow.
+
+An example: Two different stacks of software all have a similar user-base and often use the same shared data resource -- a biobank, for instance. Treating a non-Access-Token JWT as a source of authentication enables one stack to authenticate a user to a broker, get GA4GH claims and then craft and pass a JWT to another (trusted) stack so that a user would not have to authenticate again just to access the same stack from a new set of software. This enables two or more software stacks to work toether more fluidly than having the same user authenticate twice across two stacks to access the same data. There is an assumption that these two software stacks have agreements and risk assessment in place in order to make this a secure method of authentication.
