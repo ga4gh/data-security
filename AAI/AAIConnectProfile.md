@@ -4,7 +4,6 @@
 
 | Version | Date    | Editor                                     | Notes                   |
 |---------|---------|--------------------------------------------|-------------------------|
-| 1.0.3   | 2021-02 | David Bernick                              | Clarify allowance of JWT-only Authn |
 | 1.0.2   | 2020-02 | David Bernick                              | Clarify risk scenarios  |
 | 1.0.1   | 2019-10 | David Bernick                              | Clarify that non-GA4GH claims are allowed in tokens |
 | 1.0.0   | 2019-10 | Approved by GA4GH Steering Committee       |                         |
@@ -815,21 +814,3 @@ following:
 4.  Any signed tokens that may be stored by participating services SHOULD be
     encrypted at rest and follow best practices to limit the ability of
     administrators from decrypting this content.
-
-Appendix
----------------- 
-#### Can the output of `/userinfo` be used as a JWT for Authentication?
-
-The spec says that `/userinfo` may be formatted as a JWT. A Clearinghouse that sends an access token to a `/userinfo` endpoint might get either JSON or a formatted and signed JWT from a broker. It can then use that JWT downstream as an authentication mechanism if downstream services like Clearinghouses support it and know what to do with it. 
-
-It is probable that a special token endpoint will exist in a future version of this profile that should prevent the `/userinfo` endpoint from being overloaded.
-
-#### Can a JWT alone be used for authentication even if the spec mostly talks about OIDC Flow?
-
-Yes. This specification allows for groups to organize themselves in many ways. 
-
-A trusted group of Brokers and Claims Clearinghouses are permitted to format `/userinfo` output as a JWT and use that as the primary means of how their services communicate or to take `/userinfo` output and format it through some other means into a JWT. Proper due-dilligence and handling of tokens must be followed.
-
-This specification does not prohibit services from using JWTs as authentication outside of an OIDC flow.
-
-An example: Two different stacks of software all have a similar user-base and often use the same shared data resource -- a biobank, for instance. Treating a non-Access-Token JWT as a source of authentication enables one stack to authenticate a user to a broker, get GA4GH claims and then craft and pass a JWT to another (trusted) stack so that a user would not have to authenticate again just to access the same stack from a new set of software. This enables two or more software stacks to work toether more fluidly than having the same user authenticate twice across two stacks to access the same data. There is an assumption that these two software stacks have agreements and risk assessment in place in order to make this a secure method of authentication.

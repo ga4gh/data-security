@@ -14,6 +14,7 @@
        - [Embedded Tokens example and explanation](#embedded-tokens)\
        - [Services parties are responsible for providing](#services-parties-are-responsible-for-providing)
 - [**Future topics to explore**](#future-topics-to-explore)
+- [**FAQ**](FAQ.md)
 
 ## Introduction
 
