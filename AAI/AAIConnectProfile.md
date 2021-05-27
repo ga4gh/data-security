@@ -4,6 +4,7 @@
 
 | Version | Date    | Editor                                     | Notes                   |
 |---------|---------|--------------------------------------------|-------------------------|
+| 1.1     | 2021-06 | David Bernick                              | Add "Token Container" concept for Passports |
 | 1.0.2   | 2020-02 | David Bernick                              | Clarify risk scenarios  |
 | 1.0.1   | 2019-10 | David Bernick                              | Clarify that non-GA4GH claims are allowed in tokens |
 | 1.0.0   | 2019-10 | Approved by GA4GH Steering Committee       |                         |
@@ -24,10 +25,10 @@ applicable to (but not limited to) the sharing of restricted datasets.
 
 In particular, this specification introduces a JSON Web Token
 ([JWT](#relevant-specifications)) syntax for an access token to
-enable an OIDC provider (called a [Broker](#term-broker)) to allow a downstream
+enable an OIDC provider (called a [Broker](#term-broker)) to allow a downstream 
 access token consumer (called a [Claim Clearinghouse](#term-claim-clearinghouse))
 to locate the Broker’s /userinfo endpoint as a means to fetch [GA4GH
-Claims](#term-ga4gh-claim). This specification is suggested to be used together
+Claims](#term-ga4gh-claim). The GA4GH Claims, nominally a  [GA4GH Passport](https://github.com/ga4gh-duri/ga4gh-duri.github.io/blob/master/researcher_ids/ga4gh_passport_v1.md), can then be use for other authentication and authorization purposes. This specification is suggested to be used together
 with others that specify the syntax and semantics of the GA4GH Claims exchanged.
 
 ### Table of Contents
@@ -41,6 +42,7 @@ with others that specify the syntax and semantics of the GA4GH Claims exchanged.
        - [Client/Application Conformance](#clientapplication-conformance)\
        - [Conformance for Brokers](#conformance-for-brokers)\
        - [Conformance for Embedded Token Issuers](#conformance-for-embedded-token-issuers)\
+       - [Conformance for Token Container Issuers](#conformance-for-token-container-issuers)\
        - [Conformance for Claim Clearinghouses (consuming Access Tokens to give access to data)](#conformance-for-claim-clearinghouses-consuming-access-tokens-to-give-access-to-data)
 - [**GA4GH JWT Format**](#ga4gh-jwt-format)\
        - [Access_token issued by broker](#access_token-issued-by-broker)\
@@ -118,8 +120,8 @@ Access can be granted by either issuing new access tokens for downstream
 services (i.e. the Claim Clearinghouse may act like an authorization server)
 or by providing access to the underlying resources directly (i.e. the Claim
 Clearinghouse may act like a resource server). Some Claim Clearinghouses may
-issue access tokens that may contain a new set of GA4GH Claims and/or a
-subset of GA4GH claims for downstream consumption.
+issue tokens that may contain a new set of GA4GH Claims and/or a
+subset of GA4GH claims for downstream consumption (such as a Passport).
 
 <a name="term-data-holder"></a> **Data Holder** -- An organization that
 protects a specific set of data. They hold data (or its copy) and respects
@@ -133,9 +135,13 @@ instance, a Data Access Committee (DAC).
 
 <a name="term-embedded-token-issuer"></a> **Embedded Token Issuer** --
 a service that signs [Embedded Tokens](#term-embedded-token). This service
-may be a [Broker](#term-broker) itself, or it may have a Broker use this
-service as part of collecting GA4GH Claims that the Broker includes in
-responses from its /userinfo endpoint.
+may be:  
+* a [Broker](#term-broker) itself
+* a Broker may use this service as part of collecting GA4GH Claims that the Broker includes in responses from its /userinfo endpoint.
+
+<a name="term-token-container-issuer"></a> **Token Container Issuer** --
+a service that creates and signs a container - in this case a JWT - holding [Embedded Tokens](#term-embedded-token).
+* a stand-alone service where a Broker, Client or Claims Clearinghouse may re-sign the JWT holding GA4GH Claims (such as [GA4GH Visas](https://github.com/ga4gh-duri/ga4gh-duri.github.io/blob/master/researcher_ids/ga4gh_passport_v1.md#passport-visa)) with their own authority.
 
 <a name="term-embedded-token"></a> **Embedded Token** -- A GA4GH Claim value
 or entry within a list or object of a GA4GH Claim that contains a JWS string.
@@ -399,29 +405,44 @@ the Broker.
     except for accommodating for `exp` timestamps to be represented as
     indicated above.
 
-#### Conformance for Claim Clearinghouses (consuming Access Tokens to give access to data)
+#### Conformance for Token Container Issuers
+
+1.  Token Container Issuers are used to re-sign GA4GH Claims Tokens, nominally JWTs, that contain Embedded Tokens.
+
+2.  Token Container Issuers do not need to be a be a OIDC provider, and MAY provide a .well-known endpoint that doesn't conform to the OIDC Discovery specification for ease of finding signing keys.  
+
+    1. Token Container Issuers MAY be AAI Clients, Clearinghouses or Brokers.
+
+3.  Token Containers themselves are JWTs that contain Embedded Tokens. Token Containers use this format [User Info Format](#claims-sent-to-data-holder-by-a-broker-via-userinfo) as a signed JWT.  
+    
+    1. It is RECOMMENDED for Token Containers to conform to the <https://tools.ietf.org/html/rfc7515> (JWS) Specification.
+    
+
+#### Conformance for Claim Clearinghouses (consuming Access Tokens  or Token Containers to give access to data)
 
 1.  Claim Clearinghouses MUST trust at least one Broker.
 
     1.  Claim Clearinghouses MAY trust more than one Broker
     
-    2.  The responsibility of risk assessment of a Broker is on the Claim Clearinghouse to trust an access token. RECOMMENDED to trust the minimum set of Brokers required to obtain the access token payload.
+    2.  The responsibility of risk assessment of a Broker is on the Claim Clearinghouse to trust a token. 
     
-2.  Claim Clearinghouses MUST either check the validity of the access token or treat the access
+2.  Claim Clearinghouses MUST process access tokens to access a Broker's `/userinfo` to get access to GA4GH Claims OR MUST process Token Containers and their Embedded Tokens. 
+           
+    1.  For access token flows, Claim Clearinghouses MUST either check the validity of the access token or treat the access
     token as opaque.
 
-    1.  If treating the token as a JWT a Claim Clearinghouse:
+        1.  If treating the token as a JWT a Claim Clearinghouse:
 
-        1. Even though JWTs are expected to be submitted against /userinfo, a Claim Clearinghouse SHOULD check the Token’s signature via JWKS or having stored the
+            1. Even though JWTs are expected to be submitted against a Broker's `/userinfo`, a Claim Clearinghouse SHOULD check the Token’s signature via JWKS or having stored the
             public key.
 
-            1.  A metadata URL (.well-known URL) SHOULD be used here to use the
+                1.  A metadata URL (.well-known URL) SHOULD be used here to use the
                 jwks_uri parameter.
                 
-        2.  MUST check `iss` attribute to ensure a trusted Broker has generated
+            2.  MUST check `iss` attribute to ensure a trusted Broker has generated
             the token.
             
-            1.  If evaluating an Embedded Token, trust MUST be established based
+                1.  If evaluating an Embedded Token, trust MUST be established based
                 on the signer of the Embedded Token itself. In Claim
                 Clearinghouses participating in open federation, the Claim
                 Clearinghouse does not necessarily have to trust the Broker that
@@ -431,14 +452,16 @@ the Broker.
                 also be trusted if the Claim Clearinghouse needs to restrict its
                 trust model).
 
-        3.  MUST check `exp` to ensure the token has not expired.
+            3.  MUST check `exp` to ensure the token has not expired.
 
-        4.  MAY additionally check `aud` to make sure Relying Party is trusted
+            4.  MAY additionally check `aud` to make sure Relying Party is trusted
             (client_id).
 
-    2.  If treating the token as an opaque a Claim Clearinghouse MUST know in
+        2.  If treating the token as an opaque a Claim Clearinghouse MUST know in
         advance where to find a corresponding /userinfo. This may limit the
         functionality of accepting tokens from some Brokers.
+
+    2.  For Token Container flows, Claim Clearinghouses MUST check the validity of the JWT token. Follow the guidance in the JWT access tokens for validity.
 
 3.  Claim Clearinghouse or downstream applications MAY use [/userinfo
     endpoint](https://openid.net/specs/openid-connect-core-1_0.html#UserInfo)
@@ -456,7 +479,7 @@ the Broker.
 
     1. Section 5.1.6 of RFC 6819 contains a SHOULD section that states `Ensure that client applications do not share tokens with 3rd parties.` This profile provides a mechanism for Clearinghouses to consume access tokens from multiple brokers in a manner that does not involve 3rd parties. Client applications SHOULD take care to not spread the tokens to any other services that would be considered 3rd parties.
         
-6.  If making use of [Embedded Tokens](#term-embedded-token):
+6.  If making use of [Embedded Tokens](#term-embedded-token) directly from `/userinfo` or from a Token Container:
 
     1.  The Claim Clearinghouse MUST validate that all token checks pass (such as
         the token hasn’t expired) as described elsewhere in this specification and
@@ -586,7 +609,7 @@ Payload:
 Only the GA4GH claims truly must be as prescribed here. Refer to OIDC Spec for
 more information. The /userinfo endpoint MAY use `application/json` or
 `application/jwt`. If `application/jwt` is returned, it MUST be signed as per
-[UserInfo](https://openid.net/specs/openid-connect-core-1_0.html#UserInfoResponse).
+[UserInfo](https://openid.net/specs/openid-connect-core-1_0.html#UserInfoResponse). If this is a JWT, it MAY be used as a Token Container.
 
 ```
 {
