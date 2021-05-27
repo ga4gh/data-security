@@ -140,14 +140,16 @@ may be:
 * a Broker may use this service as part of collecting GA4GH Claims that the Broker includes in responses from its /userinfo endpoint.
 
 <a name="term-token-container-issuer"></a> **Token Container Issuer** --
-a service that creates and signs a container - in this case a JWT - holding [Embedded Tokens](#term-embedded-token).
-* a stand-alone service where a Broker, Client or Claims Clearinghouse may re-sign the JWT holding GA4GH Claims (such as [GA4GH Visas](https://github.com/ga4gh-duri/ga4gh-duri.github.io/blob/master/researcher_ids/ga4gh_passport_v1.md#passport-visa)) with their own authority.
+a service that creates and signs a [Token Container](#term-token-container) - in this case a JWT - holding [Embedded Tokens](#term-embedded-token).
+* a service where a Broker, Client or Claims Clearinghouse may re-sign the JWT holding GA4GH Claims (such as [GA4GH Visas](https://github.com/ga4gh-duri/ga4gh-duri.github.io/blob/master/researcher_ids/ga4gh_passport_v1.md#passport-visa)) with their own authority.
 
 <a name="term-embedded-token"></a> **Embedded Token** -- A GA4GH Claim value
 or entry within a list or object of a GA4GH Claim that contains a JWS string.
 It MUST be signed by an [Embedded Token Issuer](#term-embedded-token-issuer).
 An Embedded Token can pass [GA4GH Claims](#term-ga4gh-claim) through various Brokers as needed
 while retaining the token signature of the original Embedded Token Issuer.
+
+<a name="term-token-container"></a> **Token Container** -- A signed and verifiable JWT container for holding [Embedded Tokens](#term-embedded-token).
 
 ### Relevant Specifications
 
@@ -299,8 +301,8 @@ the Broker.
     3.  A user's withdrawal of this agreement does not need to apply to
         previously generated access tokens.
 
-6.  By signing an access token, an Broker asserts that the GA4GH Claims that
-    token makes available at the /userinfo endpoint -- not including any
+6.  <a name="broker-signing"></a>By signing an access token, an Broker asserts that the GA4GH Claims that
+    token makes available at the `/userinfo` endpoint -- not including any
     Embedded Tokens -- were legitimately derived from their [Claim
     Sources](#term-claim-source), and the content is presented and/or
     transformed without misrepresenting the original intent.
@@ -411,7 +413,9 @@ the Broker.
 
 2.  Token Container Issuers do not need to be a be a OIDC provider, and MAY provide a .well-known endpoint that doesn't conform to the OIDC Discovery specification for ease of finding signing keys.  
 
-    1. Token Container Issuers MAY be AAI Clients, Clearinghouses or Brokers.
+    1. Token Container Issuers MAY be AAI Clients, Clearinghouses, Brokers or any other entity and do not need to be part of the OIDC flow.  
+    
+    2. Token Containers should be [signed](#broker-signing) in the same way that Brokers sign access tokens.
 
 3.  Token Containers themselves are JWTs that contain Embedded Tokens. Token Containers use this format [User Info Format](#claims-sent-to-data-holder-by-a-broker-via-userinfo) as a signed JWT.  
     
