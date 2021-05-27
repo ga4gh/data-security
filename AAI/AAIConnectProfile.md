@@ -53,6 +53,7 @@ with others that specify the syntax and semantics of the GA4GH Claims exchanged.
        - [Claim Source Revokes Claim](#claim-source-revokes-claim)\
        - [Revoking Access from Bad Actors](#revoking-access-from-bad-actors)\
        - [Limited Damage of Leaked Tokens](#limited-damage-of-leaked-tokens)
+- [**Appendix**](#Appendix)
 
 ### Requirements Notation and Conventions
 
@@ -404,7 +405,7 @@ the Broker.
 
     1.  Claim Clearinghouses MAY trust more than one Broker
     
-    2.  Risk assessment of a Broker is on the Claim Clearinghouse to trust an access token. RECOMMENDED to trust the minimum set of Brokers required to obtain the access token payload.
+    2.  The responsibility of risk assessment of a Broker is on the Claim Clearinghouse to trust an access token. RECOMMENDED to trust the minimum set of Brokers required to obtain the access token payload.
     
 2.  Claim Clearinghouses MUST either check the validity of the access token or treat the access
     token as opaque.
