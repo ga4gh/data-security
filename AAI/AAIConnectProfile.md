@@ -4,6 +4,7 @@
 
 | Version | Date    | Editor                                     | Notes                   |
 |---------|---------|--------------------------------------------|-------------------------|
+| 1.0.3   | 2020-04 | Douglas Voet                               | Add audiences to embedded tokens |
 | 1.0.2   | 2020-02 | David Bernick                              | Clarify risk scenarios  |
 | 1.0.1   | 2019-10 | David Bernick                              | Clarify that non-GA4GH claims are allowed in tokens |
 | 1.0.0   | 2019-10 | Approved by GA4GH Steering Committee       |                         |
@@ -398,6 +399,12 @@ the Broker.
     presented and/or transformed without misrepresenting the original intent,
     except for accommodating for `exp` timestamps to be represented as
     indicated above.
+    
+3.  An Embedded Token Issuer MAY include the `aud` claim to identify the 
+    [Brokers](#term-broker) as the intended audience as specified by 
+    [RFC 7523 Section 3](https://tools.ietf.org/html/rfc7523#section-3).
+    When an `aud` claim is specified, the values within the `aud` claim MUST 
+    match the `iss` claim of access tokens issued by consented Brokers.
 
 #### Conformance for Claim Clearinghouses (consuming Access Tokens to give access to data)
 
@@ -430,6 +437,11 @@ the Broker.
                 any other Broker involved in the propagation of the claims to
                 also be trusted if the Claim Clearinghouse needs to restrict its
                 trust model).
+            2.  If an Embedded Token contains an `aud` claim, Clearinghouse MUST check
+                that one of the Embedded Token's `aud` entries 
+                [matches](https://tools.ietf.org/html/rfc3986#section-6.2.1) the Broker's 
+                `iss` claim (i.e. a Broker's access token `iss` claim must match the `aud`
+                claim within its Embedded Tokens if the Embedded Token aud claim is provided).
 
         3.  MUST check `exp` to ensure the token has not expired.
 
@@ -661,7 +673,7 @@ where:
 4.  The payload claims MAY contain at least one GA4GH Claim
     (`<ga4gh-spec-claims>`).
 
-5.  The payload claims MUST NOT include `aud`.
+5.  The payload claims MAY include `aud` to list approved brokers
 
 ##### Embedded Document Token Format
 
@@ -707,6 +719,8 @@ Issuer.
    -   `<ga4gh-spec-claims>`: OPTIONAL. One or more GA4GH Claims MAY be
        provided. See [Authorization/Claims](#authorizationclaims) for an
        example.
+       
+   -   MAY contain `aud` to list approved brokers
 
 #### Authorization/Claims 
 
