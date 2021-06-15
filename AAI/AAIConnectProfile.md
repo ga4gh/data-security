@@ -409,7 +409,7 @@ the Broker.
 
 #### Conformance for Token Container Issuers
 
-1.  Token Container Issuers are used to re-sign GA4GH Claims Tokens, nominally JWTs, that contain Embedded Tokens.
+1.  Token Container Issuers are used to re-package and re-sign GA4GH Claims Tokens, nominally JWTs, that contain Embedded Tokens.
 
 2.  Token Container Issuers do not need to be a be a OIDC provider, and MAY provide a .well-known endpoint that doesn't conform to the OIDC Discovery specification for ease of finding signing keys.  
 
@@ -419,10 +419,12 @@ the Broker.
 
 3.  Token Containers themselves are JWTs that contain Embedded Tokens. Token Containers use this format [User Info Format](#claims-sent-to-data-holder-by-a-broker-via-userinfo) as a signed JWT.  
     
-    1. It is RECOMMENDED for Token Containers to conform to the <https://tools.ietf.org/html/rfc7515> (JWS) Specification.
+    1. It is RECOMMENDED for Token Containers to conform to the <https://tools.ietf.org/html/rfc7515> (JWS) Specification.  
+    
+4.  Token Containers MAY be issued from a `/token` endpoint that, when presented with a valid access token, presents a signed JWT with the embedded tokens as opposed to deriving it directly from `/userinfo`.  This endpoint should act in the same way as a `/userinfo` endpoint, however it simply guarantees a return in a signed JWT format.
     
 
-#### Conformance for Claim Clearinghouses (consuming Access Tokens  or Token Containers to give access to data)
+#### Conformance for Claim Clearinghouses (consuming Access Tokens or Token Containers to give access to data)
 
 1.  Claim Clearinghouses MUST trust at least one Broker.
 
@@ -608,12 +610,18 @@ Payload:
 
 -   `addtional claims`: OPTIONAL. Any other additional non-GA4GH claims are allowed. This specification does not dictate the format of other claims.
 
-#### Claims sent to Data Holder by a Broker via /userinfo
+#### Claims sent to Data Holder by a Broker via `/userinfo` (and `/token` if using)
 
 Only the GA4GH claims truly must be as prescribed here. Refer to OIDC Spec for
 more information. The /userinfo endpoint MAY use `application/json` or
-`application/jwt`. If `application/jwt` is returned, it MUST be signed as per
-[UserInfo](https://openid.net/specs/openid-connect-core-1_0.html#UserInfoResponse). If this is a JWT, it MAY be used as a Token Container.
+`application/jwt`.  It is RECOMMENDED that if desiring to return a JWT, a `/token` exists to do that and `/userinfo` returns a general blob.   
+
+If `application/jwt` is returned, it MUST be signed as per
+[UserInfo](https://openid.net/specs/openid-connect-core-1_0.html#UserInfoResponse).  
+
+If this is a JWT, it MAY be used as a Token Container.  
+
+If this information is a JWT, especially from the recommended `/token` endpoint, the JWT should include additional attributes.
 
 ```
 {
@@ -623,6 +631,8 @@ more information. The /userinfo endpoint MAY use `application/json` or
   "<client-id1>",
   "<client-id2>" ...
  ],
+ "iat": <seconds-since-epoch>,
+ "exp": <seconds-since-epoch>,
  <ga4gh-spec-claims>
 }
 ```
@@ -630,6 +640,10 @@ more information. The /userinfo endpoint MAY use `application/json` or
 -   `iss` and `sub`: REQUIRED.
 
 -   `aud`: OPTIONAL.
+
+-   `iat`: REQUIRED only if JWT Otherwise OPTIONAL. Time issued.
+
+-   `exp`: REQUIRED only if JWT Otherwise OPTIONAL. Time expired.
 
 -   `<ga4gh-spec-claims>`: OPTIONAL. GA4GH Claims are generally included as
     part of one or more GA4GH standard specifications based on the scopes
