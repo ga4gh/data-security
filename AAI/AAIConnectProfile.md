@@ -421,7 +421,21 @@ the Broker.
     
     1. It is RECOMMENDED for Token Containers to conform to the <https://tools.ietf.org/html/rfc7515> (JWS) Specification.  
     
-4.  Token Containers MAY be issued from a `/aai/token` endpoint that, when presented with a valid access token, presents a signed JWT with the embedded tokens as opposed to deriving it directly from `/userinfo`.  This endpoint should act in the same way as a `/userinfo` endpoint, however it simply guarantees a return in a signed JWT format.
+4.  Token Containers MAY be issued from a token endpoint using the [token exchange OAuth extension](https://datatracker.ietf.org/doc/html/rfc8693), modulo the following clarifications:
+
+    1. The token endpoint MAY support other OAuth2 grant types.
+
+    2. Client authentication is REQUIRED (using [OAuth2 client authentication](https://datatracker.ietf.org/doc/html/rfc6749#section-2.3.1) is RECOMMENDED).
+
+    3. The `requested_token_type` parameter MUST be present with the value `urn:ietf:params:oauth:token-type:jwt`.
+
+    4. The `subject_token` parameter value MUST be a valid AAI access token issued to the requesting client.
+
+    5. The `subject_token_type` parameter value MUST be `urn:ietf:params:oauth:token-type:access_token`.
+
+    6. The token endpoint SHOULD require one or more scopes to be present in the given AAI access token (ex. `"scope": "ga4gh_passport_v1"`).
+
+    7. The token endpoint MAY accept or require any other optional parameters defined in [RFC8693](https://datatracker.ietf.org/doc/html/rfc8693).
     
 
 #### Conformance for Claim Clearinghouses (consuming Access Tokens or Token Containers to give access to data)
@@ -610,18 +624,18 @@ Payload:
 
 -   `addtional claims`: OPTIONAL. Any other additional non-GA4GH claims are allowed. This specification does not dictate the format of other claims.
 
-#### Claims sent to Data Holder by a Broker via `/userinfo` (and `/aai/token` if using)
+#### Claims sent to Data Holder by a Broker via `/userinfo`
 
 Only the GA4GH claims truly must be as prescribed here. Refer to OIDC Spec for
 more information. The /userinfo endpoint MAY use `application/json` or
-`application/jwt`.  It is RECOMMENDED that if desiring to return a JWT, a `/aai/token` exists to do that and `/userinfo` returns a general blob.   
+`application/jwt`.  It is RECOMMENDED that if desiring to return a JWT, a token endpoint supporting AAI token exchange exists to do that and `/userinfo` returns a general blob.
 
 If `application/jwt` is returned, it MUST be signed as per
 [UserInfo](https://openid.net/specs/openid-connect-core-1_0.html#UserInfoResponse).  
 
 If this is a JWT, it MAY be used as a Token Container.  
 
-If this information is a JWT, especially from the recommended `/aai/token` endpoint, the JWT should include additional attributes.
+If this information is a JWT, especially from the recommended token endpoint, the JWT should include additional attributes.
 
 ```
 {
