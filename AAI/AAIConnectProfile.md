@@ -137,9 +137,9 @@ instance, a Data Access Committee (DAC).
 <a name="term-passport-scoped-access-token"></a> **Passport-Scoped Access
 Token** -- A JWT bearer token, returned as an OAuth2 access token as
 described herein, encoded via JWS Compact Serialization per
-[rfc7515](https://datatracker.ietf.org/doc/html/rfc7515), containing
+[RFC7515](https://datatracker.ietf.org/doc/html/rfc7515), containing
 `ga4gh_passport_v1` as a space-separated entry within the `scope` claim but
-does not contain [GA4GH Claims](#term-ga4gh-claims).
+does not contain [GA4GH Claims](#term-ga4gh-claim).
 
 <a name="term-visa-issuer"></a> <a name="term-embedded-token-issuer"></a>
 **Visa Issuer** (aka "Embedded Token Issuer") -- a service that signs
@@ -149,7 +149,7 @@ does not contain [GA4GH Claims](#term-ga4gh-claims).
 **Visa** (aka "Embedded Token") -- A [GA4GH Claim](#term-ga4gh-claim)
 value or entry within a list or object of a GA4GH Claim that contains a JWT
 encoded via JWS Compact Serialization per
-[rfc7515](https://datatracker.ietf.org/doc/html/rfc7515).
+[RFC7515](https://datatracker.ietf.org/doc/html/rfc7515).
 It MUST be signed by a [Visa Issuer](#term-visa-issuer). A Visa MAY be passed
 through various [Brokers](#term-broker) as needed while retaining the token
 signature of the original Visa Issuer.
@@ -176,6 +176,8 @@ Clearinghouses MUST be protected using TLS.
 [OIDC Discovery](https://openid.net/specs/openid-connect-discovery-1_0.html)
 
 [OAuth 2.0 Threat Model and Security Considerations (RFC 6819)](https://tools.ietf.org/html/rfc6819).
+
+[GA4GH Passport](https://github.com/ga4gh-duri/ga4gh-duri.github.io/blob/master/researcher_ids/ga4gh_passport_v1.md)
 
 ### Flow of Claims 
 
@@ -811,7 +813,7 @@ claims to prevent further tokens from being minted.
         token revocation and remove access accordingly.
 
 2.  A process MUST exist, manual or automated, to eventually remove or invalidate
-    related claims from the [Claim Respository](#term-claim-respository).
+    related claims from the [Claim Respository](#term-claim-repository).
 
 #### Limited Damage of Leaked Tokens
 
