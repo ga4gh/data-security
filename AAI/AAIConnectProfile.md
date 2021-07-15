@@ -4,6 +4,7 @@
 
 | Version | Date    | Editor                                     | Notes                   |
 |---------|---------|--------------------------------------------|-------------------------|
+| 1.0.3   | 2021-06 | Craig Voisin                               | Links for "scope" claim |
 | 1.0.2   | 2020-02 | David Bernick                              | Clarify risk scenarios  |
 | 1.0.1   | 2019-10 | David Bernick                              | Clarify that non-GA4GH claims are allowed in tokens |
 | 1.0.0   | 2019-10 | Approved by GA4GH Steering Committee       |                         |
@@ -520,7 +521,9 @@ the Broker.
 
 A well-formed JWS-Encoded JSON Web Token (JWT) consists of three concatenated
 Base64url-encoded strings, separated by dots (.) The three sections are: header,
-payload and signature. These JWTs follow <https://tools.ietf.org/html/rfc7515> (JWS).
+payload and signature. These JWTs follow [RFC7515](https://tools.ietf.org/html/rfc7515) (JWS)
+and utilize a number of [standard JWT claim names](https://www.iana.org/assignments/jwt/jwt.xhtml)
+as per the registation process.
 
 This profile is agnostic to the format of the id_token.
 
@@ -578,6 +581,7 @@ Payload:
     include any `<ga4gh-spec-scopes>` needed for the GA4GH compliant environment
     (e.g. "ga4gh_passport_v1" is the [scope for GA4GH
     Passports](https://github.com/ga4gh-duri/ga4gh-duri.github.io/blob/master/researcher_ids/ga4gh_passport_v1.md#requirement-7)).
+    The `scope` claim is defined by [RFC8693 section 4.2](https://datatracker.ietf.org/doc/html/rfc8693#section-4.2).
 
 -   `addtional claims`: OPTIONAL. Any other additional non-GA4GH claims are allowed. This specification does not dictate the format of other claims.
 
@@ -656,7 +660,8 @@ where:
 2.  `jti` is RECOMMENDED.
 
 3.  `scope` is REQUIRED and MUST be a string containing a space-delimited set of
-    scope names. "openid" MUST be included as a scope name.
+    scope names. "openid" MUST be included as a scope name. The `scope` claim
+    name is defined by [RFC8693 section 4.2](https://datatracker.ietf.org/doc/html/rfc8693#section-4.2).
 
 4.  The payload claims MAY contain at least one GA4GH Claim
     (`<ga4gh-spec-claims>`).
