@@ -1,9 +1,10 @@
 ---
-## GA4GH Authentication and Authorization Infrastructure (AAI) OpenID Connect Profile (DRAFT RFC)
+## GA4GH Authentication and Authorization Infrastructure (AAI) OpenID Connect Profile
 ---
 
 | Version | Date    | Editor                                     | Notes                   |
 |---------|---------|--------------------------------------------|-------------------------|
+| 1.0.4   | 2021-07 | Craig Voisin                               | Improve existing terminology and define Passport and Visa JWTs |
 | 1.0.3   | 2021-06 | Craig Voisin                               | Links for "scope" claim |
 | 1.0.2   | 2020-02 | David Bernick                              | Clarify risk scenarios  |
 | 1.0.1   | 2019-10 | David Bernick                              | Clarify that non-GA4GH claims are allowed in tokens |
@@ -41,14 +42,14 @@ with others that specify the syntax and semantics of the GA4GH Claims exchanged.
 - [**Profile Requirements**](#profile-requirements)\
        - [Client/Application Conformance](#clientapplication-conformance)\
        - [Conformance for Brokers](#conformance-for-brokers)\
-       - [Conformance for Embedded Token Issuers](#conformance-for-embedded-token-issuers)\
+       - [Conformance for Visa Issuers](#conformance-for-visa-issuers)\
        - [Conformance for Claim Clearinghouses (consuming Access Tokens to give access to data)](#conformance-for-claim-clearinghouses-consuming-access-tokens-to-give-access-to-data)
 - [**GA4GH JWT Format**](#ga4gh-jwt-format)\
        - [Access_token issued by broker](#access_token-issued-by-broker)\
        - [Claims sent to Data Holder by a Broker via /userinfo](#claims-sent-to-data-holder-by-a-broker-via-userinfo)\
-       - [Embedded Token issued by Embedded Token Issuer](#embedded-token-issued-by-embedded-token-issuer)\
-            - [Embedded Access Token Format](#embedded-access-token-format)\
-            - [Embedded Document Token Format](#embedded-document-token-format)\
+       - [Visa issued by Visa Issuer](#visa-issued-by-visa-issuer)\
+            - [Visa Access Token Format](#visa-access-token-format)\
+            - [Visa Document Token Format](#visa-document-token-format)\
        - [Authorization/Claims](#authorizationclaims)
 - [**Token Revocation**](#token-revocation)\
        - [Claim Source Revokes Claim](#claim-source-revokes-claim)\
@@ -69,9 +70,10 @@ be interpreted as described in [RFC2119](https://www.ietf.org/rfc/rfc2119.txt).
 ### Terminology
 
 <a name="term-ga4gh-claim"></a> **GA4GH Claim** -- A JWT claim as defined by a GA4GH
-documented technical standard that is making use of this AAI specification. Note
-that GA4GH is not the organization making the claim nor taking responsibility for
-the claim as this is a reference to a GA4GH documented standard only.
+documented technical standard that is making use of this AAI specification. Typically
+this is the `ga4gh_passport_v1` or `ga4gh_visa_v1` claim for GA4GH Passports v1.x.
+Note that GA4GH is not the organization making the claim nor taking responsibility
+for the claim as this is a reference to a GA4GH documented standard only.
 
 <a name="term-claim-management-system"></a> **Claim Management System** -- a service
 that allows [Claim Source](#term-claim-source) users to manage claims and update one
@@ -132,17 +134,25 @@ can also be a data holder. Data holders run an
 data and, in that role, has capacity to decide who can access it. For
 instance, a Data Access Committee (DAC).
 
-<a name="term-embedded-token-issuer"></a> **Embedded Token Issuer** --
-a service that signs [Embedded Tokens](#term-embedded-token). This service
-may be a [Broker](#term-broker) itself, or it may have a Broker use this
-service as part of collecting GA4GH Claims that the Broker includes in
-responses from its /userinfo endpoint.
+<a name="term-passport-scoped-access-token"></a> **Passport-Scoped Access
+Token** -- A JWT bearer token, returned as an OAuth2 access token as
+described herein, encoded via JWS Compact Serialization per
+[rfc7515](https://datatracker.ietf.org/doc/html/rfc7515), containing
+`ga4gh_passport_v1` as a space-separated entry within the `scope` claim but
+does not contain [GA4GH Claims](#term-ga4gh-claims).
 
-<a name="term-embedded-token"></a> **Embedded Token** -- A GA4GH Claim value
-or entry within a list or object of a GA4GH Claim that contains a JWS string.
-It MUST be signed by an [Embedded Token Issuer](#term-embedded-token-issuer).
-An Embedded Token can pass [GA4GH Claims](#term-ga4gh-claim) through various Brokers as needed
-while retaining the token signature of the original Embedded Token Issuer.
+<a name="term-visa-issuer"></a> <a name="term-embedded-token-issuer"></a>
+**Visa Issuer** (aka "Embedded Token Issuer") -- a service that signs
+[Visas](#term-visa).
+
+<a name="term-visa"></a> <a name="term-embedded-token"></a>
+**Visa** (aka "Embedded Token") -- A [GA4GH Claim](#term-ga4gh-claim)
+value or entry within a list or object of a GA4GH Claim that contains a JWT
+encoded via JWS Compact Serialization per
+[rfc7515](https://datatracker.ietf.org/doc/html/rfc7515).
+It MUST be signed by a [Visa Issuer](#term-visa-issuer). A Visa MAY be passed
+through various [Brokers](#term-broker) as needed while retaining the token
+signature of the original Visa Issuer.
 
 ### Relevant Specifications
 
@@ -187,7 +197,7 @@ in this specification, in their handling of protocols, claims, tokens and
 related data. The flow between these components (represented by black arrows)
 MAY not be direct or conversely services shown as being separate MAY be
 combined into one service. For example, some implementations MAY deploy one
-service that handles the responsibilities of both the Embedded Token Issuer and
+service that handles the responsibilities of both the Visa Issuer and
 the Broker.
 
 ### Profile Requirements 
@@ -296,104 +306,102 @@ the Broker.
 
 6.  By signing an access token, an Broker asserts that the GA4GH Claims that
     token makes available at the /userinfo endpoint -- not including any
-    Embedded Tokens -- were legitimately derived from their [Claim
+    Visas -- were legitimately derived from their [Claim
     Sources](#term-claim-source), and the content is presented and/or
     transformed without misrepresenting the original intent.
     
-    When a Broker acts as a Embedded Token Issuer and signs Embedded
-    Tokens, then those signatures adhere to the same assertion criteria as
-    outlined in the [Conformance for Embedded Token
-    Issuers](#conformance-for-embedded-token-issuers)
-    section of this specification.
+    When a Broker acts as a Visa Issuer and signs Visas, then those signatures
+    adhere to the same assertion criteria as outlined in the [Conformance
+    for Visa Issuers](#conformance-for-visa-issuers) section of this
+    specification.
 
-    When a Broker provides Embeded Tokens from other Embedded Token
-    Issuers, it is providing them "as is" (i.e. it provides no additional
-    assurance as to the quality, authenticity, or trustworthiness of the
-    claims from such tokens and any such assurances are made by the issuer of
-    the Embedded Token, i.e. the Embedded Token Issuer).
+    When a Broker provides Embeded Tokens from other Visa Issuers, it is providing
+    them "as is" (i.e. it provides no additional assurance as to the quality,
+    authenticity, or trustworthiness of the claims from such tokens and any such
+    assurances are made by the issuer of the Visa, i.e. the Visa Issuer).
 
-#### Conformance for Embedded Token Issuers
+<a name="conformance-for-embedded-token-issuers"></a>
+#### Conformance for Visa Issuers
 
-1.  An [Embedded Token Issuer](#term-embedded-token-issuer) MUST
-    provide one or more of the following types of [Embedded
-    Tokens](#term-embedded-token):
+1.  A [Visa Issuer](#term-visa-issuer) MUST provide one or more of the following
+    types of [Visas](#term-visa):
 
-    1.  <a name="term-embedded-access-token"></a> **Embedded Access Token**
-        -- The Embedded Token Issuer is providing an OIDC provider service
-        and issues OIDC-compliant access tokens in a specific format that can
-        be used as an Embedded Token.
+    1.  <a name="term-visa-access-token"></a> <a name="term-embedded-access-token"></a>
+        **Visa Access Token** -- The Visa Issuer is providing an OIDC provider
+        service and issues OIDC-compliant access tokens in a specific format that can
+        be used as a Visa.
     
-        1.  The Embedded Token payload MUST contain the "openid" scope. That
+        1.  The Visa payload MUST contain the "openid" scope. That
             is, it has a `scope` JWT claim that contains "openid" as a
             space-delimited substring.
             
-        2.  Embedded Token is a JWS string and follows the [Embedded Access
-            Token Format](#embedded-access-token-format). This includes
-            having GA4GH Claims as JWT claims directly in the Embedded Token.
+        2.  Visa is a JWS string and follows the [Visa Access Token
+            Format](#visa-access-token-format). This includes
+            having GA4GH Claims as JWT claims directly in the Visa.
             
-        3.  Embedded Token Issuer MUST support [OIDC Discovery
+        3.  Visa Issuer MUST support [OIDC Discovery
             spec](https://openid.net/specs/openid-connect-discovery-1_0.html),
             and provide `jwks_uri` as
             [Metadata](https://openid.net/specs/openid-connect-discovery-1_0.html#ProviderMetadata)
-            that is reachable by a Claim Clearinghouse.
+            that may be reachable by a Claim Clearinghouse.
         
-        4.  Embedded Token Issuer MUST support public-facing
-            /userinfo endpoint. When presented with a valid Embedded Access
+        4.  Visa Issuer MUST support public-facing
+            /userinfo endpoint. When presented with a valid Visa Access
             Token, the /userinfo endpoint MUST return a success status
             and MAY return the current values for GA4GH Claims that were
-            included within the Embedded Access Token, however returning
-            GA4GH Claims from the /userinfo endpoint for Embedded Access
+            included within the Visa Access Token, however returning
+            GA4GH Claims from the /userinfo endpoint for Visa Access
             Tokens is OPTIONAL.
             
-        5.  If the Embedded Access Token's `exp` exceeds the `iat` by
-            more than 1 hour, the Embedded Token Issuer should expect
+        5.  If the Visa Access Token's `exp` exceeds the `iat` by
+            more than 1 hour, the Visa Issuer should expect
             Claim Clearinghouses to use [Access Token Polling](#at-polling) and
-            MUST provide a means to revoke Embedded Access Tokens. The
+            MUST provide a means to revoke Visa Access Tokens. The
             /userinfo endpoint MUST return an HTTP status 401 as per
             [RFC6750 section 3.1](https://tools.ietf.org/html/rfc6750#section-3.1)
-            when provided an Embedded Access Token that has completed the
+            when provided an Visa Access Token that has completed the
             revocation process.
 
         6.  The JWS header MUST NOT have `jku` specified.
 
-        7.  Embedded Token Issuer MUST provide protection against
+        7.  Visa Issuer MUST provide protection against
             attacks as outlined in [RFC
             6819](https://tools.ietf.org/html/rfc6819).
         
-    2.  <a name="term-embedded-document-token"></a> **Embedded Document
-        Token** -- The Embedded Token Issuer does not need to be a
+    2.  <a name="term-visa-document-token"></a> <a name="term-embedded-document-token"></a>
+        **Visa Document Token** -- The Visa Issuer does not need to be a
         be a OIDC provider, and MAY provide tokens of this type without any
         revocation process.
         
         1.  The JWS header contains `jku` as specified by [RFC7515 Section
             4.1.2](https://tools.ietf.org/html/rfc7515#section-4.1.2), and
             provides the corresponding public-facing endpoint to fetch
-            the public key used to sign the Embedded Document Token.
+            the public key used to sign the Visa Document Token.
             
-        2.  Follows the [Embedded Document Token
-            Format](#embedded-document-token-format).
+        2.  Follows the [Visa Document Token
+            Format](#visa-document-token-format).
 
         3.  The token is not treated as an access token, but validity
             checks outlined elsewhere in this specification still apply.
 
         4.  MUST conform to [token limited-life or revocation
-            requirements](#token-revocation), even if no Embedded Token
+            requirements](#token-revocation), even if no Visa token
             revocation process is provided.
 
         5.  The `scope` JWT claim, if included, MUST NOT contain "openid" as
             a space-delimited substring.
     
-2.  An Embedded Token Issuer MAY generate the `exp` timestamp to enforce
+2.  A Visa Issuer MAY generate the `exp` timestamp to enforce
     its policies and allow Claim Clearinghouses to understand the intent of
-    how long the claim may be used before needing to return to the Embedded
-    Token Issuer to refesh the claim. As a non-normative example, if a
+    how long the claim may be used before needing to return to the Visa Issuer
+    to refesh the claim. As a non-normative example, if a
     GA4GH claim expires in 25 years (or even never expires explictly in the
-    Claim Repository), the Embedded Token Issuer could set the `exp` to
+    Claim Repository), the Visa Issuer could set the `exp` to
     1 day into the future plus issue a refresh token in order to force the
     refresh token to be used when a downstream Claim Clearinghouse is still
     interested in using such a claim after 1 day elapses.
 
-3.  By signing an Embedded Token, an Embedded Token Issuer asserts that
+3.  By signing a Visa, a Visa Issuer asserts that
     the GA4GH claims made available by the token were legitimately derived
     from their [Claim Sources](#term-claim-source), and the content is
     presented and/or transformed without misrepresenting the original intent,
@@ -422,12 +430,12 @@ the Broker.
         2.  MUST check `iss` attribute to ensure a trusted Broker has generated
             the token.
             
-            1.  If evaluating an Embedded Token, trust MUST be established based
-                on the signer of the Embedded Token itself. In Claim
+            1.  If evaluating a Visa, trust MUST be established based
+                on the signer of the Visa itself. In Claim
                 Clearinghouses participating in open federation, the Claim
                 Clearinghouse does not necessarily have to trust the Broker that
-                includes Embedded Tokens within another token in order to use
-                the Embedded Token (although the Claim Clearinghouse MAY require
+                includes Visas within another token in order to use
+                the Visa (although the Claim Clearinghouse MAY require
                 any other Broker involved in the propagation of the claims to
                 also be trusted if the Claim Clearinghouse needs to restrict its
                 trust model).
@@ -457,23 +465,23 @@ the Broker.
 
     1. Section 5.1.6 of RFC 6819 contains a SHOULD section that states `Ensure that client applications do not share tokens with 3rd parties.` This profile provides a mechanism for Clearinghouses to consume access tokens from multiple brokers in a manner that does not involve 3rd parties. Client applications SHOULD take care to not spread the tokens to any other services that would be considered 3rd parties.
         
-6.  If making use of [Embedded Tokens](#term-embedded-token):
+6.  If making use of [Visas](#term-visa):
 
     1.  The Claim Clearinghouse MUST validate that all token checks pass (such as
         the token hasn’t expired) as described elsewhere in this specification and
         the underlying OIDC specifications.
 
-    2.  If making use of [Embedded Access Tokens](#term-embedded-access-token):
+    2.  If making use of [Visa Access Tokens](#term-visa-access-token):
     
         1. Token checks MUST be performed to ensure it complies with the access
            token specification.
     
-        2. In addition to other validation checks, an Embedded Token is considered
+        2. In addition to other validation checks, a Visa is considered
            invalid if it is more than 1 hour old (as per the `iat` claim) AND
            [Access Token Polling](#at-polling) does not confirm that the token is still
            valid (e.g. provide a success status code).
                       
-    3.  If making use of [Embedded Document Tokens](#term-embedded-document-token):
+    3.  If making use of [Visa Document Tokens](#term-visa-document-token):
 
         1.  Fetching the public keys using the `jku` is not required if a Claim
             Clearinghouse has received the keys for the given `iss` via a trusted,
@@ -486,7 +494,7 @@ the Broker.
             calling the `jku` endpoint.
 
 7.  <a name="at-polling"></a> **Access Token Polling**: Clients MAY use access tokens,
-    including Embedded Tokens, to occasionally check which claims are still valid
+    including Visas, to occasionally check which claims are still valid
     at the associated /userinfo endpoint in order to establish whether the user
     still meets the access requirements.
     
@@ -511,9 +519,9 @@ the Broker.
         For example, /userinfo returns HTTP status 400.
 
     5.  If the /userinfo endpoint returns an updated set of GA4GH Claims (this is
-        an OPTIONAL feature of an Embedded Token Issuer), then the Claim
+        an OPTIONAL feature of an Visa Issuer), then the Claim
         Clearinghouse MUST use the updated GA4GH Claims and ignore the original
-        GA4GH Claim values in the Embedded Access Token. If the Claim
+        GA4GH Claim values in the Visa Access Token. If the Claim
         Clearinghouse is unable to adjust for the the updated GA4GH Claims, then
         it MUST act as though the the token was revoked.
 
@@ -524,7 +532,6 @@ Base64url-encoded strings, separated by dots (.) The three sections are: header,
 payload and signature. These JWTs follow [RFC7515](https://tools.ietf.org/html/rfc7515) (JWS)
 and utilize a number of [standard JWT claim names](https://www.iana.org/assignments/jwt/jwt.xhtml)
 as per the registation process.
-
 This profile is agnostic to the format of the id_token.
 
 #### Access_token issued by Broker
@@ -616,11 +623,13 @@ more information. The /userinfo endpoint MAY use `application/json` or
     [Authorization/Claims](#authorizationclaims) for an example of a GA4GH
     Claim.
 
-#### Embedded Token issued by Embedded Token Issuer
+<a name="embedded-token-issued-by-embedded-token-issuer"></a>
+#### Visa issued by Visa Issuer
 
-There are two supported formats for Embedded Tokens.
+There are two supported formats for Visas.
 
-##### Embedded Access Token Format
+<a name="embedded-access-token-format"></a>
+##### Visa Access Token Format
 
 Header format:
 
@@ -668,10 +677,10 @@ where:
 
 5.  The payload claims MUST NOT include `aud`.
 
-##### Embedded Document Token Format
+<a name="embedded-document-token-format"></a>
+##### Visa Document Token Format
 
-Conforms with JWS format requirements and is signed by an Embedded Token
-Issuer.
+Conforms with JWS format requirements and is signed by a Visa Issuer.
 
 1. MUST be a JWS string.
 
@@ -746,7 +755,7 @@ During the lifetime of the downstream access token, some systems may require
 that claims are no longer inspected nor updated.
 
 In the event that a [Claim Source](#term-claim-source) revokes a claim within
-a [Claim Repository](#term-claim-repository), downstream Embedded Token
+a [Claim Repository](#term-claim-repository), downstream Visa
 Issuers, Brokers, Claim Clearinghouses, and other Authorization or Resource
 Servers MUST at a minimum provide a means to limit the lifespan of any given
 access tokens generated as a result of claims. To achieve this goal, servers
@@ -757,8 +766,8 @@ involved with access may employ one or more of the following options:
     an Broker in order to refresh claims. On a refresh, expiry timestamps can
     be extended from what the previous claim may have indicated.
     
-2.  Provide GA4GH Claims in the form of [Embedded Access
-    Tokens](#term-embedded-access-token) to allow downstream Claim
+2.  Provide GA4GH Claims in the form of [Visa Access
+    Tokens](#term-visa-access-token) to allow downstream Claim
     Clearinghouses to periodically check the validity of the token via calls
     to the /userinfo endpoint as per [Access Token Polling](#at-polling).
 
