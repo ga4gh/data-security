@@ -45,7 +45,7 @@ with others that specify the syntax and semantics of the GA4GH Claims exchanged.
        - [Conformance for Visa Issuers](#conformance-for-visa-issuers)\
        - [Conformance for Claim Clearinghouses (consuming Access Tokens to give access to data)](#conformance-for-claim-clearinghouses-consuming-access-tokens-to-give-access-to-data)
 - [**GA4GH JWT Format**](#ga4gh-jwt-format)\
-       - [Access_token issued by broker](#access_token-issued-by-broker)\
+       - [Passport-Scoped Access_Token issued by broker](#passport-scoped-access-token-issued-by-broker)\
        - [Claims sent to Data Holder by a Broker via /userinfo](#claims-sent-to-data-holder-by-a-broker-via-userinfo)\
        - [Visa issued by Visa Issuer](#visa-issued-by-visa-issuer)\
             - [Visa Access Token Format](#visa-access-token-format)\
@@ -243,13 +243,15 @@ the Broker.
     issue id_tokens and access_tokens (and potentially refresh tokens) for
     consumption within the GA4GH compliant environment.
 
-    1.  A Broker MUST issue both id_tokens and access_tokens.
+    1.  A Broker MUST issue both [Passport-Scoped Access Tokens](#term-passport-scoped-access-token)
+        (access_tokens) and id_tokens.
 
         1.  This document makes no specifications for id_tokens.
 
     2.  Access_tokens MUST be in JWS format  
 
-        1.  Access tokens for GA4GH use MUST be in [this format](#ga4gh-jwt-format).
+        1.  Access tokens for GA4GH use MUST be a [GA4GH JWT](#ga4gh-jwt-format) using
+            [Passport-Scoped Access Token format](#passport-scoped-access-token-issued-by-broker).
 
         2.  Access tokens do not contain GA4GH Claims directly in the access token.
 
@@ -534,7 +536,8 @@ and utilize a number of [standard JWT claim names](https://www.iana.org/assignme
 as per the registation process.
 This profile is agnostic to the format of the id_token.
 
-#### Access_token issued by Broker
+<a name="access_token-issued-by-broker"></a>
+#### Passport-Scoped Access Token issued by Broker
 
 Header - The `kid` parameter (see [RFC7515 section
 4.1.4](https://tools.ietf.org/html/rfc7515#section-4.1.4)) must be included
@@ -560,7 +563,7 @@ Payload:
  "iat": <seconds-since-epoch>,
  "exp": <seconds-since-epoch>,
  "jti": <token-identifier>,
- "scope": "openid <ga4gh-spec-scopes>",
+ "scope": "openid <ga4gh-passport-scopes>",
  <additional claims>
 }
 ```
@@ -585,7 +588,7 @@ Payload:
     [RFC7519 Section 4.1.7](https://tools.ietf.org/html/rfc7519#section-4.1.7)
 
 -   `scope`: REQUIRED. Includes verified scopes. MUST include "openid". Will also
-    include any `<ga4gh-spec-scopes>` needed for the GA4GH compliant environment
+    include any `<ga4gh-passport-scopes>` from the GA4GH Passport specification
     (e.g. "ga4gh_passport_v1" is the [scope for GA4GH
     Passports](https://github.com/ga4gh-duri/ga4gh-duri.github.io/blob/master/researcher_ids/ga4gh_passport_v1.md#requirement-7)).
     The `scope` claim is defined by [RFC8693 section 4.2](https://datatracker.ietf.org/doc/html/rfc8693#section-4.2).
@@ -607,7 +610,7 @@ more information. The /userinfo endpoint MAY use `application/json` or
   "<client-id1>",
   "<client-id2>" ...
  ],
- <ga4gh-spec-claims>
+ <ga4gh-visa-claims>
 }
 ```
 
@@ -615,11 +618,11 @@ more information. The /userinfo endpoint MAY use `application/json` or
 
 -   `aud`: OPTIONAL.
 
--   `<ga4gh-spec-claims>`: OPTIONAL. GA4GH Claims are generally included as
-    part of one or more GA4GH standard specifications based on the scopes
-    provided. Even when requested by the appropriate scopes, these GA4GH Claims
-    may not be included in the response for various reasons, such as if the
-    user does not have any GA4GH Claims. See
+-   `<ga4gh-visa-claims>`: OPTIONAL. GA4GH Claims are generally included as
+    specified by the GA4GH Passport specification based on the Passport-Scoped
+    Access Token's scope provided. Even when requested by the appropriate scopes,
+    these GA4GH Claims may not be included in the response for various reasons, such
+    as if the user does not have any GA4GH Claims. See
     [Authorization/Claims](#authorizationclaims) for an example of a GA4GH
     Claim.
 
@@ -657,7 +660,7 @@ Payload format:
  "exp": <seconds-since-epoch>,
  "jti": <token-identifier>,
  "scope": "openid <ga4gh-spec-scopes>"
- <ga4gh-spec-claims>
+ <ga4gh-visa-claims>
 }
 ```
 
@@ -673,7 +676,7 @@ where:
     name is defined by [RFC8693 section 4.2](https://datatracker.ietf.org/doc/html/rfc8693#section-4.2).
 
 4.  The payload claims MAY contain at least one GA4GH Claim
-    (`<ga4gh-spec-claims>`).
+    (`<ga4gh-visa-claims>`).
 
 5.  The payload claims MUST NOT include `aud`.
 
@@ -705,7 +708,7 @@ Conforms with JWS format requirements and is signed by a Visa Issuer.
      "iat": <seconds-since-epoch>,
      "exp": <seconds-since-epoch>,
      "jti": <token-identifier>,
-     <ga4gh-spec-claims>
+     <ga4gh-visa-claims>
    }.
    <signature>
    ```
@@ -718,7 +721,7 @@ Conforms with JWS format requirements and is signed by a Visa Issuer.
        [RFC7519 Section 4.1.7](https://tools.ietf.org/html/rfc7519#section-4.1.7)
        is RECOMMENDED.
      
-   -   `<ga4gh-spec-claims>`: OPTIONAL. One or more GA4GH Claims MAY be
+   -   `<ga4gh-visa-claims>`: OPTIONAL. One or more GA4GH Claims MAY be
        provided. See [Authorization/Claims](#authorizationclaims) for an
        example.
 
@@ -729,7 +732,7 @@ specification](https://github.com/ga4gh-duri/ga4gh-duri.github.io/blob/master/re
 by the DURI work stream.
 
 A non-normative example of a GA4GH Passport, as referred to
-in as `<ga4gh-spec-claims>` within the JWT formatting sections of this
+in as `<ga4gh-passport-claims>` within the JWT formatting sections of this
 specification, is:
 
 ```
