@@ -813,7 +813,7 @@ claims to prevent further tokens from being minted.
         token revocation and remove access accordingly.
 
 2.  A process MUST exist, manual or automated, to eventually remove or invalidate
-    related claims from the [Claim Respository](#term-claim-repository).
+    related claims from the [Claim Repository](#term-claim-repository).
 
 #### Limited Damage of Leaked Tokens
 
