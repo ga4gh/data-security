@@ -4,6 +4,8 @@
 
 | Version | Date    | Editor                                     | Notes                   |
 |---------|---------|--------------------------------------------|-------------------------|
+| 1.2.0   | 2021-07 | Craig Voisin                               | Introduce self-contained passports |
+| 1.1.0   | 2021-07 | Craig Voisin                               | *abandoned* version now reserved, new concepts moved to v1.2 |
 | 1.0.4   | 2021-07 | Craig Voisin                               | Improve existing terminology and define Passport and Visa JWTs |
 | 1.0.3   | 2021-06 | Craig Voisin                               | Links for "scope" claim |
 | 1.0.2   | 2020-02 | David Bernick                              | Clarify risk scenarios  |
@@ -51,6 +53,10 @@ with others that specify the syntax and semantics of the GA4GH Claims exchanged.
             - [Visa Access Token Format](#visa-access-token-format)\
             - [Visa Document Token Format](#visa-document-token-format)\
        - [Authorization/Claims](#authorizationclaims)
+- [**Broker Passport Endpoint**](#broker-passport-endpoint)\
+       - [Passport Endpoint Request](#passport-endpoint-request)\
+       - [Broker Passport Endpoint Processing](#broker-passport-endpoint-processing)\
+       - [Passport Endpoint Response](#passport-endpoint-response)
 - [**Token Revocation**](#token-revocation)\
        - [Claim Source Revokes Claim](#claim-source-revokes-claim)\
        - [Revoking Access from Bad Actors](#revoking-access-from-bad-actors)\
@@ -141,6 +147,15 @@ described herein, encoded via JWS Compact Serialization per
 `ga4gh_passport_v1` as a space-separated entry within the `scope` claim but
 does not contain [GA4GH Claims](#term-ga4gh-claim).
 
+<a name="term-passport-scoped-access-token"></a> **Self-Contained Passport** --
+A JWT that contains one or more [GA4GH Claims](#term-ga4gh-claim) as per the
+[Self-Contained Passport Format](#self-contained-passport-issued-by-broker)
+section for use with some GA4GH-compatible service endpoints using the `POST`
+method. The Self-Contained Passport is a JWT encoded via JWS Compact
+Serialization per [RFC7515](https://datatracker.ietf.org/doc/html/rfc7515).
+For more details, see the [Conformance for Brokers](#conformance-for-brokers)
+section.
+
 <a name="term-visa-issuer"></a> <a name="term-embedded-token-issuer"></a>
 **Visa Issuer** (aka "Embedded Token Issuer") -- a service that signs
 [Visas](#term-visa).
@@ -192,7 +207,7 @@ relying party of the auth flow that fetches the claims from upstream.
 
 Implementations may introduce clients, additional services, and protocols --
 not detailed in the above diagram -- to provide the mechanisms to move the data
-between the Claim Respository and the [Broker](#term-broker).
+between the Claim Repository and the [Broker](#term-broker).
 These mechanisms are unspecified by the scope of this specification except that
 they MUST adhere to security and privacy best practices, such as those outlined
 in this specification, in their handling of protocols, claims, tokens and
@@ -239,11 +254,38 @@ the Broker.
 5.  MUST provide protection against Client attacks as outlined in
     [RFC 6819](https://tools.ietf.org/html/rfc6819).
 
+6.  If using [Self-Contained Passports](#term-self-contained-passport) as part of calling a
+    service endpoint:
+    
+    1.  Clients MUST use the `POST` method.
+
+    2.  Clients MUST NOT attach the Self-Contained Passport as part of the `Authorization`
+        or any other header.
+        
+    3.  Clients MUST include the Self-Contained Passport as part of the request
+        payload as per the Resource Server service endpoint specification. Service endpoints
+        MAY use one of:
+        
+        1.  Header of `Content-Type: application/x-www-form-urlencoded` or similar
+            multipart form content types as per [RFC1867](https://www.ietf.org/rfc/rfc1867)
+            with the Self-Contained Passport as one of the parameters specified to
+            include.
+        
+        2.  A different `Content-Type` header that allows the Self-Contained Passport
+            to be included as part of a structural field.
+            (e.g. `Content-Type: application/json` as per [RFC4627](https://www.ietf.org/rfc/rfc4627)).
+
+    4. Clients MAY discover if Self-Contained Passports are available from a given Broker
+       via OIDC Discovery and determine all options where Visas may be obtained. If
+       `ga4gh_visa_modes_supported` is not present, the Client SHOULD assume a value of
+       "user_info".
+            
 #### Conformance for Brokers 
 
 1.  Brokers operate downstream from IdPs or provide their own IdP service. They
-    issue id_tokens and access_tokens (and potentially refresh tokens) for
-    consumption within the GA4GH compliant environment.
+    issue id_tokens and access_tokens (and potentially other tokens such as refresh
+    tokens or Self-Contained Passports) for consumption within the GA4GH compliant
+    environment.
 
     1.  A Broker MUST issue both [Passport-Scoped Access Tokens](#term-passport-scoped-access-token)
         (access_tokens) and id_tokens.
@@ -259,6 +301,24 @@ the Broker.
 
         3.  Access tokens MAY contain non-GA4GH Claims directly in the access token.
 
+    3.  A Broker MAY issue [Self-Contained Passports](#term-self-contained-passport).
+
+        1.  Self-Contained Passports MAY be large and are only for use via POST within
+            GA4GH-compatible service endpoints.
+
+        2.  Self-Contained Passports MUST NOT be used with OAuth2 endpoints that require
+            an `Authorization` header.
+
+        3.  There is no need to call /userinfo to receive GA4GH Claims on a Self-Contained
+            Passport as these claims are already included in the bearer token's payload.
+            
+        4.  If supporting Self-Contained Passports, a Broker MUST:
+
+            1.  Include additional OIDC Discovery information as indicated below.
+
+            2.  Provide the Passport Endpoint compliant with [Broker Passport
+                Endpoint](#broker-passport-endpoint) section of this specification.
+
 2.  Broker MUST support [OIDC Discovery
     spec](https://openid.net/specs/openid-connect-discovery-1_0.html)
 
@@ -266,11 +326,25 @@ the Broker.
         [Metadata](https://openid.net/specs/openid-connect-discovery-1_0.html#ProviderMetadata)
         (i.e. must have a `jwks_uri` as required that’s reachable by a Claim
         Clearinghouse)
+        
+    2.  If supporting Self-Contained Passports, the Broker MUST:
+
+        1.  Include `ga4gh_passport_endpoint` that is compliant with the [Broker Passport
+            Endpoint](#broker-passport-endpoint) section of this specification.
+        
+        2.  Include `ga4gh_visa_modes_supported` this is an array of string values.
+        
+            1.  "user_info": Visas may be available as part of `<ga4gh-visa-cliams>`
+                within the /userinfo response.
+        
+            2.  "ga4gh_passport_endpoint": Visas may be available as part of a
+                Self-Contained Passport at the location indicated by looking up
+                the `ga4gh_passport_endpoint` entry.
 
 3.  Broker MUST support public-facing /userinfo endpoint as per [section 5.3 of the OIDC
     specification](https://openid.net/specs/openid-connect-core-1_0.html#UserInfo).
 
-    1.  When presented with a valid access token, the /userinfo endpoint MUST return
+    1.  When presented with a valid Passport-Scoped Access Token, the /userinfo endpoint MUST return
         claims in the specified
         [User Info Format](#claims-sent-to-data-holder-by-a-broker-via-userinfo) using
         either an `application/json` or `application/jwt` encoding.
@@ -319,7 +393,7 @@ the Broker.
     for Visa Issuers](#conformance-for-visa-issuers) section of this
     specification.
 
-    When a Broker provides Embeded Tokens from other Visa Issuers, it is providing
+    When a Broker provides Visas from other Visa Issuers, it is providing
     them "as is" (i.e. it provides no additional assurance as to the quality,
     authenticity, or trustworthiness of the claims from such tokens and any such
     assurances are made by the issuer of the Visa, i.e. the Visa Issuer).
@@ -398,8 +472,8 @@ the Broker.
 2.  A Visa Issuer MAY generate the `exp` timestamp to enforce
     its policies and allow Claim Clearinghouses to understand the intent of
     how long the claim may be used before needing to return to the Visa Issuer
-    to refesh the claim. As a non-normative example, if a
-    GA4GH claim expires in 25 years (or even never expires explictly in the
+    to refresh the claim. As a non-normative example, if a
+    GA4GH claim expires in 25 years (or even never expires explicitly in the
     Claim Repository), the Visa Issuer could set the `exp` to
     1 day into the future plus issue a refresh token in order to force the
     refresh token to be used when a downstream Claim Clearinghouse is still
@@ -412,7 +486,7 @@ the Broker.
     except for accommodating for `exp` timestamps to be represented as
     indicated above.
 
-#### Conformance for Claim Clearinghouses (consuming Access Tokens to give access to data)
+#### Conformance for Claim Clearinghouses
 
 1.  Claim Clearinghouses MUST trust at least one Broker.
 
@@ -508,7 +582,7 @@ the Broker.
     minimum, the client MUST stop checking once any of the following occurs:
 
     1.  The system can reasonably determine that authorization related to these
-        claims is not longer needed by the user. For example, all downstream cloud
+        claims are no longer needed by the user. For example, all downstream cloud
         tasks have terminated and the related systems will no longer be using the
         access token nor any downstream tokens that were authorized by evaluating
         access requirements against claims in the token.
@@ -527,7 +601,17 @@ the Broker.
         Clearinghouse MUST use the updated GA4GH Claims and ignore the original
         GA4GH Claim values in the Visa Access Token. If the Claim
         Clearinghouse is unable to adjust for the the updated GA4GH Claims, then
-        it MUST act as though the the token was revoked.
+        it MUST act as though the token was revoked.
+
+8. Claim Clearinghouses MAY choose to accept Self-Contained Passports.
+
+   1. MUST NOT be accepted as part of an authorization header. (i.e. use `POST`
+      method payload to receive the passport)
+      
+   2. Claim Clearinghouses that accept Content-Type `application/json` SHOULD
+      accept a JSON object with the attribute name
+      `ga4gh_passport:self_contained_v1` having the self-contained passport as a
+      value.
 
 ### GA4GH JWT Format
 
@@ -535,7 +619,7 @@ A well-formed JWS-Encoded JSON Web Token (JWT) consists of three concatenated
 Base64url-encoded strings, separated by dots (.) The three sections are: header,
 payload and signature. These JWTs follow [RFC7515](https://tools.ietf.org/html/rfc7515) (JWS)
 and utilize a number of [standard JWT claim names](https://www.iana.org/assignments/jwt/jwt.xhtml)
-as per the registation process.
+as per the registration process.
 This profile is agnostic to the format of the id_token.
 
 <a name="access_token-issued-by-broker"></a>
@@ -595,7 +679,7 @@ Payload:
     Passports](https://github.com/ga4gh-duri/ga4gh-duri.github.io/blob/master/researcher_ids/ga4gh_passport_v1.md#requirement-7)).
     The `scope` claim is defined by [RFC8693 section 4.2](https://datatracker.ietf.org/doc/html/rfc8693#section-4.2).
 
--   `addtional claims`: OPTIONAL. Any other additional non-GA4GH claims are allowed. This specification does not dictate the format of other claims.
+-   `additional claims`: OPTIONAL. Any other additional non-GA4GH claims are allowed. This specification does not dictate the format of other claims.
 
 #### Claims sent to Data Holder by a Broker via /userinfo
 
@@ -624,7 +708,8 @@ more information. The /userinfo endpoint MAY use `application/json` or
     specified by the GA4GH Passport specification based on the Passport-Scoped
     Access Token's scope provided. Even when requested by the appropriate scopes,
     these GA4GH Claims may not be included in the response for various reasons, such
-    as if the user does not have any GA4GH Claims. See
+    as if the user does not have any GA4GH Claims or because they are only provided
+    as part of a Self-Contained Passport. See
     [Authorization/Claims](#authorizationclaims) for an example of a GA4GH
     Claim.
 
@@ -746,6 +831,123 @@ specification, is:
 See the [GA4GH Passport
 Claim Format](https://github.com/ga4gh-duri/ga4gh-duri.github.io/blob/master/researcher_ids/ga4gh_passport_v1.md#passport-claim-format)
 for more details.
+
+### Broker Passport Endpoint
+
+This endpoint is only REQUIRED if the Broker has published the endpoint's location
+via OIDC Discovery. See the [Conformance for Brokers](conformance-for-brokers]
+section for details.
+
+#### Passport Endpoint Request
+
+```
+POST <ga4gh-passport-endpoint>
+Authorization: Bearer <passport-scoped-access-token>
+Content-Type: application/json
+
+{
+  "ga4gh_passport:self_contained_v1": "<self-contained-passport-jws>",
+  "targets": {
+    "<aud>": ["<visa-ref>"],
+    ...
+  }
+}
+```
+
+MUST be called with one of, but NOT both:
+
+1.  `Authorization` header: for use with Passport-Scoped Access Tokens.
+
+2.  `ga4gh_passport:self_contained_v1` JSON field: for use by previously allocated
+    Self-Contained Passports.
+
+`targets` only for use by clients providing Passport-Scoped Access Tokens,
+i.e. the client MUST NOT change the audience of an existing Self-Contained Passport.
+If `targets` is present it MUST contain at least one entry:
+
+    -   One Self-Contained Passport will be generated for each entry in the
+        `targets` map, or the Broker MUST return an error if there are too
+        many entries.
+
+    -   `<aud>`: the target audience string for the token to be included
+        as one of the array entries in the `aud` JWT claim as part of the
+        Self-Contained Passport response.
+        
+    -   `<visa-ref>`: the `value` string of a Visa. The access MUST NOT provide
+        more access than the authorization allowed by the token as part of calling
+        this endpoint.
+        
+        -   However, the `<visa-ref>` may offer a more specific subset
+            of data of any visa that is available by Visas within scope of the
+            caller's token.
+            
+        -   The format of `<visa-ref>` for subsetting access within a broader
+            `<visa-ref>` is up to the Visa Issuer, and is beyond the scope of this
+            specification.
+            
+    -   Example usage of requesting multiple tokens would be to federate calls
+        across many nodes in a network, each expecting a different audience.
+        (e.g. federating across 100 GA4GH Beacon nodes from different providers)
+
+#### Broker Passport Endpoint Processing
+
+1.  The Broker MUST validate the authorization token received according to
+    requirements for tokens elsewhere in this specification.
+
+2.  The scope of authorization MUST NOT exceed that of the caller's authorization,
+    whether using an `Authorization` header or a Self-Contained Passport.
+    
+    1.  The Broker SHOULD indicate errors in the response for each `<visa-ref>`
+        that attempts to upscope access, and still provide Self-Contained Passports
+        for any remaining `<visa-ref>` unless there are no valid `<visa-ref>`
+        entries.
+
+3.  The Broker SHOULD limit the number of tokens it can produce to some reasonable
+    number, and indicate such a number as part of OIDC Discovery.
+
+#### Passport Endpoint Response
+
+If the Broker's token limit was not exceeded and at least one valid token was minted,
+the Broker's response takes the following form:
+
+```
+Content-Type: application/json
+
+{
+  "tokens": {
+    "<aud>": "<self-contained-passport-jws>",
+    ...
+  },
+  "status": {
+    "aud": {
+      "<aud>": <status-code>,
+      ...
+    }
+    "visas": {
+      "<visa-ref>": <status-code>,
+      ...
+    }
+  }
+}
+```
+
+Where:
+
+-   `tokens`: REQUIRED as the map of tokens per `aud` in the request structure
+    and each `<self-contained-passport-jws>` is a JWS Compact String of a Self-Contained
+    Passport.
+    
+-   `status`: OPTIONAL returns a map of each status code per `<aud>` and/or
+    `<visa-ref>`.
+    
+    -   `status-code`: an HTTP status code per [RFC2616](https://datatracker.ietf.org/doc/html/rfc2616)
+        or extensions thereof that best represents the outcome, with the following
+        extensions:
+        
+        1.  `207`: Includes only a subset of what was requested, interpreted from
+            [RFC4918](https://datatracker.ietf.org/doc/html/rfc4918). See details
+            under `<visa-ref>` status entries for details.
+
 
 Token Revocation
 ----------------
