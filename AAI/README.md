@@ -1,8 +1,13 @@
+---
+layout: page
+permalink: aai-introduction
+---
+
 # Introduction to the GA4GH Authentication and Authorization Infrastructure (AAI)
 
 ## Quick Links
 
-- Specification: [GA4GH Authentication and Authorization Infrastructure (AAI) OpenID Connect Profile](https://github.com/ga4gh/data-security/blob/master/AAI/AAIConnectProfile.md)
+- Specification: [GA4GH Authentication and Authorization Infrastructure (AAI) OpenID Connect Profile]({% link AAI/AAIConnectProfile.md %})
 - Other specifications that use the AAI profile: [GA4GH Passport](https://bit.ly/ga4gh-passport-v1)
 
 ### Table of Contents
@@ -19,10 +24,10 @@
 ## Introduction
 
 The [GA4GH AAI profile
-specification](https://github.com/ga4gh/data-security/blob/master/AAI/AAIConnectProfile.md)
+specification]({% link AAI/AAIConnectProfile.md %})
 leverages OpenID Connect (OIDC) Servers for use in authenticating the identity of
 researchers desiring to access clinical and genomic resources from [data
-holders](https://github.com/ga4gh/data-security/blob/master/AAI/AAIConnectProfile.md#term-data-holder)
+holders]({% link AAI/AAIConnectProfile.md %}#term-data-holder)
 adhering to GA4GH standards, and to enable data holders to obtain security-related
 attributes of those researchers. This is intended to be endorsed as a GA4GH standard,
 implemented by GA4GH Driver Projects, and shared broadly.
@@ -67,7 +72,7 @@ Here is a diagram:
 <https://www.lucidchart.com/invitations/accept/68f3089b-0c9b-4e64-acd2-abffae3c0c43>
 of a full-broker. This is one possible way to use this spec.
 
-![flow](https://github.com/ga4gh/data-security/blob/master/AAI/flow.png)
+![flow diagram]({% link AAI/flow.png %})
 
 In this diagram, the Data Owner Claim Clearinghouse, the Data Holder Claim
 Clearinghouse and the Broker are all different entities. However, some cases, the Broker and Data Owner might be the same entity and
@@ -92,7 +97,7 @@ fits their needs.
 
 #### Embedded Tokens example and explanation
 
-![embedded](https://github.com/ga4gh/data-security/blob/master/AAI/embedded_Claims_flow.png)
+![embedded claims flow diagram]({% link AAI/embedded_Claims_flow.png %})
 
 Consider two parties: Google and ELIXIR.  
 

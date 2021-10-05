@@ -1,3 +1,8 @@
+---
+layout: page
+permalink: aai-faq
+---
+
 Frequently Asked Questions and Implementation Examples
 ---------------- 
 ## Can the output of `/userinfo` be used as a JWT for Authentication?

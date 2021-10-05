@@ -1,0 +1,38 @@
+title: GA4GH Data Security
+description: AAI
+# set to /local for local builds.. will be overridden in Github Action builds
+baseurl: "/local"
+url: "" # the base hostname & protocol for your site, e.g. http://example.com
+destination: ./build
+
+# Build settings
+theme: minima
+plugins:
+  - jekyll-feed
+  - jekyll-spaceship
+
+kramdown:
+  auto_ids: true
+
+# Limit the header pages to those we want top at top level, this also controls ordering
+header_pages:
+  - AAI/README.md
+  - AAI/AAIConnectProfile.md
+
+# Due to the way we publish to github pages - it is useful that Jekyll keeps any .git in the destination around
+keep_files: [.git]
+# Because we are using a github repo structure that existed pre-Jekyll - we explicitly add
+# files to make sure only those we want go into the resulting site, and exclude other random build artifacts
+# Normally we would move everything down into a Jekyll folder and build it all
+exclude:
+  - .idea/
+  - .github/
+  - jekyll-builder-local/
+  - Makefile
+  - uml/
+  - DSIP/
+  - README.md
+  - S*.png
+  - S*.jpg
+  - AAI/AccessProductBackground.md
+  - AAI/MAINTAINER.md

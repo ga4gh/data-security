@@ -1,5 +1,6 @@
 ---
-## GA4GH Authentication and Authorization Infrastructure (AAI) OpenID Connect Profile
+layout: page
+permalink: aai-openid-connect-profile
 ---
 
 | Version | Date    | Editor                                     | Notes                   |
@@ -181,7 +182,7 @@ Clearinghouses MUST be protected using TLS.
 
 ### Flow of Claims 
 
-![FlowOfClaims](/AAI/claim_flow_of_data_basic.svg) 
+![FlowOfClaims]({% link AAI/claim_flow_of_data_basic.svg %})
 
 The above diagram shows how claims flow from a [Claim
 Source](#term-claim-source) to a [Claim

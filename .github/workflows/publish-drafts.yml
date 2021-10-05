@@ -1,0 +1,56 @@
+name: Publish Drafts
+
+on:
+  # Triggers the workflow on push or pull request events but only for the draft+branches we are on
+  push:
+    branches: [ 1.2-draft*, add-github* ]
+  pull_request:
+    branches: [ 1.2-draft*, add-github* ]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+jobs:
+  cummulative-publish:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: actions/cache@v2
+        with:
+          path: vendor/bundle
+          key: ${{ runner.os }}-gems-${{ hashFiles('**/Gemfile') }}
+          restore-keys: |
+            ${{ runner.os }}-gems-
+
+      - name: Get Branch Name for Publish Folder
+        id: branch-name
+        uses: tj-actions/branch-names@v5
+
+      - name: Set Jekyll baseurl to Publish Folder
+        uses: mikefarah/yq@master
+        env:
+          PUBLISH_BASEURL: data-security/${{ steps.branch-name.outputs.current_branch }}
+        with:
+          cmd: yq eval -i '.baseurl = strenv(PUBLISH_BASEURL)' '_config.yml'
+
+      - name: Build Jekyll Site
+        uses: helaili/jekyll-action@master
+        env:
+          PLANTUML_VERSION: "1.2021.10"
+        with:
+          # this is dodgy.. the jekyll action wants to build things outside our workspace so setting it to
+          # this brings it back into the workspace where files will be kept for the deploy
+          target_path: ../workspace/build
+          build_only: true
+          token: ${{ secrets.GITHUB_TOKEN }}
+          pre_build_commands: apk add --no-cache graphviz wget ca-certificates ttf-dejavu fontconfig openjdk11 && wget http://downloads.sourceforge.net/project/plantuml/$PLANTUML_VERSION/plantuml.$PLANTUML_VERSION.jar -O /usr/bin/plantuml.jar && echo '#!/bin/sh' > /usr/bin/plantuml && echo 'java -jar /usr/bin/plantuml.jar $*' >> /usr/bin/plantuml && chmod a+rx /usr/bin/plantuml
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: build
+          destination_dir: ${{ steps.branch-name.outputs.current_branch }}
+          keep_files: true
