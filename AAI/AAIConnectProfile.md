@@ -1,8 +1,8 @@
 ---
 layout: page
+title: AAI OIDC Profile
 permalink: aai-openid-connect-profile
 ---
-
 
 ### Abstract
 {:.no_toc}
@@ -24,7 +24,7 @@ with others that specify the syntax and semantics of the GA4GH Claims exchanged.
 {:.no_toc}
 
 * toc
-  {:toc}
+{:toc}
 
 ### Requirements Notation and Conventions
 
