@@ -50,94 +50,9 @@
   </header>
 
   <div class="post-content">
-    <table>
-  <thead>
-    <tr>
-      <th>Version</th>
-      <th>Date</th>
-      <th>Editor</th>
-      <th>Notes</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>1.0.4</td>
-      <td>2021-07</td>
-      <td>Craig Voisin</td>
-      <td>Improve existing terminology and define Passport and Visa JWTs</td>
-    </tr>
-    <tr>
-      <td>1.0.3</td>
-      <td>2021-06</td>
-      <td>Craig Voisin</td>
-      <td>Links for “scope” claim</td>
-    </tr>
-    <tr>
-      <td>1.0.2</td>
-      <td>2020-02</td>
-      <td>David Bernick</td>
-      <td>Clarify risk scenarios</td>
-    </tr>
-    <tr>
-      <td>1.0.1</td>
-      <td>2019-10</td>
-      <td>David Bernick</td>
-      <td>Clarify that non-GA4GH claims are allowed in tokens</td>
-    </tr>
-    <tr>
-      <td>1.0.0</td>
-      <td>2019-10</td>
-      <td>Approved by GA4GH Steering Committee</td>
-      <td> </td>
-    </tr>
-    <tr>
-      <td>0.9.9</td>
-      <td>2019-10</td>
-      <td>David Bernick, Craig Voisin, Mikael Linden</td>
-      <td>Approved standard</td>
-    </tr>
-    <tr>
-      <td>0.9.5</td>
-      <td>2019-09</td>
-      <td>Craig Voisin</td>
-      <td>Update claim flow diagram and definitions</td>
-    </tr>
-    <tr>
-      <td>0.9.4</td>
-      <td>2019-08</td>
-      <td>Craig Voisin</td>
-      <td>Embedded tokens for signed RI Claim Objects</td>
-    </tr>
-    <tr>
-      <td>0.9.3</td>
-      <td>2019-08</td>
-      <td>Craig Voisin</td>
-      <td>Support for RI’s embedded tokens</td>
-    </tr>
-    <tr>
-      <td>0.9.2</td>
-      <td>2019-07</td>
-      <td>David Bernick</td>
-      <td>Made changes based on feedback from review</td>
-    </tr>
-    <tr>
-      <td>0.9.1</td>
-      <td>2019-06</td>
-      <td>Craig Voisin</td>
-      <td>Added terminology links</td>
-    </tr>
-    <tr>
-      <td>0.9.0</td>
-      <td>2017-</td>
-      <td>Mikael Linden, Craig Voisin, David Bernick</td>
-      <td>Initial working version</td>
-    </tr>
-  </tbody>
-</table>
+    <h3 class="no_toc" id="abstract">Abstract</h3>
 
-<h3 id="abstract">Abstract</h3>
-
-<p>This specification profiles the OpenID Connect protocol to provide a federated
+<p>This specification profiles the OpenID Connect protocol (OIDC) to provide a federated
 (multilateral) authentication and authorisation infrastructure for greater
 interoperability between Genomics institutions in a manner specifically
 applicable to (but not limited to) the sharing of restricted datasets.</p>
@@ -150,37 +65,10 @@ to locate the Broker’s /userinfo endpoint as a means to fetch <a href="#term-g
 Claims</a>. This specification is suggested to be used together
 with others that specify the syntax and semantics of the GA4GH Claims exchanged.</p>
 
-<h3 id="table-of-contents">Table of Contents</h3>
+<h3 class="no_toc" id="table-of-contents">Table of Contents</h3>
 
 <ul>
-  <li><a href="#abstract">Abstract</a></li>
-  <li><a href="#requirements-notation-and-conventions">Requirements Notation and Conventions</a></li>
-  <li><a href="#terminology">Terminology</a></li>
-  <li><a href="#relevant-specifications">Relevant Specifications</a></li>
-  <li><a href="#flow-of-claims">Flow of Claims</a></li>
-  <li>
-<a href="#profile-requirements"><strong>Profile Requirements</strong></a><br>
-     - <a href="#clientapplication-conformance">Client/Application Conformance</a><br>
-     - <a href="#conformance-for-brokers">Conformance for Brokers</a><br>
-     - <a href="#conformance-for-visa-issuers">Conformance for Visa Issuers</a><br>
-     - <a href="#conformance-for-claim-clearinghouses-consuming-access-tokens-to-give-access-to-data">Conformance for Claim Clearinghouses (consuming Access Tokens to give access to data)</a>
-</li>
-  <li>
-<a href="#ga4gh-jwt-format"><strong>GA4GH JWT Format</strong></a><br>
-     - <a href="#passport-scoped-access-token-issued-by-broker">Passport-Scoped Access_Token issued by broker</a><br>
-     - <a href="#claims-sent-to-data-holder-by-a-broker-via-userinfo">Claims sent to Data Holder by a Broker via /userinfo</a><br>
-     - <a href="#visa-issued-by-visa-issuer">Visa issued by Visa Issuer</a><br>
-          - <a href="#visa-access-token-format">Visa Access Token Format</a><br>
-          - <a href="#visa-document-token-format">Visa Document Token Format</a><br>
-     - <a href="#authorizationclaims">Authorization/Claims</a>
-</li>
-  <li>
-<a href="#token-revocation"><strong>Token Revocation</strong></a><br>
-     - <a href="#claim-source-revokes-claim">Claim Source Revokes Claim</a><br>
-     - <a href="#revoking-access-from-bad-actors">Revoking Access from Bad Actors</a><br>
-     - <a href="#limited-damage-of-leaked-tokens">Limited Damage of Leaked Tokens</a>
-</li>
-  <li><a href="#Appendix"><strong>Appendix</strong></a></li>
+  <li>toc</li>
 </ul>
 
 <h3 id="requirements-notation-and-conventions">Requirements Notation and Conventions</h3>
@@ -320,7 +208,7 @@ relying party of the auth flow that fetches the claims from upstream.</p>
 
 <p>Implementations may introduce clients, additional services, and protocols –
 not detailed in the above diagram – to provide the mechanisms to move the data
-between the Claim Respository and the <a href="#term-broker">Broker</a>.
+between the Claim Repository and the <a href="#term-broker">Broker</a>.
 These mechanisms are unspecified by the scope of this specification except that
 they MUST adhere to security and privacy best practices, such as those outlined
 in this specification, in their handling of protocols, claims, tokens and
@@ -453,7 +341,7 @@ to indicate whether or not the Broker supports the <a href="https://openid.net/s
 parameter</a>
 on /userinfo to subset which claim information will be returned. If the Broker
 does not support the OIDC claims request parameter, then all claim information
-for the provided scopes eligible for release to the requestor MUST be returned.</p>
+for the provided scopes eligible for release to the requester MUST be returned.</p>
       </li>
     </ol>
   </li>
@@ -503,7 +391,7 @@ adhere to the same assertion criteria as outlined in the <a href="#conformance-f
 for Visa Issuers</a> section of this
 specification.</p>
 
-    <p>When a Broker provides Embeded Tokens from other Visa Issuers, it is providing
+    <p>When a Broker provides Embedded Tokens from other Visa Issuers, it is providing
 them “as is” (i.e. it provides no additional assurance as to the quality,
 authenticity, or trustworthiness of the claims from such tokens and any such
 assurances are made by the issuer of the Visa, i.e. the Visa Issuer).</p>
@@ -574,7 +462,7 @@ attacks as outlined in <a href="https://tools.ietf.org/html/rfc6819">RFC
       </li>
       <li>
         <p><a name="term-visa-document-token"></a> <a name="term-embedded-document-token"></a>
-<strong>Visa Document Token</strong> – The Visa Issuer does not need to be a
+<strong>Visa Document Token</strong> – The Visa Issuer does not need to
 be a OIDC provider, and MAY provide tokens of this type without any
 revocation process.</p>
 
@@ -610,7 +498,7 @@ a space-delimited substring.</p>
     <p>A Visa Issuer MAY generate the <code class="language-plaintext highlighter-rouge">exp</code> timestamp to enforce
 its policies and allow Claim Clearinghouses to understand the intent of
 how long the claim may be used before needing to return to the Visa Issuer
-to refesh the claim. As a non-normative example, if a
+to refresh the claim. As a non-normative example, if a
 GA4GH claim expires in 25 years (or even never expires explictly in the
 Claim Repository), the Visa Issuer could set the <code class="language-plaintext highlighter-rouge">exp</code> to
 1 day into the future plus issue a refresh token in order to force the
@@ -653,7 +541,7 @@ token as opaque.</p>
         <ol>
           <li>
             <p>Even though JWTs are expected to be submitted against /userinfo, a Claim Clearinghouse SHOULD check the Token’s signature via JWKS or having stored the
- public key.</p>
+public key.</p>
 
             <ol>
               <li>A metadata URL (.well-known URL) SHOULD be used here to use the
@@ -772,7 +660,7 @@ minimum, the client MUST stop checking once any of the following occurs:</p>
     <ol>
       <li>
         <p>The system can reasonably determine that authorization related to these
-claims is not longer needed by the user. For example, all downstream cloud
+claims is no longer needed by the user. For example, all downstream cloud
 tasks have terminated and the related systems will no longer be using the
 access token nor any downstream tokens that were authorized by evaluating
 access requirements against claims in the token.</p>
@@ -794,8 +682,8 @@ For example, /userinfo returns HTTP status 400.</p>
 an OPTIONAL feature of an Visa Issuer), then the Claim
 Clearinghouse MUST use the updated GA4GH Claims and ignore the original
 GA4GH Claim values in the Visa Access Token. If the Claim
-Clearinghouse is unable to adjust for the the updated GA4GH Claims, then
-it MUST act as though the the token was revoked.</p>
+Clearinghouse is unable to adjust for the updated GA4GH Claims, then
+it MUST act as though the token was revoked.</p>
       </li>
     </ol>
   </li>
@@ -807,7 +695,7 @@ it MUST act as though the the token was revoked.</p>
 Base64url-encoded strings, separated by dots (.) The three sections are: header,
 payload and signature. These JWTs follow <a href="https://tools.ietf.org/html/rfc7515">RFC7515</a> (JWS)
 and utilize a number of <a href="https://www.iana.org/assignments/jwt/jwt.xhtml">standard JWT claim names</a>
-as per the registation process.
+as per the registration process.
 This profile is agnostic to the format of the id_token.</p>
 
 <p><a name="access_token-issued-by-broker"></a></p>
@@ -1149,7 +1037,7 @@ following:</p>
 
 <ol>
   <li>
-    <p>Be able to leverage mechanisms in place for revoking claims and tokens 
+    <p>Be able to leverage mechanisms in place for revoking claims and tokens
 for other purposes to also limit exposure of leaked tokens.</p>
   </li>
   <li>
@@ -1157,7 +1045,7 @@ for other purposes to also limit exposure of leaked tokens.</p>
 tokens (should longer lived tokens be needed).</p>
   </li>
   <li>
-    <p>Limit the life of refresh tokens or long lived keys before an auth challenge
+    <p>Limit the life of refresh tokens or long-lived keys before an auth challenge
 occurs or otherwise the refresh token simply fails to generate more access
 tokens.</p>
   </li>
@@ -1167,6 +1055,106 @@ encrypted at rest and follow best practices to limit the ability of
 administrators from decrypting this content.</p>
   </li>
 </ol>
+
+<h3 id="specification-revision-history">Specification Revision History</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Version</th>
+      <th>Date</th>
+      <th>Editor</th>
+      <th>Notes</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>1.2.0</td>
+      <td>2021-07</td>
+      <td>Craig Voisin …</td>
+      <td>…</td>
+    </tr>
+    <tr>
+      <td>1.1.0</td>
+      <td>2021-07</td>
+      <td>Craig Voisin</td>
+      <td>
+<em>abandoned</em> version now reserved, new concepts moved to v1.2</td>
+    </tr>
+    <tr>
+      <td>1.0.4</td>
+      <td>2021-07</td>
+      <td>Craig Voisin</td>
+      <td>Improve existing terminology and define Passport and Visa JWTs</td>
+    </tr>
+    <tr>
+      <td>1.0.3</td>
+      <td>2021-06</td>
+      <td>Craig Voisin</td>
+      <td>Links for “scope” claim</td>
+    </tr>
+    <tr>
+      <td>1.0.2</td>
+      <td>2020-02</td>
+      <td>David Bernick</td>
+      <td>Clarify risk scenarios</td>
+    </tr>
+    <tr>
+      <td>1.0.1</td>
+      <td>2019-10</td>
+      <td>David Bernick</td>
+      <td>Clarify that non-GA4GH claims are allowed in tokens</td>
+    </tr>
+    <tr>
+      <td>1.0.0</td>
+      <td>2019-10</td>
+      <td>Approved by GA4GH Steering Committee</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>0.9.9</td>
+      <td>2019-10</td>
+      <td>David Bernick, Craig Voisin, Mikael Linden</td>
+      <td>Approved standard</td>
+    </tr>
+    <tr>
+      <td>0.9.5</td>
+      <td>2019-09</td>
+      <td>Craig Voisin</td>
+      <td>Update claim flow diagram and definitions</td>
+    </tr>
+    <tr>
+      <td>0.9.4</td>
+      <td>2019-08</td>
+      <td>Craig Voisin</td>
+      <td>Embedded tokens for signed RI Claim Objects</td>
+    </tr>
+    <tr>
+      <td>0.9.3</td>
+      <td>2019-08</td>
+      <td>Craig Voisin</td>
+      <td>Support for RI’s embedded tokens</td>
+    </tr>
+    <tr>
+      <td>0.9.2</td>
+      <td>2019-07</td>
+      <td>David Bernick</td>
+      <td>Made changes based on feedback from review</td>
+    </tr>
+    <tr>
+      <td>0.9.1</td>
+      <td>2019-06</td>
+      <td>Craig Voisin</td>
+      <td>Added terminology links</td>
+    </tr>
+    <tr>
+      <td>0.9.0</td>
+      <td>2017-</td>
+      <td>Mikael Linden, Craig Voisin, David Bernick</td>
+      <td>Initial working version</td>
+    </tr>
+  </tbody>
+</table>
 
   </div>
 
