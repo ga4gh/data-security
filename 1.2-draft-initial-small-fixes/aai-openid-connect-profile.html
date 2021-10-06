@@ -6,9 +6,9 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 <!-- Begin Jekyll SEO tag v2.7.1 -->
-<title>GA4GH Data Security | AAI</title>
+<title>AAI OIDC Profile | GA4GH Data Security</title>
 <meta name="generator" content="Jekyll v4.2.0">
-<meta property="og:title" content="GA4GH Data Security">
+<meta property="og:title" content="AAI OIDC Profile">
 <meta property="og:locale" content="en_US">
 <meta name="description" content="AAI">
 <meta property="og:description" content="AAI">
@@ -16,9 +16,9 @@
 <meta property="og:url" content="/data-security/1.2-draft-initial-small-fixes/aai-openid-connect-profile">
 <meta property="og:site_name" content="GA4GH Data Security">
 <meta name="twitter:card" content="summary">
-<meta property="twitter:title" content="GA4GH Data Security">
+<meta property="twitter:title" content="AAI OIDC Profile">
 <script type="application/ld+json">
-{"description":"AAI","url":"/data-security/1.2-draft-initial-small-fixes/aai-openid-connect-profile","@type":"WebPage","headline":"GA4GH Data Security","@context":"https://schema.org"}</script>
+{"description":"AAI","url":"/data-security/1.2-draft-initial-small-fixes/aai-openid-connect-profile","@type":"WebPage","headline":"AAI OIDC Profile","@context":"https://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 <link rel="stylesheet" href="/data-security/1.2-draft-initial-small-fixes/assets/main.css">
 <link type="application/atom+xml" rel="alternate" href="/data-security/1.2-draft-initial-small-fixes/feed.xml" title="GA4GH Data Security">
@@ -37,7 +37,9 @@
           </span>
         </label>
 
-        <div class="trigger"></div>
+        <div class="trigger">
+<a class="page-link" href="/data-security/1.2-draft-initial-small-fixes/aai-introduction">Introduction to the GA4GH Authentication and Authorization Infrastructure (AAI)</a><a class="page-link" href="/data-security/1.2-draft-initial-small-fixes/aai-openid-connect-profile">AAI OIDC Profile</a>
+</div>
       </nav>
 </div>
 </header>
@@ -46,7 +48,7 @@
         <article class="post">
 
   <header class="post-header">
-    <h1 class="post-title"></h1>
+    <h1 class="post-title">AAI OIDC Profile</h1>
   </header>
 
   <div class="post-content">
@@ -67,8 +69,40 @@ with others that specify the syntax and semantics of the GA4GH Claims exchanged.
 
 <h3 class="no_toc" id="table-of-contents">Table of Contents</h3>
 
-<ul>
-  <li>toc</li>
+<ul id="markdown-toc">
+  <li><a href="#requirements-notation-and-conventions" id="markdown-toc-requirements-notation-and-conventions">Requirements Notation and Conventions</a></li>
+  <li><a href="#terminology" id="markdown-toc-terminology">Terminology</a></li>
+  <li><a href="#relevant-specifications" id="markdown-toc-relevant-specifications">Relevant Specifications</a></li>
+  <li><a href="#flow-of-claims" id="markdown-toc-flow-of-claims">Flow of Claims</a></li>
+  <li>
+<a href="#profile-requirements" id="markdown-toc-profile-requirements">Profile Requirements</a>    <ul>
+      <li><a href="#clientapplication-conformance" id="markdown-toc-clientapplication-conformance">Client/Application Conformance</a></li>
+      <li><a href="#conformance-for-brokers" id="markdown-toc-conformance-for-brokers">Conformance for Brokers</a></li>
+      <li><a href="#conformance-for-visa-issuers" id="markdown-toc-conformance-for-visa-issuers">Conformance for Visa Issuers</a></li>
+      <li><a href="#conformance-for-claim-clearinghouses-consuming-access-tokens-to-give-access-to-data" id="markdown-toc-conformance-for-claim-clearinghouses-consuming-access-tokens-to-give-access-to-data">Conformance for Claim Clearinghouses (consuming Access Tokens to give access to data)</a></li>
+    </ul>
+  </li>
+  <li>
+<a href="#ga4gh-jwt-format" id="markdown-toc-ga4gh-jwt-format">GA4GH JWT Format</a>    <ul>
+      <li><a href="#passport-scoped-access-token-issued-by-broker" id="markdown-toc-passport-scoped-access-token-issued-by-broker">Passport-Scoped Access Token issued by Broker</a></li>
+      <li><a href="#claims-sent-to-data-holder-by-a-broker-via-userinfo" id="markdown-toc-claims-sent-to-data-holder-by-a-broker-via-userinfo">Claims sent to Data Holder by a Broker via /userinfo</a></li>
+      <li>
+<a href="#visa-issued-by-visa-issuer" id="markdown-toc-visa-issued-by-visa-issuer">Visa issued by Visa Issuer</a>        <ul>
+          <li><a href="#visa-access-token-format" id="markdown-toc-visa-access-token-format">Visa Access Token Format</a></li>
+          <li><a href="#visa-document-token-format" id="markdown-toc-visa-document-token-format">Visa Document Token Format</a></li>
+        </ul>
+      </li>
+      <li><a href="#authorizationclaims" id="markdown-toc-authorizationclaims">Authorization/Claims</a></li>
+    </ul>
+  </li>
+  <li>
+<a href="#token-revocation" id="markdown-toc-token-revocation">Token Revocation</a>    <ul>
+      <li><a href="#claim-source-revokes-claim" id="markdown-toc-claim-source-revokes-claim">Claim Source Revokes Claim</a></li>
+      <li><a href="#revoking-access-from-bad-actors" id="markdown-toc-revoking-access-from-bad-actors">Revoking Access from Bad Actors</a></li>
+      <li><a href="#limited-damage-of-leaked-tokens" id="markdown-toc-limited-damage-of-leaked-tokens">Limited Damage of Leaked Tokens</a></li>
+      <li><a href="#specification-revision-history" id="markdown-toc-specification-revision-history">Specification Revision History</a></li>
+    </ul>
+  </li>
 </ul>
 
 <h3 id="requirements-notation-and-conventions">Requirements Notation and Conventions</h3>
