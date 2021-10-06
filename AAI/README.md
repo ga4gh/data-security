@@ -1,10 +1,10 @@
 ---
 layout: page
-title: Introduction to the GA4GH Authentication and Authorization Infrastructure (AAI)
+title: AAI Introduction
 permalink: aai-introduction
 ---
 
-## Quick Links
+### Quick Links
 {:.no_toc}
 
 - Specification: [GA4GH Authentication and Authorization Infrastructure (AAI) OpenID Connect Profile]({% link AAI/AAIConnectProfile.md %})
@@ -16,7 +16,7 @@ permalink: aai-introduction
 * toc
 {:toc}
 
-## Introduction
+### Introduction
 
 The [GA4GH AAI profile specification]({% link AAI/AAIConnectProfile.md %})
 leverages OpenID Connect (OIDC) Servers for use in authenticating the identity of
@@ -41,7 +41,7 @@ a federated approach. An organization can still use this specification and not
 support multiple Brokers, though they may find in that case that it’s just using
 a prescriptive version of OIDC.
 
-## Background
+### Background
 
 #### Examples of broker technologies
 
@@ -166,7 +166,7 @@ security](https://github.com/ga4gh/data-security). It is also acceptable to
 align the security to a known and accepted framework such as NIST-800-53,
 ISO-27001/ISO-27002.
 
-## Future topics to explore
+### Future topics to explore
 
 <https://openid.net/specs/openid-connect-federation-1_0.html> - OIDC federation
 
