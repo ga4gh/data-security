@@ -1,30 +1,24 @@
 ---
 layout: page
+title: AAI Introduction
 permalink: aai-introduction
 ---
 
-# Introduction to the GA4GH Authentication and Authorization Infrastructure (AAI)
-
-## Quick Links
+### Quick Links
+{:.no_toc}
 
 - Specification: [GA4GH Authentication and Authorization Infrastructure (AAI) OpenID Connect Profile]({% link AAI/AAIConnectProfile.md %})
 - Other specifications that use the AAI profile: [GA4GH Passport](https://bit.ly/ga4gh-passport-v1)
 
 ### Table of Contents
+{:.no_toc}
 
-- [**Introduction**](#introduction)
-- [**Background**](#background)\
-       - [Examples of broker technologies](#examples-of-broker-technologies)\
-       - [Why Brokers?](#why-brokers)\
-       - [Embedded Tokens example and explanation](#embedded-tokens)\
-       - [Services parties are responsible for providing](#services-parties-are-responsible-for-providing)
-- [**Future topics to explore**](#future-topics-to-explore)
-- [**FAQ**](FAQ.md)
+* toc
+{:toc}
 
-## Introduction
+### Introduction
 
-The [GA4GH AAI profile
-specification]({% link AAI/AAIConnectProfile.md %})
+The [GA4GH AAI profile specification]({% link AAI/AAIConnectProfile.md %})
 leverages OpenID Connect (OIDC) Servers for use in authenticating the identity of
 researchers desiring to access clinical and genomic resources from [data
 holders]({% link AAI/AAIConnectProfile.md %}#term-data-holder)
@@ -34,7 +28,9 @@ implemented by GA4GH Driver Projects, and shared broadly.
 
 To help assure the authenticity of identities used to access data from GA4GH
 Driver Projects, and other projects that adopt GA4GH standards, the Data Use and
-Researcher Identity (DURI) Work Stream has developed a standard around [claims](https://github.com/ga4gh-duri/ga4gh-duri.github.io/tree/master/researcher_ids). This standard assumes that some GA4GH Claims provided
+Researcher Identity (DURI) Work Stream has developed a standard around
+[claims](https://github.com/ga4gh-duri/ga4gh-duri.github.io/tree/master/researcher_ids).
+This standard assumes that some GA4GH Claims provided
 by Brokers described in this document will conform to the DURI researcher-identity
 policy and standard. This standard does NOT assume that DURI's GA4GH Claims will be
 the only ones used.
@@ -45,7 +41,7 @@ a federated approach. An organization can still use this specification and not
 support multiple Brokers, though they may find in that case that it’s just using
 a prescriptive version of OIDC.
 
-## Background
+### Background
 
 #### Examples of broker technologies
 
@@ -66,7 +62,12 @@ level that they cannot be ignored. The use of a "brokers" and "clearinghouses"
 enables "inserting" information into the usual OIDC flow so that Google
 identities can be used but claims and scopes can be customized.
 
-We have also found that some brokers, such as ELIXIR for example, provide some useful "extra" claims on top of an IdP like Google, but an institution receiving ELIXIR claims might want to add even more claims. Brokers then had to have a mechanism for trusting claims from other Brokers while providing provenance and proof of where they came from. This lead to the Embedded Token structure.  
+We have also found that some brokers, such as ELIXIR for example, provide
+some useful "extra" claims on top of an IdP like Google, but an institution
+receiving ELIXIR claims might want to add even more claims. Brokers then
+had to have a mechanism for trusting claims from other Brokers while
+providing provenance and proof of where they came from. This lead to
+the Embedded Token structure.  
 
 Here is a diagram:
 <https://www.lucidchart.com/invitations/accept/68f3089b-0c9b-4e64-acd2-abffae3c0c43>
@@ -75,7 +76,8 @@ of a full-broker. This is one possible way to use this spec.
 ![flow diagram]({% link AAI/flow.png %})
 
 In this diagram, the Data Owner Claim Clearinghouse, the Data Holder Claim
-Clearinghouse and the Broker are all different entities. However, some cases, the Broker and Data Owner might be the same entity and
+Clearinghouse and the Broker are all different entities. However, some cases,
+the Broker and Data Owner might be the same entity and
 even be operated with the same OIDC Provider Software.
 
 Examples of implementations that provide both Identity Brokering and Data Owner
@@ -101,13 +103,25 @@ fits their needs.
 
 Consider two parties: Google and ELIXIR.  
 
-In this example, Google Passport Clearinghouse makes access decisions based on ELIXIR Assertion Repository information via a chain of brokers that have passed along the Passport Visas in standard GA4GH Passport format where the Passports are signed by different Brokers but the Passport Visas retain the signature from the Passport Visa Issuer. 
+In this example, Google Passport Clearinghouse makes access decisions based
+on ELIXIR Assertion Repository information via a chain of brokers that have
+passed along the Passport Visas in standard GA4GH Passport format where the
+Passports are signed by different Brokers but the Passport Visas retain
+the signature from the Passport Visa Issuer. 
 
-The way this chain of brokers and trust is maintained is through "embedded tokens". There are two types of embedded tokens: Embedded Access Tokens and Embedded Document Tokens. 
+The way this chain of brokers and trust is maintained is through
+"embedded tokens". There are two types of embedded
+tokens: Embedded Access Tokens and Embedded Document Tokens. 
 
-Embedded Access Tokens are claims in a Broker's token that can then be sent to OTHER brokers' `/userinfo` endpoints for further user claims. In GA4GH Passports, embedded access tokens will usually carry full claims so as not to interrogate /userinfo each time.
+Embedded Access Tokens are claims in a Broker's token that can then be
+sent to OTHER brokers' `/userinfo` endpoints for further user claims.
+In GA4GH Passports, embedded access tokens will usually carry full claims
+so as not to interrogate `/userinfo` each time.
 
-Embedded Document Tokens cannot be revoked and no `/userinfo` endpoint is provided for them, however they stilll offer a signature that can be used to verify their provenance and always contain the necessary claims in them already.
+Embedded Document Tokens cannot be revoked and no `/userinfo` endpoint
+is provided for them, however they still offer a signature that can
+be used to verify their provenance and always contain the necessary
+claims in them already.
 
 #### Services parties are responsible for providing 
 
@@ -152,7 +166,7 @@ security](https://github.com/ga4gh/data-security). It is also acceptable to
 align the security to a known and accepted framework such as NIST-800-53,
 ISO-27001/ISO-27002.
 
-## Future topics to explore
+### Future topics to explore
 
 <https://openid.net/specs/openid-connect-federation-1_0.html> - OIDC federation
 
