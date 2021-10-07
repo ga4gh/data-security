@@ -6,9 +6,9 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 <!-- Begin Jekyll SEO tag v2.7.1 -->
-<title>GA4GH Data Security | AAI</title>
+<title>AAI OIDC Profile | GA4GH Data Security</title>
 <meta name="generator" content="Jekyll v4.2.0">
-<meta property="og:title" content="GA4GH Data Security">
+<meta property="og:title" content="AAI OIDC Profile">
 <meta property="og:locale" content="en_US">
 <meta name="description" content="AAI">
 <meta property="og:description" content="AAI">
@@ -16,9 +16,9 @@
 <meta property="og:url" content="/data-security/1.2-draft-sequence-diagram/aai-openid-connect-profile">
 <meta property="og:site_name" content="GA4GH Data Security">
 <meta name="twitter:card" content="summary">
-<meta property="twitter:title" content="GA4GH Data Security">
+<meta property="twitter:title" content="AAI OIDC Profile">
 <script type="application/ld+json">
-{"description":"AAI","url":"/data-security/1.2-draft-sequence-diagram/aai-openid-connect-profile","@type":"WebPage","headline":"GA4GH Data Security","@context":"https://schema.org"}</script>
+{"description":"AAI","url":"/data-security/1.2-draft-sequence-diagram/aai-openid-connect-profile","@type":"WebPage","headline":"AAI OIDC Profile","@context":"https://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 <link rel="stylesheet" href="/data-security/1.2-draft-sequence-diagram/assets/main.css">
 <link type="application/atom+xml" rel="alternate" href="/data-security/1.2-draft-sequence-diagram/feed.xml" title="GA4GH Data Security">
@@ -37,7 +37,9 @@
           </span>
         </label>
 
-        <div class="trigger"></div>
+        <div class="trigger">
+<a class="page-link" href="/data-security/1.2-draft-sequence-diagram/aai-introduction">AAI Introduction</a><a class="page-link" href="/data-security/1.2-draft-sequence-diagram/aai-openid-connect-profile">AAI OIDC Profile</a>
+</div>
       </nav>
 </div>
 </header>
@@ -46,98 +48,13 @@
         <article class="post">
 
   <header class="post-header">
-    <h1 class="post-title"></h1>
+    <h1 class="post-title">AAI OIDC Profile</h1>
   </header>
 
   <div class="post-content">
-    <table>
-  <thead>
-    <tr>
-      <th>Version</th>
-      <th>Date</th>
-      <th>Editor</th>
-      <th>Notes</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>1.0.4</td>
-      <td>2021-07</td>
-      <td>Craig Voisin</td>
-      <td>Improve existing terminology and define Passport and Visa JWTs</td>
-    </tr>
-    <tr>
-      <td>1.0.3</td>
-      <td>2021-06</td>
-      <td>Craig Voisin</td>
-      <td>Links for “scope” claim</td>
-    </tr>
-    <tr>
-      <td>1.0.2</td>
-      <td>2020-02</td>
-      <td>David Bernick</td>
-      <td>Clarify risk scenarios</td>
-    </tr>
-    <tr>
-      <td>1.0.1</td>
-      <td>2019-10</td>
-      <td>David Bernick</td>
-      <td>Clarify that non-GA4GH claims are allowed in tokens</td>
-    </tr>
-    <tr>
-      <td>1.0.0</td>
-      <td>2019-10</td>
-      <td>Approved by GA4GH Steering Committee</td>
-      <td> </td>
-    </tr>
-    <tr>
-      <td>0.9.9</td>
-      <td>2019-10</td>
-      <td>David Bernick, Craig Voisin, Mikael Linden</td>
-      <td>Approved standard</td>
-    </tr>
-    <tr>
-      <td>0.9.5</td>
-      <td>2019-09</td>
-      <td>Craig Voisin</td>
-      <td>Update claim flow diagram and definitions</td>
-    </tr>
-    <tr>
-      <td>0.9.4</td>
-      <td>2019-08</td>
-      <td>Craig Voisin</td>
-      <td>Embedded tokens for signed RI Claim Objects</td>
-    </tr>
-    <tr>
-      <td>0.9.3</td>
-      <td>2019-08</td>
-      <td>Craig Voisin</td>
-      <td>Support for RI’s embedded tokens</td>
-    </tr>
-    <tr>
-      <td>0.9.2</td>
-      <td>2019-07</td>
-      <td>David Bernick</td>
-      <td>Made changes based on feedback from review</td>
-    </tr>
-    <tr>
-      <td>0.9.1</td>
-      <td>2019-06</td>
-      <td>Craig Voisin</td>
-      <td>Added terminology links</td>
-    </tr>
-    <tr>
-      <td>0.9.0</td>
-      <td>2017-</td>
-      <td>Mikael Linden, Craig Voisin, David Bernick</td>
-      <td>Initial working version</td>
-    </tr>
-  </tbody>
-</table>
+    <h3 class="no_toc" id="abstract">Abstract</h3>
 
-<h3 id="abstract">Abstract</h3>
-
-<p>This specification profiles the OpenID Connect protocol to provide a federated
+<p>This specification profiles the OpenID Connect protocol (OIDC) to provide a federated
 (multilateral) authentication and authorisation infrastructure for greater
 interoperability between Genomics institutions in a manner specifically
 applicable to (but not limited to) the sharing of restricted datasets.</p>
@@ -150,37 +67,47 @@ to locate the Broker’s /userinfo endpoint as a means to fetch <a href="#term-g
 Claims</a>. This specification is suggested to be used together
 with others that specify the syntax and semantics of the GA4GH Claims exchanged.</p>
 
-<h3 id="table-of-contents">Table of Contents</h3>
+<h3 class="no_toc" id="table-of-contents">Table of Contents</h3>
 
-<ul>
-  <li><a href="#abstract">Abstract</a></li>
-  <li><a href="#requirements-notation-and-conventions">Requirements Notation and Conventions</a></li>
-  <li><a href="#terminology">Terminology</a></li>
-  <li><a href="#relevant-specifications">Relevant Specifications</a></li>
-  <li><a href="#flow-of-claims">Flow of Claims</a></li>
+<ul id="markdown-toc">
+  <li><a href="#requirements-notation-and-conventions" id="markdown-toc-requirements-notation-and-conventions">Requirements Notation and Conventions</a></li>
+  <li><a href="#terminology" id="markdown-toc-terminology">Terminology</a></li>
+  <li><a href="#relevant-specifications" id="markdown-toc-relevant-specifications">Relevant Specifications</a></li>
+  <li><a href="#flow-of-claims" id="markdown-toc-flow-of-claims">Flow of Claims</a></li>
   <li>
-<a href="#profile-requirements"><strong>Profile Requirements</strong></a><br>
-     - <a href="#clientapplication-conformance">Client/Application Conformance</a><br>
-     - <a href="#conformance-for-brokers">Conformance for Brokers</a><br>
-     - <a href="#conformance-for-visa-issuers">Conformance for Visa Issuers</a><br>
-     - <a href="#conformance-for-claim-clearinghouses-consuming-access-tokens-to-give-access-to-data">Conformance for Claim Clearinghouses (consuming Access Tokens to give access to data)</a>
-</li>
+<a href="#profile-requirements" id="markdown-toc-profile-requirements">Profile Requirements</a>    <ul>
+      <li><a href="#clientapplication-conformance" id="markdown-toc-clientapplication-conformance">Client/Application Conformance</a></li>
+      <li><a href="#conformance-for-brokers" id="markdown-toc-conformance-for-brokers">Conformance for Brokers</a></li>
+      <li><a href="#conformance-for-visa-issuers" id="markdown-toc-conformance-for-visa-issuers">Conformance for Visa Issuers</a></li>
+      <li><a href="#conformance-for-claim-clearinghouses-consuming-access-tokens-to-give-access-to-data" id="markdown-toc-conformance-for-claim-clearinghouses-consuming-access-tokens-to-give-access-to-data">Conformance for Claim Clearinghouses (consuming Access Tokens to give access to data)</a></li>
+    </ul>
+  </li>
   <li>
-<a href="#ga4gh-jwt-format"><strong>GA4GH JWT Format</strong></a><br>
-     - <a href="#passport-scoped-access-token-issued-by-broker">Passport-Scoped Access_Token issued by broker</a><br>
-     - <a href="#claims-sent-to-data-holder-by-a-broker-via-userinfo">Claims sent to Data Holder by a Broker via /userinfo</a><br>
-     - <a href="#visa-issued-by-visa-issuer">Visa issued by Visa Issuer</a><br>
-          - <a href="#visa-access-token-format">Visa Access Token Format</a><br>
-          - <a href="#visa-document-token-format">Visa Document Token Format</a><br>
-     - <a href="#authorizationclaims">Authorization/Claims</a>
-</li>
+<a href="#ga4gh-jwt-format" id="markdown-toc-ga4gh-jwt-format">GA4GH JWT Format</a>    <ul>
+      <li><a href="#passport-scoped-access-token-issued-by-broker" id="markdown-toc-passport-scoped-access-token-issued-by-broker">Passport-Scoped Access Token issued by Broker</a></li>
+      <li><a href="#claims-sent-to-data-holder-by-a-broker-via-userinfo" id="markdown-toc-claims-sent-to-data-holder-by-a-broker-via-userinfo">Claims sent to Data Holder by a Broker via /userinfo</a></li>
+      <li>
+<a href="#visa-issued-by-visa-issuer" id="markdown-toc-visa-issued-by-visa-issuer">Visa issued by Visa Issuer</a>        <ul>
+          <li><a href="#visa-access-token-format" id="markdown-toc-visa-access-token-format">Visa Access Token Format</a></li>
+          <li><a href="#visa-document-token-format" id="markdown-toc-visa-document-token-format">Visa Document Token Format</a></li>
+        </ul>
+      </li>
+      <li><a href="#authorizationclaims" id="markdown-toc-authorizationclaims">Authorization/Claims</a></li>
+    </ul>
+  </li>
   <li>
-<a href="#token-revocation"><strong>Token Revocation</strong></a><br>
-     - <a href="#claim-source-revokes-claim">Claim Source Revokes Claim</a><br>
-     - <a href="#revoking-access-from-bad-actors">Revoking Access from Bad Actors</a><br>
-     - <a href="#limited-damage-of-leaked-tokens">Limited Damage of Leaked Tokens</a>
-</li>
-  <li><a href="#Appendix"><strong>Appendix</strong></a></li>
+<a href="#token-revocation" id="markdown-toc-token-revocation">Token Revocation</a>    <ul>
+      <li><a href="#claim-source-revokes-claim" id="markdown-toc-claim-source-revokes-claim">Claim Source Revokes Claim</a></li>
+      <li><a href="#revoking-access-from-bad-actors" id="markdown-toc-revoking-access-from-bad-actors">Revoking Access from Bad Actors</a></li>
+      <li><a href="#limited-damage-of-leaked-tokens" id="markdown-toc-limited-damage-of-leaked-tokens">Limited Damage of Leaked Tokens</a></li>
+      <li>
+<a href="#appendix---sequence-diagrams" id="markdown-toc-appendix---sequence-diagrams">Appendix - Sequence Diagrams</a>        <ul>
+          <li><a href="#main-flow" id="markdown-toc-main-flow">Main Flow</a></li>
+        </ul>
+      </li>
+      <li><a href="#specification-revision-history" id="markdown-toc-specification-revision-history">Specification Revision History</a></li>
+    </ul>
+  </li>
 </ul>
 
 <h3 id="requirements-notation-and-conventions">Requirements Notation and Conventions</h3>
@@ -320,7 +247,7 @@ relying party of the auth flow that fetches the claims from upstream.</p>
 
 <p>Implementations may introduce clients, additional services, and protocols –
 not detailed in the above diagram – to provide the mechanisms to move the data
-between the Claim Respository and the <a href="#term-broker">Broker</a>.
+between the Claim Repository and the <a href="#term-broker">Broker</a>.
 These mechanisms are unspecified by the scope of this specification except that
 they MUST adhere to security and privacy best practices, such as those outlined
 in this specification, in their handling of protocols, claims, tokens and
@@ -453,7 +380,7 @@ to indicate whether or not the Broker supports the <a href="https://openid.net/s
 parameter</a>
 on /userinfo to subset which claim information will be returned. If the Broker
 does not support the OIDC claims request parameter, then all claim information
-for the provided scopes eligible for release to the requestor MUST be returned.</p>
+for the provided scopes eligible for release to the requester MUST be returned.</p>
       </li>
     </ol>
   </li>
@@ -503,7 +430,7 @@ adhere to the same assertion criteria as outlined in the <a href="#conformance-f
 for Visa Issuers</a> section of this
 specification.</p>
 
-    <p>When a Broker provides Embeded Tokens from other Visa Issuers, it is providing
+    <p>When a Broker provides Embedded Tokens from other Visa Issuers, it is providing
 them “as is” (i.e. it provides no additional assurance as to the quality,
 authenticity, or trustworthiness of the claims from such tokens and any such
 assurances are made by the issuer of the Visa, i.e. the Visa Issuer).</p>
@@ -574,7 +501,7 @@ attacks as outlined in <a href="https://tools.ietf.org/html/rfc6819">RFC
       </li>
       <li>
         <p><a name="term-visa-document-token"></a> <a name="term-embedded-document-token"></a>
-<strong>Visa Document Token</strong> – The Visa Issuer does not need to be a
+<strong>Visa Document Token</strong> – The Visa Issuer does not need to
 be a OIDC provider, and MAY provide tokens of this type without any
 revocation process.</p>
 
@@ -610,7 +537,7 @@ a space-delimited substring.</p>
     <p>A Visa Issuer MAY generate the <code class="language-plaintext highlighter-rouge">exp</code> timestamp to enforce
 its policies and allow Claim Clearinghouses to understand the intent of
 how long the claim may be used before needing to return to the Visa Issuer
-to refesh the claim. As a non-normative example, if a
+to refresh the claim. As a non-normative example, if a
 GA4GH claim expires in 25 years (or even never expires explictly in the
 Claim Repository), the Visa Issuer could set the <code class="language-plaintext highlighter-rouge">exp</code> to
 1 day into the future plus issue a refresh token in order to force the
@@ -653,7 +580,7 @@ token as opaque.</p>
         <ol>
           <li>
             <p>Even though JWTs are expected to be submitted against /userinfo, a Claim Clearinghouse SHOULD check the Token’s signature via JWKS or having stored the
- public key.</p>
+public key.</p>
 
             <ol>
               <li>A metadata URL (.well-known URL) SHOULD be used here to use the
@@ -772,7 +699,7 @@ minimum, the client MUST stop checking once any of the following occurs:</p>
     <ol>
       <li>
         <p>The system can reasonably determine that authorization related to these
-claims is not longer needed by the user. For example, all downstream cloud
+claims is no longer needed by the user. For example, all downstream cloud
 tasks have terminated and the related systems will no longer be using the
 access token nor any downstream tokens that were authorized by evaluating
 access requirements against claims in the token.</p>
@@ -794,8 +721,8 @@ For example, /userinfo returns HTTP status 400.</p>
 an OPTIONAL feature of an Visa Issuer), then the Claim
 Clearinghouse MUST use the updated GA4GH Claims and ignore the original
 GA4GH Claim values in the Visa Access Token. If the Claim
-Clearinghouse is unable to adjust for the the updated GA4GH Claims, then
-it MUST act as though the the token was revoked.</p>
+Clearinghouse is unable to adjust for the updated GA4GH Claims, then
+it MUST act as though the token was revoked.</p>
       </li>
     </ol>
   </li>
@@ -807,7 +734,7 @@ it MUST act as though the the token was revoked.</p>
 Base64url-encoded strings, separated by dots (.) The three sections are: header,
 payload and signature. These JWTs follow <a href="https://tools.ietf.org/html/rfc7515">RFC7515</a> (JWS)
 and utilize a number of <a href="https://www.iana.org/assignments/jwt/jwt.xhtml">standard JWT claim names</a>
-as per the registation process.
+as per the registration process.
 This profile is agnostic to the format of the id_token.</p>
 
 <p><a name="access_token-issued-by-broker"></a></p>
@@ -1149,7 +1076,7 @@ following:</p>
 
 <ol>
   <li>
-    <p>Be able to leverage mechanisms in place for revoking claims and tokens 
+    <p>Be able to leverage mechanisms in place for revoking claims and tokens
 for other purposes to also limit exposure of leaked tokens.</p>
   </li>
   <li>
@@ -1157,7 +1084,7 @@ for other purposes to also limit exposure of leaked tokens.</p>
 tokens (should longer lived tokens be needed).</p>
   </li>
   <li>
-    <p>Limit the life of refresh tokens or long lived keys before an auth challenge
+    <p>Limit the life of refresh tokens or long-lived keys before an auth challenge
 occurs or otherwise the refresh token simply fails to generate more access
 tokens.</p>
   </li>
@@ -1167,6 +1094,352 @@ encrypted at rest and follow best practices to limit the ability of
 administrators from decrypting this content.</p>
   </li>
 </ol>
+
+<h3 id="appendix---sequence-diagrams">Appendix - Sequence Diagrams</h3>
+
+<p>The following sequence diagrams are included to help explain the intended flows
+documented in this specification. However the diagrams are non-normative - if there are
+any discrepancies between the diagrams and the text of the specification, the text
+of the specification will take precedence.</p>
+
+<h4 id="main-flow">Main Flow</h4>
+
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" contentscripttype="application/ecmascript" contentstyletype="text/css" preserveaspectratio="none" version="1.1" viewbox="0 0 1081 1169" zoomandpan="magnify">
+  <defs>
+    <filter height="300%" id="f1ee8gozcwhva3" width="300%" x="-1" y="-1">
+      <fegaussianblur result="blurOut" stddeviation="2.0"></fegaussianblur>
+      <fecolormatrix in="blurOut" result="blurOut2" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .4 0"></fecolormatrix>
+      <feoffset dx="4.0" dy="4.0" in="blurOut2" result="blurOut3"></feoffset>
+      <feblend in="SourceGraphic" in2="blurOut3" mode="normal"></feblend>
+    </filter>
+  </defs>
+  <g>
+    <rect fill="#EEEEEE" height="1150.9375" style="stroke:#A80036;stroke-width:1.0;" width="308" x="11" y="6"></rect>
+    <text fill="#000000" font-family="sans-serif" font-size="13" font-weight="bold" lengthadjust="spacing" textlength="83" x="123.5" y="18.0669">Researcher</text>
+    <rect fill="#DDDDDD" height="1150.9375" style="stroke:#A80036;stroke-width:1.0;" width="205" x="381.5" y="6"></rect>
+    <text fill="#000000" font-family="sans-serif" font-size="13" font-weight="bold" lengthadjust="spacing" textlength="24" x="472" y="18.0669">AAI</text>
+    <rect fill="#DDDDDD" height="1150.9375" style="stroke:#A80036;stroke-width:1.0;" width="162" x="608.5" y="6"></rect>
+    <text fill="#000000" font-family="sans-serif" font-size="13" font-weight="bold" lengthadjust="spacing" textlength="87" x="646" y="18.0669">Data Owner</text>
+    <rect fill="#DDDDDD" height="1150.9375" style="stroke:#A80036;stroke-width:1.0;" width="271" x="792.5" y="6"></rect>
+    <text fill="#000000" font-family="sans-serif" font-size="13" font-weight="bold" lengthadjust="spacing" textlength="89" x="883.5" y="18.0669">Data Holder</text>
+    <line style="stroke:#A80036;stroke-width:1.0;stroke-dasharray:5.0,5.0;" x1="56" x2="56" y1="108.4297" y2="1162.9375"></line>
+    <line style="stroke:#A80036;stroke-width:1.0;stroke-dasharray:5.0,5.0;" x1="266" x2="266" y1="108.4297" y2="1162.9375"></line>
+    <line style="stroke:#A80036;stroke-width:1.0;stroke-dasharray:5.0,5.0;" x1="437.5" x2="437.5" y1="108.4297" y2="1162.9375"></line>
+    <line style="stroke:#A80036;stroke-width:1.0;stroke-dasharray:5.0,5.0;" x1="540.5" x2="540.5" y1="108.4297" y2="1162.9375"></line>
+    <line style="stroke:#A80036;stroke-width:1.0;stroke-dasharray:5.0,5.0;" x1="689.5" x2="689.5" y1="108.4297" y2="1162.9375"></line>
+    <line style="stroke:#A80036;stroke-width:1.0;stroke-dasharray:5.0,5.0;" x1="877.5" x2="877.5" y1="108.4297" y2="1162.9375"></line>
+    <line style="stroke:#A80036;stroke-width:1.0;stroke-dasharray:5.0,5.0;" x1="1014.5" x2="1014.5" y1="108.4297" y2="1162.9375"></line>
+    <text fill="#000000" font-family="sans-serif" font-size="14" lengthadjust="spacing" textlength="77" x="15" y="105.1279">User Agent</text>
+    <ellipse cx="56.5" cy="35.1328" fill="#FEFECE" filter="url(#f1ee8gozcwhva3)" rx="8" ry="8" style="stroke:#A80036;stroke-width:2.0;"></ellipse>
+    <path d="M56.5,43.1328 L56.5,70.1328 M43.5,51.1328 L69.5,51.1328 M56.5,70.1328 L43.5,85.1328 M56.5,70.1328 L69.5,85.1328 " fill="none" filter="url(#f1ee8gozcwhva3)" style="stroke:#A80036;stroke-width:2.0;"></path>
+    <rect fill="#FEFECE" filter="url(#f1ee8gozcwhva3)" height="30.2969" style="stroke:#A80036;stroke-width:1.5;" width="53" x="238" y="73.1328"></rect>
+    <text fill="#000000" font-family="sans-serif" font-size="14" lengthadjust="spacing" textlength="39" x="245" y="93.1279">Client</text>
+    <rect fill="#FEFECE" filter="url(#f1ee8gozcwhva3)" height="30.2969" style="stroke:#A80036;stroke-width:1.5;" width="60" x="405.5" y="73.1328"></rect>
+    <text fill="#000000" font-family="sans-serif" font-size="14" lengthadjust="spacing" textlength="46" x="412.5" y="93.1279">Broker</text>
+    <rect fill="#FEFECE" filter="url(#f1ee8gozcwhva3)" height="30.2969" style="stroke:#A80036;stroke-width:1.5;" width="35" x="523.5" y="69.1328"></rect>
+    <rect fill="#FEFECE" filter="url(#f1ee8gozcwhva3)" height="30.2969" style="stroke:#A80036;stroke-width:1.5;" width="35" x="519.5" y="73.1328"></rect>
+    <text fill="#000000" font-family="sans-serif" font-size="14" lengthadjust="spacing" textlength="21" x="526.5" y="93.1279">IdP</text>
+    <rect fill="#FEFECE" filter="url(#f1ee8gozcwhva3)" height="30.2969" style="stroke:#A80036;stroke-width:1.5;" width="106" x="636.5" y="69.1328"></rect>
+    <rect fill="#FEFECE" filter="url(#f1ee8gozcwhva3)" height="30.2969" style="stroke:#A80036;stroke-width:1.5;" width="106" x="632.5" y="73.1328"></rect>
+    <text fill="#000000" font-family="sans-serif" font-size="14" lengthadjust="spacing" textlength="92" x="639.5" y="93.1279">Visa Issuer(s)</text>
+    <rect fill="#FEFECE" filter="url(#f1ee8gozcwhva3)" height="30.2969" style="stroke:#A80036;stroke-width:1.5;" width="119" x="816.5" y="73.1328"></rect>
+    <text fill="#000000" font-family="sans-serif" font-size="14" lengthadjust="spacing" textlength="105" x="823.5" y="93.1279">Clearing House</text>
+    <rect fill="#FEFECE" filter="url(#f1ee8gozcwhva3)" height="30.2969" style="stroke:#A80036;stroke-width:1.5;" width="46" x="989.5" y="73.1328"></rect>
+    <text fill="#000000" font-family="sans-serif" font-size="14" lengthadjust="spacing" textlength="32" x="996.5" y="93.1279">Data</text>
+    <rect fill="#EEEEEE" filter="url(#f1ee8gozcwhva3)" height="3" style="stroke:#EEEEEE;stroke-width:1.0;" width="1074.5" x="0" y="138.9961"></rect>
+    <line style="stroke:#000000;stroke-width:1.0;" x1="0" x2="1074.5" y1="138.9961" y2="138.9961"></line>
+    <line style="stroke:#000000;stroke-width:1.0;" x1="0" x2="1074.5" y1="141.9961" y2="141.9961"></line>
+    <rect fill="#EEEEEE" filter="url(#f1ee8gozcwhva3)" height="23.1328" style="stroke:#000000;stroke-width:2.0;" width="50" x="512.25" y="128.4297"></rect>
+    <text fill="#000000" font-family="sans-serif" font-size="13" font-weight="bold" lengthadjust="spacing" textlength="36" x="518.25" y="144.4966">OIDC</text>
+    <rect fill="#FFFFFF" filter="url(#f1ee8gozcwhva3)" height="100.7969" style="stroke:#000000;stroke-width:2.0;" width="569.5" x="12" y="161.5625"></rect>
+    <path d="M12,161.5625 L78,161.5625 L78,168.5625 L68,178.5625 L12,178.5625 L12,161.5625 " fill="#EEEEEE" style="stroke:#000000;stroke-width:2.0;"></path>
+    <text fill="#000000" font-family="sans-serif" font-size="13" font-weight="bold" lengthadjust="spacing" textlength="21" x="25" y="175.6294">ref</text>
+    <text fill="#000000" font-family="sans-serif" font-size="13" lengthadjust="spacing" textlength="487" x="41.25" y="194.6294">OIDC flow results in the client holding a JWT *OIDC Root Access Token* with a</text>
+    <text fill="#000000" font-family="sans-serif" font-size="13" lengthadjust="spacing" textlength="108" x="41.25" y="209.7622">scope containing</text>
+    <text fill="#000000" font-family="sans-serif" font-size="13" font-style="italic" lengthadjust="spacing" textlength="48" x="153.25" y="209.7622">at least</text>
+    <text fill="#000000" font-family="sans-serif" font-size="13" lengthadjust="spacing" textlength="139" x="205.25" y="209.7622">"ga4gh" and "openid".</text>
+    <text fill="#000000" font-family="sans-serif" font-size="13" lengthadjust="spacing" textlength="471" x="41.25" y="224.895">This token can be exchanged for passports with the broker but is not itself</text>
+    <text fill="#000000" font-family="sans-serif" font-size="13" lengthadjust="spacing" textlength="229" x="41.25" y="240.0278">for use downstream to access data.</text>
+    <text fill="#000000" font-family="sans-serif" font-size="13" lengthadjust="spacing" textlength="515" x="41.25" y="255.1606">This token may have other scopes that enable its use for non-GA4GH use cases.</text>
+    <rect fill="#EEEEEE" filter="url(#f1ee8gozcwhva3)" height="3" style="stroke:#EEEEEE;stroke-width:1.0;" width="1074.5" x="0" y="287.9258"></rect>
+    <line style="stroke:#000000;stroke-width:1.0;" x1="0" x2="1074.5" y1="287.9258" y2="287.9258"></line>
+    <line style="stroke:#000000;stroke-width:1.0;" x1="0" x2="1074.5" y1="290.9258" y2="290.9258"></line>
+    <rect fill="#EEEEEE" filter="url(#f1ee8gozcwhva3)" height="23.1328" style="stroke:#000000;stroke-width:2.0;" width="85" x="494.75" y="277.3594"></rect>
+    <text fill="#000000" font-family="sans-serif" font-size="13" font-weight="bold" lengthadjust="spacing" textlength="71" x="500.75" y="293.4263">Exchange</text>
+    <polygon fill="#A80036" points="254.5,342.7578,264.5,346.7578,254.5,350.7578,258.5,346.7578" style="stroke:#A80036;stroke-width:1.0;"></polygon>
+    <line style="stroke:#A80036;stroke-width:1.0;" x1="56.5" x2="260.5" y1="346.7578" y2="346.7578"></line>
+    <text fill="#000000" font-family="sans-serif" font-size="13" lengthadjust="spacing" textlength="125" x="63.5" y="326.5591">User sends request</text>
+    <text fill="#000000" font-family="sans-serif" font-size="13" lengthadjust="spacing" textlength="186" x="63.5" y="341.6919">to access data through client</text>
+    <polygon fill="#A80036" points="425.5,371.8906,435.5,375.8906,425.5,379.8906,429.5,375.8906" style="stroke:#A80036;stroke-width:1.0;"></polygon>
+    <line style="stroke:#A80036;stroke-width:1.0;" x1="266.5" x2="431.5" y1="375.8906" y2="375.8906"></line>
+    <text fill="#000000" font-family="sans-serif" font-size="13" lengthadjust="spacing" textlength="104" x="273.5" y="370.8247">Token exchange</text>
+    <path d="M137,388.8906 L137,443.8906 L563,443.8906 L563,398.8906 L553,388.8906 L137,388.8906 " fill="#FBFB77" filter="url(#f1ee8gozcwhva3)" style="stroke:#A80036;stroke-width:1.0;"></path>
+    <path d="M553,388.8906 L553,398.8906 L563,398.8906 L553,388.8906 " fill="#FBFB77" style="stroke:#A80036;stroke-width:1.0;"></path>
+    <text fill="#000000" font-family="sans-serif" font-size="13" lengthadjust="spacing" textlength="8" x="143" y="405.9575">{</text>
+    <text fill="#000000" font-family="sans-serif" font-size="13" lengthadjust="spacing" textlength="397" x="151" y="421.0903">grant_type=urn:ietf:params:oauth:grant-type:token-exchange</text>
+    <text fill="#000000" font-family="sans-serif" font-size="13" lengthadjust="spacing" textlength="8" x="143" y="436.2231">}</text>
+    <polygon fill="#A80036" points="677.5,470.4219,687.5,474.4219,677.5,478.4219,681.5,474.4219" style="stroke:#A80036;stroke-width:1.0;"></polygon>
+    <line style="stroke:#A80036;stroke-width:1.0;" x1="437.5" x2="683.5" y1="474.4219" y2="474.4219"></line>
+    <text fill="#000000" font-family="sans-serif" font-size="13" lengthadjust="spacing" textlength="180" x="444.5" y="469.356">Fetch signed visa(s) for user</text>
+    <path d="M275,487.4219 L275,602.4219 L848,602.4219 L848,497.4219 L838,487.4219 L275,487.4219 " fill="#FBFB77" filter="url(#f1ee8gozcwhva3)" style="stroke:#A80036;stroke-width:1.0;"></path>
+    <path d="M838,487.4219 L838,497.4219 L848,497.4219 L838,487.4219 " fill="#FBFB77" style="stroke:#A80036;stroke-width:1.0;"></path>
+    <text fill="#000000" font-family="sans-serif" font-size="13" lengthadjust="spacing" textlength="5" x="281" y="504.4888">[</text>
+    <text fill="#000000" font-family="sans-serif" font-size="13" lengthadjust="spacing" textlength="8" x="289" y="519.6216">{</text>
+    <text fill="#000000" font-family="sans-serif" font-size="13" lengthadjust="spacing" textlength="536" x="297" y="534.7544">"v": "c:dataset1 et:&lt;time&gt; iu:https://orcid.org/0000-0002-1825-0097 iv:&lt;random&gt;",</text>
+    <text fill="#000000" font-family="sans-serif" font-size="13" lengthadjust="spacing" textlength="79" x="297" y="549.8872">"k": "&lt;kid&gt;",</text>
+    <text fill="#000000" font-family="sans-serif" font-size="13" lengthadjust="spacing" textlength="120" x="297" y="565.02">"s": "tKNh ... uPBw"</text>
+    <text fill="#000000" font-family="sans-serif" font-size="13" lengthadjust="spacing" textlength="8" x="289" y="580.1528">}</text>
+    <text fill="#000000" font-family="sans-serif" font-size="13" lengthadjust="spacing" textlength="5" x="281" y="595.2856">]</text>
+    <polygon fill="#A80036" points="448.5,629.4844,438.5,633.4844,448.5,637.4844,444.5,633.4844" style="stroke:#A80036;stroke-width:1.0;"></polygon>
+    <line style="stroke:#A80036;stroke-width:1.0;" x1="442.5" x2="688.5" y1="633.4844" y2="633.4844"></line>
+    <text fill="#000000" font-family="sans-serif" font-size="13" lengthadjust="spacing" textlength="187" x="454.5" y="628.4185">Return signed visa(s) for user</text>
+    <polygon fill="#A80036" points="277.5,658.6172,267.5,662.6172,277.5,666.6172,273.5,662.6172" style="stroke:#A80036;stroke-width:1.0;"></polygon>
+    <line style="stroke:#A80036;stroke-width:1.0;" x1="271.5" x2="436.5" y1="662.6172" y2="662.6172"></line>
+    <text fill="#000000" font-family="sans-serif" font-size="13" lengthadjust="spacing" textlength="147" x="283.5" y="657.5513">Token exchange return</text>
+    <path d="M113,675.6172 L113,775.6172 L586,775.6172 L586,685.6172 L576,675.6172 L113,675.6172 " fill="#FBFB77" filter="url(#f1ee8gozcwhva3)" style="stroke:#A80036;stroke-width:1.0;"></path>
+    <path d="M576,675.6172 L576,685.6172 L586,685.6172 L576,675.6172 " fill="#FBFB77" style="stroke:#A80036;stroke-width:1.0;"></path>
+    <text fill="#000000" font-family="sans-serif" font-size="13" lengthadjust="spacing" textlength="8" x="119" y="692.6841">{</text>
+    <text fill="#000000" font-family="sans-serif" font-size="13" lengthadjust="spacing" textlength="413" x="127" y="707.8169">"access_token": "... BASE 64 JWT PASSPORT_ACCESS_TOKEN ...",</text>
+    <text fill="#000000" font-family="sans-serif" font-size="13" lengthadjust="spacing" textlength="444" x="127" y="722.9497">"issued_token_type": "urn:ga4gh:token-type:self-contained-passport",</text>
+    <text fill="#000000" font-family="sans-serif" font-size="13" lengthadjust="spacing" textlength="142" x="127" y="738.0825">"token_type":"Bearer",</text>
+    <text fill="#000000" font-family="sans-serif" font-size="13" lengthadjust="spacing" textlength="94" x="127" y="753.2153">"expires_in":60</text>
+    <text fill="#000000" font-family="sans-serif" font-size="13" lengthadjust="spacing" textlength="8" x="119" y="768.3481">}</text>
+    <path d="M204,790.4141 L204,1042.4141 L940,1042.4141 L940,800.4141 L930,790.4141 L204,790.4141 " fill="#CCCCCC" filter="url(#f1ee8gozcwhva3)" style="stroke:#A80036;stroke-width:1.0;"></path>
+    <path d="M930,790.4141 L930,800.4141 L940,800.4141 L930,790.4141 " fill="#CCCCCC" style="stroke:#A80036;stroke-width:1.0;"></path>
+    <text fill="#000000" font-family="sans-serif" font-size="13" lengthadjust="spacing" textlength="8" x="281.75" y="807.481">{</text>
+    <text fill="#000000" font-family="sans-serif" font-size="13" lengthadjust="spacing" textlength="226" x="289.75" y="822.6138">"iss": "https://broker.example.com",</text>
+    <text fill="#000000" font-family="sans-serif" font-size="13" lengthadjust="spacing" textlength="303" x="289.75" y="837.7466">"sub": "https://orcid.org/0000-0002-1825-0097",</text>
+    <text fill="#000000" font-family="sans-serif" font-size="13" lengthadjust="spacing" textlength="297" x="289.75" y="852.8794">"aud": "https://resource-server.example.com/",</text>
+    <text fill="#000000" font-family="sans-serif" font-size="13" lengthadjust="spacing" textlength="307" x="289.75" y="868.0122">"jti": "071f99cc-0b52-11ec-96c2-374f836e9e79",</text>
+    <text fill="#000000" font-family="sans-serif" font-size="13" lengthadjust="spacing" textlength="66" x="289.75" y="883.145">"ga4gh": {</text>
+    <text fill="#000000" font-family="sans-serif" font-size="13" lengthadjust="spacing" textlength="57" x="297.75" y="898.2778">"vn": 1.2,</text>
+    <text fill="#000000" font-family="sans-serif" font-size="13" lengthadjust="spacing" textlength="43" x="297.75" y="913.4106">"iss": {</text>
+    <text fill="#000000" font-family="sans-serif" font-size="13" lengthadjust="spacing" textlength="141" x="305.75" y="928.5435">"https://issuer.com": {</text>
+    <text fill="#000000" font-family="sans-serif" font-size="13" lengthadjust="spacing" textlength="536" x="313.75" y="943.6763">"v": "c:dataset1 et:&lt;time&gt; iu:https://orcid.org/0000-0002-1825-0097 iv:&lt;random&gt;",</text>
+    <text fill="#000000" font-family="sans-serif" font-size="13" lengthadjust="spacing" textlength="79" x="313.75" y="958.8091">"k": "&lt;kid&gt;",</text>
+    <text fill="#000000" font-family="sans-serif" font-size="13" lengthadjust="spacing" textlength="120" x="313.75" y="973.9419">"s": "tKNh ... uPBw"</text>
+    <text fill="#000000" font-family="sans-serif" font-size="13" lengthadjust="spacing" textlength="8" x="305.75" y="989.0747">}</text>
+    <text fill="#000000" font-family="sans-serif" font-size="13" lengthadjust="spacing" textlength="8" x="297.75" y="1004.2075">}</text>
+    <text fill="#000000" font-family="sans-serif" font-size="13" lengthadjust="spacing" textlength="8" x="289.75" y="1019.3403">}</text>
+    <text fill="#000000" font-family="sans-serif" font-size="13" lengthadjust="spacing" textlength="8" x="281.75" y="1034.4731">}</text>
+    <rect fill="#EEEEEE" filter="url(#f1ee8gozcwhva3)" height="3" style="stroke:#EEEEEE;stroke-width:1.0;" width="1074.5" x="0" y="1072.1055"></rect>
+    <line style="stroke:#000000;stroke-width:1.0;" x1="0" x2="1074.5" y1="1072.1055" y2="1072.1055"></line>
+    <line style="stroke:#000000;stroke-width:1.0;" x1="0" x2="1074.5" y1="1075.1055" y2="1075.1055"></line>
+    <rect fill="#EEEEEE" filter="url(#f1ee8gozcwhva3)" height="23.1328" style="stroke:#000000;stroke-width:2.0;" width="41" x="516.75" y="1061.5391"></rect>
+    <text fill="#000000" font-family="sans-serif" font-size="13" font-weight="bold" lengthadjust="spacing" textlength="27" x="522.75" y="1077.606">Use</text>
+    <polygon fill="#A80036" points="866,1111.8047,876,1115.8047,866,1119.8047,870,1115.8047" style="stroke:#A80036;stroke-width:1.0;"></polygon>
+    <line style="stroke:#A80036;stroke-width:1.0;" x1="266.5" x2="872" y1="1115.8047" y2="1115.8047"></line>
+    <text fill="#000000" font-family="sans-serif" font-size="13" lengthadjust="spacing" textlength="130" x="273.5" y="1110.7388">Please give me data</text>
+    <polygon fill="#A80036" points="277.5,1140.9375,267.5,1144.9375,277.5,1148.9375,273.5,1144.9375" style="stroke:#A80036;stroke-width:1.0;"></polygon>
+    <line style="stroke:#A80036;stroke-width:1.0;" x1="271.5" x2="877" y1="1144.9375" y2="1144.9375"></line>
+    <text fill="#000000" font-family="sans-serif" font-size="13" lengthadjust="spacing" textlength="75" x="283.5" y="1139.8716">Return data</text>
+    <!--MD5=[8deb32b9e376c6fb0b8570ad5fe46d34]
+@startuml
+skinparamlocked svgDimensionStyle false
+
+
+hide footbox
+skinparam BoxPadding 10
+skinparam ParticipantPadding 20
+
+box "Researcher"  #eee
+actor       "User Agent"                as user
+participant Client                      as client
+end box
+
+box "AAI"
+participant Broker                      as broker
+collections "IdP"                       as idps
+end box
+
+box "Data Owner"
+collections "Visa Issuer(s)"            as issuers
+end box
+
+box "Data Holder"
+participant "Clearing House"            as clearing
+participant "Data"            as data
+end box
+
+==OIDC==
+
+ref over user, client, broker, idps
+OIDC flow results in the client holding a JWT *OIDC Root Access Token* with a
+scope containing //at least// "ga4gh" and "openid".
+This token can be exchanged for passports with the broker but is not itself
+for use downstream to access data.
+This token may have other scopes that enable its use for non-GA4GH use cases.
+end ref
+
+==Exchange==
+
+user -> client : User sends request\nto access data through client
+client -> broker : Token exchange
+note over client, broker
+{
+  grant_type=urn:ietf:params:oauth:grant-type:token-exchange
+}
+end note
+
+broker -> issuers : Fetch signed visa(s) for user
+note over broker, issuers
+[
+  {
+    "v": "c:dataset1 et:<time> iu:https://orcid.org/0000-0002-1825-0097 iv:<random>",
+    "k": "<kid>",
+    "s": "tKNh ... uPBw"
+  }
+]
+end note
+broker <- issuers : Return signed visa(s) for user
+
+client <- broker : Token exchange return
+note over client, broker
+{
+  "access_token": "... BASE 64 JWT PASSPORT_ACCESS_TOKEN ...",
+  "issued_token_type": "urn:ga4gh:token-type:self-contained-passport",
+  "token_type":"Bearer",
+  "expires_in":60
+}
+end note
+
+note over client, clearing  #CCCCCC
+{
+  "iss": "https://broker.example.com",
+  "sub": "https://orcid.org/0000-0002-1825-0097",
+  "aud": "https://resource-server.example.com/",
+  "jti": "071f99cc-0b52-11ec-96c2-374f836e9e79",
+  "ga4gh": {
+    "vn": 1.2,
+    "iss": {
+      "https://issuer.com": {
+        "v": "c:dataset1 et:<time> iu:https://orcid.org/0000-0002-1825-0097 iv:<random>",
+        "k": "<kid>",
+        "s": "tKNh ... uPBw"
+      }
+    }
+  }
+}
+end note
+
+==Use==
+
+client -> clearing : Please give me data
+client <- clearing : Return data
+
+
+@enduml
+
+PlantUML version 1.2021.10(Mon Aug 30 13:43:48 GMT 2021)
+(GPL source distribution)
+Java Runtime: OpenJDK Runtime Environment
+JVM: OpenJDK 64-Bit Server VM
+Default Encoding: UTF-8
+Language: en
+Country: US
+-->
+  </g>
+</svg>
+
+<h3 id="specification-revision-history">Specification Revision History</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Version</th>
+      <th>Date</th>
+      <th>Editor</th>
+      <th>Notes</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>1.2.0</td>
+      <td>2021-07</td>
+      <td>Craig Voisin …</td>
+      <td>…</td>
+    </tr>
+    <tr>
+      <td>1.1.0</td>
+      <td>2021-07</td>
+      <td>Craig Voisin</td>
+      <td>
+<em>abandoned</em> version now reserved, new concepts moved to v1.2</td>
+    </tr>
+    <tr>
+      <td>1.0.4</td>
+      <td>2021-07</td>
+      <td>Craig Voisin</td>
+      <td>Improve existing terminology and define Passport and Visa JWTs</td>
+    </tr>
+    <tr>
+      <td>1.0.3</td>
+      <td>2021-06</td>
+      <td>Craig Voisin</td>
+      <td>Links for “scope” claim</td>
+    </tr>
+    <tr>
+      <td>1.0.2</td>
+      <td>2020-02</td>
+      <td>David Bernick</td>
+      <td>Clarify risk scenarios</td>
+    </tr>
+    <tr>
+      <td>1.0.1</td>
+      <td>2019-10</td>
+      <td>David Bernick</td>
+      <td>Clarify that non-GA4GH claims are allowed in tokens</td>
+    </tr>
+    <tr>
+      <td>1.0.0</td>
+      <td>2019-10</td>
+      <td>Approved by GA4GH Steering Committee</td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>0.9.9</td>
+      <td>2019-10</td>
+      <td>David Bernick, Craig Voisin, Mikael Linden</td>
+      <td>Approved standard</td>
+    </tr>
+    <tr>
+      <td>0.9.5</td>
+      <td>2019-09</td>
+      <td>Craig Voisin</td>
+      <td>Update claim flow diagram and definitions</td>
+    </tr>
+    <tr>
+      <td>0.9.4</td>
+      <td>2019-08</td>
+      <td>Craig Voisin</td>
+      <td>Embedded tokens for signed RI Claim Objects</td>
+    </tr>
+    <tr>
+      <td>0.9.3</td>
+      <td>2019-08</td>
+      <td>Craig Voisin</td>
+      <td>Support for RI’s embedded tokens</td>
+    </tr>
+    <tr>
+      <td>0.9.2</td>
+      <td>2019-07</td>
+      <td>David Bernick</td>
+      <td>Made changes based on feedback from review</td>
+    </tr>
+    <tr>
+      <td>0.9.1</td>
+      <td>2019-06</td>
+      <td>Craig Voisin</td>
+      <td>Added terminology links</td>
+    </tr>
+    <tr>
+      <td>0.9.0</td>
+      <td>2017-</td>
+      <td>Mikael Linden, Craig Voisin, David Bernick</td>
+      <td>Initial working version</td>
+    </tr>
+  </tbody>
+</table>
 
   </div>
 
