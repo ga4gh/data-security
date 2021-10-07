@@ -803,6 +803,108 @@ following:
     encrypted at rest and follow best practices to limit the ability of
     administrators from decrypting this content.
 
+### Appendix - Sequence Diagrams
+
+The following sequence diagrams are included to help explain the intended flows
+documented in this specification. However the diagrams are non-normative - if there are
+any discrepancies between the diagrams and the text of the specification, the text
+of the specification will take precedence.
+
+#### Main Flow
+
+{% plantuml %}
+
+hide footbox
+skinparam BoxPadding 10
+skinparam ParticipantPadding 20
+
+box "Researcher"  #eee
+actor       "User Agent"                as user
+participant Client                      as client
+end box
+
+box "AAI"
+participant Broker                      as broker
+collections "IdP"                       as idps
+end box
+
+box "Data Owner"
+collections "Visa Issuer(s)"            as issuers
+end box
+
+box "Data Holder"
+participant "Clearing House"            as clearing
+participant "Data"            as data
+end box
+
+==OIDC==
+
+ref over user, client, broker, idps
+OIDC flow results in the client holding a JWT *OIDC Root Access Token* with a
+scope containing //at least// "ga4gh" and "openid".
+This token can be exchanged for passports with the broker but is not itself
+for use downstream to access data.
+This token may have other scopes that enable its use for non-GA4GH use cases.
+end ref
+
+==Exchange==
+
+user -> client : User sends request\nto access data through client
+client -> broker : Token exchange
+note over client, broker
+{
+  grant_type=urn:ietf:params:oauth:grant-type:token-exchange
+}
+end note
+
+broker -> issuers : Fetch signed visa(s) for user
+note over broker, issuers
+[
+  {
+    "v": "c:dataset1 et:<time> iu:https://orcid.org/0000-0002-1825-0097 iv:<random>",
+    "k": "<kid>",
+    "s": "tKNh ... uPBw"
+  }
+]
+end note
+broker <- issuers : Return signed visa(s) for user
+
+client <- broker : Token exchange return
+note over client, broker
+{
+  "access_token": "... BASE 64 JWT PASSPORT_ACCESS_TOKEN ...",
+  "issued_token_type": "urn:ga4gh:token-type:self-contained-passport",
+  "token_type":"Bearer",
+  "expires_in":60
+}
+end note
+
+note over client, clearing  #CCCCCC
+{
+  "iss": "https://broker.example.com",
+  "sub": "https://orcid.org/0000-0002-1825-0097",
+  "aud": "https://resource-server.example.com/",
+  "jti": "071f99cc-0b52-11ec-96c2-374f836e9e79",
+  "ga4gh": {
+    "vn": 1.2,
+    "iss": {
+      "https://issuer.com": {
+        "v": "c:dataset1 et:<time> iu:https://orcid.org/0000-0002-1825-0097 iv:<random>",
+        "k": "<kid>",
+        "s": "tKNh ... uPBw"
+      }
+    }
+  }
+}
+end note
+
+==Use==
+
+client -> clearing : Please give me data
+client <- clearing : Return data
+
+{% endplantuml %}
+
 ### Specification Revision History
 
 | Version | Date    | Editor                                     | Notes                   |
