@@ -103,7 +103,7 @@ can also be a data holder. Data holders run an
 data and, in that role, has capacity to decide who can access it. For
 instance, a Data Access Committee (DAC).
 
-<a name="term-passport-scoped-access-token"></a> **Passport-Scoped Access
+<a name="term-passport-scoped-access-token"></a> **Passport-Scoped OAuth Access
 Token** -- A JWT bearer token, returned as an OAuth2 access token as
 described herein, encoded via JWS Compact Serialization per
 [RFC7515](https://datatracker.ietf.org/doc/html/rfc7515), containing
@@ -389,6 +389,7 @@ the Broker.
 
     2.  The responsibility of risk assessment of a Broker is on the Claim Clearinghouse to trust an access token. RECOMMENDED to trust the minimum set of Brokers required to obtain the access token payload.
 
+
 2.  Claim Clearinghouses MUST either check the validity of the access token or treat the access
     token as opaque.
 
@@ -422,6 +423,7 @@ the Broker.
         advance where to find a corresponding /userinfo. This may limit the
         functionality of accepting tokens from some Brokers.
 
+
 3.  Claim Clearinghouse or downstream applications MAY use [/userinfo
     endpoint](https://openid.net/specs/openid-connect-core-1_0.html#UserInfo)
     (derived from the access_token JWT’s `iss`) to request claims and MAY make
@@ -430,13 +432,22 @@ the Broker.
     to subset which claims are requested if supported by the Broker for the
     claims in question.
 
+
 4.  Claim Clearinghouses service can be a Broker itself and would follow the
     [Conformance For Brokers](#conformance-for-brokers).
+
 
 5.  Claim Clearinghouses MUST provide protection against attacks as outlined in
     [RFC 6819](https://tools.ietf.org/html/rfc6819).
 
-    1. Section 5.1.6 of RFC 6819 contains a SHOULD section that states `Ensure that client applications do not share tokens with 3rd parties.` This profile provides a mechanism for Clearinghouses to consume access tokens from multiple brokers in a manner that does not involve 3rd parties. Client applications SHOULD take care to not spread the tokens to any other services that would be considered 3rd parties.
+    1. Section 5.1.6 of RFC 6819 contains a SHOULD section that
+       states `Ensure that client applications do not share tokens with 3rd parties.` This 
+       profile provides a mechanism for Clearinghouses to consume access tokens from
+       multiple brokers in a manner that does not involve 3rd parties. Client applications
+       SHOULD take care to not spread the tokens to any other services
+       that would be considered 3rd parties.
+    
+
 
 6.  If making use of [Visas](#term-visa):
 
@@ -810,7 +821,105 @@ documented in this specification. However the diagrams are non-normative - if th
 any discrepancies between the diagrams and the text of the specification, the text
 of the specification will take precedence.
 
-#### Main Flow
+#### Callback (Userinfo) Flow
+
+The flow as used by Elixir uses the initial *Passport-Scoped OAuth Access Token* as
+a token handed to downstream resource servers. These servers can use this token, in conjunction
+with a callback to the `/userinfo` endpoint of the broker, to obtain the *Passport* content in
+JSON format.
+
+{% plantuml %}
+
+hide footbox
+skinparam BoxPadding 10
+skinparam ParticipantPadding 20
+
+box "Researcher"  #eee
+actor       "User Agent"                as user
+participant Client                      as client
+end box
+
+box "AAI"
+participant Broker                      as broker
+collections "IdP"                       as idps
+end box
+
+box "Data Owner"
+collections "Visa Issuer(s)"            as issuers
+end box
+
+box "Data Holder"
+participant "Clearing House"            as clearing
+participant "Data"                      as data
+end box
+
+==OIDC==
+
+ref over user, client, broker, idps
+OIDC flow results in the client holding a *Passport-Scoped OAuth Access Token*.
+end ref
+
+==Use==
+
+user -> client : User instructs client\nregarding data access
+client -> clearing : Client asks for data
+note over client, clearing  #CCCCCC
+{
+   Authorization: Bearer <Passport-Scoped OAuth Access Token>
+}
+end note
+
+clearing -> broker : Please give me details of the passport
+note over broker, clearing  #CCCCCC
+{
+  Authorization: Bearer <Passport-Scoped OAuth Access Token>
+}
+end note
+
+broker -> issuers : (optional) Fetch signed visa(s) for user
+note over broker, issuers
+[
+  <visa1>,
+  <visa2>,
+]
+end note
+broker <- issuers : (optional) Return signed visa(s) for user
+
+
+clearing <- broker : Return passport
+note over broker, clearing  #CCCCCC
+{
+  "iss": "https://broker.example.com",
+  "sub": <clientid>,
+  "jti": "071f99cc-0b52-11ec-96c2-374f836e9e79",
+  "ga4gh_passport_v1": [
+    <visa1>,
+    <visa2>,
+    ...
+  ]
+}
+end note
+
+
+note over clearing, data  #FFCCCB
+Decision is made to release data using information contained in the
+passport - and this decision is coordinated with the data system to
+facilitate that actual data release.
+end note
+
+client <- clearing : Return data
+
+
+{% endplantuml %}
+
+#### Exchange Flow
+
+The exchange flow does not ever distribute the initial *Passport-Scoped OAuth Access Token* beyond
+the client application. A token exchange operation is executed by the client, in
+exchange for a *Passport Access Token* (need precise name), a *Work Order Token* (same) - or any
+other token that may be used downstream to access resources. In this example flow, the
+ *Passport Access Token* is used as a bearer token - though noting that the potential large size
+and overly generous scope of these tokens may limit the general availability of this technique.
 
 {% plantuml %}
 
@@ -840,40 +949,36 @@ end box
 ==OIDC==
 
 ref over user, client, broker, idps
-OIDC flow results in the client holding a JWT *OIDC Root Access Token* with a
-scope containing //at least// "ga4gh" and "openid".
-This token can be exchanged for passports with the broker but is not itself
-for use downstream to access data.
-This token may have other scopes that enable its use for non-GA4GH use cases.
+OIDC flow results in the client holding a *Passport-Scoped OAuth Access Token*.
 end ref
 
 ==Exchange==
 
-user -> client : User sends request\nto access data through client
+user -> client : User instructs client\nregarding data access
 client -> broker : Token exchange
 note over client, broker
-{
-  grant_type=urn:ietf:params:oauth:grant-type:token-exchange
-}
+Content-Type: application/x-www-form-urlencoded
+
+grant_type=urn:ietf:params:oauth:grant-type:token-exchange
+requested_token_type=TBD
+subject_token=<Passport-Scoped OAuth Access Token>
+subject_token_type=urn:ietf:params:oauth:token-type:access_token
 end note
 
-broker -> issuers : Fetch signed visa(s) for user
+broker -> issuers : (optional) Fetch signed visa(s) for user
 note over broker, issuers
 [
-  {
-    "v": "c:dataset1 et:<time> iu:https://orcid.org/0000-0002-1825-0097 iv:<random>",
-    "k": "<kid>",
-    "s": "tKNh ... uPBw"
-  }
+  "evb....",
+  "evb....",
 ]
 end note
-broker <- issuers : Return signed visa(s) for user
+broker <- issuers : (optional) Return signed visa(s) for user
 
 client <- broker : Token exchange return
 note over client, broker
 {
   "access_token": "... BASE 64 JWT PASSPORT_ACCESS_TOKEN ...",
-  "issued_token_type": "urn:ga4gh:token-type:self-contained-passport",
+  "issued_token_type": <TBD>,
   "token_type":"Bearer",
   "expires_in":60
 }
@@ -885,25 +990,32 @@ note over client, clearing  #CCCCCC
   "sub": "https://orcid.org/0000-0002-1825-0097",
   "aud": "https://resource-server.example.com/",
   "jti": "071f99cc-0b52-11ec-96c2-374f836e9e79",
-  "ga4gh": {
-    "vn": 1.2,
-    "iss": {
-      "https://issuer.com": {
-        "v": "c:dataset1 et:<time> iu:https://orcid.org/0000-0002-1825-0097 iv:<random>",
-        "k": "<kid>",
-        "s": "tKNh ... uPBw"
-      }
-    }
-  }
+  "ga4gh_passport_v1": [
+    "evb....",
+    "evn...."
+  ]
 }
 end note
 
 ==Use==
 
-client -> clearing : Please give me data
+client -> clearing : Client asks for data
+note over client, clearing  #CCCCCC
+{
+Authorization: Bearer <name of token type for here?>
+}
+end note
+
+note over clearing, data  #FFCCCB
+Decision is made to release data using information contained in the
+bearer token - and this decision is coordinated with the data system to
+facilitate that actual data release.
+end note
+
 client <- clearing : Return data
 
 {% endplantuml %}
+
 
 ### Specification Revision History
 
