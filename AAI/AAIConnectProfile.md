@@ -875,7 +875,7 @@ note right
 }
 end note
 
-group Informative Only (not defined in this specification)
+group#DeepSkyBlue #LightSkyBlue Informative Only (not defined in this specification)
     broker -> issuers : Fetch signed visa(s) for user
     broker <- issuers : Return signed visa(s) for user
     note right
@@ -890,7 +890,7 @@ clearing <- broker : Return passport
 note right
 {
   "iss": "https://broker.example.com",
-  "sub": "<client id>",
+  "sub": "<subject id>",
   "jti": "<jti>",
   "ga4gh_passport_v1": [
     "<visa1>",
@@ -947,7 +947,7 @@ end box
 
 ==OIDC==
 
-ref over user, client, broker, idps
+ref over user, client, broker, idps 
 OIDC flow results in the client holding a *Passport-Scoped OAuth Access Token*.
 end ref
 
@@ -963,7 +963,7 @@ subject_token=<Passport-Scoped OAuth Access Token>
 subject_token_type=urn:ietf:params:oauth:token-type:access_token
 end note
 
-group Informative Only (not defined in this specification)
+group#DeepSkyBlue #LightSkyBlue Informative Only (not defined in this specification)
     broker -> issuers : Fetch signed visa(s) for user
     broker <- issuers : Return signed visa(s) for user
     note right
