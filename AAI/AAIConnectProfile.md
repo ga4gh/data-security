@@ -861,40 +861,40 @@ end ref
 
 ==Use==
 
-user -> client : User instructs client\nregarding data access
-client -> clearing : Client asks for data
-note over client, clearing  #CCCCCC
+client -> clearing : Client requests data
+note right 
 {
    Authorization: Bearer <Passport-Scoped OAuth Access Token>
 }
 end note
 
-clearing -> broker : Please give me details of the passport
-note over broker, clearing  #CCCCCC
+clearing -> broker : Clearing house asks for passport content
+note right 
 {
   Authorization: Bearer <Passport-Scoped OAuth Access Token>
 }
 end note
 
-broker -> issuers : (optional) Fetch signed visa(s) for user
-note over broker, issuers
-[
-  <visa1>,
-  <visa2>,
-]
-end note
-broker <- issuers : (optional) Return signed visa(s) for user
-
+group Informative Only (not defined in this specification)
+    broker -> issuers : Fetch signed visa(s) for user
+    broker <- issuers : Return signed visa(s) for user
+    note right
+    [
+      "<visa1>",
+      "<visa2>"
+    ]
+    end note
+end
 
 clearing <- broker : Return passport
-note over broker, clearing  #CCCCCC
+note right
 {
   "iss": "https://broker.example.com",
-  "sub": <clientid>,
-  "jti": "071f99cc-0b52-11ec-96c2-374f836e9e79",
+  "sub": "<client id>",
+  "jti": "<jti>",
   "ga4gh_passport_v1": [
-    <visa1>,
-    <visa2>,
+    "<visa1>",
+    "<visa2>",
     ...
   ]
 }
@@ -907,7 +907,7 @@ passport - and this decision is coordinated with the data system to
 facilitate that actual data release.
 end note
 
-client <- clearing : Return data
+client <- clearing : Client is given data
 
 
 {% endplantuml %}
@@ -916,10 +916,9 @@ client <- clearing : Return data
 
 The exchange flow does not ever distribute the initial *Passport-Scoped OAuth Access Token* beyond
 the client application. A token exchange operation is executed by the client, in
-exchange for a *Passport Access Token* (need precise name), a *Work Order Token* (same) - or any
+exchange for a *Passport Token*, a *Work Order Token* (same) - or any
 other token that may be used downstream to access resources. In this example flow, the
- *Passport Access Token* is used as a bearer token - though noting that the potential large size
-and overly generous scope of these tokens may limit the general availability of this technique.
+ *Passport Token* is included as authorisation in the POST to a DRS server.
 
 {% plantuml %}
 
@@ -954,9 +953,8 @@ end ref
 
 ==Exchange==
 
-user -> client : User instructs client\nregarding data access
 client -> broker : Token exchange
-note over client, broker
+note right
 Content-Type: application/x-www-form-urlencoded
 
 grant_type=urn:ietf:params:oauth:grant-type:token-exchange
@@ -965,54 +963,61 @@ subject_token=<Passport-Scoped OAuth Access Token>
 subject_token_type=urn:ietf:params:oauth:token-type:access_token
 end note
 
-broker -> issuers : (optional) Fetch signed visa(s) for user
-note over broker, issuers
-[
-  "evb....",
-  "evb....",
-]
-end note
-broker <- issuers : (optional) Return signed visa(s) for user
+group Informative Only (not defined in this specification)
+    broker -> issuers : Fetch signed visa(s) for user
+    broker <- issuers : Return signed visa(s) for user
+    note right
+    [
+      "<visa1>",
+      "<visa2>"
+    ]
+    end note
+end
 
 client <- broker : Token exchange return
-note over client, broker
+note right
 {
-  "access_token": "... BASE 64 JWT PASSPORT_ACCESS_TOKEN ...",
-  "issued_token_type": <TBD>,
-  "token_type":"Bearer",
-  "expires_in":60
+  "access_token": "<passport token (base64 encoded)>",
+  "issued_token_type": "<TBD>",
+  "token_type": "Bearer",
+  "expires_in": 60
 }
-end note
 
-note over client, clearing  #CCCCCC
+▼ passport token content decoded from base64 (generally opaque to the client) ▼  
+
+{
+  "alg": "RS256",
+  "typ": "???",
+} .
 {
   "iss": "https://broker.example.com",
-  "sub": "https://orcid.org/0000-0002-1825-0097",
+  "sub": "<subject id>",
   "aud": "https://resource-server.example.com/",
-  "jti": "071f99cc-0b52-11ec-96c2-374f836e9e79",
+  "jti": "<jti>",
   "ga4gh_passport_v1": [
-    "evb....",
-    "evn...."
+    "<visa1>",
+    "<visa2>",
+    ...
   ]
-}
+} . <secret>
 end note
 
 ==Use==
 
-client -> clearing : Client asks for data
-note over client, clearing  #CCCCCC
+client -> clearing : Client requests data
+note right
 {
-Authorization: Bearer <name of token type for here?>
+  REPLACE WITH CORRECT DRS DETAILS
 }
 end note
 
 note over clearing, data  #FFCCCB
 Decision is made to release data using information contained in the
-bearer token - and this decision is coordinated with the data system to
+passport token - and this decision is coordinated with the data system to
 facilitate that actual data release.
 end note
 
-client <- clearing : Return data
+client <- clearing : Client is given data
 
 {% endplantuml %}
 
