@@ -889,9 +889,9 @@ end
 clearing <- broker : Return passport
 note right
 {
-  "iss": "https://broker.example.com",
-  "sub": "<subject id>",
-  "jti": "<jti>",
+  "iss": "https://<issuer-website>/",
+  "sub": "<subject-identifier>",
+  "jti": "<token-identifier>",
   "ga4gh_passport_v1": [
     "<visa1>",
     "<visa2>",
@@ -918,7 +918,9 @@ The exchange flow does not ever distribute the initial *Passport-Scoped OAuth Ac
 the client application. A token exchange operation is executed by the client, in
 exchange for a *Passport Token*, a *Work Order Token* (same) - or any
 other token that may be used downstream to access resources. In this example flow, the
- *Passport Token* is included as authorisation in the POST to a DRS server.
+ *Passport Token* is included as authorisation in the POST to a DRS server. The token
+exchange has also specified a known resource server website that will limit the audience
+of the returned token.
 
 {% plantuml %}
 
@@ -961,6 +963,7 @@ grant_type=urn:ietf:params:oauth:grant-type:token-exchange
 requested_token_type=TBD
 subject_token=<Passport-Scoped OAuth Access Token>
 subject_token_type=urn:ietf:params:oauth:token-type:access_token
+audience=https://<drs-resource-server-website>/
 end note
 
 group#DeepSkyBlue #LightSkyBlue Informative Only (not defined in this specification)
@@ -986,14 +989,19 @@ note right
 ▼ passport token content decoded from base64 (generally opaque to the client) ▼  
 
 {
+  "typ": TBD,
   "alg": "RS256",
-  "typ": "???",
+  "kid": "<key-identifier>"
 } .
 {
-  "iss": "https://broker.example.com",
-  "sub": "<subject id>",
-  "aud": "https://resource-server.example.com/",
-  "jti": "<jti>",
+  "iss": "https://<issuer-website>/",
+  "sub": "<subject-identifier>",
+  "aud": [
+    "https://<drs-resource-server-website>/"
+  ],
+  "iat": <seconds-since-epoch>,
+  "exp": <seconds-since-epoch>,
+  "jti": "<token-identifier>",
   "ga4gh_passport_v1": [
     "<visa1>",
     "<visa2>",
