@@ -53,14 +53,33 @@
 
   <div class="post-content">
     <h3 id="12-draft-work-in-progress">1.2 Draft Work In Progress</h3>
-<p>| Date | Editor | Notes |
-|——|——–|——-|
-| 2022-02-24 | TomConner | Merged edits from David Bernick’s bernick_clearinghouse_clarifications branch |</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Date</th>
+      <th>Editor</th>
+      <th>Notes</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>2022-03-10</td>
+      <td>TomConner</td>
+      <td>Token endpoints; spec references</td>
+    </tr>
+    <tr>
+      <td>2022-02-24</td>
+      <td>TomConner</td>
+      <td>Merged edits from David Bernick’s bernick_clearinghouse_clarifications branch</td>
+    </tr>
+  </tbody>
+</table>
 
 <h3 class="no_toc" id="abstract">Abstract</h3>
 
 <p>This specification profiles the OpenID Connect protocol (OIDC) to provide a federated
-(multilateral) authentication and authorisation infrastructure for greater
+(multilateral) authentication and authorization infrastructure for greater
 interoperability between Genomics institutions in a manner specifically
 applicable to (but not limited to) the sharing of restricted datasets.</p>
 
@@ -68,8 +87,8 @@ applicable to (but not limited to) the sharing of restricted datasets.</p>
 (<a href="#relevant-specifications">JWT</a>) syntax for an access token to
 enable an OIDC provider (called a <a href="#term-broker">Broker</a>) to allow a downstream 
 access token consumer (called a <a href="#term-claim-clearinghouse">Claim Clearinghouse</a>)
-to locate the Broker’s /aaitoken endpoint as a means to fetch <a href="#term-ga4gh-claim">GA4GH
-Claims</a>. The GA4GH Claims, nominally a  <a href="https://github.com/ga4gh-duri/ga4gh-duri.github.io/blob/master/researcher_ids/ga4gh_passport_v1.md">GA4GH Passport</a>, can then be use for other authentication and authorization purposes. This specification is suggested to be used together
+to locate the Broker’s <code class="language-plaintext highlighter-rouge">/userinfo</code> and <code class="language-plaintext highlighter-rouge">/aaitoken</code> endpoints as a means to fetch <a href="#term-ga4gh-claim">GA4GH
+Claims</a>. The GA4GH Claims, nominally a  <a href="https://github.com/ga4gh-duri/ga4gh-duri.github.io/blob/master/researcher_ids/ga4gh_passport_v1.md">GA4GH DURI Passport</a>, can then be used for other authentication and authorization purposes. This specification is suggested to be used together
 with others that specify the syntax and semantics of the GA4GH Claims exchanged.</p>
 
 <h3 class="no_toc" id="table-of-contents">Table of Contents</h3>
@@ -92,7 +111,7 @@ with others that specify the syntax and semantics of the GA4GH Claims exchanged.
   <li>
 <a href="#ga4gh-jwt-format" id="markdown-toc-ga4gh-jwt-format">GA4GH JWT Format</a>    <ul>
       <li><a href="#passport-scoped-access-token-issued-by-broker" id="markdown-toc-passport-scoped-access-token-issued-by-broker">Passport-Scoped Access Token issued by Broker</a></li>
-      <li><a href="#claims-sent-to-data-holder-by-a-broker-via-aaitoken" id="markdown-toc-claims-sent-to-data-holder-by-a-broker-via-aaitoken">Claims sent to Data Holder by a Broker via <code class="language-plaintext highlighter-rouge">/aaitoken</code></a></li>
+      <li><a href="#claims-sent-to-data-holder-by-a-broker-via-aaitoken-or-userinfo" id="markdown-toc-claims-sent-to-data-holder-by-a-broker-via-aaitoken-or-userinfo">Claims sent to Data Holder by a Broker via <code class="language-plaintext highlighter-rouge">/aaitoken</code> or <code class="language-plaintext highlighter-rouge">/userinfo</code></a></li>
       <li>
 <a href="#visa-issued-by-visa-issuer" id="markdown-toc-visa-issued-by-visa-issuer">Visa issued by Visa Issuer</a>        <ul>
           <li><a href="#visa-access-token-format" id="markdown-toc-visa-access-token-format">Visa Access Token Format</a></li>
@@ -126,7 +145,8 @@ be interpreted as described in <a href="https://www.ietf.org/rfc/rfc2119.txt">RF
 
 <p><a name="term-ga4gh-claim"></a> <strong>GA4GH Claim</strong> – A JWT claim as defined by a GA4GH
 documented technical standard that is making use of this AAI specification. Typically
-this is the <code class="language-plaintext highlighter-rouge">ga4gh_passport_v1</code> or <code class="language-plaintext highlighter-rouge">ga4gh_visa_v1</code> claim for GA4GH Passports v1.x.
+this is the <code class="language-plaintext highlighter-rouge">ga4gh_passport_v1</code> or <code class="language-plaintext highlighter-rouge">ga4gh_visa_v1</code> claim for GA4GH Passports v1.x (see 
+<a href="https://github.com/ga4gh-duri/ga4gh-duri.github.io/blob/master/researcher_ids/ga4gh_passport_v1.md">GA4GH DURI Passport</a>).
 Note that GA4GH is not the organization making the claim nor taking responsibility
 for the claim as this is a reference to a GA4GH documented standard only.</p>
 
@@ -202,7 +222,7 @@ a service that signs <a href="#term-embedded-token">Embedded Tokens</a>. This se
 may be:</p>
 <ul>
   <li>a <a href="#term-broker">Broker</a> itself</li>
-  <li>a Broker may use this service as part of collecting GA4GH Claims that the Broker includes in responses from its /aaitoken endpoint.</li>
+  <li>a Broker may use this service as part of collecting GA4GH Claims that the Broker includes in responses from its /userinfo or /aaitoken endpoint.</li>
 </ul>
 
 <p><a name="term-token-container-issuer"></a> <strong>Token Container Issuer</strong> –
@@ -228,28 +248,39 @@ signature of the original Visa Issuer.</p>
 
 <h3 id="relevant-specifications">Relevant Specifications</h3>
 
-<p><a href="http://openid.net/specs/openid-connect-core-1_0.html">OIDC Spec</a> -
-Authorization Code Flow and Implicit Flow will generate id_tokens and
-access_tokens from the Broker.</p>
+<p><a href="http://openid.net/specs/openid-connect-core-1_0.html">OIDC-Core</a> -
+        Authorization Code Flow and Implicit Flow will generate id_tokens and
+        access_tokens from the Broker.</p>
 
-<p><a href="https://tools.ietf.org/html/rfc7519">JWT</a> - Specific implementations MAY extend
-this structure with their own service-specific JWT claim names as top-level
-members of this JSON object. Recommended “extensions” are in the
-<a href="#authorizationclaims">Permissions</a> section. The JWT specified here follows JWS
-headers specification from <a href="https://tools.ietf.org/html/rfc7515">RFC7515</a>.</p>
+<p><a href="https://tools.ietf.org/html/rfc7519">RFC7519-JWT</a> - Specific implementations MAY extend
+        this structure with their own service-specific JWT claim names as top-level
+        members of this JSON object. Recommended “extensions” are in the
+        <a href="#authorizationclaims">Permissions</a> section. The JWT specified here follows JWS
+        headers specification from <a href="https://tools.ietf.org/html/rfc7515">RFC7515-JWS</a>.</p>
 
-<p><a href="https://tools.ietf.org/html/rfc7515">JWS</a> - JSON Web Signature (JWS) is the
-specific JWT to use for this spec.</p>
+<p><a href="https://tools.ietf.org/html/rfc7515">RFC7515-JWS</a> - JSON Web Signature (JWS) is the
+        specific JWT to use for this spec.</p>
 
-<p><a href="https://tools.ietf.org/html/rfc5246">Transport Layer Security (TLS, RFC 5246</a>).
-Information passed among clients, Applications, Brokers, and Claim
-Clearinghouses MUST be protected using TLS.</p>
+<p><a href="https://tools.ietf.org/html/rfc5246">RFC5246-TLS</a> - Transport Layer Security.
+        Information passed among clients, Applications, Brokers, and Claim
+        Clearinghouses MUST be protected using TLS.</p>
 
-<p><a href="https://openid.net/specs/openid-connect-discovery-1_0.html">OIDC Discovery</a></p>
+<p><a href="https://openid.net/specs/openid-connect-discovery-1_0.html">OIDC-Discovery</a></p>
 
-<p><a href="https://tools.ietf.org/html/rfc6819">OAuth 2.0 Threat Model and Security Considerations (RFC 6819)</a>.</p>
+<p><a href="https://github.com/ga4gh-duri/ga4gh-duri.github.io/blob/master/researcher_ids/ga4gh_passport_v1.md">GA4GH Passport</a> - DURI</p>
 
-<p><a href="https://github.com/ga4gh-duri/ga4gh-duri.github.io/blob/master/researcher_ids/ga4gh_passport_v1.md">GA4GH Passport</a></p>
+<p><a href="https://www.rfc-editor.org/info/rfc8693">RFC8693</a>  Jones, M., Nadalin, A., Campbell, B., Ed., Bradley, J.,
+        and C. Mortimore, “OAuth 2.0 Token Exchange”, RFC 8693,
+        DOI 10.17487/RFC8693, January 2020.</p>
+
+<p><a href="https://www.rfc-editor.org/info/rfc6819">RFC6819</a> 
+        Lodderstedt, T, McGloin, M., and P. Hunt, 
+        “OAuth 2.0 Threat Model and Security Considerations”, 
+        RFC 6819, January 2013.</p>
+
+<p><a href="https://www.rfc-editor.org/info/rfc8725">RFC8725</a>  Sheffer, Y., Hardt, D., and M. Jones, “JSON Web Token Best
+        Current Practices”, BCP 225, RFC 8725,
+        DOI 10.17487/RFC8725, February 2020.</p>
 
 <h3 id="flow-of-claims">Flow of Claims</h3>
 
@@ -381,11 +412,15 @@ Clearinghouse)</li>
     </ol>
   </li>
   <li>
-    <p>Broker MUST support public-facing /aaitoken endpoint.</p>
+    <p>Broker MUST support public-facing <code class="language-plaintext highlighter-rouge">/aaitoken</code> endpoint or <code class="language-plaintext highlighter-rouge">/userinfo</code> endpoint.</p>
 
     <ol>
       <li>
-        <p>When presented with a valid access token, the /aaitoken endpoint MUST return
+        <p>The <code class="language-plaintext highlighter-rouge">/aaitoken</code> endpoint SHOULD be used for passport visa claims in 
+preference to <code class="language-plaintext highlighter-rouge">/userinfo</code>.</p>
+      </li>
+      <li>
+        <p>When presented with a valid access token, the endpoint MUST return
 claims in the specified
 <a href="#claims-sent-to-data-holder-by-a-broker-via-aaitoken">User Info Format</a> using
 either an <code class="language-plaintext highlighter-rouge">application/json</code> or <code class="language-plaintext highlighter-rouge">application/jwt</code> encoding.</p>
@@ -394,7 +429,7 @@ either an <code class="language-plaintext highlighter-rouge">application/json</c
         <p>The Broker MUST include the claims_parameter_supported in the discovery service
 to indicate whether or not the Broker supports the <a href="https://openid.net/specs/openid-connect-core-1_0.html#ClaimsParameter">OIDC claims request
 parameter</a>
-on /aaitoken to subset which claim information will be returned. If the Broker
+on <code class="language-plaintext highlighter-rouge">/userinfo</code> to subset which claim information will be returned. If the Broker
 does not support the OIDC claims request parameter, then all claim information
 for the provided scopes eligible for release to the requester MUST be returned.</p>
       </li>
@@ -436,7 +471,7 @@ previously generated access tokens.</p>
   </li>
   <li>
     <p>By signing an access token, an Broker asserts that the GA4GH Claims that
-token makes available at the /aaitoken (TODO: Settle path name) endpoint – 
+token makes available at the /userinfo or /aaitoken endpoint – 
 not including any Visas – were legitimately derived from their <a href="#term-claim-source">Claim
 Sources</a>, and the content is presented and/or
 transformed without misrepresenting the original intent.</p>
@@ -488,7 +523,7 @@ that may be reachable by a Claim Clearinghouse.</p>
           </li>
           <li>
             <p>Visa Issuer MUST support public-facing
-/aaitoken endpoint. When presented with a valid Visa Access
+<code class="language-plaintext highlighter-rouge">/aaitoken</code> or <code class="language-plaintext highlighter-rouge">/userinfo</code> endpoint. When presented with a valid Visa Access
 Token, the /aaitoken endpoint MUST return a success status
 and MAY return the current values for GA4GH Claims that were
 included within the Visa Access Token, however returning
@@ -500,7 +535,7 @@ Tokens is OPTIONAL. (NOTE: I don’t really understand the distinction being mad
 more than 1 hour, the Visa Issuer should expect
 Claim Clearinghouses to use <a href="#at-polling">Access Token Polling</a> and
 MUST provide a means to revoke Visa Access Tokens. The
-/aaitoken endpoint MUST return an HTTP status 401 as per
+<code class="language-plaintext highlighter-rouge">/aaitoken</code> or <code class="language-plaintext highlighter-rouge">/userinfo</code> endpoint MUST return an HTTP status 401 as per
 <a href="https://tools.ietf.org/html/rfc6750#section-3.1">RFC6750 section 3.1</a>
 when provided an Visa Access Token that has completed the
 revocation process.</p>
@@ -640,7 +675,7 @@ indicated above.</p>
     </ol>
   </li>
   <li>
-    <p>Claim Clearinghouses MUST process access tokens to access a Broker’s <code class="language-plaintext highlighter-rouge">/aaitoken</code> to get access to GA4GH Claims OR MUST process Token Containers and their Embedded Tokens.</p>
+    <p>Claim Clearinghouses MUST process access tokens to access a Broker’s <code class="language-plaintext highlighter-rouge">/aaitoken</code> or <code class="language-plaintext highlighter-rouge">/userinfo</code> to get access to GA4GH Claims OR MUST process Token Containers and their Embedded Tokens.</p>
 
     <ol>
       <li>
@@ -653,7 +688,7 @@ token as opaque.</p>
 
             <ol>
               <li>
-                <p>Even though JWTs are expected to be submitted against a Broker’s <code class="language-plaintext highlighter-rouge">/aaitoken</code>, a Claim Clearinghouse SHOULD check the Token’s signature via JWKS or having stored the
+                <p>Even though JWTs are expected to be submitted against a Broker’s <code class="language-plaintext highlighter-rouge">/aaitoken</code> or <code class="language-plaintext highlighter-rouge">/userinfo</code>, a Claim Clearinghouse SHOULD check the Token’s signature via JWKS or having stored the
 public key.</p>
 
                 <ol>
@@ -688,8 +723,8 @@ trust model).</li>
           </li>
           <li>
             <p>If treating the token as an opaque a Claim Clearinghouse MUST know in
-advance where to find a corresponding /aaitoken. This may limit the
-functionality of accepting tokens from some Brokers.</p>
+advance where to find a corresponding <code class="language-plaintext highlighter-rouge">/aaitoken</code>. This may limit the
+functionality of accepting tokens from some Brokers.  (TODO: Question: is an opaque token an alternative to validation? Does 1.2 need to support this flow?)</p>
           </li>
         </ol>
       </li>
@@ -758,8 +793,8 @@ calling the <code class="language-plaintext highlighter-rouge">jku</code> endpoi
   <li>
     <p><a name="at-polling"></a> <strong>Access Token Polling</strong>: Clients MAY use access tokens,
 including Visas, to occasionally check which claims are still valid
-at the associated /aaitoken endpoint in order to establish whether the user
-still meets the access requirements.</p>
+at the associated <code class="language-plaintext highlighter-rouge">/aaitoken</code> or <code class="language-plaintext highlighter-rouge">/userinfo</code> endpoint in order to establish 
+whether the user still meets the access requirements.</p>
 
     <p>This MUST NOT be done more than once per hour (excluding any optional retries)
 per Claim Clearinghouse. Any request retries MUST include exponential backoff
@@ -783,11 +818,10 @@ administrator has revoked the access token or a refresh token related to
 minting the access token.</p>
       </li>
       <li>
-        <p>The /aaitoken endpoint returns an HTTP status that is not retryable.
-For example, /aaitoken returns HTTP status 400.</p>
+        <p>The endpoint returns an HTTP status that is not retryable, e.g. HTTP status 400.</p>
       </li>
       <li>
-        <p>If the /aaitoken endpoint returns an updated set of GA4GH Claims (this is
+        <p>If the endpoint returns an updated set of GA4GH Claims (this is
 an OPTIONAL feature of an Visa Issuer), then the Claim
 Clearinghouse MUST use the updated GA4GH Claims and ignore the original
 GA4GH Claim values in the Visa Access Token. If the Claim
@@ -876,13 +910,13 @@ The <code class="language-plaintext highlighter-rouge">scope</code> claim is def
   </li>
 </ul>
 
-<h4 id="claims-sent-to-data-holder-by-a-broker-via-aaitoken">Claims sent to Data Holder by a Broker via <code class="language-plaintext highlighter-rouge">/aaitoken</code>
+<h4 id="claims-sent-to-data-holder-by-a-broker-via-aaitoken-or-userinfo">Claims sent to Data Holder by a Broker via <code class="language-plaintext highlighter-rouge">/aaitoken</code> or <code class="language-plaintext highlighter-rouge">/userinfo</code>
 </h4>
 <p>(TODO Settle question of JWT, blob, other)</p>
 
 <p>Only the GA4GH claims truly must be as prescribed here. Refer to OIDC Spec for
-more information. The /aaitoken endpoint MAY use <code class="language-plaintext highlighter-rouge">application/json</code> or
-<code class="language-plaintext highlighter-rouge">application/jwt</code>.  It is RECOMMENDED that if desiring to return a JWT, a token endpoint supporting AAI token exchange exists to do that and <code class="language-plaintext highlighter-rouge">/aaitoken</code> returns a general blob.</p>
+more information. The endpoint MAY use <code class="language-plaintext highlighter-rouge">application/json</code> or
+<code class="language-plaintext highlighter-rouge">application/jwt</code>.  It is RECOMMENDED that if desiring to return a JWT, a token endpoint supporting AAI token exchange exists to do that and <code class="language-plaintext highlighter-rouge">/userinfo</code> returns a general blob.</p>
 
 <p>If <code class="language-plaintext highlighter-rouge">application/jwt</code> is returned, it MUST be signed like /userinfo responses as per
 <a href="https://openid.net/specs/openid-connect-core-1_0.html#UserInfoResponse">UserInfo</a>.</p>
@@ -940,7 +974,7 @@ Claim.</p>
 
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>{
  "typ": "JWT",
- "alg": "RS256",
+ "alg": "&lt;algorithm&gt;",
  "kid": "&lt;key-identifier&gt;"
 }
 </code></pre></div></div>
@@ -949,7 +983,7 @@ Claim.</p>
 
 <ol>
   <li>
-    <p><code class="language-plaintext highlighter-rouge">alg</code> MUST be “RS256”.</p>
+    <p><code class="language-plaintext highlighter-rouge">alg</code> MUST be “RS256” or “ES256”</p>
   </li>
   <li>
     <p>The header MUST NOT contain a <code class="language-plaintext highlighter-rouge">jku</code>.</p>
@@ -1016,7 +1050,7 @@ JWT claim, if the <code class="language-plaintext highlighter-rouge">scope</code
     <div class="language-plaintext highlighter-rouge">
 <div class="highlight"><pre class="highlight"><code>{
   "typ": "JWT",
-  "alg": "RS256",
+  "alg": "&lt;algorithm&gt;",
   "jku": "https://&lt;jwk-URL&gt;",
   "kid": "&lt;key-identifier&gt;"
 }.
@@ -1036,7 +1070,7 @@ JWT claim, if the <code class="language-plaintext highlighter-rouge">scope</code
         <p><code class="language-plaintext highlighter-rouge">typ</code>: MUST be “JWT”.</p>
       </li>
       <li>
-        <p><code class="language-plaintext highlighter-rouge">alg</code>: MUST be “RS256”.</p>
+        <p><code class="language-plaintext highlighter-rouge">alg</code>: MUST be “RS256” or “ES256”</p>
       </li>
       <li>
         <p><code class="language-plaintext highlighter-rouge">jti</code>: RECOMMENDED. A unique identifier for the token as per
