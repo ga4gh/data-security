@@ -6,25 +6,30 @@ permalink: aai-openid-connect-profile
 
 ### 1.2 Draft Work In Progress 
 
-| Date       | Editor       | Notes |
-|------------|--------------|-------|
-| 2022-03-10 | TomConner    | Token endpoints; spec references |
-| 2022-02-24 | TomConner    | Merged edits from David Bernick's bernick_clearinghouse_clarifications branch |
+| Date       | Editor    | Notes                                                                         |
+|------------|-----------|-------------------------------------------------------------------------------|
+| 2022-03-16 | Patto     | Abstract clarified to support all flows                                       |
+| 2022-03-10 | TomConner | Token endpoints; spec references                                              |
+| 2022-02-24 | TomConner | Merged edits from David Bernick's bernick_clearinghouse_clarifications branch |
 
 ### Abstract
 {:.no_toc}
 
 This specification profiles the OpenID Connect protocol (OIDC) to provide a federated
 (multilateral) authentication and authorization infrastructure for greater
-interoperability between Genomics institutions in a manner specifically
+interoperability between genomics institutions in a manner specifically
 applicable to (but not limited to) the sharing of restricted datasets.
 
-In particular, this specification introduces a JSON Web Token
-([JWT](#relevant-specifications)) syntax for an access token to
-enable an OIDC provider (called a [Broker](#term-broker)) to allow a downstream 
-access token consumer (called a [Claim Clearinghouse](#term-claim-clearinghouse))
-to locate the Broker’s `/userinfo` and `/aaitoken` endpoints as a means to fetch [GA4GH
-Claims](#term-ga4gh-claim). The GA4GH Claims, nominally a  [GA4GH DURI Passport](https://github.com/ga4gh-duri/ga4gh-duri.github.io/blob/master/researcher_ids/ga4gh_passport_v1.md), can then be used for other authentication and authorization purposes. This specification is suggested to be used together
+In particular, this specification profiles endpoints and flows that
+enable an OIDC provider (called a [Broker](#term-broker)) to
+provide [GA4GH Claims](#term-ga4gh-claim) to downstream claim consumers
+(called a [Claim Clearinghouse](#term-claim-clearinghouse)).
+
+The GA4GH Claims, nominally a [GA4GH DURI Passport](https://github.com/ga4gh-duri/ga4gh-duri.github.io/blob/master/researcher_ids/ga4gh_passport_v1.md),
+can then be used for authentication and authorization purposes by downstream
+systems.
+
+This specification is suggested to be used together
 with others that specify the syntax and semantics of the GA4GH Claims exchanged.
 
 ### Table of Contents
