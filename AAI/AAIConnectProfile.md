@@ -20,7 +20,7 @@ This specification profiles the OpenID Connect protocol (OIDC) to provide a fede
 interoperability between genomics institutions in a manner specifically
 applicable to (but not limited to) the sharing of restricted datasets.
 
-In particular, this specification profiles endpoints and flows that
+In particular, this specification profiles tokens, endpoints and flows that
 enable an OIDC provider (called a [Broker](#term-broker)) to
 provide [GA4GH Claims](#term-ga4gh-claim) to downstream claim consumers
 (called a [Claim Clearinghouse](#term-claim-clearinghouse)).
