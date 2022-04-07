@@ -120,7 +120,7 @@ with others that specify the syntax and semantics of the GA4GH Claims exchanged.
   <li>
 <a href="#ga4gh-jwt-format" id="markdown-toc-ga4gh-jwt-format">GA4GH JWT Format</a>    <ul>
       <li><a href="#passport-scoped-access-token-issued-by-broker" id="markdown-toc-passport-scoped-access-token-issued-by-broker">Passport-Scoped Access Token issued by Broker</a></li>
-      <li><a href="#claims-sent-to-data-holder-by-a-broker-via-aaitoken-or-userinfo" id="markdown-toc-claims-sent-to-data-holder-by-a-broker-via-aaitoken-or-userinfo">Claims sent to Data Holder by a Broker via <code class="language-plaintext highlighter-rouge">/aaitoken</code> or <code class="language-plaintext highlighter-rouge">/userinfo</code></a></li>
+      <li><a href="#claims-sent-to-data-holder-by-a-broker-via-token-or-userinfo" id="markdown-toc-claims-sent-to-data-holder-by-a-broker-via-token-or-userinfo">Claims sent to Data Holder by a Broker via <code class="language-plaintext highlighter-rouge">/token</code> or <code class="language-plaintext highlighter-rouge">/userinfo</code></a></li>
       <li>
 <a href="#visa-issued-by-visa-issuer" id="markdown-toc-visa-issued-by-visa-issuer">Visa issued by Visa Issuer</a>        <ul>
           <li><a href="#visa-access-token-format" id="markdown-toc-visa-access-token-format">Visa Access Token Format</a></li>
@@ -231,7 +231,7 @@ a service that signs <a href="#term-embedded-token">Embedded Tokens</a>. This se
 may be:</p>
 <ul>
   <li>a <a href="#term-broker">Broker</a> itself</li>
-  <li>a Broker may use this service as part of collecting GA4GH Claims that the Broker includes in responses from its /userinfo or /aaitoken endpoint.</li>
+  <li>a Broker may use this service as part of collecting GA4GH Claims that the Broker includes in responses from its /userinfo or /token endpoint.</li>
 </ul>
 
 <p><a name="term-token-container-issuer"></a> <strong>Token Container Issuer</strong> –
@@ -421,17 +421,18 @@ Clearinghouse)</li>
     </ol>
   </li>
   <li>
-    <p>Broker MUST support public-facing <code class="language-plaintext highlighter-rouge">/aaitoken</code> endpoint or <code class="language-plaintext highlighter-rouge">/userinfo</code> endpoint.</p>
+    <p>Broker MUST support public-facing <code class="language-plaintext highlighter-rouge">/token</code> endpoint or <code class="language-plaintext highlighter-rouge">/userinfo</code> endpoint.</p>
 
     <ol>
       <li>
-        <p>The <code class="language-plaintext highlighter-rouge">/aaitoken</code> endpoint SHOULD be used for passport visa claims in 
+        <p>The <code class="language-plaintext highlighter-rouge">/token</code> endpoint SHOULD be used for passport visa claims in 
 preference to <code class="language-plaintext highlighter-rouge">/userinfo</code>.</p>
       </li>
       <li>
         <p>When presented with a valid access token, the endpoint MUST return
 claims in the specified
-<a href="#claims-sent-to-data-holder-by-a-broker-via-aaitoken">User Info Format</a> using
+[Format]
+   (#claims-sent-to-data-holder-by-a-broker-via-token-or-userinfo) using
 either an <code class="language-plaintext highlighter-rouge">application/json</code> or <code class="language-plaintext highlighter-rouge">application/jwt</code> encoding.</p>
       </li>
       <li>
@@ -480,7 +481,7 @@ previously generated access tokens.</p>
   </li>
   <li>
     <p>By signing an access token, an Broker asserts that the GA4GH Claims that
-token makes available at the /userinfo or /aaitoken endpoint – 
+token makes available at the /userinfo or /token endpoint – 
 not including any Visas – were legitimately derived from their <a href="#term-claim-source">Claim
 Sources</a>, and the content is presented and/or
 transformed without misrepresenting the original intent.</p>
@@ -532,11 +533,11 @@ that may be reachable by a Claim Clearinghouse.</p>
           </li>
           <li>
             <p>Visa Issuer MUST support public-facing
-<code class="language-plaintext highlighter-rouge">/aaitoken</code> or <code class="language-plaintext highlighter-rouge">/userinfo</code> endpoint. When presented with a valid Visa Access
-Token, the /aaitoken endpoint MUST return a success status
+<code class="language-plaintext highlighter-rouge">/token</code> or <code class="language-plaintext highlighter-rouge">/userinfo</code> endpoint. When presented with a valid Visa Access
+Token, the /token endpoint MUST return a success status
 and MAY return the current values for GA4GH Claims that were
 included within the Visa Access Token, however returning
-GA4GH Claims from the /aaitoken endpoint for Visa Access
+GA4GH Claims from the /token endpoint for Visa Access
 Tokens is OPTIONAL. (NOTE: I don’t really understand the distinction being made here.)</p>
           </li>
           <li>
@@ -544,7 +545,7 @@ Tokens is OPTIONAL. (NOTE: I don’t really understand the distinction being mad
 more than 1 hour, the Visa Issuer should expect
 Claim Clearinghouses to use <a href="#at-polling">Access Token Polling</a> and
 MUST provide a means to revoke Visa Access Tokens. The
-<code class="language-plaintext highlighter-rouge">/aaitoken</code> or <code class="language-plaintext highlighter-rouge">/userinfo</code> endpoint MUST return an HTTP status 401 as per
+<code class="language-plaintext highlighter-rouge">/token</code> or <code class="language-plaintext highlighter-rouge">/userinfo</code> endpoint MUST return an HTTP status 401 as per
 <a href="https://tools.ietf.org/html/rfc6750#section-3.1">RFC6750 section 3.1</a>
 when provided an Visa Access Token that has completed the
 revocation process.</p>
@@ -633,7 +634,7 @@ indicated above.</p>
     </ol>
   </li>
   <li>
-    <p>Token Containers themselves are JWTs that contain Embedded Tokens. Token Containers use this format <a href="#claims-sent-to-data-holder-by-a-broker-via-aaitoken">User Info Format</a> as a (TODO what format) signed JWT.</p>
+    <p>Token Containers themselves are JWTs that contain Embedded Tokens. Token Containers use this format <a href="#claims-sent-to-data-holder-by-a-broker-via-token-or-userinfo">Format</a> as a (TODO what format) signed JWT.</p>
 
     <ol>
       <li>It is RECOMMENDED for Token Containers to conform to the <a href="https://tools.ietf.org/html/rfc7515">https://tools.ietf.org/html/rfc7515</a> (JWS) Specification.</li>
@@ -684,7 +685,7 @@ indicated above.</p>
     </ol>
   </li>
   <li>
-    <p>Claim Clearinghouses MUST process access tokens to access a Broker’s <code class="language-plaintext highlighter-rouge">/aaitoken</code> or <code class="language-plaintext highlighter-rouge">/userinfo</code> to get access to GA4GH Claims OR MUST process Token Containers and their Embedded Tokens.</p>
+    <p>Claim Clearinghouses MUST process access tokens to access a Broker’s <code class="language-plaintext highlighter-rouge">/token</code> or <code class="language-plaintext highlighter-rouge">/userinfo</code> to get access to GA4GH Claims OR MUST process Token Containers and their Embedded Tokens.</p>
 
     <ol>
       <li>
@@ -697,7 +698,7 @@ token as opaque.</p>
 
             <ol>
               <li>
-                <p>Even though JWTs are expected to be submitted against a Broker’s <code class="language-plaintext highlighter-rouge">/aaitoken</code> or <code class="language-plaintext highlighter-rouge">/userinfo</code>, a Claim Clearinghouse SHOULD check the Token’s signature via JWKS or having stored the
+                <p>Even though JWTs are expected to be submitted against a Broker’s <code class="language-plaintext highlighter-rouge">/token</code> or <code class="language-plaintext highlighter-rouge">/userinfo</code>, a Claim Clearinghouse SHOULD check the Token’s signature via JWKS or having stored the
 public key.</p>
 
                 <ol>
@@ -732,7 +733,7 @@ trust model).</li>
           </li>
           <li>
             <p>If treating the token as an opaque a Claim Clearinghouse MUST know in
-advance where to find a corresponding <code class="language-plaintext highlighter-rouge">/aaitoken</code>. This may limit the
+advance where to find a corresponding <code class="language-plaintext highlighter-rouge">/token</code>. This may limit the
 functionality of accepting tokens from some Brokers.  (TODO: Question: is an opaque token an alternative to validation? Does 1.2 need to support this flow?)</p>
           </li>
         </ol>
@@ -755,7 +756,7 @@ functionality of accepting tokens from some Brokers.  (TODO: Question: is an opa
     </ol>
   </li>
   <li>
-    <p>If making use of <a href="#term-embedded-token">Embedded Tokens</a> directly from <code class="language-plaintext highlighter-rouge">/aaitoken</code> or from a Token Container:</p>
+    <p>If making use of <a href="#term-embedded-token">Embedded Tokens</a> directly from <code class="language-plaintext highlighter-rouge">/token</code> or from a Token Container:</p>
 
     <ol>
       <li>
@@ -802,7 +803,7 @@ calling the <code class="language-plaintext highlighter-rouge">jku</code> endpoi
   <li>
     <p><a name="at-polling"></a> <strong>Access Token Polling</strong>: Clients MAY use access tokens,
 including Visas, to occasionally check which claims are still valid
-at the associated <code class="language-plaintext highlighter-rouge">/aaitoken</code> or <code class="language-plaintext highlighter-rouge">/userinfo</code> endpoint in order to establish 
+at the associated <code class="language-plaintext highlighter-rouge">/token</code> or <code class="language-plaintext highlighter-rouge">/userinfo</code> endpoint in order to establish 
 whether the user still meets the access requirements.</p>
 
     <p>This MUST NOT be done more than once per hour (excluding any optional retries)
@@ -919,7 +920,7 @@ The <code class="language-plaintext highlighter-rouge">scope</code> claim is def
   </li>
 </ul>
 
-<h4 id="claims-sent-to-data-holder-by-a-broker-via-aaitoken-or-userinfo">Claims sent to Data Holder by a Broker via <code class="language-plaintext highlighter-rouge">/aaitoken</code> or <code class="language-plaintext highlighter-rouge">/userinfo</code>
+<h4 id="claims-sent-to-data-holder-by-a-broker-via-token-or-userinfo">Claims sent to Data Holder by a Broker via <code class="language-plaintext highlighter-rouge">/token</code> or <code class="language-plaintext highlighter-rouge">/userinfo</code>
 </h4>
 <p>(TODO Settle question of JWT, blob, other)</p>
 
@@ -1143,7 +1144,7 @@ be extended from what the previous claim may have indicated.</p>
     <p>Provide GA4GH Claims in the form of <a href="#term-visa-access-token">Visa Access
 Tokens</a> to allow downstream Claim
 Clearinghouses to periodically check the validity of the token via calls
-to the /aaitoken endpoint as per <a href="#at-polling">Access Token Polling</a>.</p>
+to the /token endpoint as per <a href="#at-polling">Access Token Polling</a>.</p>
   </li>
   <li>
     <p>Provide refresh tokens at every level in the system hierarchy and use
@@ -1182,7 +1183,7 @@ warrant taking action.</p>
     <ul>
       <li>
         <p>If an access token is long-lived, then the access token MUST be
-revocable, and once revoked the /aaitoken endpoint MUST NOT return
+revocable, and once revoked the /token endpoint MUST NOT return
 claims. In this event, an appropriate error status MUST be returned like /userinfo errors as per
 <a href="https://openid.net/specs/openid-connect-core-1_0.html#UserInfoError">section 5.3.3 of the OIDC specification</a>.</p>
       </li>
