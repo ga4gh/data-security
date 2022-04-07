@@ -18,5 +18,3 @@ The local copy can then be browsed at
 ```
 http://localhost:4000/local/
 ```
-
-Tagged for Tom
