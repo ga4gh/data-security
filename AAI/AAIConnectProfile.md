@@ -84,11 +84,11 @@ subset of GA4GH claims for downstream consumption.
 
 <a name="term-data-holder"></a> **Data Holder** -- An organization that
 protects a specific set of data. They hold data (or its copy) and respects
-and enforces the data owner's decisions on who can access it. A data owner
+and enforces the data controller's decisions on who can access it. A data controller
 can also be a data holder. Data holders run an
 [Claim Clearinghouse Server](#term-claim-clearinghouse) at a minimum.
 
-<a name="term-data-owner"></a> **Data Owner** -- An organization that manages
+<a name="term-data-controller"></a> **Data Controller** -- An organization that manages
 data and, in that role, has capacity to decide who can access it. For
 instance, a Data Access Committee (DAC).
 
@@ -564,7 +564,7 @@ Payload:
 
 -   `idp`: OPTIONAL. SHOULD contain the IDP the user used to auth with.
     A non-normative example is "google". This does not have to be unique and
-    can be used just to help inform if that is what a data owner or data holder
+    can be used just to help inform if that is what a data controller or data holder
     needs.
 
 -   `aud`: OPTIONAL. If provided, it MUST contain the Oauth Client ID of the
