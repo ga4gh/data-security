@@ -8,6 +8,7 @@ permalink: aai-openid-connect-profile
 
 | Date       | Editor    | Notes                                                                         |
 |------------|-----------|-------------------------------------------------------------------------------|
+| 2022-05-05 | TomConner | Data owner -> data controller                                                 |
 | 2022-03-16 | Patto     | Abstract clarified to support all flows                                       |
 | 2022-03-10 | TomConner | Token endpoints; spec references                                              |
 | 2022-02-24 | TomConner | Merged edits from David Bernick's bernick_clearinghouse_clarifications branch |
