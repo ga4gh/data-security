@@ -159,17 +159,6 @@ this is the <code class="language-plaintext highlighter-rouge">ga4gh_passport_v1
 Note that GA4GH is not the organization making the claim nor taking responsibility
 for the claim as this is a reference to a GA4GH documented standard only.</p>
 
-<p><a name="term-claim-management-system"></a> <strong>Claim Management System</strong> – a service
-that allows <a href="#term-claim-source">Claim Source</a> users to manage claims and update one
-or more <a href="#term-claim-repository">Claim Repositories</a>. For instance, a data owner
-of a controlled access dataset would typically interact with a Claim Management
-System to add or remove claims from a <a href="#term-claim-repository">Claim Repository</a>.</p>
-
-<p><a name="term-claim-repository"></a> <strong>Claim Repository</strong> – a service that
-manages the durable storage and retrieval of claims (such as a database),
-along with any metadata and/or audit logs related to claim creation,
-modification, and deletion.</p>
-
 <p><a name="term-claim-source"></a> <strong>Claim Source</strong> – the source organization of
 a claim assertion which at a minimum includes the organization associated with
 asserting the claim, although can optionally identify a sub-organization or a
@@ -293,19 +282,21 @@ signature of the original Visa Issuer.</p>
 
 <h3 id="flow-of-claims">Flow of Claims</h3>
 
-<p><img src="/data-security/1.2-draft-token-exchange/AAI/claim_flow_of_data_basic.svg" alt="FlowOfClaims"></p>
+<p><img class="plantuml" src="http://www.plantuml.com/plantuml/svg/~h407374617274756d6c0a736b696e706172616d20636f6d706f6e656e745374796c652072656374616e676c650a6c65667420746f20726967687420646972656374696f6e0a0a7061636b6167652022556e73706563696669656420636c69656e74732c206164646974696f6e616c2073657276696365732c2070726f746f636f6c7322207b0a636f6d706f6e656e7420223c623e436c61696d20536f757263653c2f623e202831295c6e6f7267616e69736174696f6e2220617320436c61696d536f75726365310a636f6d706f6e656e7420223c623e436c61696d20536f757263653c2f623e202832295c6e6f7267616e69736174696f6e2220617320436c61696d536f75726365320a636f6d706f6e656e7420223c623e436c61696d20536f757263653c2f623e20282e2e2e295c6e6f7267616e69736174696f6e2220617320436c61696d536f757263654e0a0a646174616261736520223c623e436c61696d205265706f7369746f72793c2f623e5c6e616273747261637420736572766963652220617320436c61696d5265706f7369746f72790a636f6d706f6e656e7420223c623e56697361204973737565723c2f623e5c6e616273747261637420736572766963655c6e286f7074696f6e616c2922206173204554490a7d0a0a7061636b61676520225370656369666965642047413447482041414920636c69656e74732c2073657276696365732c2070726f746f636f6c7322207b0a636f6d706f6e656e7420223c623e42726f6b65723c2f623e5c6e73657276696365222061732042726f6b657220234641464144320a636f6d706f6e656e7420223c623e436c61696d20436c656172696e67686f7573653c2f623e5c6e736572766963652220617320436c656172696e67486f75736520233945374242350a7d0a0a436c61696d536f7572636531202d2d3e20436c61696d5265706f7369746f7279203a2028756e737065636966696564290a436c61696d536f7572636532202d2d3e20436c61696d5265706f7369746f7279203a2028756e737065636966696564290a436c61696d536f757263654e202d2d3e20436c61696d5265706f7369746f7279203a2028756e737065636966696564290a436c61696d5265706f7369746f7279202d2d3e20455449203a2028756e737065636966696564290a0a0a436c61696d5265706f7369746f7279202d2d3e2042726f6b6572203a2028756e737065636966696564290a455449202d2d3e2042726f6b6572203a2028756e737065636966696564290a42726f6b6572202d2d3e20436c656172696e67486f757365203a2047413447482041414920737065630a0a40656e64756d6c"></p>
 
-<p>The above diagram shows how claims flow from a <a href="#term-claim-source">Claim
-Source</a> to a <a href="#term-claim-clearinghouse">Claim
-Clearinghouse</a> that uses them. This does not
-label all of the Relying Party relationships along this chain, where
-each recipient in the chain is typically – but not always – the
-relying party of the auth flow that fetches the claims from upstream.</p>
+<p>The above diagram shows how claims flow from <a href="#term-claim-source">Claim Source(s)</a>
+to a <a href="#term-claim-clearinghouse">Claim Clearinghouse</a> that uses them. Only the
+right hand portion of the flow is normative in that it is fully documented in this
+specification.</p>
 
-<p>Implementations may introduce clients, additional services, and protocols –
-not detailed in the above diagram – to provide the mechanisms to move the data
-between the Claim Repository and the <a href="#term-broker">Broker</a>.
-These mechanisms are unspecified by the scope of this specification except that
+<p>Implementations may introduce clients, additional services, and protocols
+to provide the mechanisms to move the data between the
+<a href="#term-claim-source">Claim Source(s)</a> and the <a href="#term-broker">Broker</a>. This diagram
+shows <em>one possible mechanism</em> involving a repository service that persists claims from a variety of
+organisations, and optionally then involving a separate visa issuer who
+signs some claims.</p>
+
+<p>These mechanisms are unspecified by the scope of this specification except that
 they MUST adhere to security and privacy best practices, such as those outlined
 in this specification, in their handling of protocols, claims, tokens and
 related data. The flow between these components (represented by black arrows)
@@ -599,8 +590,7 @@ a space-delimited substring.</p>
 its policies and allow Claim Clearinghouses to understand the intent of
 how long the claim may be used before needing to return to the Visa Issuer
 to refresh the claim. As a non-normative example, if a
-GA4GH claim expires in 25 years (or even never expires explictly in the
-Claim Repository), the Visa Issuer could set the <code class="language-plaintext highlighter-rouge">exp</code> to
+GA4GH claim expires in 25 years, the Visa Issuer could set the <code class="language-plaintext highlighter-rouge">exp</code> to
 1 day into the future plus issue a refresh token in order to force the
 refresh token to be used when a downstream Claim Clearinghouse is still
 interested in using such a claim after 1 day elapses.</p>
@@ -1126,9 +1116,8 @@ revocation capabilities across highly federated and loosely coupled systems.
 During the lifetime of the downstream access token, some systems may require
 that claims are no longer inspected nor updated.</p>
 
-<p>In the event that a <a href="#term-claim-source">Claim Source</a> revokes a claim within
-a <a href="#term-claim-repository">Claim Repository</a>, downstream Visa
-Issuers, Brokers, Claim Clearinghouses, and other Authorization or Resource
+<p>In the event that a <a href="#term-claim-source">Claim Source</a> revokes a claim,
+downstream Visa Issuers, Brokers, Claim Clearinghouses, and other Authorization or Resource
 Servers MUST at a minimum provide a means to limit the lifespan of any given
 access tokens generated as a result of claims. To achieve this goal, servers
 involved with access may employ one or more of the following options:</p>
@@ -1136,34 +1125,34 @@ involved with access may employ one or more of the following options:</p>
 <ol>
   <li>
     <p>Have each GA4GH Claim or sub-object be paired with an expiry timestamp.
-Expiry timestamps would require users to log in occasionally via
-an Broker in order to refresh claims. On a refresh, expiry timestamps can
-be extended from what the previous claim may have indicated.</p>
+ Expiry timestamps would require users to log in occasionally via
+ a Broker in order to refresh claims. On a refresh, expiry timestamps can
+ be extended from what the previous claim may have indicated.</p>
   </li>
   <li>
     <p>Provide GA4GH Claims in the form of <a href="#term-visa-access-token">Visa Access
 Tokens</a> to allow downstream Claim
 Clearinghouses to periodically check the validity of the token via calls
-to the /token endpoint as per <a href="#at-polling">Access Token Polling</a>.</p>
+to the <code class="language-plaintext highlighter-rouge">/token</code> endpoint as per <a href="#at-polling">Access Token Polling</a>.</p>
   </li>
   <li>
     <p>Provide refresh tokens at every level in the system hierarchy and use
-short-lived access tokens. This may require all contributing systems to
-support <a href="https://openid.net/specs/openid-connect-core-1_0.html#OfflineAccess">OIDC offline
-access</a>
-refresh tokens to deal with execution of processes where the user is no
-longer actively involved. In the event that refresh tokens experience
-errors, the systems involved must eventually revoke the ability for
-downstream access tokens to be replaced via refresh tokens (although some
-level of delay to reach out to a user to try to resolve the issue may be
-desirable).</p>
+ short-lived access tokens. This may require all contributing systems to
+ support <a href="https://openid.net/specs/openid-connect-core-1_0.html#OfflineAccess">OIDC offline
+ access</a>
+ refresh tokens to deal with execution of processes where the user is no
+ longer actively involved. In the event that refresh tokens experience
+ errors, the systems involved must eventually revoke the ability for
+ downstream access tokens to be replaced via refresh tokens (although some
+ level of delay to reach out to a user to try to resolve the issue may be
+ desirable).</p>
   </li>
   <li>
     <p>Provide some other means for downstream Claim Clearinghouses or other
-systems that create downstream access tokens to be informed of a material
-change in upstream claims such that action can be taken to revoke the token,
-revoke the refresh token, or revoke the access privileges associated with
-such tokens.</p>
+ systems that create downstream access tokens to be informed of a material
+ change in upstream claims such that action can be taken to revoke the token,
+ revoke the refresh token, or revoke the access privileges associated with
+ such tokens.</p>
   </li>
 </ol>
 
@@ -1195,7 +1184,7 @@ token revocation and remove access accordingly.</p>
   </li>
   <li>
     <p>A process MUST exist, manual or automated, to eventually remove or invalidate
-related claims from the <a href="#term-claim-repository">Claim Repository</a>.</p>
+related claims at source and intermediate systems.</p>
   </li>
 </ol>
 
