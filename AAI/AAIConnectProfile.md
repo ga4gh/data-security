@@ -57,17 +57,6 @@ this is the `ga4gh_passport_v1` or `ga4gh_visa_v1` claim for GA4GH Passports v1.
 Note that GA4GH is not the organization making the claim nor taking responsibility
 for the claim as this is a reference to a GA4GH documented standard only.
 
-<a name="term-claim-management-system"></a> **Claim Management System** -- a service
-that allows [Claim Source](#term-claim-source) users to manage claims and update one
-or more [Claim Repositories](#term-claim-repository). For instance, a data owner
-of a controlled access dataset would typically interact with a Claim Management
-System to add or remove claims from a [Claim Repository](#term-claim-repository).
-
-<a name="term-claim-repository"></a> **Claim Repository** -- a service that
-manages the durable storage and retrieval of claims (such as a database),
-along with any metadata and/or audit logs related to claim creation,
-modification, and deletion.
-
 <a name="term-claim-source"></a> **Claim Source** -- the source organization of
 a claim assertion which at a minimum includes the organization associated with
 asserting the claim, although can optionally identify a sub-organization or a
@@ -183,20 +172,51 @@ signature of the original Visa Issuer.
         Current Practices", BCP 225, RFC 8725,
         DOI 10.17487/RFC8725, February 2020.
             
+
 ### Flow of Claims
 
-![FlowOfClaims]({% link AAI/claim_flow_of_data_basic.svg %})
+@startuml
+skinparam componentStyle rectangle
+left to right direction
 
-The above diagram shows how claims flow from a [Claim
-Source](#term-claim-source) to a [Claim
-Clearinghouse](#term-claim-clearinghouse) that uses them. This does not
-label all of the Relying Party relationships along this chain, where
-each recipient in the chain is typically -- but not always -- the
-relying party of the auth flow that fetches the claims from upstream.
+package "Unspecified clients, additional services, protocols" {
+component "<b>Claim Source</b> (1)\norganisation" as ClaimSource1
+component "<b>Claim Source</b> (2)\norganisation" as ClaimSource2
+component "<b>Claim Source</b> (...)\norganisation" as ClaimSourceN
 
-Implementations may introduce clients, additional services, and protocols --
-not detailed in the above diagram -- to provide the mechanisms to move the data
-between the Claim Repository and the [Broker](#term-broker).
+database "<b>Claim Repository</b>\nabstract service" as ClaimRepository
+component "<b>Visa Issuer</b>\nabstract service\n(optional)" as ETI
+}
+
+package "Specified GA4GH AAI clients, services, protocols" {
+component "<b>Broker</b>\nservice" as Broker #FAFAD2
+component "<b>Claim Clearinghouse</b>\nservice" as ClearingHouse #9E7BB5
+}
+
+ClaimSource1 --> ClaimRepository : (unspecified)
+ClaimSource2 --> ClaimRepository : (unspecified)
+ClaimSourceN --> ClaimRepository : (unspecified)
+ClaimRepository --> ETI : (unspecified)
+
+
+ClaimRepository --> Broker : (unspecified)
+ETI --> Broker : (unspecified)
+Broker --> ClearingHouse : GA4GH AAI spec
+
+@enduml
+
+The above diagram shows how claims flow from [Claim Source(s)](#term-claim-source)
+to a [Claim Clearinghouse](#term-claim-clearinghouse) that uses them. Only the
+right hand portion of the flow is normative in that it is fully documented in this
+specification.
+
+Implementations may introduce clients, additional services, and protocols
+to provide the mechanisms to move the data between the
+[Claim Source(s)](#term-claim-source) and the [Broker](#term-broker). This diagram
+shows *one possible mechanism* involving a repository service that persists claims from a variety of
+organisations, and optionally then involving a separate visa issuer who
+signs some claims.
+
 These mechanisms are unspecified by the scope of this specification except that
 they MUST adhere to security and privacy best practices, such as those outlined
 in this specification, in their handling of protocols, claims, tokens and
@@ -406,8 +426,7 @@ the Broker.
     its policies and allow Claim Clearinghouses to understand the intent of
     how long the claim may be used before needing to return to the Visa Issuer
     to refresh the claim. As a non-normative example, if a
-    GA4GH claim expires in 25 years (or even never expires explictly in the
-    Claim Repository), the Visa Issuer could set the `exp` to
+    GA4GH claim expires in 25 years, the Visa Issuer could set the `exp` to
     1 day into the future plus issue a refresh token in order to force the
     refresh token to be used when a downstream Claim Clearinghouse is still
     interested in using such a claim after 1 day elapses.
@@ -805,24 +824,23 @@ revocation capabilities across highly federated and loosely coupled systems.
 During the lifetime of the downstream access token, some systems may require
 that claims are no longer inspected nor updated.
 
-In the event that a [Claim Source](#term-claim-source) revokes a claim within
-a [Claim Repository](#term-claim-repository), downstream Visa
-Issuers, Brokers, Claim Clearinghouses, and other Authorization or Resource
+In the event that a [Claim Source](#term-claim-source) revokes a claim,
+downstream Visa Issuers, Brokers, Claim Clearinghouses, and other Authorization or Resource
 Servers MUST at a minimum provide a means to limit the lifespan of any given
 access tokens generated as a result of claims. To achieve this goal, servers
 involved with access may employ one or more of the following options:
 
-1.  Have each GA4GH Claim or sub-object be paired with an expiry timestamp.
+1. Have each GA4GH Claim or sub-object be paired with an expiry timestamp.
     Expiry timestamps would require users to log in occasionally via
-    an Broker in order to refresh claims. On a refresh, expiry timestamps can
+    a Broker in order to refresh claims. On a refresh, expiry timestamps can
     be extended from what the previous claim may have indicated.
 
 2.  Provide GA4GH Claims in the form of [Visa Access
     Tokens](#term-visa-access-token) to allow downstream Claim
     Clearinghouses to periodically check the validity of the token via calls
-    to the /token endpoint as per [Access Token Polling](#at-polling).
+    to the `/token` endpoint as per [Access Token Polling](#at-polling).
 
-3.  Provide refresh tokens at every level in the system hierarchy and use
+3. Provide refresh tokens at every level in the system hierarchy and use
     short-lived access tokens. This may require all contributing systems to
     support [OIDC offline
     access](https://openid.net/specs/openid-connect-core-1_0.html#OfflineAccess)
@@ -833,7 +851,7 @@ involved with access may employ one or more of the following options:
     level of delay to reach out to a user to try to resolve the issue may be
     desirable).
 
-4.  Provide some other means for downstream Claim Clearinghouses or other
+4. Provide some other means for downstream Claim Clearinghouses or other
     systems that create downstream access tokens to be informed of a material
     change in upstream claims such that action can be taken to revoke the token,
     revoke the refresh token, or revoke the access privileges associated with
@@ -859,7 +877,7 @@ claims to prevent further tokens from being minted.
         token revocation and remove access accordingly.
 
 2.  A process MUST exist, manual or automated, to eventually remove or invalidate
-    related claims from the [Claim Repository](#term-claim-repository).
+    related claims at source and intermediate systems.
 
 #### Limited Damage of Leaked Tokens
 
