@@ -26,8 +26,8 @@ enable an OIDC provider (called a [Broker](#term-broker)) to
 provide [GA4GH Claims](#term-ga4gh-claim) to downstream claim consumers
 (called a [Claim Clearinghouse](#term-claim-clearinghouse)).
 
-The GA4GH Claims, nominally a [GA4GH DURI Passport](https://github.com/ga4gh-duri/ga4gh-duri.github.io/blob/master/researcher_ids/ga4gh_passport_v1.md),
-can then be used for authentication and authorization purposes by downstream
+[GA4GH DURI Passports](https://github.com/ga4gh-duri/ga4gh-duri.github.io/blob/master/researcher_ids/ga4gh_passport_v1.md) 
+and Visas can then be used for authorization purposes by downstream
 systems.
 
 This specification is suggested to be used together
