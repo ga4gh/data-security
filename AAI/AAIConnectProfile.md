@@ -349,7 +349,7 @@ the Broker.
     authenticity, or trustworthiness of the claims from such tokens and any such
     assurances are made by the issuer of the Visa, i.e. the Visa Issuer).
 
-TODO embedded-access-token is this a passport access token or a visa access token or sdfjlsdkfjlksdjf sdkj
+TODO embedded-access-token is this a passport access token or a visa access token or something else
 
 <a name="conformance-for-visa-issuers"></a>
 #### Conformance for Visa Issuers
