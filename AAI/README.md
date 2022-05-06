@@ -66,8 +66,8 @@ We have also found that some brokers, such as ELIXIR for example, provide
 some useful "extra" claims on top of an IdP like Google, but an institution
 receiving ELIXIR claims might want to add even more claims. Brokers then
 had to have a mechanism for trusting claims from other Brokers while
-providing provenance and proof of where they came from. This lead to
-the Embedded Token structure.  
+providing provenance and proof of where they came from. This led to
+the embedded token structure.  
 
 Here is a diagram:
 <https://www.lucidchart.com/invitations/accept/68f3089b-0c9b-4e64-acd2-abffae3c0c43>
@@ -98,6 +98,8 @@ Data holders and data owners should explore their options to decide what best
 fits their needs.
 
 #### Embedded Tokens example and explanation
+
+TODO consider Visa vs embedded token terminology. 
 
 ![embedded claims flow diagram]({% link AAI/embedded_Claims_flow.png %})
 

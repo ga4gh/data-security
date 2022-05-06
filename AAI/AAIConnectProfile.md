@@ -112,30 +112,27 @@ described herein, encoded via JWS Compact Serialization per
 [RFC7515](https://datatracker.ietf.org/doc/html/rfc7515), containing
 `ga4gh_passport_v1` as a space-separated entry within the `scope` claim but
 does not contain [GA4GH Claims](#term-ga4gh-claim).
-<a name="term-embedded-token-issuer"></a> **Embedded Token Issuer** --
-a service that signs [Embedded Tokens](#term-embedded-token). This service
-may be:  
-* a [Broker](#term-broker) itself
-* a Broker may use this service as part of collecting GA4GH Claims that the Broker includes in responses from its /userinfo or /token endpoint.
 
-<a name="term-token-container-issuer"></a> **Token Container Issuer** --
-a service that creates and signs a [Token Container](#term-token-container) - in this case a JWT - holding [Embedded Tokens](#term-embedded-token).
+<a name="term-passport"></a> **Passport** -- A signed and verifiable JWT container for holding [Visas](#term-visa).
+
+<a name="term-passport-issuer"></a> **Passport Issuer** --
+a service that creates and signs a [Passport](#term-passport-token) - in this case a JWT - holding [Visas](#term-visa).
 * a service where a Broker, Client or Claims Clearinghouse may re-sign the JWT holding GA4GH Claims (such as [GA4GH Visas](https://github.com/ga4gh-duri/ga4gh-duri.github.io/blob/master/researcher_ids/ga4gh_passport_v1.md#passport-visa)) with their own authority.
 
-<a name="term-visa-issuer"></a> <a name="term-embedded-token-issuer"></a>
-**Visa Issuer** (aka "Embedded Token Issuer") -- a service that signs
-[Visas](#term-visa).
+<a name="term-visa-issuer"></a>
+**Visa Issuer** -- a service that signs
+[Visas](#term-visa). This service:
+* may be a [Broker](#term-broker) itself
+* may be used by a [Broker](#term-broker) as part of collecting GA4GH Claims that the Broker includes in responses from its `/userinfo` or `/token` endpoint.
 
-<a name="term-visa"></a> <a name="term-embedded-token"></a>
-**Visa** (aka "Embedded Token") -- A [GA4GH Claim](#term-ga4gh-claim)
+<a name="term-visa"></a> 
+**Visa** -- A [GA4GH Claim](#term-ga4gh-claim)
 value or entry within a list or object of a GA4GH Claim that contains a JWT
 encoded via JWS Compact Serialization per
 [RFC7515](https://datatracker.ietf.org/doc/html/rfc7515).
 It MUST be signed by a [Visa Issuer](#term-visa-issuer). A Visa MAY be passed
 through various [Brokers](#term-broker) as needed while retaining the token
 signature of the original Visa Issuer.
-
-<a name="term-token-container"></a> **Token Container** -- A signed and verifiable JWT container for holding [Embedded Tokens](#term-embedded-token).
 
 ### Relevant Specifications
 
@@ -347,12 +344,14 @@ the Broker.
     for Visa Issuers](#conformance-for-visa-issuers) section of this
     specification.
 
-    When a Broker provides Embedded Tokens from other Visa Issuers, it is providing
+    When a Broker provides Visas from other Visa Issuers, it is providing
     them "as is" (i.e. it provides no additional assurance as to the quality,
     authenticity, or trustworthiness of the claims from such tokens and any such
     assurances are made by the issuer of the Visa, i.e. the Visa Issuer).
 
-<a name="conformance-for-embedded-token-issuers"></a>
+TODO embedded-access-token is this a passport access token or a visa access token or sdfjlsdkfjlksdjf sdkj
+
+<a name="conformance-for-visa-issuers"></a>
 #### Conformance for Visa Issuers
 
 1.  A [Visa Issuer](#term-visa-issuer) MUST provide one or more of the following
@@ -439,23 +438,25 @@ the Broker.
     except for accommodating for `exp` timestamps to be represented as
     indicated above.
 
-#### Conformance for Token Container Issuers
+#### Conformance for Passport Issuers
 
-1.  Token Container Issuers are used to re-package and re-sign GA4GH Claims Tokens, nominally JWTs, that contain Embedded Tokens.
+TODO "GA4GH Claims Tokens" perhaps should be "Visas"
 
-2.  Token Container Issuers do not need to be a be a OIDC provider, and MAY provide a .well-known endpoint that doesn't conform to the OIDC Discovery specification for ease of finding signing keys.  
+1.  Passport Issuers are used to re-package and re-sign GA4GH Claims Tokens, nominally JWTs, that contain Visas.
 
-    1. Token Container Issuers MAY be AAI Clients, Clearinghouses, Brokers or any other entity and do not need to be part of the OIDC flow.  
+2.  Passport Issuers do not need to be a be a OIDC provider, and MAY provide a .well-known endpoint that doesn't conform to the OIDC Discovery specification for ease of finding signing keys.  
+
+    1. Passport Issuers MAY be AAI Clients, Clearinghouses, Brokers or any other entity and do not need to be part of the OIDC flow.  
     
-    2. Token Containers should be [signed](#broker-signing) in the same way that Brokers sign access tokens.
+    2. Passports SHOULD be signed in the same way that Brokers sign access tokens.
 
-3.  Token Containers themselves are JWTs that contain Embedded Tokens. Token Containers use this format [Format](#claims-sent-to-data-holder-by-a-broker-via-token-or-userinfo) as a (TODO what format) signed JWT.  
+3.  Passports themselves are JWTs that contain Visas. Passports use this format [Format](#claims-sent-to-data-holder-by-a-broker-via-token-or-userinfo) as a signed JWT.  
     
-    1. It is RECOMMENDED for Token Containers to conform to the <https://tools.ietf.org/html/rfc7515> (JWS) Specification.  
+    1. It is RECOMMENDED for Passports to conform to the <https://tools.ietf.org/html/rfc7515> (JWS) Specification.  
     
-4.  Token Containers MAY be issued from a token endpoint using the [token exchange OAuth extension](https://datatracker.ietf.org/doc/html/rfc8693), modulo the following clarifications:
+4.  Passports MAY be issued from a `/token` endpoint using the [token exchange OAuth extension](https://datatracker.ietf.org/doc/html/rfc8693), modulo the following clarifications:
 
-    1. The token endpoint MAY support other OAuth2 grant types.
+    1. The `/token` endpoint MAY support other OAuth2 grant types.
 
     2. Client authentication is REQUIRED (using [OAuth2 client authentication](https://datatracker.ietf.org/doc/html/rfc6749#section-2.3.1) is RECOMMENDED).
 
@@ -470,7 +471,7 @@ the Broker.
     7. The token endpoint MAY accept or require any other optional parameters defined in [RFC8693](https://datatracker.ietf.org/doc/html/rfc8693).
     
 
-#### Conformance for Claim Clearinghouses (consuming Access Tokens or Token Containers to give access to data)
+#### Conformance for Claim Clearinghouses (consuming Passports or Visas to give access to data)
 
 1.  Claim Clearinghouses MUST trust at least one Broker.
 
@@ -478,7 +479,7 @@ the Broker.
     
     2.  The responsibility of risk assessment of a Broker is on the Claim Clearinghouse to trust a token. 
     
-2.  Claim Clearinghouses MUST process access tokens to access a Broker's `/token` or `/userinfo` to get access to GA4GH Claims OR MUST process Token Containers and their Embedded Tokens. 
+2.  Claim Clearinghouses MUST process access tokens to access a Broker's `/token` or `/userinfo` to get access to GA4GH Claims OR MUST process Passports and their Visas. 
            
     1.  For access token flows, Claim Clearinghouses MUST either check the validity of the access token or treat the access
     token as opaque.
@@ -494,8 +495,8 @@ the Broker.
             2.  MUST check `iss` attribute to ensure a trusted Broker has generated
             the token.
             
-                1.  If evaluating an Embedded Token, trust MUST be established based
-                on the signer of the Embedded Token itself. In Claim
+                1.  If evaluating Visa, trust MUST be established based
+                on the signer of the Visa itself. In Claim
                 Clearinghouses participating in open federation, the Claim
                 Clearinghouse does not necessarily have to trust the Broker that
                 includes Visas within another token in order to use
@@ -513,7 +514,7 @@ the Broker.
         advance where to find a corresponding `/token`. This may limit the
         functionality of accepting tokens from some Brokers.  (TODO: Question: is an opaque token an alternative to validation? Does 1.2 need to support this flow?)
 
-    2.  For Token Container flows, Claim Clearinghouses MUST check the validity of the JWT token. Follow the guidance in the JWT access tokens for validity.
+    2.  For Passport flows, Claim Clearinghouses MUST check the validity of the JWT token. Follow the guidance in the JWT access tokens for validity.
 
 4.  Claim Clearinghouses service can be a Broker itself and would follow the
     [Conformance For Brokers](#conformance-for-brokers).
@@ -523,7 +524,7 @@ the Broker.
 
     1. Section 5.1.6 of RFC 6819 contains a SHOULD section that states `Ensure that client applications do not share tokens with 3rd parties.` This profile provides a mechanism for Clearinghouses to consume access tokens from multiple brokers in a manner that does not involve 3rd parties. Client applications SHOULD take care to not spread the tokens to any other services that would be considered 3rd parties.
         
-6.  If making use of [Embedded Tokens](#term-embedded-token) directly from `/token` or from a Token Container:
+6.  If making use of [Visas](#term-visa) directly from `/token` or from a Passport:
 
     1.  The Claim Clearinghouse MUST validate that all token checks pass (such as
         the token hasn’t expired) as described elsewhere in this specification and
@@ -651,16 +652,15 @@ Payload:
 -   `addtional claims`: OPTIONAL. Any other additional non-GA4GH claims are allowed. This specification does not dictate the format of other claims.
 
 #### Claims sent to Data Holder by a Broker via `/token` or `/userinfo`
-(TODO Settle question of JWT, blob, other)
 
 Only the GA4GH claims truly must be as prescribed here. Refer to OIDC Spec for
 more information. The endpoint MAY use `application/json` or
 `application/jwt`.  It is RECOMMENDED that if desiring to return a JWT, a token endpoint supporting AAI token exchange exists to do that and `/userinfo` returns a general blob.
 
-If `application/jwt` is returned, it MUST be signed like /userinfo responses as per
+If `application/jwt` is returned, it MUST be signed like `/userinfo` responses as per
 [UserInfo](https://openid.net/specs/openid-connect-core-1_0.html#UserInfoResponse).  
 
-If this is a JWT, it MAY be used as a Token Container.  
+If this is a JWT, it MAY be used as a Passport.  
 
 If this information is a JWT, especially from the recommended token endpoint, the JWT should include additional attributes.
 
@@ -694,7 +694,7 @@ If this information is a JWT, especially from the recommended token endpoint, th
     [Authorization/Claims](#authorizationclaims) for an example of a GA4GH
     Claim.
 
-<a name="embedded-token-issued-by-embedded-token-issuer"></a>
+<a name="visa-issued-by-visa-issuer"></a>
 #### Visa issued by Visa Issuer
 
 There are two supported formats for Visas.
