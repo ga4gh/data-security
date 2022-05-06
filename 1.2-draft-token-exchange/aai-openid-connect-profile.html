@@ -118,8 +118,8 @@ with others that specify the syntax and semantics of the GA4GH Claims exchanged.
       <li><a href="#clientapplication-conformance" id="markdown-toc-clientapplication-conformance">Client/Application Conformance</a></li>
       <li><a href="#conformance-for-brokers" id="markdown-toc-conformance-for-brokers">Conformance for Brokers</a></li>
       <li><a href="#conformance-for-visa-issuers" id="markdown-toc-conformance-for-visa-issuers">Conformance for Visa Issuers</a></li>
-      <li><a href="#conformance-for-token-container-issuers" id="markdown-toc-conformance-for-token-container-issuers">Conformance for Token Container Issuers</a></li>
-      <li><a href="#conformance-for-claim-clearinghouses-consuming-access-tokens-or-token-containers-to-give-access-to-data" id="markdown-toc-conformance-for-claim-clearinghouses-consuming-access-tokens-or-token-containers-to-give-access-to-data">Conformance for Claim Clearinghouses (consuming Access Tokens or Token Containers to give access to data)</a></li>
+      <li><a href="#conformance-for-passport-issuers" id="markdown-toc-conformance-for-passport-issuers">Conformance for Passport Issuers</a></li>
+      <li><a href="#conformance-for-claim-clearinghouses-consuming-passports-or-visas-to-give-access-to-data" id="markdown-toc-conformance-for-claim-clearinghouses-consuming-passports-or-visas-to-give-access-to-data">Conformance for Claim Clearinghouses (consuming Passports or Visas to give access to data)</a></li>
     </ul>
   </li>
   <li>
@@ -219,35 +219,32 @@ Token</strong> – A JWT bearer token, returned as an OAuth2 access token as
 described herein, encoded via JWS Compact Serialization per
 <a href="https://datatracker.ietf.org/doc/html/rfc7515">RFC7515</a>, containing
 <code class="language-plaintext highlighter-rouge">ga4gh_passport_v1</code> as a space-separated entry within the <code class="language-plaintext highlighter-rouge">scope</code> claim but
-does not contain <a href="#term-ga4gh-claim">GA4GH Claims</a>.
-<a name="term-embedded-token-issuer"></a> <strong>Embedded Token Issuer</strong> –
-a service that signs <a href="#term-embedded-token">Embedded Tokens</a>. This service
-may be:</p>
-<ul>
-  <li>a <a href="#term-broker">Broker</a> itself</li>
-  <li>a Broker may use this service as part of collecting GA4GH Claims that the Broker includes in responses from its /userinfo or /token endpoint.</li>
-</ul>
+does not contain <a href="#term-ga4gh-claim">GA4GH Claims</a>.</p>
 
-<p><a name="term-token-container-issuer"></a> <strong>Token Container Issuer</strong> –
-a service that creates and signs a <a href="#term-token-container">Token Container</a> - in this case a JWT - holding <a href="#term-embedded-token">Embedded Tokens</a>.</p>
+<p><a name="term-passport"></a> <strong>Passport</strong> – A signed and verifiable JWT container for holding <a href="#term-visa">Visas</a>.</p>
+
+<p><a name="term-passport-issuer"></a> <strong>Passport Issuer</strong> –
+a service that creates and signs a <a href="#term-passport-token">Passport</a> - in this case a JWT - holding <a href="#term-visa">Visas</a>.</p>
 <ul>
   <li>a service where a Broker, Client or Claims Clearinghouse may re-sign the JWT holding GA4GH Claims (such as <a href="https://github.com/ga4gh-duri/ga4gh-duri.github.io/blob/master/researcher_ids/ga4gh_passport_v1.md#passport-visa">GA4GH Visas</a>) with their own authority.</li>
 </ul>
 
-<p><a name="term-visa-issuer"></a> <a name="term-embedded-token-issuer"></a>
-<strong>Visa Issuer</strong> (aka “Embedded Token Issuer”) – a service that signs
-<a href="#term-visa">Visas</a>.</p>
+<p><a name="term-visa-issuer"></a>
+<strong>Visa Issuer</strong> – a service that signs
+<a href="#term-visa">Visas</a>. This service:</p>
+<ul>
+  <li>may be a <a href="#term-broker">Broker</a> itself</li>
+  <li>may be used by a <a href="#term-broker">Broker</a> as part of collecting GA4GH Claims that the Broker includes in responses from its <code class="language-plaintext highlighter-rouge">/userinfo</code> or <code class="language-plaintext highlighter-rouge">/token</code> endpoint.</li>
+</ul>
 
-<p><a name="term-visa"></a> <a name="term-embedded-token"></a>
-<strong>Visa</strong> (aka “Embedded Token”) – A <a href="#term-ga4gh-claim">GA4GH Claim</a>
+<p><a name="term-visa"></a> 
+<strong>Visa</strong> – A <a href="#term-ga4gh-claim">GA4GH Claim</a>
 value or entry within a list or object of a GA4GH Claim that contains a JWT
 encoded via JWS Compact Serialization per
 <a href="https://datatracker.ietf.org/doc/html/rfc7515">RFC7515</a>.
 It MUST be signed by a <a href="#term-visa-issuer">Visa Issuer</a>. A Visa MAY be passed
 through various <a href="#term-broker">Brokers</a> as needed while retaining the token
 signature of the original Visa Issuer.</p>
-
-<p><a name="term-token-container"></a> <strong>Token Container</strong> – A signed and verifiable JWT container for holding <a href="#term-embedded-token">Embedded Tokens</a>.</p>
 
 <h3 id="relevant-specifications">Relevant Specifications</h3>
 
@@ -487,14 +484,16 @@ adhere to the same assertion criteria as outlined in the <a href="#conformance-f
 for Visa Issuers</a> section of this
 specification.</p>
 
-    <p>When a Broker provides Embedded Tokens from other Visa Issuers, it is providing
+    <p>When a Broker provides Visas from other Visa Issuers, it is providing
 them “as is” (i.e. it provides no additional assurance as to the quality,
 authenticity, or trustworthiness of the claims from such tokens and any such
 assurances are made by the issuer of the Visa, i.e. the Visa Issuer).</p>
   </li>
 </ol>
 
-<p><a name="conformance-for-embedded-token-issuers"></a></p>
+<p>TODO embedded-access-token is this a passport access token or a visa access token or sdfjlsdkfjlksdjf sdkj</p>
+
+<p><a name="conformance-for-visa-issuers"></a></p>
 <h4 id="conformance-for-visa-issuers">Conformance for Visa Issuers</h4>
 
 <ol>
@@ -610,37 +609,39 @@ indicated above.</p>
   </li>
 </ol>
 
-<h4 id="conformance-for-token-container-issuers">Conformance for Token Container Issuers</h4>
+<h4 id="conformance-for-passport-issuers">Conformance for Passport Issuers</h4>
+
+<p>TODO “GA4GH Claims Tokens” perhaps should be “Visas”</p>
 
 <ol>
   <li>
-    <p>Token Container Issuers are used to re-package and re-sign GA4GH Claims Tokens, nominally JWTs, that contain Embedded Tokens.</p>
+    <p>Passport Issuers are used to re-package and re-sign GA4GH Claims Tokens, nominally JWTs, that contain Visas.</p>
   </li>
   <li>
-    <p>Token Container Issuers do not need to be a be a OIDC provider, and MAY provide a .well-known endpoint that doesn’t conform to the OIDC Discovery specification for ease of finding signing keys.</p>
+    <p>Passport Issuers do not need to be a be a OIDC provider, and MAY provide a .well-known endpoint that doesn’t conform to the OIDC Discovery specification for ease of finding signing keys.</p>
 
     <ol>
       <li>
-        <p>Token Container Issuers MAY be AAI Clients, Clearinghouses, Brokers or any other entity and do not need to be part of the OIDC flow.</p>
+        <p>Passport Issuers MAY be AAI Clients, Clearinghouses, Brokers or any other entity and do not need to be part of the OIDC flow.</p>
       </li>
       <li>
-        <p>Token Containers should be <a href="#broker-signing">signed</a> in the same way that Brokers sign access tokens.</p>
+        <p>Passports SHOULD be signed in the same way that Brokers sign access tokens.</p>
       </li>
     </ol>
   </li>
   <li>
-    <p>Token Containers themselves are JWTs that contain Embedded Tokens. Token Containers use this format <a href="#claims-sent-to-data-holder-by-a-broker-via-token-or-userinfo">Format</a> as a (TODO what format) signed JWT.</p>
+    <p>Passports themselves are JWTs that contain Visas. Passports use this format <a href="#claims-sent-to-data-holder-by-a-broker-via-token-or-userinfo">Format</a> as a signed JWT.</p>
 
     <ol>
-      <li>It is RECOMMENDED for Token Containers to conform to the <a href="https://tools.ietf.org/html/rfc7515">https://tools.ietf.org/html/rfc7515</a> (JWS) Specification.</li>
+      <li>It is RECOMMENDED for Passports to conform to the <a href="https://tools.ietf.org/html/rfc7515">https://tools.ietf.org/html/rfc7515</a> (JWS) Specification.</li>
     </ol>
   </li>
   <li>
-    <p>Token Containers MAY be issued from a token endpoint using the <a href="https://datatracker.ietf.org/doc/html/rfc8693">token exchange OAuth extension</a>, modulo the following clarifications:</p>
+    <p>Passports MAY be issued from a <code class="language-plaintext highlighter-rouge">/token</code> endpoint using the <a href="https://datatracker.ietf.org/doc/html/rfc8693">token exchange OAuth extension</a>, modulo the following clarifications:</p>
 
     <ol>
       <li>
-        <p>The token endpoint MAY support other OAuth2 grant types.</p>
+        <p>The <code class="language-plaintext highlighter-rouge">/token</code> endpoint MAY support other OAuth2 grant types.</p>
       </li>
       <li>
         <p>Client authentication is REQUIRED (using <a href="https://datatracker.ietf.org/doc/html/rfc6749#section-2.3.1">OAuth2 client authentication</a> is RECOMMENDED).</p>
@@ -664,7 +665,7 @@ indicated above.</p>
   </li>
 </ol>
 
-<h4 id="conformance-for-claim-clearinghouses-consuming-access-tokens-or-token-containers-to-give-access-to-data">Conformance for Claim Clearinghouses (consuming Access Tokens or Token Containers to give access to data)</h4>
+<h4 id="conformance-for-claim-clearinghouses-consuming-passports-or-visas-to-give-access-to-data">Conformance for Claim Clearinghouses (consuming Passports or Visas to give access to data)</h4>
 
 <ol>
   <li>
@@ -680,7 +681,7 @@ indicated above.</p>
     </ol>
   </li>
   <li>
-    <p>Claim Clearinghouses MUST process access tokens to access a Broker’s <code class="language-plaintext highlighter-rouge">/token</code> or <code class="language-plaintext highlighter-rouge">/userinfo</code> to get access to GA4GH Claims OR MUST process Token Containers and their Embedded Tokens.</p>
+    <p>Claim Clearinghouses MUST process access tokens to access a Broker’s <code class="language-plaintext highlighter-rouge">/token</code> or <code class="language-plaintext highlighter-rouge">/userinfo</code> to get access to GA4GH Claims OR MUST process Passports and their Visas.</p>
 
     <ol>
       <li>
@@ -706,8 +707,8 @@ public key.</p>
 the token.</p>
 
                 <ol>
-                  <li>If evaluating an Embedded Token, trust MUST be established based
-on the signer of the Embedded Token itself. In Claim
+                  <li>If evaluating Visa, trust MUST be established based
+on the signer of the Visa itself. In Claim
 Clearinghouses participating in open federation, the Claim
 Clearinghouse does not necessarily have to trust the Broker that
 includes Visas within another token in order to use
@@ -734,7 +735,7 @@ functionality of accepting tokens from some Brokers.  (TODO: Question: is an opa
         </ol>
       </li>
       <li>
-        <p>For Token Container flows, Claim Clearinghouses MUST check the validity of the JWT token. Follow the guidance in the JWT access tokens for validity.</p>
+        <p>For Passport flows, Claim Clearinghouses MUST check the validity of the JWT token. Follow the guidance in the JWT access tokens for validity.</p>
       </li>
     </ol>
   </li>
@@ -751,7 +752,7 @@ functionality of accepting tokens from some Brokers.  (TODO: Question: is an opa
     </ol>
   </li>
   <li>
-    <p>If making use of <a href="#term-embedded-token">Embedded Tokens</a> directly from <code class="language-plaintext highlighter-rouge">/token</code> or from a Token Container:</p>
+    <p>If making use of <a href="#term-visa">Visas</a> directly from <code class="language-plaintext highlighter-rouge">/token</code> or from a Passport:</p>
 
     <ol>
       <li>
@@ -917,16 +918,15 @@ The <code class="language-plaintext highlighter-rouge">scope</code> claim is def
 
 <h4 id="claims-sent-to-data-holder-by-a-broker-via-token-or-userinfo">Claims sent to Data Holder by a Broker via <code class="language-plaintext highlighter-rouge">/token</code> or <code class="language-plaintext highlighter-rouge">/userinfo</code>
 </h4>
-<p>(TODO Settle question of JWT, blob, other)</p>
 
 <p>Only the GA4GH claims truly must be as prescribed here. Refer to OIDC Spec for
 more information. The endpoint MAY use <code class="language-plaintext highlighter-rouge">application/json</code> or
 <code class="language-plaintext highlighter-rouge">application/jwt</code>.  It is RECOMMENDED that if desiring to return a JWT, a token endpoint supporting AAI token exchange exists to do that and <code class="language-plaintext highlighter-rouge">/userinfo</code> returns a general blob.</p>
 
-<p>If <code class="language-plaintext highlighter-rouge">application/jwt</code> is returned, it MUST be signed like /userinfo responses as per
+<p>If <code class="language-plaintext highlighter-rouge">application/jwt</code> is returned, it MUST be signed like <code class="language-plaintext highlighter-rouge">/userinfo</code> responses as per
 <a href="https://openid.net/specs/openid-connect-core-1_0.html#UserInfoResponse">UserInfo</a>.</p>
 
-<p>If this is a JWT, it MAY be used as a Token Container.</p>
+<p>If this is a JWT, it MAY be used as a Passport.</p>
 
 <p>If this information is a JWT, especially from the recommended token endpoint, the JWT should include additional attributes.</p>
 
@@ -967,7 +967,7 @@ Claim.</p>
   </li>
 </ul>
 
-<p><a name="embedded-token-issued-by-embedded-token-issuer"></a></p>
+<p><a name="visa-issued-by-visa-issuer"></a></p>
 <h4 id="visa-issued-by-visa-issuer">Visa issued by Visa Issuer</h4>
 
 <p>There are two supported formats for Visas.</p>
