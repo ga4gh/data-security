@@ -8,6 +8,7 @@ permalink: aai-openid-connect-profile
 
 | Date       | Editor    | Notes                                                                         |
 |------------|-----------|-------------------------------------------------------------------------------|
+| 2022-05-09 | TomConner | Changed wording in Abstract per Max's comments                                |
 | 2022-05-06 | TomConner | Embedded Token and Token Container -> Visa and Passport                       |
 | 2022-05-05 | TomConner | Data owner -> data controller                                                 |
 | 2022-03-16 | Patto     | Abstract clarified to support all flows                                       |
@@ -18,21 +19,20 @@ permalink: aai-openid-connect-profile
 {:.no_toc}
 
 This specification profiles the OpenID Connect protocol (OIDC) to provide a federated
-(multilateral) authentication and authorization infrastructure for greater
+(multilateral) authorization infrastructure for greater
 interoperability between genomics institutions in a manner specifically
 applicable to (but not limited to) the sharing of restricted datasets.
 
 In particular, this specification profiles tokens, endpoints and flows that
 enable an OIDC provider (called a [Broker](#term-broker)) to
-provide [GA4GH Claims](#term-ga4gh-claim) to downstream claim consumers
-(called a [Claim Clearinghouse](#term-claim-clearinghouse)).
+provide [Passports](#term-passport) and [Visas](#term-visa) to downstream consumers
+called [Claim Clearinghouses](#term-claim-clearinghouse).
 
-[GA4GH DURI Passports](https://github.com/ga4gh-duri/ga4gh-duri.github.io/blob/master/researcher_ids/ga4gh_passport_v1.md) 
-and Visas can then be used for authorization purposes by downstream
+[GA4GH DURI Passports](https://github.com/ga4gh-duri/ga4gh-duri.github.io/blob/master/researcher_ids/ga4gh_passport_v1.md) can then be used for authorization purposes by downstream
 systems.
 
 This specification is suggested to be used together
-with others that specify the syntax and semantics of the GA4GH Claims exchanged.
+with others that specify the syntax and semantics of the [GA4GH Claims](#term-ga4gh-claim) exchanged.
 
 ### Table of Contents
 {:.no_toc}
