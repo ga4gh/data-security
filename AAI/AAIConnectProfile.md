@@ -8,6 +8,7 @@ permalink: aai-openid-connect-profile
 
 | Date       | Editor    | Notes                                                                         |
 |------------|-----------|-------------------------------------------------------------------------------|
+| 2022-05-12 | TomConner | Edits per discussion in PR and call                                           |
 | 2022-05-09 | TomConner | Changed wording in Abstract per Max's comments                                |
 | 2022-05-06 | TomConner | Embedded Token and Token Container -> Visa and Passport                       |
 | 2022-05-05 | TomConner | Data owner -> data controller                                                 |
@@ -120,11 +121,17 @@ does not contain [GA4GH Claims](#term-ga4gh-claim).
 a service that creates and signs a [Passport](#term-passport-token) - in this case a JWT - holding [Visas](#term-visa).
 * a service where a Broker, Client or Claims Clearinghouse may re-sign the JWT holding GA4GH Claims (such as [GA4GH Visas](https://github.com/ga4gh-duri/ga4gh-duri.github.io/blob/master/researcher_ids/ga4gh_passport_v1.md#passport-visa)) with their own authority.
 
+<a name="term-token-endpoint"></a> **Token Endpoint** -- 
+as defined by [OIDC-Core](http://openid.net/specs/openid-connect-core-1_0.html); see [Token Endpoint](https://openid.net/specs/openid-connect-core-1_0.html#TokenEndpoint).
+
+<a name="term-userinfo-endpoint"></a> **UserInfo Endpoint** -- 
+as defined by [OIDC-Core](http://openid.net/specs/openid-connect-core-1_0.html); see [UserInfo Endpoint](https://openid.net/specs/openid-connect-core-1_0.html#UserInfo).
+
 <a name="term-visa-issuer"></a>
 **Visa Issuer** -- a service that signs
 [Visas](#term-visa). This service:
 * may be a [Broker](#term-broker) itself
-* may be used by a [Broker](#term-broker) as part of collecting GA4GH Claims that the Broker includes in responses from its `/userinfo` or `/token` endpoint.
+* may be used by a [Broker](#term-broker) as part of collecting GA4GH Claims that the Broker includes in responses from its UserInfo or Token Endpoint.
 
 <a name="term-visa"></a> 
 **Visa** -- A [GA4GH Claim](#term-ga4gh-claim)
@@ -290,28 +297,31 @@ the Broker.
         (i.e. must have a `jwks_uri` as required that’s reachable by a Claim
         Clearinghouse)
 
-3.  Broker MUST support public-facing `/token` endpoint or `/userinfo` endpoint.
+3.  Broker MUST support a Token Endpoint or UserInfo Endpoint.
 
-    1.  The `/token` endpoint SHOULD be used for passport visa claims in 
-        preference to `/userinfo`. 
+    1.  The Token Endpoint SHOULD be used for passport visa claims in 
+        preference to the UserInfo Endpoint. 
 
-    1.  When presented with a valid access token, the endpoint MUST return
+    2.  When presented with a valid access token, the endpoint MUST return
         claims in the specified
         [Format]
        (#claims-sent-to-data-holder-by-a-broker-via-token-or-userinfo) using
         either an `application/json` or `application/jwt` encoding.
 
-    2.  The Broker MUST include the claims_parameter_supported in the discovery service
+    3.  The Broker MUST include the claims_parameter_supported in the discovery service
         to indicate whether or not the Broker supports the [OIDC claims request
         parameter](https://openid.net/specs/openid-connect-core-1_0.html#ClaimsParameter)
-        on `/userinfo` to subset which claim information will be returned. If the Broker
+        on UserInfo to subset which claim information will be returned. If the Broker
         does not support the OIDC claims request parameter, then all claim information
         for the provided scopes eligible for release to the requester MUST be returned.
 
-4.  Broker MUST provide protection against attacks as outlined in
+4.  Broker MAY support a Token Exchange endpoint. If implemented, it MUST behave as described 
+    for passport issuance in [Conformance For Passport Issuers](#conformance-for-passport-issuers).
+
+5.  Broker MUST provide protection against attacks as outlined in
     [RFC 6819](https://tools.ietf.org/html/rfc6819).
 
-5.  The user represented by the identity of the access token MUST have agreed to
+6.  The user represented by the identity of the access token MUST have agreed to
     release claims related to the requested scopes as part of generating tokens
     that can expose GA4GH Claims that represent user data or permissions.
     Brokers MUST adhere to
@@ -334,8 +344,8 @@ the Broker.
     3.  A user's withdrawal of this agreement does not need to apply to
         previously generated access tokens.
 
-6.  By signing an access token, an Broker asserts that the GA4GH Claims that
-    token makes available at the /userinfo or /token endpoint -- 
+7.  By signing an access token, an Broker asserts that the GA4GH Claims that
+    token makes available at the UserInfo or Token Endpoint -- 
     not including any Visas -- were legitimately derived from their [Claim
     Sources](#term-claim-source), and the content is presented and/or
     transformed without misrepresenting the original intent.
@@ -361,7 +371,9 @@ TODO embedded-access-token is this a passport access token or a visa access toke
     1. <a name="term-visa-access-token"></a> <a name="term-embedded-access-token"></a>
        **Visa Access Token** -- The Visa Issuer is providing an OIDC provider
        service and issues OIDC-compliant access tokens in a specific format that can
-       be used as a Visa.
+       be used as a Visa. Note: The **Visa Access Token** may be removed in a future 
+       version of the specification. New implementations should prefer to issue Visas 
+       as [Visa Document Tokens](#visa-document-token-format).
 
         1.  The Visa payload MUST contain the "openid" scope. That
             is, it has a `scope` JWT claim that contains "openid" as a
@@ -377,37 +389,35 @@ TODO embedded-access-token is this a passport access token or a visa access toke
             [Metadata](https://openid.net/specs/openid-connect-discovery-1_0.html#ProviderMetadata)
             that may be reachable by a Claim Clearinghouse.
 
-        4.  Visa Issuer MUST support public-facing
-            `/token` or `/userinfo` endpoint. When presented with a valid Visa Access
-            Token, the /token endpoint MUST return a success status
-            and MAY return the current values for GA4GH Claims that were
-            included within the Visa Access Token, however returning
-            GA4GH Claims from the /token endpoint for Visa Access
-            Tokens is OPTIONAL. (NOTE: I don't really understand the distinction being made here.)
+        4.  Visa Issuer MUST support public-facing /userinfo endpoint. When presented with a valid 
+            Visa Access Token, the /userinfo endpoint MUST return a success status and MAY return 
+            the current values for GA4GH Claims that were included within the Visa Access Token, 
+            however returning GA4GH Claims from the /userinfo endpoint for Visa Access Tokens is 
+            OPTIONAL.
 
-        5.  If the Visa Access Token's `exp` exceeds the `iat` by
+        1.  If the Visa Access Token's `exp` exceeds the `iat` by
             more than 1 hour, the Visa Issuer should expect
             Claim Clearinghouses to use [Access Token Polling](#at-polling) and
             MUST provide a means to revoke Visa Access Tokens. The
-            `/token` or `/userinfo` endpoint MUST return an HTTP status 401 as per
+            Token or UserInfo Endpoint MUST return an HTTP status 401 as per
             [RFC6750 section 3.1](https://tools.ietf.org/html/rfc6750#section-3.1)
             when provided an Visa Access Token that has completed the
             revocation process.
 
-        6.  The JWS header MUST NOT have `jku` specified.
+        2.  The JWS header MUST NOT have `jku` specified.
 
-        7.  Visa Issuer MUST provide protection against
+        3.  Visa Issuer MUST provide protection against
             attacks as outlined in [RFC
             6819](https://tools.ietf.org/html/rfc6819).
 
-    2. <a name="term-visa-document-token"></a> <a name="term-embedded-document-token"></a>
+    1. <a name="term-visa-document-token"></a> <a name="term-embedded-document-token"></a>
        **Visa Document Token** -- The Visa Issuer does not need to
        be a OIDC provider, and MAY provide tokens of this type without any
        revocation process.
 
         1.  The JWS header contains `jku` as specified by [RFC7515 Section
             4.1.2](https://tools.ietf.org/html/rfc7515#section-4.1.2), and
-            provides the corresponding public-facing endpoint to fetch
+            provides the corresponding endpoint to fetch
             the public key used to sign the Visa Document Token.
 
         2.  Follows the [Visa Document Token
@@ -441,9 +451,7 @@ TODO embedded-access-token is this a passport access token or a visa access toke
 
 #### Conformance for Passport Issuers
 
-TODO "GA4GH Claims Tokens" perhaps should be "Visas"
-
-1.  Passport Issuers are used to re-package and re-sign GA4GH Claims Tokens, nominally JWTs, that contain Visas.
+1.  Passport Issuers are used to package Visas into signed Passports.
 
 2.  Passport Issuers do not need to be a be a OIDC provider, and MAY provide a .well-known endpoint that doesn't conform to the OIDC Discovery specification for ease of finding signing keys.  
 
@@ -455,9 +463,9 @@ TODO "GA4GH Claims Tokens" perhaps should be "Visas"
     
     1. It is RECOMMENDED for Passports to conform to the <https://tools.ietf.org/html/rfc7515> (JWS) Specification.  
     
-4.  Passports MAY be issued from a `/token` endpoint using the [token exchange OAuth extension](https://datatracker.ietf.org/doc/html/rfc8693), modulo the following clarifications:
+4.  Passports MAY be issued from a Token Endpoint using the [token exchange OAuth extension](https://datatracker.ietf.org/doc/html/rfc8693), modulo the following clarifications:
 
-    1. The `/token` endpoint MAY support other OAuth2 grant types.
+    1. The Token Endpoint MAY support other OAuth2 grant types.
 
     2. Client authentication is REQUIRED (using [OAuth2 client authentication](https://datatracker.ietf.org/doc/html/rfc6749#section-2.3.1) is RECOMMENDED).
 
@@ -467,9 +475,9 @@ TODO "GA4GH Claims Tokens" perhaps should be "Visas"
 
     5. The `subject_token_type` parameter value MUST be `urn:ietf:params:oauth:token-type:access_token`.
 
-    6. The token endpoint SHOULD require one or more scopes to be present in the given AAI access token (ex. `"scope": "ga4gh_passport_v1"`).
+    6. The Token Endpoint SHOULD require one or more scopes to be present in the given AAI access token (ex. `"scope": "ga4gh_passport_v1"`).
 
-    7. The token endpoint MAY accept or require any other optional parameters defined in [RFC8693](https://datatracker.ietf.org/doc/html/rfc8693).
+    7. The Token Endpoint MAY accept or require any other optional parameters defined in [RFC8693](https://datatracker.ietf.org/doc/html/rfc8693).
     
 
 #### Conformance for Claim Clearinghouses (consuming Passports or Visas to give access to data)
@@ -480,14 +488,14 @@ TODO "GA4GH Claims Tokens" perhaps should be "Visas"
     
     2.  The responsibility of risk assessment of a Broker is on the Claim Clearinghouse to trust a token. 
     
-2.  Claim Clearinghouses MUST process access tokens to access a Broker's `/token` or `/userinfo` to get access to GA4GH Claims OR MUST process Passports and their Visas. 
+2.  Claim Clearinghouses MUST process access tokens to access a Broker's Token or UserInfo Endpoint to get access to GA4GH Claims OR MUST process Passports and their Visas. 
            
     1.  For access token flows, Claim Clearinghouses MUST either check the validity of the access token or treat the access
     token as opaque.
 
         1.  If treating the token as a JWT a Claim Clearinghouse:
 
-            1. Even though JWTs are expected to be submitted against a Broker's `/token` or `/userinfo`, a Claim Clearinghouse SHOULD check the Token’s signature via JWKS or having stored the
+            1. Even though JWTs are expected to be submitted against a Broker's Token or UserInfo Endpoint, a Claim Clearinghouse SHOULD check the Token’s signature via JWKS or having stored the
             public key.
 
                 1.  A metadata URL (.well-known URL) SHOULD be used here to use the
@@ -512,20 +520,20 @@ TODO "GA4GH Claims Tokens" perhaps should be "Visas"
             (client_id).
 
         2.  If treating the token as an opaque a Claim Clearinghouse MUST know in
-        advance where to find a corresponding `/token`. This may limit the
-        functionality of accepting tokens from some Brokers.  (TODO: Question: is an opaque token an alternative to validation? Does 1.2 need to support this flow?)
+        advance where to find a corresponding Token Endpoint. This may limit the
+        functionality of accepting tokens from some Brokers. 
 
-    2.  For Passport flows, Claim Clearinghouses MUST check the validity of the JWT token. Follow the guidance in the JWT access tokens for validity.
+    1.  For Passport flows, Claim Clearinghouses MUST check the validity of the JWT token. Follow the guidance in the JWT access tokens for validity.
 
-4.  Claim Clearinghouses service can be a Broker itself and would follow the
+3.  Claim Clearinghouses service can be a Broker itself and would follow the
     [Conformance For Brokers](#conformance-for-brokers).
 
-5.  Claim Clearinghouses MUST provide protection against attacks as outlined in
+4.  Claim Clearinghouses MUST provide protection against attacks as outlined in
     [RFC 6819](https://tools.ietf.org/html/rfc6819).
 
     1. Section 5.1.6 of RFC 6819 contains a SHOULD section that states `Ensure that client applications do not share tokens with 3rd parties.` This profile provides a mechanism for Clearinghouses to consume access tokens from multiple brokers in a manner that does not involve 3rd parties. Client applications SHOULD take care to not spread the tokens to any other services that would be considered 3rd parties.
         
-6.  If making use of [Visas](#term-visa) directly from `/token` or from a Passport:
+5.  If making use of [Visas](#term-visa) directly from a Token Endpoint or from a Passport:
 
     1.  The Claim Clearinghouse MUST validate that all token checks pass (such as
         the token hasn’t expired) as described elsewhere in this specification and
@@ -553,9 +561,9 @@ TODO "GA4GH Claims Tokens" perhaps should be "Visas"
             trusted issuer configuration. This check MUST be performed before
             calling the `jku` endpoint.
 
-7.  <a name="at-polling"></a> **Access Token Polling**: Clients MAY use access tokens,
+6.  <a name="at-polling"></a> **Access Token Polling**: Clients MAY use access tokens,
     including Visas, to occasionally check which claims are still valid
-    at the associated `/token` or `/userinfo` endpoint in order to establish 
+    at the associated Token or UserInfo Endpoint in order to establish 
     whether the user still meets the access requirements.
 
     This MUST NOT be done more than once per hour (excluding any optional retries)
@@ -652,18 +660,18 @@ Payload:
 
 -   `addtional claims`: OPTIONAL. Any other additional non-GA4GH claims are allowed. This specification does not dictate the format of other claims.
 
-#### Claims sent to Data Holder by a Broker via `/token` or `/userinfo`
+#### Claims sent to Data Holder by a Broker via Token or UserInfo Endpoint
 
 Only the GA4GH claims truly must be as prescribed here. Refer to OIDC Spec for
 more information. The endpoint MAY use `application/json` or
-`application/jwt`.  It is RECOMMENDED that if desiring to return a JWT, a token endpoint supporting AAI token exchange exists to do that and `/userinfo` returns a general blob.
+`application/jwt`.  It is RECOMMENDED that if desiring to return a JWT, a Token Endpoint supporting AAI token exchange exists to do that and that the UserInfo Endpoint returns a general blob.
 
-If `application/jwt` is returned, it MUST be signed like `/userinfo` responses as per
+If `application/jwt` is returned, it MUST be signed like UserInfo responses as per
 [UserInfo](https://openid.net/specs/openid-connect-core-1_0.html#UserInfoResponse).  
 
 If this is a JWT, it MAY be used as a Passport.  
 
-If this information is a JWT, especially from the recommended token endpoint, the JWT should include additional attributes.
+If this information is a JWT, especially from the recommended Token Endpoint, the JWT should include additional attributes.
 
 ```
 {
@@ -840,7 +848,7 @@ involved with access may employ one or more of the following options:
 2.  Provide GA4GH Claims in the form of [Visa Access
     Tokens](#term-visa-access-token) to allow downstream Claim
     Clearinghouses to periodically check the validity of the token via calls
-    to the `/token` endpoint as per [Access Token Polling](#at-polling).
+    to the Token Endpoint as per [Access Token Polling](#at-polling).
 
 3. Provide refresh tokens at every level in the system hierarchy and use
     short-lived access tokens. This may require all contributing systems to
@@ -871,8 +879,8 @@ claims to prevent further tokens from being minted.
     warrant taking action.
 
     -   If an access token is long-lived, then the access token MUST be
-        revocable, and once revoked the /token endpoint MUST NOT return
-        claims. In this event, an appropriate error status MUST be returned like /userinfo errors as per
+        revocable, and once revoked the Token Endpoint MUST NOT return
+        claims. In this event, an appropriate error status MUST be returned like UserInfo errors as per
         [section 5.3.3 of the OIDC specification](https://openid.net/specs/openid-connect-core-1_0.html#UserInfoError).
 
     -   [Access Token Polling](#at-polling) can allow downstream systems to detect
