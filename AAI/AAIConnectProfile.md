@@ -389,10 +389,10 @@ TODO embedded-access-token is this a passport access token or a visa access toke
             [Metadata](https://openid.net/specs/openid-connect-discovery-1_0.html#ProviderMetadata)
             that may be reachable by a Claim Clearinghouse.
 
-        4.  Visa Issuer MUST support public-facing /userinfo endpoint. When presented with a valid 
-            Visa Access Token, the /userinfo endpoint MUST return a success status and MAY return 
+        4.  Visa Issuer MUST support public-facing UserInfo Endpoint. When presented with a valid 
+            Visa Access Token, the UserInfo Endpoint MUST return a success status and MAY return 
             the current values for GA4GH Claims that were included within the Visa Access Token, 
-            however returning GA4GH Claims from the /userinfo endpoint for Visa Access Tokens is 
+            however returning GA4GH Claims from the UserInfo Endpoint for Visa Access Tokens is 
             OPTIONAL.
 
         1.  If the Visa Access Token's `exp` exceeds the `iat` by
