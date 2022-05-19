@@ -1001,7 +1001,7 @@ group#DeepSkyBlue #LightSkyBlue Informative Only (not defined in this specificat
     end note
 end
 
-clearing <- broker : Return passport
+clearing <- broker : UserInfo Endpoint returns passport content (plain JSON, not signed JWT)
 note right
 {
   "iss": "https://<issuer-website>/",
@@ -1031,7 +1031,7 @@ client <- clearing : Client is given data
 
 The exchange flow does not ever distribute the initial *Passport-Scoped OAuth Access Token* beyond
 the client application. A token exchange operation is executed by the client, in
-exchange for a *Passport Token*, a *Work Order Token* (same) - or any
+exchange for a *Passport Token* - or any
 other token that may be used downstream to access resources. In this example flow, the
  *Passport Token* is included as authorisation in the POST to a DRS server. The token
 exchange has also specified a known resource server website that will limit the audience
@@ -1059,7 +1059,7 @@ end box
 
 box "Data Holder"
 participant "Clearing House"            as clearing
-participant "Data"            as data
+participant "Data"                      as data
 end box
 
 ==OIDC==
@@ -1075,7 +1075,7 @@ note right
 Content-Type: application/x-www-form-urlencoded
 
 grant_type=urn:ietf:params:oauth:grant-type:token-exchange
-requested_token_type=TBD
+requested_token_type=urn:ietf:params:oauth:token-type:jwt
 subject_token=<Passport-Scoped OAuth Access Token>
 subject_token_type=urn:ietf:params:oauth:token-type:access_token
 audience=https://<drs-resource-server-website>/
