@@ -451,19 +451,19 @@ TODO embedded-access-token is this a passport access token or a visa access toke
 
 #### Conformance for Passport Issuers
 
-1.  Passport Issuers are used to package Visas into signed Passports.
+1. Passport Issuers are used to package Visas into signed Passports.
 
-2.  Passport Issuers do not need to be a be a OIDC provider, and MAY provide a .well-known endpoint that doesn't conform to the OIDC Discovery specification for ease of finding signing keys.  
+2. Passport Issuers do not need to be a OIDC provider, and MAY provide a .well-known endpoint that doesn't conform to the OIDC Discovery specification for ease of finding signing keys.  
 
     1. Passport Issuers MAY be AAI Clients, Clearinghouses, Brokers or any other entity and do not need to be part of the OIDC flow.  
     
     2. Passports SHOULD be signed in the same way that Brokers sign access tokens.
 
-3.  Passports themselves are JWTs that contain Visas. Passports use this format [Format](#claims-sent-to-data-holder-by-a-broker-via-token-or-userinfo) as a signed JWT.  
+3. Passports themselves are JWTs that contain Visas. Passports use this format [Format](#claims-sent-to-data-holder-by-a-broker-via-token-or-userinfo) as a signed JWT.  
     
     1. It is RECOMMENDED for Passports to conform to the <https://tools.ietf.org/html/rfc7515> (JWS) Specification.  
     
-4.  Passports MAY be issued from a Token Endpoint using the [token exchange OAuth extension](https://datatracker.ietf.org/doc/html/rfc8693), modulo the following clarifications:
+4. Passports MAY be issued from a Token Endpoint using the [token exchange OAuth extension](https://datatracker.ietf.org/doc/html/rfc8693), modulo the following clarifications:
 
     1. The Token Endpoint MAY support other OAuth2 grant types.
 
@@ -478,7 +478,28 @@ TODO embedded-access-token is this a passport access token or a visa access toke
     6. The Token Endpoint SHOULD require one or more scopes to be present in the given AAI access token (ex. `"scope": "ga4gh_passport_v1"`).
 
     7. The Token Endpoint MAY accept or require any other optional parameters defined in [RFC8693](https://datatracker.ietf.org/doc/html/rfc8693).
-    
+
+@startuml
+skinparam componentStyle rectangle
+left to right direction
+
+component "<b>Client</b>" as Client
+component "<b>Passport Issuer</b>" as PassportIssuer
+component "<b>Broker</b>" as Broker
+
+component "<b>Visa Issuer</b> (1)" as VisaIssuer1
+component "<b>Visa Issuer</b> (2)" as VisaIssuer2
+
+VisaIssuer1 -> PassportIssuer : Visa A, B
+VisaIssuer2 -> PassportIssuer : Visa C
+
+Client <- Broker : Passport-Scoped OAuth Access Token
+
+Client ----> PassportIssuer : (request for token exchange)
+Client <--- PassportIssuer : Passport (contains Visa A,B,C)
+
+@enduml
+   
 
 #### Conformance for Claim Clearinghouses (consuming Passports or Visas to give access to data)
 
@@ -911,7 +932,7 @@ following:
 ### Appendix - Sequence Diagrams
 
 The following sequence diagrams are included to help explain the intended flows
-documented in this specification. However the diagrams are non-normative - if there are
+documented in this specification. These diagrams should be considered non-normative - if there are
 any discrepancies between the diagrams and the text of the specification, the text
 of the specification will take precedence.
 
@@ -919,7 +940,7 @@ of the specification will take precedence.
 
 The flow as used by Elixir uses the initial *Passport-Scoped OAuth Access Token* as
 a token handed to downstream resource servers. These servers can use this token, in conjunction
-with a callback to the `/userinfo` endpoint of the broker, to obtain the *Passport* content in
+with a callback to the *Userinfo Endpoint* of the broker, to obtain the *Passport* content in
 JSON format.
 
 {% plantuml %}
