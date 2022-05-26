@@ -8,6 +8,7 @@ permalink: aai-openid-connect-profile
 
 | Date       | Editor    | Notes                                                                         |
 |------------|-----------|-------------------------------------------------------------------------------|
+| 2022-05-20 | TomConner | Terminology fixes per issue 62                                                |
 | 2022-05-12 | TomConner | Edits per discussion in PR and call                                           |
 | 2022-05-09 | TomConner | Changed wording in Abstract per Max's comments                                |
 | 2022-05-06 | TomConner | Embedded Token and Token Container -> Visa and Passport                       |
@@ -27,7 +28,7 @@ applicable to (but not limited to) the sharing of restricted datasets.
 In particular, this specification profiles tokens, endpoints and flows that
 enable an OIDC provider (called a [Broker](#term-broker)) to
 provide [Passports](#term-passport) and [Visas](#term-visa) to downstream consumers
-called [Claim Clearinghouses](#term-claim-clearinghouse).
+called [Passport Clearninghouses](#term-passport-clearinghouse).
 
 [GA4GH DURI Passports](https://github.com/ga4gh-duri/ga4gh-duri.github.io/blob/master/researcher_ids/ga4gh_passport_v1.md) can then be used for authorization purposes by downstream
 systems.
@@ -60,16 +61,6 @@ this is the `ga4gh_passport_v1` or `ga4gh_visa_v1` claim for GA4GH Passports v1.
 Note that GA4GH is not the organization making the claim nor taking responsibility
 for the claim as this is a reference to a GA4GH documented standard only.
 
-<a name="term-claim-source"></a> **Claim Source** -- the source organization of
-a claim assertion which at a minimum includes the organization associated with
-asserting the claim, although can optionally identify a sub-organization or a
-specific assignment within the organization that made the claim.
-
--   This is NOT necessarily the organization that stores the claim, nor the
-    [Broker](#term-broker)’s organization that signs the token; it is the
-    organization that has the authority to assert the claim on behalf of the
-    user and is responsible for making and maintaining the assertion.
-
 <a name="term-identity-provider"></a> **Identity Provider (IdP)** -- a
 service that provides to users an identity, authenticates it; and provides
 claims to a Broker using standard protocols, such as OpenID Connect, SAML or
@@ -78,13 +69,13 @@ ERACommons. IdPs MAY be claims sources.
 
 <a name="term-broker"></a> **Broker** -- An OIDC Provider service that
 authenticates a user (potentially by an Identity Provider), collects their
-claims from internal and/or upstream claim sources and issues conformant JWT
-claims to be consumed by [Claim Clearinghouses](#term-claim-clearinghouse).
-Brokers may also be Claim Clearinghouses of other upstream Brokers (i.e.
+claims from internal and/or upstream [Visa Assertion Sources](#term-visa-assertion-source) and issues conformant JWT
+claims to be consumed by [Passport Clearinghouses](#term-passport-clearinghouse).
+Brokers may also be Passport Clearninghouses of other upstream Brokers (i.e.
 create a chain of Brokers like in the
 [Flow of Claims diagram](#flow-of-claims)).
 
-<a name="term-claim-clearinghouse"></a> **Claim Clearinghouse** -- A consumer
+<a name="term-passport-clearinghouse"></a> **Passport Clearinghouse** -- A consumer
 of [GA4GH Claims](#term-ga4gh-claim) (i.e. an OIDC Relying Party or a service
 downstream), that were provided by a [Broker](#term-broker), to make an
 authorization decision at least in part based on inspecting GA4GH claims and
@@ -92,17 +83,17 @@ allows access to a specific set of underlying resources in the target
 environment or platform. This abstraction allows for a variety of models for
 how systems consume these claims in order to provide access to resources.
 Access can be granted by either issuing new access tokens for downstream
-services (i.e. the Claim Clearinghouse may act like an authorization server)
-or by providing access to the underlying resources directly (i.e. the Claim
-Clearinghouse may act like a resource server). Some Claim Clearinghouses may
-issue tokens that may contain a new set of GA4GH Claims and/or a
-subset of GA4GH claims for downstream consumption (such as a Passport).
+services (i.e. the Passport Clearinghouse may act like an authorization server)
+or by providing access to the underlying resources directly (i.e. the Passport
+Clearinghouse may act like a resource server). Some Passport Clearinghouses may
+issue Passports that contain a new set or
+subset of Visas for downstream consumption.
 
 <a name="term-data-holder"></a> **Data Holder** -- An organization that
 protects a specific set of data. They hold data (or its copy) and respects
 and enforces the data controller's decisions on who can access it. A data controller
 can also be a data holder. Data holders run an
-[Claim Clearinghouse Server](#term-claim-clearinghouse) at a minimum.
+[Passport Clearninghouse Server](#term-claim-clearinghouse) at a minimum.
 
 <a name="term-data-controller"></a> **Data Controller** -- An organization that manages
 data and, in that role, has capacity to decide who can access it. For
@@ -119,19 +110,13 @@ does not contain [GA4GH Claims](#term-ga4gh-claim).
 
 <a name="term-passport-issuer"></a> **Passport Issuer** --
 a service that creates and signs a [Passport](#term-passport-token) - in this case a JWT - holding [Visas](#term-visa).
-* a service where a Broker, Client or Claims Clearinghouse may re-sign the JWT holding GA4GH Claims (such as [GA4GH Visas](https://github.com/ga4gh-duri/ga4gh-duri.github.io/blob/master/researcher_ids/ga4gh_passport_v1.md#passport-visa)) with their own authority.
+* a service where a Broker, client or Passport Clearinghouse may re-sign the JWT holding GA4GH Claims (such as [GA4GH Visas](https://github.com/ga4gh-duri/ga4gh-duri.github.io/blob/master/researcher_ids/ga4gh_passport_v1.md#passport-visa)) with their own authority.
 
 <a name="term-token-endpoint"></a> **Token Endpoint** -- 
 as defined by [OIDC-Core](http://openid.net/specs/openid-connect-core-1_0.html); see [Token Endpoint](https://openid.net/specs/openid-connect-core-1_0.html#TokenEndpoint).
 
 <a name="term-userinfo-endpoint"></a> **UserInfo Endpoint** -- 
 as defined by [OIDC-Core](http://openid.net/specs/openid-connect-core-1_0.html); see [UserInfo Endpoint](https://openid.net/specs/openid-connect-core-1_0.html#UserInfo).
-
-<a name="term-visa-issuer"></a>
-**Visa Issuer** -- a service that signs
-[Visas](#term-visa). This service:
-* may be a [Broker](#term-broker) itself
-* may be used by a [Broker](#term-broker) as part of collecting GA4GH Claims that the Broker includes in responses from its UserInfo or Token Endpoint.
 
 <a name="term-visa"></a> 
 **Visa** -- A [GA4GH Claim](#term-ga4gh-claim)
@@ -142,39 +127,55 @@ It MUST be signed by a [Visa Issuer](#term-visa-issuer). A Visa MAY be passed
 through various [Brokers](#term-broker) as needed while retaining the token
 signature of the original Visa Issuer.
 
+<a name="term-visa-issuer"></a>
+**Visa Issuer** -- a service that signs
+[Visas](#term-visa). This service:
+* may be a [Broker](#term-broker) itself
+* may be used by a [Broker](#term-broker) as part of collecting Visa Assertions that the Broker includes in responses from its UserInfo or Token Endpoint.
+
+<a name="term-visa-assertion-source"></a> **Visa Assertion Source** -- the source organization of
+a [Visa](#term-visa) claim assertion which at a minimum includes the organization associated with
+asserting the claim, although can optionally identify a sub-organization or a
+specific assignment within the organization that made the claim.
+
+-   This is NOT necessarily the organization that stores the claim, nor the
+    [Broker](#term-broker)’s organization that signs the token; it is the
+    organization that has the authority to assert the claim on behalf of the
+    user and is responsible for making and maintaining the assertion.
+
 ### Relevant Specifications
 
 [OIDC-Core](http://openid.net/specs/openid-connect-core-1_0.html) -
         Authorization Code Flow and Implicit Flow will generate id_tokens and
         access_tokens from the Broker.
 
-[RFC7519-JWT](https://tools.ietf.org/html/rfc7519) - Specific implementations MAY extend
+[RFC-7519](https://tools.ietf.org/html/rfc7519) - Specific implementations MAY extend
         this structure with their own service-specific JWT claim names as top-level
         members of this JSON object. Recommended "extensions" are in the
         [Permissions](#authorizationclaims) section. The JWT specified here follows JWS
         headers specification from [RFC7515-JWS](https://tools.ietf.org/html/rfc7515).
 
-[RFC7515-JWS](https://tools.ietf.org/html/rfc7515) - JSON Web Signature (JWS) is the
+[RFC-7515](https://tools.ietf.org/html/rfc7515) - JSON Web Signature (JWS) is the
         specific JWT to use for this spec.
 
-[RFC5246-TLS](https://tools.ietf.org/html/rfc5246) - Transport Layer Security.
+[RFC-5246](https://tools.ietf.org/html/rfc5246) - Transport Layer Security.
         Information passed among clients, Applications, Brokers, and Claim
         Clearinghouses MUST be protected using TLS.
 
 [OIDC-Discovery](https://openid.net/specs/openid-connect-discovery-1_0.html)
 
-[GA4GH Passport](https://github.com/ga4gh-duri/ga4gh-duri.github.io/blob/master/researcher_ids/ga4gh_passport_v1.md) - DURI
+[GA4GH-Passport](https://github.com/ga4gh-duri/ga4gh-duri.github.io/blob/master/researcher_ids/ga4gh_passport_v1.md) - DURI
 
-[RFC8693](https://www.rfc-editor.org/info/rfc8693)  Jones, M., Nadalin, A., Campbell, B., Ed., Bradley, J.,
+[RFC-8693](https://www.rfc-editor.org/info/rfc8693)  Jones, M., Nadalin, A., Campbell, B., Ed., Bradley, J.,
         and C. Mortimore, "OAuth 2.0 Token Exchange", RFC 8693,
         DOI 10.17487/RFC8693, January 2020.
 
-[RFC6819](https://www.rfc-editor.org/info/rfc6819) 
+[RFC-6819](https://www.rfc-editor.org/info/rfc6819) 
         Lodderstedt, T, McGloin, M., and P. Hunt, 
         "OAuth 2.0 Threat Model and Security Considerations", 
         RFC 6819, January 2013.
 
-[RFC8725](https://www.rfc-editor.org/info/rfc8725)  Sheffer, Y., Hardt, D., and M. Jones, "JSON Web Token Best
+[RFC-8725](https://www.rfc-editor.org/info/rfc8725)  Sheffer, Y., Hardt, D., and M. Jones, "JSON Web Token Best
         Current Practices", BCP 225, RFC 8725,
         DOI 10.17487/RFC8725, February 2020.
             
@@ -186,39 +187,39 @@ skinparam componentStyle rectangle
 left to right direction
 
 package "Unspecified clients, additional services, protocols" {
-component "<b>Claim Source</b> (1)\norganisation" as ClaimSource1
-component "<b>Claim Source</b> (2)\norganisation" as ClaimSource2
-component "<b>Claim Source</b> (...)\norganisation" as ClaimSourceN
+component "<b>Visa Assertion Source</b> (1)\norganisation" as VisaSource1
+component "<b>Visa Assertion Source</b> (2)\norganisation" as VisaSource2
+component "<b>Visa Assertion Source</b> (...)\norganisation" as VisaSourceN
 
-database "<b>Claim Repository</b>\nabstract service" as ClaimRepository
+database "<b>Visa Assertion Repository</b>\nabstract service" as VisaRepository
 component "<b>Visa Issuer</b>\nabstract service\n(optional)" as ETI
 }
 
 package "Specified GA4GH AAI clients, services, protocols" {
 component "<b>Broker</b>\nservice" as Broker #FAFAD2
-component "<b>Claim Clearinghouse</b>\nservice" as ClearingHouse #9E7BB5
+component "<b>Passport Clearinghouse</b>\nservice" as ClearingHouse #9E7BB5
 }
 
-ClaimSource1 --> ClaimRepository : (unspecified)
-ClaimSource2 --> ClaimRepository : (unspecified)
-ClaimSourceN --> ClaimRepository : (unspecified)
-ClaimRepository --> ETI : (unspecified)
+VisaSource1 --> VisaRepository : (unspecified)
+VisaSource2 --> VisaRepository : (unspecified)
+VisaSourceN --> VisaRepository : (unspecified)
+VisaRepository --> ETI : (unspecified)
 
 
-ClaimRepository --> Broker : (unspecified)
+VisaRepository --> Broker : (unspecified)
 ETI --> Broker : (unspecified)
 Broker --> ClearingHouse : GA4GH AAI spec
 
 @enduml
 
-The above diagram shows how claims flow from [Claim Source(s)](#term-claim-source)
-to a [Claim Clearinghouse](#term-claim-clearinghouse) that uses them. Only the
+The above diagram shows how claims flow from [Visa Assertion Sources](#term-visa-assertion-source)
+to a [Passport Clearinghouse](#term-passport-clearinghouse) that uses them. Only the
 right hand portion of the flow is normative in that it is fully documented in this
 specification.
 
 Implementations may introduce clients, additional services, and protocols
 to provide the mechanisms to move the data between the
-[Claim Source(s)](#term-claim-source) and the [Broker](#term-broker). This diagram
+[Visa Assertions](#term-visa-assertion-source) and the [Broker](#term-broker). This diagram
 shows *one possible mechanism* involving a repository service that persists claims from a variety of
 organisations, and optionally then involving a separate visa issuer who
 signs some claims.
@@ -299,7 +300,7 @@ the Broker.
 
 3.  Broker MUST support a Token Endpoint or UserInfo Endpoint.
 
-    1.  The Token Endpoint SHOULD be used for passport visa claims in 
+    1.  The Token Endpoint SHOULD be used for [Visas](#term-visa) in 
         preference to the UserInfo Endpoint. 
 
     2.  When presented with a valid access token, the endpoint MUST return
@@ -387,7 +388,7 @@ TODO embedded-access-token is this a passport access token or a visa access toke
             spec](https://openid.net/specs/openid-connect-discovery-1_0.html),
             and provide `jwks_uri` as
             [Metadata](https://openid.net/specs/openid-connect-discovery-1_0.html#ProviderMetadata)
-            that may be reachable by a Claim Clearinghouse.
+            that may be reachable by a Passport Clearninghouse.
 
         4.  Visa Issuer MUST support public-facing UserInfo Endpoint. When presented with a valid 
             Visa Access Token, the UserInfo Endpoint MUST return a success status and MAY return 
@@ -397,7 +398,7 @@ TODO embedded-access-token is this a passport access token or a visa access toke
 
         1.  If the Visa Access Token's `exp` exceeds the `iat` by
             more than 1 hour, the Visa Issuer should expect
-            Claim Clearinghouses to use [Access Token Polling](#at-polling) and
+            Passport Clearninghouses to use [Access Token Polling](#at-polling) and
             MUST provide a means to revoke Visa Access Tokens. The
             Token or UserInfo Endpoint MUST return an HTTP status 401 as per
             [RFC6750 section 3.1](https://tools.ietf.org/html/rfc6750#section-3.1)
@@ -434,17 +435,17 @@ TODO embedded-access-token is this a passport access token or a visa access toke
             a space-delimited substring.
 
 2.  A Visa Issuer MAY generate the `exp` timestamp to enforce
-    its policies and allow Claim Clearinghouses to understand the intent of
+    its policies and allow Passport Clearninghouses to understand the intent of
     how long the claim may be used before needing to return to the Visa Issuer
     to refresh the claim. As a non-normative example, if a
     GA4GH claim expires in 25 years, the Visa Issuer could set the `exp` to
     1 day into the future plus issue a refresh token in order to force the
-    refresh token to be used when a downstream Claim Clearinghouse is still
+    refresh token to be used when a downstream Passport Clearninghouse is still
     interested in using such a claim after 1 day elapses.
 
 3.  By signing a Visa, a Visa Issuer asserts that
     the GA4GH claims made available by the token were legitimately derived
-    from their [Claim Sources](#term-claim-source), and the content is
+    from their [Visa Assertion Sources](#term-visa-assertion-source), and the content is
     presented and/or transformed without misrepresenting the original intent,
     except for accommodating for `exp` timestamps to be represented as
     indicated above.
@@ -480,22 +481,22 @@ TODO embedded-access-token is this a passport access token or a visa access toke
     7. The Token Endpoint MAY accept or require any other optional parameters defined in [RFC8693](https://datatracker.ietf.org/doc/html/rfc8693).
     
 
-#### Conformance for Claim Clearinghouses (consuming Passports or Visas to give access to data)
+#### Conformance for Passport Clearninghouses (consuming Passports or Visas to give access to data)
 
-1.  Claim Clearinghouses MUST trust at least one Broker.
+1.  Passport Clearninghouses MUST trust at least one Broker.
 
-    1.  Claim Clearinghouses MAY trust more than one Broker
+    1.  Passport Clearninghouses MAY trust more than one Broker
     
-    2.  The responsibility of risk assessment of a Broker is on the Claim Clearinghouse to trust a token. 
+    2.  The responsibility of risk assessment of a Broker is on the Passport Clearninghouse to trust a token. 
     
-2.  Claim Clearinghouses MUST process access tokens to access a Broker's Token or UserInfo Endpoint to get access to GA4GH Claims OR MUST process Passports and their Visas. 
+2.  Passport Clearninghouses MUST process access tokens to access a Broker's Token or UserInfo Endpoint to get access to GA4GH Claims OR MUST process Passports and their Visas. 
            
-    1.  For access token flows, Claim Clearinghouses MUST either check the validity of the access token or treat the access
+    1.  For access token flows, Passport Clearninghouses MUST either check the validity of the access token or treat the access
     token as opaque.
 
-        1.  If treating the token as a JWT a Claim Clearinghouse:
+        1.  If treating the token as a JWT a Passport Clearninghouse:
 
-            1. Even though JWTs are expected to be submitted against a Broker's Token or UserInfo Endpoint, a Claim Clearinghouse SHOULD check the Token’s signature via JWKS or having stored the
+            1. Even though JWTs are expected to be submitted against a Broker's Token or UserInfo Endpoint, a Passport Clearninghouse SHOULD check the Token’s signature via JWKS or having stored the
             public key.
 
                 1.  A metadata URL (.well-known URL) SHOULD be used here to use the
@@ -509,9 +510,9 @@ TODO embedded-access-token is this a passport access token or a visa access toke
                 Clearinghouses participating in open federation, the Claim
                 Clearinghouse does not necessarily have to trust the Broker that
                 includes Visas within another token in order to use
-                the Visa (although the Claim Clearinghouse MAY require
+                the Visa (although the Passport Clearninghouse MAY require
                 any other Broker involved in the propagation of the claims to
-                also be trusted if the Claim Clearinghouse needs to restrict its
+                also be trusted if the Passport Clearninghouse needs to restrict its
                 trust model).
 
             3.  MUST check `exp` to ensure the token has not expired.
@@ -519,23 +520,23 @@ TODO embedded-access-token is this a passport access token or a visa access toke
             4.  MAY additionally check `aud` to make sure Relying Party is trusted
             (client_id).
 
-        2.  If treating the token as an opaque a Claim Clearinghouse MUST know in
+        2.  If treating the token as opaque a Passport Clearninghouse MUST know in
         advance where to find a corresponding Token Endpoint. This may limit the
         functionality of accepting tokens from some Brokers. 
 
-    1.  For Passport flows, Claim Clearinghouses MUST check the validity of the JWT token. Follow the guidance in the JWT access tokens for validity.
+    1.  For Passport flows, Passport Clearninghouses MUST check the validity of the JWT token. Follow the guidance in the JWT access tokens for validity.
 
-3.  Claim Clearinghouses service can be a Broker itself and would follow the
+3.  Passport Clearninghouses service can be a Broker itself and would follow the
     [Conformance For Brokers](#conformance-for-brokers).
 
-4.  Claim Clearinghouses MUST provide protection against attacks as outlined in
+4.  Passport Clearninghouses MUST provide protection against attacks as outlined in
     [RFC 6819](https://tools.ietf.org/html/rfc6819).
 
     1. Section 5.1.6 of RFC 6819 contains a SHOULD section that states `Ensure that client applications do not share tokens with 3rd parties.` This profile provides a mechanism for Clearinghouses to consume access tokens from multiple brokers in a manner that does not involve 3rd parties. Client applications SHOULD take care to not spread the tokens to any other services that would be considered 3rd parties.
         
 5.  If making use of [Visas](#term-visa) directly from a Token Endpoint or from a Passport:
 
-    1.  The Claim Clearinghouse MUST validate that all token checks pass (such as
+    1.  The Passport Clearninghouse MUST validate that all token checks pass (such as
         the token hasn’t expired) as described elsewhere in this specification and
         the underlying OIDC specifications.
 
@@ -555,9 +556,9 @@ TODO embedded-access-token is this a passport access token or a visa access toke
             Clearinghouse has received the keys for the given `iss` via a trusted,
             out-of-band process.
 
-        2.  If a Claim Clearinghouse is to use the `jku` URL to fetch the public
+        2.  If a Passport Clearninghouse is to use the `jku` URL to fetch the public
             keys to verify the signature, then it MUST verify that the `jku` is
-            trusted for the given `iss` as part of the Claim Clearinghouse's
+            trusted for the given `iss` as part of the Passport Clearninghouse's
             trusted issuer configuration. This check MUST be performed before
             calling the `jku` endpoint.
 
@@ -567,7 +568,7 @@ TODO embedded-access-token is this a passport access token or a visa access toke
     whether the user still meets the access requirements.
 
     This MUST NOT be done more than once per hour (excluding any optional retries)
-    per Claim Clearinghouse. Any request retries MUST include exponential backoff
+    per Passport Clearninghouse. Any request retries MUST include exponential backoff
     delays based on best practices (e.g. include appropriate jitter). At a
     minimum, the client MUST stop checking once any of the following occurs:
 
@@ -825,7 +826,7 @@ for more details.
 Token Revocation
 ----------------
 
-#### Claim Source Revokes Claim
+#### Visa Assertion Source Revokes Claim
 
 Given that claims can cause downstream access tokens to be minted by Claim
 Clearinghouses and such downstream access tokens may have little knowledge or no
@@ -834,8 +835,8 @@ revocation capabilities across highly federated and loosely coupled systems.
 During the lifetime of the downstream access token, some systems may require
 that claims are no longer inspected nor updated.
 
-In the event that a [Claim Source](#term-claim-source) revokes a claim,
-downstream Visa Issuers, Brokers, Claim Clearinghouses, and other Authorization or Resource
+In the event that a [Visa Assertion Source](#term-visa-assertion-source) revokes a claim,
+downstream Visa Issuers, Brokers, Passport Clearninghouses, and other Authorization or Resource
 Servers MUST at a minimum provide a means to limit the lifespan of any given
 access tokens generated as a result of claims. To achieve this goal, servers
 involved with access may employ one or more of the following options:
@@ -861,7 +862,7 @@ involved with access may employ one or more of the following options:
     level of delay to reach out to a user to try to resolve the issue may be
     desirable).
 
-4. Provide some other means for downstream Claim Clearinghouses or other
+4. Provide some other means for downstream Passport Clearninghouses or other
     systems that create downstream access tokens to be informed of a material
     change in upstream claims such that action can be taken to revoke the token,
     revoke the refresh token, or revoke the access privileges associated with
