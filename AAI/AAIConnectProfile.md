@@ -462,15 +462,13 @@ TODO embedded-access-token is this a passport access token or a visa access toke
 
 1.  Passport Issuers are used to package Visas into signed Passports.
 
-2.  Passport Issuers do not need to be a be a OIDC provider, and MAY provide a .well-known endpoint that doesn't conform to the OIDC Discovery specification for ease of finding signing keys.  
+2.  Passport Issuers SHOULD be Brokers.
 
-    1. Passport Issuers MAY be AAI Clients, Clearinghouses, Brokers or any other entity and do not need to be part of the OIDC flow.  
-    
-    2. Passports SHOULD be signed in the same way that Brokers sign access tokens.
-
-3.  Passports themselves are JWTs that contain Visas. Passports use this format [Format](#claims-sent-to-data-holder-by-a-broker-via-token-or-userinfo) as a signed JWT.  
+3.  Passports themselves are JWTs that contain Visas. Passports use [this format](#claims-sent-to-data-holder-by-a-broker-via-token-or-userinfo) as a signed JWT.
     
     1. It is RECOMMENDED for Passports to conform to the <https://tools.ietf.org/html/rfc7515> (JWS) Specification.  
+
+    2. Passports MUST be signed with the `RS256` or `ES256` algorithm.
     
 4.  Passports MAY be issued from a Token Endpoint using the [token exchange OAuth extension](https://datatracker.ietf.org/doc/html/rfc8693), modulo the following clarifications:
 
@@ -478,7 +476,7 @@ TODO embedded-access-token is this a passport access token or a visa access toke
 
     2. Client authentication is REQUIRED (using [OAuth2 client authentication](https://datatracker.ietf.org/doc/html/rfc6749#section-2.3.1) is RECOMMENDED).
 
-    3. The `requested_token_type` parameter MUST be present with the value `urn:ietf:params:oauth:token-type:jwt`.
+    3. The `requested_token_type` parameter MUST be present with the value `urn:ga4gh:params:oauth:token-type:passport`.
 
     4. The `subject_token` parameter value MUST be a valid AAI access token issued to the requesting client.
 
@@ -601,7 +599,7 @@ TODO embedded-access-token is this a passport access token or a visa access toke
         Clearinghouse is unable to adjust for the updated GA4GH Claims, then
         it MUST act as though the token was revoked.
 
-### GA4GH JWT Format
+### GA4GH JWT Formats
 
 A well-formed JWS-Encoded JSON Web Token (JWT) consists of three concatenated
 Base64url-encoded strings, separated by dots (.) The three sections are: header,
@@ -671,16 +669,22 @@ Payload:
 
 #### Claims sent to Data Holder by a Broker via Token or UserInfo Endpoint
 
+##### Claims via UserInfo Endpoint
+
+The endpoint MAY use `application/json` or `application/jwt`. It is RECOMMENDED that if desiring to return a JWT, a
+Token Endpoint supporting AAI token exchange exists to do that and that the UserInfo Endpoint returns
+an `application/json` blob.
+
 Only the GA4GH claims truly must be as prescribed here. Refer to OIDC Spec for
-more information. The endpoint MAY use `application/json` or
-`application/jwt`.  It is RECOMMENDED that if desiring to return a JWT, a Token Endpoint supporting AAI token exchange exists to do that and that the UserInfo Endpoint returns a general blob.
+more information.
 
 If `application/jwt` is returned, it MUST be signed like UserInfo responses as per
 [UserInfo](https://openid.net/specs/openid-connect-core-1_0.html#UserInfoResponse).  
 
-If this is a JWT, it MAY be used as a Passport.  
+If this is a JWT, it MAY be used as a Passport token, but it is RECOMMENDED to obtain a token from the token endpoint
+instead.
 
-If this information is a JWT, especially from the recommended Token Endpoint, the JWT should include additional attributes.
+If this information is a JWT, the JWT should include additional attributes.
 
 ```
 {
@@ -696,21 +700,66 @@ If this information is a JWT, especially from the recommended Token Endpoint, th
 }
 ```
 
--   `iss` and `sub`: REQUIRED.
+- `iss` and `sub`: REQUIRED.
 
--   `aud`: OPTIONAL.
+- `aud`: OPTIONAL.
 
--   `iat`: REQUIRED only if JWT Otherwise OPTIONAL. Time issued.
+- `iat`: REQUIRED only if JWT Otherwise OPTIONAL. Time issued.
 
--   `exp`: REQUIRED only if JWT Otherwise OPTIONAL. Time expired.
+- `exp`: REQUIRED only if JWT Otherwise OPTIONAL. Time expired.
 
--   `<ga4gh-spec-claims>`: OPTIONAL. GA4GH Claims are generally included as
+- `<ga4gh-spec-claims>`: OPTIONAL. GA4GH Claims are generally included as
     part of one or more GA4GH standard specifications based on the scopes
     provided. Even when requested by the appropriate scopes, these GA4GH Claims
     may not be included in the response for various reasons, such as if the
     user does not have any GA4GH Claims. See
     [Authorization/Claims](#authorizationclaims) for an example of a GA4GH
     Claim.
+
+##### Passport Token Contents
+
+Passport Issuers MUST issue a Passport token conforming to the requirements in this section when a token exchange
+with the `requested_token_type=urn:ga4gh:params:oauth:token-type:passport` is successfully performed
+(as described in the [Conformance for Passport Issuers](#conformance-for-passport-issuers) section).
+
+###### Header
+
+This spec prescribes the following JWS headers for Passport tokens
+in addition to the guidelines established in [RFC7515](https://datatracker.ietf.org/doc/html/rfc7515):
+
+- `typ`: REQUIRED where the value must be `application/vnd.ga4gh.passport+jwt` for Passport tokens.
+
+###### Claims
+
+Only the GA4GH claims truly must be as prescribed here. The
+[JWT specification](https://datatracker.ietf.org/doc/html/rfc7519) for more details.
+
+```
+{
+ "iss": "https://<issuer-website>/",
+ "sub": "<subject-identifier>",
+ "aud": [
+  "<client-id1>",
+  "<client-id2>" ...
+ ],
+ "iat": <seconds-since-epoch>,
+ "exp": <seconds-since-epoch>,
+ <ga4gh-spec-claims>
+}
+```
+
+- `iss` and `sub`: REQUIRED.
+
+- `aud`: OPTIONAL.
+
+- `iat`: REQUIRED.
+
+- `exp`: REQUIRED.
+
+- `jti`: RECOMMENDED.
+
+- `ga4gh_passport_v1`: REQUIRED. An array of GA4GH Visas. May be empty if a user has no visas. See the
+[Passport spec](https://github.com/ga4gh-duri/ga4gh-duri.github.io) for more details on types of visas.
 
 <a name="visa-issued-by-visa-issuer"></a>
 #### Visa issued by Visa Issuer
