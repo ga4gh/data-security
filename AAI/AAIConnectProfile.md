@@ -8,6 +8,7 @@ permalink: aai-openid-connect-profile
 
 | Date       | Editor    | Notes                                                                         |
 |------------|-----------|-------------------------------------------------------------------------------|
+| 2022-05-31 | martin-kuba | Terminology fixes                                                           |
 | 2022-05-20 | TomConner | Terminology fixes per issue 62                                                |
 | 2022-05-12 | TomConner | Edits per discussion in PR and call                                           |
 | 2022-05-09 | TomConner | Changed wording in Abstract per Max's comments                                |
@@ -33,9 +34,6 @@ called [Passport Clearninghouses](#term-passport-clearinghouse).
 [GA4GH DURI Passports](https://github.com/ga4gh-duri/ga4gh-duri.github.io/blob/master/researcher_ids/ga4gh_passport_v1.md) can then be used for authorization purposes by downstream
 systems.
 
-This specification is suggested to be used together
-with others that specify the syntax and semantics of the [GA4GH Claims](#term-ga4gh-claim) exchanged.
-
 ### Table of Contents
 {:.no_toc}
 
@@ -54,6 +52,13 @@ be interpreted as described in [RFC2119](https://www.ietf.org/rfc/rfc2119.txt).
 
 ### Terminology
 
+<a name="term-jwt"></a>
+**JWT** -- JSON Web Token as defined in [RFC7519](https://datatracker.ietf.org/doc/html/rfc7519).
+JWT contains a set of [claims](https://datatracker.ietf.org/doc/html/rfc7519#section-2).
+A claim is a piece of information asserted about a subject, represented as a name/value pair consisting of
+a claim name (a string) and a claim value (any JSON value). This definiton of claims
+is inherited by [OIDC](http://openid.net/specs/openid-connect-core-1_0.html) from RFC7519.
+
 <a name="term-ga4gh-claim"></a> **GA4GH Claim** -- A JWT claim as defined by a GA4GH
 documented technical standard that is making use of this AAI specification. Typically
 this is the `ga4gh_passport_v1` or `ga4gh_visa_v1` claim for GA4GH Passports v1.x (see 
@@ -63,37 +68,36 @@ for the claim as this is a reference to a GA4GH documented standard only.
 
 <a name="term-identity-provider"></a> **Identity Provider (IdP)** -- a
 service that provides to users an identity, authenticates it; and provides
-claims to a Broker using standard protocols, such as OpenID Connect, SAML or
+assertions to a Broker using standard protocols, such as OpenID Connect, SAML or
 other federation protocols. Example: eduGAIN, Google Identity, Facebook, NIH
-ERACommons. IdPs MAY be claims sources.
+ERACommons. IdPs MAY be assertion sources.
 
 <a name="term-broker"></a> **Broker** -- An OIDC Provider service that
-authenticates a user (potentially by an Identity Provider), collects their
-claims from internal and/or upstream [Visa Assertion Sources](#term-visa-assertion-source) and issues conformant JWT
-claims to be consumed by [Passport Clearinghouses](#term-passport-clearinghouse).
+authenticates a user (potentially by an Identity Provider), collects user's
+[Visas](#term-visa) from internal and/or external [Visa Issuers](#term-visa-issuer) and provides them
+to [Passport Clearinghouses](#term-passport-clearinghouse).
 Brokers may also be Passport Clearninghouses of other upstream Brokers (i.e.
 create a chain of Brokers like in the
-[Flow of Claims diagram](#flow-of-claims)).
+[Flow of Assertions diagram](#flow-of-assertions)).
 
 <a name="term-passport-clearinghouse"></a> **Passport Clearinghouse** -- A consumer
-of [GA4GH Claims](#term-ga4gh-claim) (i.e. an OIDC Relying Party or a service
+of [Visas](#term-visa) (i.e. an OIDC Relying Party or a service
 downstream), that were provided by a [Broker](#term-broker), to make an
-authorization decision at least in part based on inspecting GA4GH claims and
+authorization decision at least in part based on inspecting Visas and
 allows access to a specific set of underlying resources in the target
 environment or platform. This abstraction allows for a variety of models for
-how systems consume these claims in order to provide access to resources.
+how systems consume these Visas in order to provide access to resources.
 Access can be granted by either issuing new access tokens for downstream
 services (i.e. the Passport Clearinghouse may act like an authorization server)
 or by providing access to the underlying resources directly (i.e. the Passport
 Clearinghouse may act like a resource server). Some Passport Clearinghouses may
-issue Passports that contain a new set or
-subset of Visas for downstream consumption.
+issue Passports that contain a new set or subset of Visas for downstream consumption.
 
 <a name="term-data-holder"></a> **Data Holder** -- An organization that
 protects a specific set of data. They hold data (or its copy) and respects
 and enforces the data controller's decisions on who can access it. A data controller
 can also be a data holder. Data holders run an
-[Passport Clearninghouse Server](#term-claim-clearinghouse) at a minimum.
+[Passport Clearninghouse Server](#term-passport-clearinghouse) at a minimum.
 
 <a name="term-data-controller"></a> **Data Controller** -- An organization that manages
 data and, in that role, has capacity to decide who can access it. For
@@ -104,13 +108,15 @@ Token** -- A JWT bearer token, returned as an OAuth2 access token as
 described herein, encoded via JWS Compact Serialization per
 [RFC7515](https://datatracker.ietf.org/doc/html/rfc7515), containing
 `ga4gh_passport_v1` as a space-separated entry within the `scope` claim but
-does not contain [GA4GH Claims](#term-ga4gh-claim).
+does not contain [Visas](#term-visa).
+
+It is RECOMMENDED that Passport-Scoped Access Tokens follow the [RFC9068 JWT Profile for OAuth 2.0 Access Tokens](https://datatracker.ietf.org/doc/html/rfc9068) specification.
 
 <a name="term-passport"></a> **Passport** -- A signed and verifiable JWT container for holding [Visas](#term-visa).
 
 <a name="term-passport-issuer"></a> **Passport Issuer** --
-a service that creates and signs a [Passport](#term-passport-token) - in this case a JWT - holding [Visas](#term-visa).
-* a service where a Broker, client or Passport Clearinghouse may re-sign the JWT holding GA4GH Claims (such as [GA4GH Visas](https://github.com/ga4gh-duri/ga4gh-duri.github.io/blob/master/researcher_ids/ga4gh_passport_v1.md#passport-visa)) with their own authority.
+a service that creates and signs [Passports](#term-passport).
+* a service where a Broker, client or Passport Clearinghouse may re-sign the JWT holding [Visas](#term-visa) with their own authority.
 
 <a name="term-token-endpoint"></a> **Token Endpoint** -- 
 as defined by [OIDC-Core](http://openid.net/specs/openid-connect-core-1_0.html); see [Token Endpoint](https://openid.net/specs/openid-connect-core-1_0.html#TokenEndpoint).
@@ -118,12 +124,14 @@ as defined by [OIDC-Core](http://openid.net/specs/openid-connect-core-1_0.html);
 <a name="term-userinfo-endpoint"></a> **UserInfo Endpoint** -- 
 as defined by [OIDC-Core](http://openid.net/specs/openid-connect-core-1_0.html); see [UserInfo Endpoint](https://openid.net/specs/openid-connect-core-1_0.html#UserInfo).
 
+<a name="term-visa-assertion"></a>
+**Visa Assertion** -- a piece of information about a user that is asserted by a [Visa Assertion Source](#term-visa-assertion-source). It is then encoded by a [Visa Issuer](#term-visa-issuer) into a [Visa](#Visa).
+
 <a name="term-visa"></a> 
-**Visa** -- A [GA4GH Claim](#term-ga4gh-claim)
-value or entry within a list or object of a GA4GH Claim that contains a JWT
-encoded via JWS Compact Serialization per
-[RFC7515](https://datatracker.ietf.org/doc/html/rfc7515).
-It MUST be signed by a [Visa Issuer](#term-visa-issuer). A Visa MAY be passed
+**Visa** -- A JWT conforming to the [Passport Visa Format](https://github.com/ga4gh-duri/ga4gh-duri.github.io/blob/master/researcher_ids/ga4gh_passport_v1.md#passport-visa-format) defined in the [GA4GH DURI Passport](https://github.com/ga4gh-duri/ga4gh-duri.github.io/blob/master/researcher_ids/ga4gh_passport_v1.md) specification.
+Visa encodes a [Visa Assertion](#term-visa-assertion) in compact and digitally signed format that can be passed as a URL-safe string value.
+
+Visa MUST be signed by a [Visa Issuer](#term-visa-issuer). A Visa MAY be passed
 through various [Brokers](#term-broker) as needed while retaining the token
 signature of the original Visa Issuer.
 
@@ -131,16 +139,16 @@ signature of the original Visa Issuer.
 **Visa Issuer** -- a service that signs
 [Visas](#term-visa). This service:
 * may be a [Broker](#term-broker) itself
-* may be used by a [Broker](#term-broker) as part of collecting Visa Assertions that the Broker includes in responses from its UserInfo or Token Endpoint.
+* may be used by a [Broker](#term-broker) as part of collecting Visas that the Broker includes in responses from its UserInfo or Token Endpoint.
 
 <a name="term-visa-assertion-source"></a> **Visa Assertion Source** -- the source organization of
-a [Visa](#term-visa) claim assertion which at a minimum includes the organization associated with
-asserting the claim, although can optionally identify a sub-organization or a
-specific assignment within the organization that made the claim.
+a [Visa Assertion](#term-visa-assertion) which at a minimum includes the organization associated with
+making the assertion, although can optionally identify a sub-organization or a
+specific assignment within the organization that made the assertion.
 
--   This is NOT necessarily the organization that stores the claim, nor the
-    [Broker](#term-broker)’s organization that signs the token; it is the
-    organization that has the authority to assert the claim on behalf of the
+-   This is NOT necessarily the organization that stores the assertion, nor the
+    [Visa Issuer](#term-visa-issuer)’s organization that signs the Visa; it is the
+    organization that has the authority to make the assertion on behalf of the
     user and is responsible for making and maintaining the assertion.
 
 ### Relevant Specifications
@@ -159,7 +167,7 @@ specific assignment within the organization that made the claim.
         specific JWT to use for this spec.
 
 [RFC-5246](https://tools.ietf.org/html/rfc5246) - Transport Layer Security.
-        Information passed among clients, Applications, Brokers, and Claim
+        Information passed among clients, Applications, Brokers, and Passport
         Clearinghouses MUST be protected using TLS.
 
 [OIDC-Discovery](https://openid.net/specs/openid-connect-discovery-1_0.html)
@@ -180,7 +188,7 @@ specific assignment within the organization that made the claim.
         DOI 10.17487/RFC8725, February 2020.
             
 
-### Flow of Claims
+### Flow of Assertions
 
 @startuml
 skinparam componentStyle rectangle
@@ -212,17 +220,17 @@ Broker --> ClearingHouse : GA4GH AAI spec
 
 @enduml
 
-The above diagram shows how claims flow from [Visa Assertion Sources](#term-visa-assertion-source)
+The above diagram shows how [Visa Assertions](#term-visa-assertion) flow from [Visa Assertion Sources](#term-visa-assertion-source)
 to a [Passport Clearinghouse](#term-passport-clearinghouse) that uses them. Only the
 right hand portion of the flow is normative in that it is fully documented in this
 specification.
 
 Implementations may introduce clients, additional services, and protocols
 to provide the mechanisms to move the data between the
-[Visa Assertions](#term-visa-assertion-source) and the [Broker](#term-broker). This diagram
-shows *one possible mechanism* involving a repository service that persists claims from a variety of
+[Visa Assertion Sources](#term-visa-assertion-source) and the [Broker](#term-broker). This diagram
+shows *one possible mechanism* involving a repository service that persists assertions from a variety of
 organisations, and optionally then involving a separate visa issuer who
-signs some claims.
+signs some visas.
 
 These mechanisms are unspecified by the scope of this specification except that
 they MUST adhere to security and privacy best practices, such as those outlined
@@ -436,15 +444,15 @@ TODO embedded-access-token is this a passport access token or a visa access toke
 
 2.  A Visa Issuer MAY generate the `exp` timestamp to enforce
     its policies and allow Passport Clearninghouses to understand the intent of
-    how long the claim may be used before needing to return to the Visa Issuer
-    to refresh the claim. As a non-normative example, if a
-    GA4GH claim expires in 25 years, the Visa Issuer could set the `exp` to
+    how long the assertion may be used before needing to return to the Visa Issuer
+    to refresh the Visa. As a non-normative example, if an
+    assertion expires in 25 years, the Visa Issuer could set the `exp` to
     1 day into the future plus issue a refresh token in order to force the
     refresh token to be used when a downstream Passport Clearninghouse is still
-    interested in using such a claim after 1 day elapses.
+    interested in using such an assertion after 1 day elapses.
 
 3.  By signing a Visa, a Visa Issuer asserts that
-    the GA4GH claims made available by the token were legitimately derived
+    the [Visa Assertions](#term-visa-assertion) made available by the Visa were legitimately derived
     from their [Visa Assertion Sources](#term-visa-assertion-source), and the content is
     presented and/or transformed without misrepresenting the original intent,
     except for accommodating for `exp` timestamps to be represented as
@@ -552,7 +560,7 @@ TODO embedded-access-token is this a passport access token or a visa access toke
 
     3.  If making use of [Visa Document Tokens](#term-visa-document-token):
 
-        1.  Fetching the public keys using the `jku` is not required if a Claim
+        1.  Fetching the public keys using the `jku` is not required if a Passport
             Clearinghouse has received the keys for the given `iss` via a trusted,
             out-of-band process.
 
@@ -913,7 +921,7 @@ following:
 
 | Version | Date    | Editor                                     | Notes                   |
 |---------|---------|--------------------------------------------|-------------------------|
-| 1.2.0   | 2021-07 | Craig Voisin ...                           | ...  |
+| 1.2.0   | 2022-?? |                                            | ...  |
 | 1.1.0   | 2021-07 | Craig Voisin                               | *abandoned* version now reserved, new concepts moved to v1.2 |
 | 1.0.4   | 2021-07 | Craig Voisin                               | Improve existing terminology and define Passport and Visa JWTs |
 | 1.0.3   | 2021-06 | Craig Voisin                               | Links for "scope" claim |
