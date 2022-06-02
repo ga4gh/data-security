@@ -2,12 +2,9 @@
 layout: page
 title: AAI OIDC Profile
 permalink: aai-openid-connect-profile
-oops: says-me
 ---
 
 ### 1.2 Draft Work In Progress 
-
-so it is {{ page.oops }}
 
 | Date       | Editor      | Notes                                                                         |
 |------------|-------------|-------------------------------------------------------------------------------|
