@@ -64,6 +64,16 @@
   </thead>
   <tbody>
     <tr>
+      <td>2022-05-31</td>
+      <td>martin-kuba</td>
+      <td>Terminology fixes</td>
+    </tr>
+    <tr>
+      <td>2022-05-20</td>
+      <td>TomConner</td>
+      <td>Terminology fixes per issue 62</td>
+    </tr>
+    <tr>
       <td>2022-05-12</td>
       <td>TomConner</td>
       <td>Edits per discussion in PR and call</td>
@@ -111,13 +121,10 @@ applicable to (but not limited to) the sharing of restricted datasets.</p>
 <p>In particular, this specification profiles tokens, endpoints and flows that
 enable an OIDC provider (called a <a href="#term-broker">Broker</a>) to
 provide <a href="#term-passport">Passports</a> and <a href="#term-visa">Visas</a> to downstream consumers
-called <a href="#term-claim-clearinghouse">Claim Clearinghouses</a>.</p>
+called <a href="#term-passport-clearinghouse">Passport Clearninghouses</a>.</p>
 
 <p><a href="https://github.com/ga4gh-duri/ga4gh-duri.github.io/blob/master/researcher_ids/ga4gh_passport_v1.md">GA4GH DURI Passports</a> can then be used for authorization purposes by downstream
 systems.</p>
-
-<p>This specification is suggested to be used together
-with others that specify the syntax and semantics of the <a href="#term-ga4gh-claim">GA4GH Claims</a> exchanged.</p>
 
 <h3 class="no_toc" id="table-of-contents">Table of Contents</h3>
 
@@ -126,14 +133,14 @@ with others that specify the syntax and semantics of the <a href="#term-ga4gh-cl
   <li><a href="#requirements-notation-and-conventions" id="markdown-toc-requirements-notation-and-conventions">Requirements Notation and Conventions</a></li>
   <li><a href="#terminology" id="markdown-toc-terminology">Terminology</a></li>
   <li><a href="#relevant-specifications" id="markdown-toc-relevant-specifications">Relevant Specifications</a></li>
-  <li><a href="#flow-of-claims" id="markdown-toc-flow-of-claims">Flow of Claims</a></li>
+  <li><a href="#flow-of-assertions" id="markdown-toc-flow-of-assertions">Flow of Assertions</a></li>
   <li>
 <a href="#profile-requirements" id="markdown-toc-profile-requirements">Profile Requirements</a>    <ul>
       <li><a href="#clientapplication-conformance" id="markdown-toc-clientapplication-conformance">Client/Application Conformance</a></li>
       <li><a href="#conformance-for-brokers" id="markdown-toc-conformance-for-brokers">Conformance for Brokers</a></li>
       <li><a href="#conformance-for-visa-issuers" id="markdown-toc-conformance-for-visa-issuers">Conformance for Visa Issuers</a></li>
       <li><a href="#conformance-for-passport-issuers" id="markdown-toc-conformance-for-passport-issuers">Conformance for Passport Issuers</a></li>
-      <li><a href="#conformance-for-claim-clearinghouses-consuming-passports-or-visas-to-give-access-to-data" id="markdown-toc-conformance-for-claim-clearinghouses-consuming-passports-or-visas-to-give-access-to-data">Conformance for Claim Clearinghouses (consuming Passports or Visas to give access to data)</a></li>
+      <li><a href="#conformance-for-passport-clearninghouses-consuming-passports-or-visas-to-give-access-to-data" id="markdown-toc-conformance-for-passport-clearninghouses-consuming-passports-or-visas-to-give-access-to-data">Conformance for Passport Clearninghouses (consuming Passports or Visas to give access to data)</a></li>
     </ul>
   </li>
   <li>
@@ -151,7 +158,7 @@ with others that specify the syntax and semantics of the <a href="#term-ga4gh-cl
   </li>
   <li>
 <a href="#token-revocation" id="markdown-toc-token-revocation">Token Revocation</a>    <ul>
-      <li><a href="#claim-source-revokes-claim" id="markdown-toc-claim-source-revokes-claim">Claim Source Revokes Claim</a></li>
+      <li><a href="#visa-assertion-source-revokes-claim" id="markdown-toc-visa-assertion-source-revokes-claim">Visa Assertion Source Revokes Claim</a></li>
       <li><a href="#revoking-access-from-bad-actors" id="markdown-toc-revoking-access-from-bad-actors">Revoking Access from Bad Actors</a></li>
       <li><a href="#limited-damage-of-leaked-tokens" id="markdown-toc-limited-damage-of-leaked-tokens">Limited Damage of Leaked Tokens</a></li>
       <li>
@@ -177,6 +184,13 @@ be interpreted as described in <a href="https://www.ietf.org/rfc/rfc2119.txt">RF
 
 <h3 id="terminology">Terminology</h3>
 
+<p><a name="term-jwt"></a>
+<strong>JWT</strong> – JSON Web Token as defined in <a href="https://datatracker.ietf.org/doc/html/rfc7519">RFC7519</a>.
+JWT contains a set of <a href="https://datatracker.ietf.org/doc/html/rfc7519#section-2">claims</a>.
+A claim is a piece of information asserted about a subject, represented as a name/value pair consisting of
+a claim name (a string) and a claim value (any JSON value). This definiton of claims
+is inherited by <a href="http://openid.net/specs/openid-connect-core-1_0.html">OIDC</a> from RFC7519.</p>
+
 <p><a name="term-ga4gh-claim"></a> <strong>GA4GH Claim</strong> – A JWT claim as defined by a GA4GH
 documented technical standard that is making use of this AAI specification. Typically
 this is the <code class="language-plaintext highlighter-rouge">ga4gh_passport_v1</code> or <code class="language-plaintext highlighter-rouge">ga4gh_visa_v1</code> claim for GA4GH Passports v1.x (see 
@@ -184,51 +198,38 @@ this is the <code class="language-plaintext highlighter-rouge">ga4gh_passport_v1
 Note that GA4GH is not the organization making the claim nor taking responsibility
 for the claim as this is a reference to a GA4GH documented standard only.</p>
 
-<p><a name="term-claim-source"></a> <strong>Claim Source</strong> – the source organization of
-a claim assertion which at a minimum includes the organization associated with
-asserting the claim, although can optionally identify a sub-organization or a
-specific assignment within the organization that made the claim.</p>
-
-<ul>
-  <li>This is NOT necessarily the organization that stores the claim, nor the
-<a href="#term-broker">Broker</a>’s organization that signs the token; it is the
-organization that has the authority to assert the claim on behalf of the
-user and is responsible for making and maintaining the assertion.</li>
-</ul>
-
 <p><a name="term-identity-provider"></a> <strong>Identity Provider (IdP)</strong> – a
 service that provides to users an identity, authenticates it; and provides
-claims to a Broker using standard protocols, such as OpenID Connect, SAML or
+assertions to a Broker using standard protocols, such as OpenID Connect, SAML or
 other federation protocols. Example: eduGAIN, Google Identity, Facebook, NIH
-ERACommons. IdPs MAY be claims sources.</p>
+ERACommons. IdPs MAY be assertion sources.</p>
 
 <p><a name="term-broker"></a> <strong>Broker</strong> – An OIDC Provider service that
-authenticates a user (potentially by an Identity Provider), collects their
-claims from internal and/or upstream claim sources and issues conformant JWT
-claims to be consumed by <a href="#term-claim-clearinghouse">Claim Clearinghouses</a>.
-Brokers may also be Claim Clearinghouses of other upstream Brokers (i.e.
+authenticates a user (potentially by an Identity Provider), collects user’s
+<a href="#term-visa">Visas</a> from internal and/or external <a href="#term-visa-issuer">Visa Issuers</a> and provides them
+to <a href="#term-passport-clearinghouse">Passport Clearinghouses</a>.
+Brokers may also be Passport Clearninghouses of other upstream Brokers (i.e.
 create a chain of Brokers like in the
-<a href="#flow-of-claims">Flow of Claims diagram</a>).</p>
+<a href="#flow-of-assertions">Flow of Assertions diagram</a>).</p>
 
-<p><a name="term-claim-clearinghouse"></a> <strong>Claim Clearinghouse</strong> – A consumer
-of <a href="#term-ga4gh-claim">GA4GH Claims</a> (i.e. an OIDC Relying Party or a service
+<p><a name="term-passport-clearinghouse"></a> <strong>Passport Clearinghouse</strong> – A consumer
+of <a href="#term-visa">Visas</a> (i.e. an OIDC Relying Party or a service
 downstream), that were provided by a <a href="#term-broker">Broker</a>, to make an
-authorization decision at least in part based on inspecting GA4GH claims and
+authorization decision at least in part based on inspecting Visas and
 allows access to a specific set of underlying resources in the target
 environment or platform. This abstraction allows for a variety of models for
-how systems consume these claims in order to provide access to resources.
+how systems consume these Visas in order to provide access to resources.
 Access can be granted by either issuing new access tokens for downstream
-services (i.e. the Claim Clearinghouse may act like an authorization server)
-or by providing access to the underlying resources directly (i.e. the Claim
-Clearinghouse may act like a resource server). Some Claim Clearinghouses may
-issue tokens that may contain a new set of GA4GH Claims and/or a
-subset of GA4GH claims for downstream consumption (such as a Passport).</p>
+services (i.e. the Passport Clearinghouse may act like an authorization server)
+or by providing access to the underlying resources directly (i.e. the Passport
+Clearinghouse may act like a resource server). Some Passport Clearinghouses may
+issue Passports that contain a new set or subset of Visas for downstream consumption.</p>
 
 <p><a name="term-data-holder"></a> <strong>Data Holder</strong> – An organization that
 protects a specific set of data. They hold data (or its copy) and respects
 and enforces the data controller’s decisions on who can access it. A data controller
 can also be a data holder. Data holders run an
-<a href="#term-claim-clearinghouse">Claim Clearinghouse Server</a> at a minimum.</p>
+<a href="#term-passport-clearinghouse">Passport Clearninghouse Server</a> at a minimum.</p>
 
 <p><a name="term-data-controller"></a> <strong>Data Controller</strong> – An organization that manages
 data and, in that role, has capacity to decide who can access it. For
@@ -239,14 +240,16 @@ Token</strong> – A JWT bearer token, returned as an OAuth2 access token as
 described herein, encoded via JWS Compact Serialization per
 <a href="https://datatracker.ietf.org/doc/html/rfc7515">RFC7515</a>, containing
 <code class="language-plaintext highlighter-rouge">ga4gh_passport_v1</code> as a space-separated entry within the <code class="language-plaintext highlighter-rouge">scope</code> claim but
-does not contain <a href="#term-ga4gh-claim">GA4GH Claims</a>.</p>
+does not contain <a href="#term-visa">Visas</a>.</p>
+
+<p>It is RECOMMENDED that Passport-Scoped Access Tokens follow the <a href="https://datatracker.ietf.org/doc/html/rfc9068">RFC9068 JWT Profile for OAuth 2.0 Access Tokens</a> specification.</p>
 
 <p><a name="term-passport"></a> <strong>Passport</strong> – A signed and verifiable JWT container for holding <a href="#term-visa">Visas</a>.</p>
 
 <p><a name="term-passport-issuer"></a> <strong>Passport Issuer</strong> –
-a service that creates and signs a <a href="#term-passport-token">Passport</a> - in this case a JWT - holding <a href="#term-visa">Visas</a>.</p>
+a service that creates and signs <a href="#term-passport">Passports</a>.</p>
 <ul>
-  <li>a service where a Broker, Client or Claims Clearinghouse may re-sign the JWT holding GA4GH Claims (such as <a href="https://github.com/ga4gh-duri/ga4gh-duri.github.io/blob/master/researcher_ids/ga4gh_passport_v1.md#passport-visa">GA4GH Visas</a>) with their own authority.</li>
+  <li>a service where a Broker, client or Passport Clearinghouse may re-sign the JWT holding <a href="#term-visa">Visas</a> with their own authority.</li>
 </ul>
 
 <p><a name="term-token-endpoint"></a> <strong>Token Endpoint</strong> – 
@@ -255,22 +258,36 @@ as defined by <a href="http://openid.net/specs/openid-connect-core-1_0.html">OID
 <p><a name="term-userinfo-endpoint"></a> <strong>UserInfo Endpoint</strong> – 
 as defined by <a href="http://openid.net/specs/openid-connect-core-1_0.html">OIDC-Core</a>; see <a href="https://openid.net/specs/openid-connect-core-1_0.html#UserInfo">UserInfo Endpoint</a>.</p>
 
+<p><a name="term-visa-assertion"></a>
+<strong>Visa Assertion</strong> – a piece of information about a user that is asserted by a <a href="#term-visa-assertion-source">Visa Assertion Source</a>. It is then encoded by a <a href="#term-visa-issuer">Visa Issuer</a> into a <a href="#Visa">Visa</a>.</p>
+
+<p><a name="term-visa"></a> 
+<strong>Visa</strong> – A JWT conforming to the <a href="https://github.com/ga4gh-duri/ga4gh-duri.github.io/blob/master/researcher_ids/ga4gh_passport_v1.md#passport-visa-format">Passport Visa Format</a> defined in the <a href="https://github.com/ga4gh-duri/ga4gh-duri.github.io/blob/master/researcher_ids/ga4gh_passport_v1.md">GA4GH DURI Passport</a> specification.
+Visa encodes a <a href="#term-visa-assertion">Visa Assertion</a> in compact and digitally signed format that can be passed as a URL-safe string value.</p>
+
+<p>Visa MUST be signed by a <a href="#term-visa-issuer">Visa Issuer</a>. A Visa MAY be passed
+through various <a href="#term-broker">Brokers</a> as needed while retaining the token
+signature of the original Visa Issuer.</p>
+
 <p><a name="term-visa-issuer"></a>
 <strong>Visa Issuer</strong> – a service that signs
 <a href="#term-visa">Visas</a>. This service:</p>
 <ul>
   <li>may be a <a href="#term-broker">Broker</a> itself</li>
-  <li>may be used by a <a href="#term-broker">Broker</a> as part of collecting GA4GH Claims that the Broker includes in responses from its UserInfo or Token Endpoint.</li>
+  <li>may be used by a <a href="#term-broker">Broker</a> as part of collecting Visas that the Broker includes in responses from its UserInfo or Token Endpoint.</li>
 </ul>
 
-<p><a name="term-visa"></a> 
-<strong>Visa</strong> – A <a href="#term-ga4gh-claim">GA4GH Claim</a>
-value or entry within a list or object of a GA4GH Claim that contains a JWT
-encoded via JWS Compact Serialization per
-<a href="https://datatracker.ietf.org/doc/html/rfc7515">RFC7515</a>.
-It MUST be signed by a <a href="#term-visa-issuer">Visa Issuer</a>. A Visa MAY be passed
-through various <a href="#term-broker">Brokers</a> as needed while retaining the token
-signature of the original Visa Issuer.</p>
+<p><a name="term-visa-assertion-source"></a> <strong>Visa Assertion Source</strong> – the source organization of
+a <a href="#term-visa-assertion">Visa Assertion</a> which at a minimum includes the organization associated with
+making the assertion, although can optionally identify a sub-organization or a
+specific assignment within the organization that made the assertion.</p>
+
+<ul>
+  <li>This is NOT necessarily the organization that stores the assertion, nor the
+<a href="#term-visa-issuer">Visa Issuer</a>’s organization that signs the Visa; it is the
+organization that has the authority to make the assertion on behalf of the
+user and is responsible for making and maintaining the assertion.</li>
+</ul>
 
 <h3 id="relevant-specifications">Relevant Specifications</h3>
 
@@ -278,51 +295,51 @@ signature of the original Visa Issuer.</p>
         Authorization Code Flow and Implicit Flow will generate id_tokens and
         access_tokens from the Broker.</p>
 
-<p><a href="https://tools.ietf.org/html/rfc7519">RFC7519-JWT</a> - Specific implementations MAY extend
+<p><a href="https://tools.ietf.org/html/rfc7519">RFC-7519</a> - Specific implementations MAY extend
         this structure with their own service-specific JWT claim names as top-level
         members of this JSON object. Recommended “extensions” are in the
         <a href="#authorizationclaims">Permissions</a> section. The JWT specified here follows JWS
         headers specification from <a href="https://tools.ietf.org/html/rfc7515">RFC7515-JWS</a>.</p>
 
-<p><a href="https://tools.ietf.org/html/rfc7515">RFC7515-JWS</a> - JSON Web Signature (JWS) is the
+<p><a href="https://tools.ietf.org/html/rfc7515">RFC-7515</a> - JSON Web Signature (JWS) is the
         specific JWT to use for this spec.</p>
 
-<p><a href="https://tools.ietf.org/html/rfc5246">RFC5246-TLS</a> - Transport Layer Security.
-        Information passed among clients, Applications, Brokers, and Claim
+<p><a href="https://tools.ietf.org/html/rfc5246">RFC-5246</a> - Transport Layer Security.
+        Information passed among clients, Applications, Brokers, and Passport
         Clearinghouses MUST be protected using TLS.</p>
 
 <p><a href="https://openid.net/specs/openid-connect-discovery-1_0.html">OIDC-Discovery</a></p>
 
-<p><a href="https://github.com/ga4gh-duri/ga4gh-duri.github.io/blob/master/researcher_ids/ga4gh_passport_v1.md">GA4GH Passport</a> - DURI</p>
+<p><a href="https://github.com/ga4gh-duri/ga4gh-duri.github.io/blob/master/researcher_ids/ga4gh_passport_v1.md">GA4GH-Passport</a> - DURI</p>
 
-<p><a href="https://www.rfc-editor.org/info/rfc8693">RFC8693</a>  Jones, M., Nadalin, A., Campbell, B., Ed., Bradley, J.,
+<p><a href="https://www.rfc-editor.org/info/rfc8693">RFC-8693</a>  Jones, M., Nadalin, A., Campbell, B., Ed., Bradley, J.,
         and C. Mortimore, “OAuth 2.0 Token Exchange”, RFC 8693,
         DOI 10.17487/RFC8693, January 2020.</p>
 
-<p><a href="https://www.rfc-editor.org/info/rfc6819">RFC6819</a> 
+<p><a href="https://www.rfc-editor.org/info/rfc6819">RFC-6819</a> 
         Lodderstedt, T, McGloin, M., and P. Hunt, 
         “OAuth 2.0 Threat Model and Security Considerations”, 
         RFC 6819, January 2013.</p>
 
-<p><a href="https://www.rfc-editor.org/info/rfc8725">RFC8725</a>  Sheffer, Y., Hardt, D., and M. Jones, “JSON Web Token Best
+<p><a href="https://www.rfc-editor.org/info/rfc8725">RFC-8725</a>  Sheffer, Y., Hardt, D., and M. Jones, “JSON Web Token Best
         Current Practices”, BCP 225, RFC 8725,
         DOI 10.17487/RFC8725, February 2020.</p>
 
-<h3 id="flow-of-claims">Flow of Claims</h3>
+<h3 id="flow-of-assertions">Flow of Assertions</h3>
 
-<p><img class="plantuml" src="http://www.plantuml.com/plantuml/svg/~h407374617274756d6c0a736b696e706172616d20636f6d706f6e656e745374796c652072656374616e676c650a6c65667420746f20726967687420646972656374696f6e0a0a7061636b6167652022556e73706563696669656420636c69656e74732c206164646974696f6e616c2073657276696365732c2070726f746f636f6c7322207b0a636f6d706f6e656e7420223c623e436c61696d20536f757263653c2f623e202831295c6e6f7267616e69736174696f6e2220617320436c61696d536f75726365310a636f6d706f6e656e7420223c623e436c61696d20536f757263653c2f623e202832295c6e6f7267616e69736174696f6e2220617320436c61696d536f75726365320a636f6d706f6e656e7420223c623e436c61696d20536f757263653c2f623e20282e2e2e295c6e6f7267616e69736174696f6e2220617320436c61696d536f757263654e0a0a646174616261736520223c623e436c61696d205265706f7369746f72793c2f623e5c6e616273747261637420736572766963652220617320436c61696d5265706f7369746f72790a636f6d706f6e656e7420223c623e56697361204973737565723c2f623e5c6e616273747261637420736572766963655c6e286f7074696f6e616c2922206173204554490a7d0a0a7061636b61676520225370656369666965642047413447482041414920636c69656e74732c2073657276696365732c2070726f746f636f6c7322207b0a636f6d706f6e656e7420223c623e42726f6b65723c2f623e5c6e73657276696365222061732042726f6b657220234641464144320a636f6d706f6e656e7420223c623e436c61696d20436c656172696e67686f7573653c2f623e5c6e736572766963652220617320436c656172696e67486f75736520233945374242350a7d0a0a436c61696d536f7572636531202d2d3e20436c61696d5265706f7369746f7279203a2028756e737065636966696564290a436c61696d536f7572636532202d2d3e20436c61696d5265706f7369746f7279203a2028756e737065636966696564290a436c61696d536f757263654e202d2d3e20436c61696d5265706f7369746f7279203a2028756e737065636966696564290a436c61696d5265706f7369746f7279202d2d3e20455449203a2028756e737065636966696564290a0a0a436c61696d5265706f7369746f7279202d2d3e2042726f6b6572203a2028756e737065636966696564290a455449202d2d3e2042726f6b6572203a2028756e737065636966696564290a42726f6b6572202d2d3e20436c656172696e67486f757365203a2047413447482041414920737065630a0a40656e64756d6c"></p>
+<p><img class="plantuml" src="http://www.plantuml.com/plantuml/svg/~h407374617274756d6c0a736b696e706172616d20636f6d706f6e656e745374796c652072656374616e676c650a6c65667420746f20726967687420646972656374696f6e0a0a7061636b6167652022556e73706563696669656420636c69656e74732c206164646974696f6e616c2073657276696365732c2070726f746f636f6c7322207b0a636f6d706f6e656e7420223c623e5669736120417373657274696f6e20536f757263653c2f623e202831295c6e6f7267616e69736174696f6e222061732056697361536f75726365310a636f6d706f6e656e7420223c623e5669736120417373657274696f6e20536f757263653c2f623e202832295c6e6f7267616e69736174696f6e222061732056697361536f75726365320a636f6d706f6e656e7420223c623e5669736120417373657274696f6e20536f757263653c2f623e20282e2e2e295c6e6f7267616e69736174696f6e222061732056697361536f757263654e0a0a646174616261736520223c623e5669736120417373657274696f6e205265706f7369746f72793c2f623e5c6e616273747261637420736572766963652220617320566973615265706f7369746f72790a636f6d706f6e656e7420223c623e56697361204973737565723c2f623e5c6e616273747261637420736572766963655c6e286f7074696f6e616c2922206173204554490a7d0a0a7061636b61676520225370656369666965642047413447482041414920636c69656e74732c2073657276696365732c2070726f746f636f6c7322207b0a636f6d706f6e656e7420223c623e42726f6b65723c2f623e5c6e73657276696365222061732042726f6b657220234641464144320a636f6d706f6e656e7420223c623e50617373706f727420436c656172696e67686f7573653c2f623e5c6e736572766963652220617320436c656172696e67486f75736520233945374242350a7d0a0a56697361536f7572636531202d2d3e20566973615265706f7369746f7279203a2028756e737065636966696564290a56697361536f7572636532202d2d3e20566973615265706f7369746f7279203a2028756e737065636966696564290a56697361536f757263654e202d2d3e20566973615265706f7369746f7279203a2028756e737065636966696564290a566973615265706f7369746f7279202d2d3e20455449203a2028756e737065636966696564290a0a0a566973615265706f7369746f7279202d2d3e2042726f6b6572203a2028756e737065636966696564290a455449202d2d3e2042726f6b6572203a2028756e737065636966696564290a42726f6b6572202d2d3e20436c656172696e67486f757365203a2047413447482041414920737065630a0a40656e64756d6c"></p>
 
-<p>The above diagram shows how claims flow from <a href="#term-claim-source">Claim Source(s)</a>
-to a <a href="#term-claim-clearinghouse">Claim Clearinghouse</a> that uses them. Only the
+<p>The above diagram shows how <a href="#term-visa-assertion">Visa Assertions</a> flow from <a href="#term-visa-assertion-source">Visa Assertion Sources</a>
+to a <a href="#term-passport-clearinghouse">Passport Clearinghouse</a> that uses them. Only the
 right hand portion of the flow is normative in that it is fully documented in this
 specification.</p>
 
 <p>Implementations may introduce clients, additional services, and protocols
 to provide the mechanisms to move the data between the
-<a href="#term-claim-source">Claim Source(s)</a> and the <a href="#term-broker">Broker</a>. This diagram
-shows <em>one possible mechanism</em> involving a repository service that persists claims from a variety of
+<a href="#term-visa-assertion-source">Visa Assertion Sources</a> and the <a href="#term-broker">Broker</a>. This diagram
+shows <em>one possible mechanism</em> involving a repository service that persists assertions from a variety of
 organisations, and optionally then involving a separate visa issuer who
-signs some claims.</p>
+signs some visas.</p>
 
 <p>These mechanisms are unspecified by the scope of this specification except that
 they MUST adhere to security and privacy best practices, such as those outlined
@@ -444,7 +461,7 @@ Clearinghouse)</li>
 
     <ol>
       <li>
-        <p>The Token Endpoint SHOULD be used for passport visa claims in 
+        <p>The Token Endpoint SHOULD be used for <a href="#term-visa">Visas</a> in 
 preference to the UserInfo Endpoint.</p>
       </li>
       <li>
@@ -556,7 +573,7 @@ having GA4GH Claims as JWT claims directly in the Visa.</p>
 spec</a>,
 and provide <code class="language-plaintext highlighter-rouge">jwks_uri</code> as
 <a href="https://openid.net/specs/openid-connect-discovery-1_0.html#ProviderMetadata">Metadata</a>
-that may be reachable by a Claim Clearinghouse.</p>
+that may be reachable by a Passport Clearninghouse.</p>
           </li>
           <li>
             <p>Visa Issuer MUST support public-facing UserInfo Endpoint. When presented with a valid 
@@ -568,7 +585,7 @@ OPTIONAL.</p>
           <li>
             <p>If the Visa Access Token’s <code class="language-plaintext highlighter-rouge">exp</code> exceeds the <code class="language-plaintext highlighter-rouge">iat</code> by
 more than 1 hour, the Visa Issuer should expect
-Claim Clearinghouses to use <a href="#at-polling">Access Token Polling</a> and
+Passport Clearninghouses to use <a href="#at-polling">Access Token Polling</a> and
 MUST provide a means to revoke Visa Access Tokens. The
 Token or UserInfo Endpoint MUST return an HTTP status 401 as per
 <a href="https://tools.ietf.org/html/rfc6750#section-3.1">RFC6750 section 3.1</a>
@@ -621,18 +638,18 @@ a space-delimited substring.</p>
   </li>
   <li>
     <p>A Visa Issuer MAY generate the <code class="language-plaintext highlighter-rouge">exp</code> timestamp to enforce
-its policies and allow Claim Clearinghouses to understand the intent of
-how long the claim may be used before needing to return to the Visa Issuer
-to refresh the claim. As a non-normative example, if a
-GA4GH claim expires in 25 years, the Visa Issuer could set the <code class="language-plaintext highlighter-rouge">exp</code> to
+its policies and allow Passport Clearninghouses to understand the intent of
+how long the assertion may be used before needing to return to the Visa Issuer
+to refresh the Visa. As a non-normative example, if an
+assertion expires in 25 years, the Visa Issuer could set the <code class="language-plaintext highlighter-rouge">exp</code> to
 1 day into the future plus issue a refresh token in order to force the
-refresh token to be used when a downstream Claim Clearinghouse is still
-interested in using such a claim after 1 day elapses.</p>
+refresh token to be used when a downstream Passport Clearninghouse is still
+interested in using such an assertion after 1 day elapses.</p>
   </li>
   <li>
     <p>By signing a Visa, a Visa Issuer asserts that
-the GA4GH claims made available by the token were legitimately derived
-from their <a href="#term-claim-source">Claim Sources</a>, and the content is
+the <a href="#term-visa-assertion">Visa Assertions</a> made available by the Visa were legitimately derived
+from their <a href="#term-visa-assertion-source">Visa Assertion Sources</a>, and the content is
 presented and/or transformed without misrepresenting the original intent,
 except for accommodating for <code class="language-plaintext highlighter-rouge">exp</code> timestamps to be represented as
 indicated above.</p>
@@ -693,36 +710,36 @@ indicated above.</p>
   </li>
 </ol>
 
-<h4 id="conformance-for-claim-clearinghouses-consuming-passports-or-visas-to-give-access-to-data">Conformance for Claim Clearinghouses (consuming Passports or Visas to give access to data)</h4>
+<h4 id="conformance-for-passport-clearninghouses-consuming-passports-or-visas-to-give-access-to-data">Conformance for Passport Clearninghouses (consuming Passports or Visas to give access to data)</h4>
 
 <ol>
   <li>
-    <p>Claim Clearinghouses MUST trust at least one Broker.</p>
+    <p>Passport Clearninghouses MUST trust at least one Broker.</p>
 
     <ol>
       <li>
-        <p>Claim Clearinghouses MAY trust more than one Broker</p>
+        <p>Passport Clearninghouses MAY trust more than one Broker</p>
       </li>
       <li>
-        <p>The responsibility of risk assessment of a Broker is on the Claim Clearinghouse to trust a token.</p>
+        <p>The responsibility of risk assessment of a Broker is on the Passport Clearninghouse to trust a token.</p>
       </li>
     </ol>
   </li>
   <li>
-    <p>Claim Clearinghouses MUST process access tokens to access a Broker’s Token or UserInfo Endpoint to get access to GA4GH Claims OR MUST process Passports and their Visas.</p>
+    <p>Passport Clearninghouses MUST process access tokens to access a Broker’s Token or UserInfo Endpoint to get access to GA4GH Claims OR MUST process Passports and their Visas.</p>
 
     <ol>
       <li>
-        <p>For access token flows, Claim Clearinghouses MUST either check the validity of the access token or treat the access
+        <p>For access token flows, Passport Clearninghouses MUST either check the validity of the access token or treat the access
 token as opaque.</p>
 
         <ol>
           <li>
-            <p>If treating the token as a JWT a Claim Clearinghouse:</p>
+            <p>If treating the token as a JWT a Passport Clearninghouse:</p>
 
             <ol>
               <li>
-                <p>Even though JWTs are expected to be submitted against a Broker’s Token or UserInfo Endpoint, a Claim Clearinghouse SHOULD check the Token’s signature via JWKS or having stored the
+                <p>Even though JWTs are expected to be submitted against a Broker’s Token or UserInfo Endpoint, a Passport Clearninghouse SHOULD check the Token’s signature via JWKS or having stored the
 public key.</p>
 
                 <ol>
@@ -740,9 +757,9 @@ on the signer of the Visa itself. In Claim
 Clearinghouses participating in open federation, the Claim
 Clearinghouse does not necessarily have to trust the Broker that
 includes Visas within another token in order to use
-the Visa (although the Claim Clearinghouse MAY require
+the Visa (although the Passport Clearninghouse MAY require
 any other Broker involved in the propagation of the claims to
-also be trusted if the Claim Clearinghouse needs to restrict its
+also be trusted if the Passport Clearninghouse needs to restrict its
 trust model).</li>
                 </ol>
               </li>
@@ -756,23 +773,23 @@ trust model).</li>
             </ol>
           </li>
           <li>
-            <p>If treating the token as an opaque a Claim Clearinghouse MUST know in
+            <p>If treating the token as opaque a Passport Clearninghouse MUST know in
 advance where to find a corresponding Token Endpoint. This may limit the
 functionality of accepting tokens from some Brokers.</p>
           </li>
         </ol>
       </li>
       <li>
-        <p>For Passport flows, Claim Clearinghouses MUST check the validity of the JWT token. Follow the guidance in the JWT access tokens for validity.</p>
+        <p>For Passport flows, Passport Clearninghouses MUST check the validity of the JWT token. Follow the guidance in the JWT access tokens for validity.</p>
       </li>
     </ol>
   </li>
   <li>
-    <p>Claim Clearinghouses service can be a Broker itself and would follow the
+    <p>Passport Clearninghouses service can be a Broker itself and would follow the
 <a href="#conformance-for-brokers">Conformance For Brokers</a>.</p>
   </li>
   <li>
-    <p>Claim Clearinghouses MUST provide protection against attacks as outlined in
+    <p>Passport Clearninghouses MUST provide protection against attacks as outlined in
 <a href="https://tools.ietf.org/html/rfc6819">RFC 6819</a>.</p>
 
     <ol>
@@ -784,7 +801,7 @@ functionality of accepting tokens from some Brokers.</p>
 
     <ol>
       <li>
-        <p>The Claim Clearinghouse MUST validate that all token checks pass (such as
+        <p>The Passport Clearninghouse MUST validate that all token checks pass (such as
 the token hasn’t expired) as described elsewhere in this specification and
 the underlying OIDC specifications.</p>
       </li>
@@ -809,14 +826,14 @@ valid (e.g. provide a success status code).</p>
 
         <ol>
           <li>
-            <p>Fetching the public keys using the <code class="language-plaintext highlighter-rouge">jku</code> is not required if a Claim
+            <p>Fetching the public keys using the <code class="language-plaintext highlighter-rouge">jku</code> is not required if a Passport
 Clearinghouse has received the keys for the given <code class="language-plaintext highlighter-rouge">iss</code> via a trusted,
 out-of-band process.</p>
           </li>
           <li>
-            <p>If a Claim Clearinghouse is to use the <code class="language-plaintext highlighter-rouge">jku</code> URL to fetch the public
+            <p>If a Passport Clearninghouse is to use the <code class="language-plaintext highlighter-rouge">jku</code> URL to fetch the public
 keys to verify the signature, then it MUST verify that the <code class="language-plaintext highlighter-rouge">jku</code> is
-trusted for the given <code class="language-plaintext highlighter-rouge">iss</code> as part of the Claim Clearinghouse’s
+trusted for the given <code class="language-plaintext highlighter-rouge">iss</code> as part of the Passport Clearninghouse’s
 trusted issuer configuration. This check MUST be performed before
 calling the <code class="language-plaintext highlighter-rouge">jku</code> endpoint.</p>
           </li>
@@ -831,7 +848,7 @@ at the associated Token or UserInfo Endpoint in order to establish
 whether the user still meets the access requirements.</p>
 
     <p>This MUST NOT be done more than once per hour (excluding any optional retries)
-per Claim Clearinghouse. Any request retries MUST include exponential backoff
+per Passport Clearninghouse. Any request retries MUST include exponential backoff
 delays based on best practices (e.g. include appropriate jitter). At a
 minimum, the client MUST stop checking once any of the following occurs:</p>
 
@@ -1139,7 +1156,7 @@ for more details.</p>
 
 <h2 id="token-revocation">Token Revocation</h2>
 
-<h4 id="claim-source-revokes-claim">Claim Source Revokes Claim</h4>
+<h4 id="visa-assertion-source-revokes-claim">Visa Assertion Source Revokes Claim</h4>
 
 <p>Given that claims can cause downstream access tokens to be minted by Claim
 Clearinghouses and such downstream access tokens may have little knowledge or no
@@ -1148,8 +1165,8 @@ revocation capabilities across highly federated and loosely coupled systems.
 During the lifetime of the downstream access token, some systems may require
 that claims are no longer inspected nor updated.</p>
 
-<p>In the event that a <a href="#term-claim-source">Claim Source</a> revokes a claim,
-downstream Visa Issuers, Brokers, Claim Clearinghouses, and other Authorization or Resource
+<p>In the event that a <a href="#term-visa-assertion-source">Visa Assertion Source</a> revokes a claim,
+downstream Visa Issuers, Brokers, Passport Clearninghouses, and other Authorization or Resource
 Servers MUST at a minimum provide a means to limit the lifespan of any given
 access tokens generated as a result of claims. To achieve this goal, servers
 involved with access may employ one or more of the following options:</p>
@@ -1180,7 +1197,7 @@ to the Token Endpoint as per <a href="#at-polling">Access Token Polling</a>.</p>
  desirable).</p>
   </li>
   <li>
-    <p>Provide some other means for downstream Claim Clearinghouses or other
+    <p>Provide some other means for downstream Passport Clearninghouses or other
  systems that create downstream access tokens to be informed of a material
  change in upstream claims such that action can be taken to revoke the token,
  revoke the refresh token, or revoke the access privileges associated with
@@ -1755,8 +1772,8 @@ Country: US
   <tbody>
     <tr>
       <td>1.2.0</td>
-      <td>2021-07</td>
-      <td>Craig Voisin …</td>
+      <td>2022-??</td>
+      <td> </td>
       <td>…</td>
     </tr>
     <tr>
