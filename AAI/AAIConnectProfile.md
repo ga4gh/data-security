@@ -108,7 +108,7 @@ can also be a data holder. Data holders run an
 data and, in that role, has capacity to decide who can access it. For
 instance, a Data Access Committee (DAC).
 
-<a name="term-passport-scoped-access-token"></a> **Passport-Scoped OAuth Access
+<a name="term-passport-scoped-access-token"></a> **Passport-Scoped Access
 Token** -- A JWT bearer token, returned as an OAuth2 access token as
 described herein, encoded via JWS Compact Serialization per
 [RFC7515](https://datatracker.ietf.org/doc/html/rfc7515), containing
@@ -460,9 +460,9 @@ TODO embedded-access-token is this a passport access token or a visa access toke
     2. Passports SHOULD be signed in the same way that Brokers sign access tokens.
 
 3.  Passports themselves are JWTs that contain Visas. Passports use this format [Format](#claims-sent-to-data-holder-by-a-broker-via-token-or-userinfo) as a signed JWT.
-
+    
     1. It is RECOMMENDED for Passports to conform to the <https://tools.ietf.org/html/rfc7515> (JWS) Specification.
-
+    
 4.  Passports MAY be issued from a Token Endpoint using the [token exchange OAuth extension](https://datatracker.ietf.org/doc/html/rfc8693), modulo the following clarifications:
 
     1. The Token Endpoint MAY support other OAuth2 grant types.
