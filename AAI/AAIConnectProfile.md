@@ -2,21 +2,24 @@
 layout: page
 title: AAI OIDC Profile
 permalink: aai-openid-connect-profile
+oops: says-me
 ---
 
 ### 1.2 Draft Work In Progress 
 
-| Date       | Editor    | Notes                                                                         |
-|------------|-----------|-------------------------------------------------------------------------------|
-| 2022-05-31 | martin-kuba | Terminology fixes                                                           |
-| 2022-05-20 | TomConner | Terminology fixes per issue 62                                                |
-| 2022-05-12 | TomConner | Edits per discussion in PR and call                                           |
-| 2022-05-09 | TomConner | Changed wording in Abstract per Max's comments                                |
-| 2022-05-06 | TomConner | Embedded Token and Token Container -> Visa and Passport                       |
-| 2022-05-05 | TomConner | Data owner -> data controller                                                 |
-| 2022-03-16 | Patto     | Abstract clarified to support all flows                                       |
-| 2022-03-10 | TomConner | Token endpoints; spec references                                              |
-| 2022-02-24 | TomConner | Merged edits from David Bernick's bernick_clearinghouse_clarifications branch |
+so it is {{ page.oops }}
+
+| Date       | Editor      | Notes                                                                         |
+|------------|-------------|-------------------------------------------------------------------------------|
+| 2022-05-31 | martin-kuba | Terminology fixes                                                             |
+| 2022-05-20 | TomConner   | Terminology fixes per issue 62                                                |
+| 2022-05-12 | TomConner   | Edits per discussion in PR and call                                           |
+| 2022-05-09 | TomConner   | Changed wording in Abstract per Max's comments                                |
+| 2022-05-06 | TomConner   | Embedded Token and Token Container -> Visa and Passport                       |
+| 2022-05-05 | TomConner   | Data owner -> data controller                                                 |
+| 2022-03-16 | Patto       | Abstract clarified to support all flows                                       |
+| 2022-03-10 | TomConner   | Token endpoints; spec references                                              |
+| 2022-02-24 | TomConner   | Merged edits from David Bernick's bernick_clearinghouse_clarifications branch |
 
 ### Abstract
 {:.no_toc}
@@ -285,9 +288,7 @@ the Broker.
     consumption within the GA4GH compliant environment.
 
     1.  A Broker MUST issue both [Passport-Scoped Access Tokens](#term-passport-scoped-access-token)
-        (access_tokens) and id_tokens.
-
-        1.  This document makes no specifications for id_tokens.
+        (access_tokens) and id_tokens. This document makes no specifications for id_tokens.
 
     2.  Access_tokens MUST be in JWS format
 
@@ -299,9 +300,8 @@ the Broker.
         3.  Access tokens MAY contain non-GA4GH Claims directly in the access token.
 
 2.  Broker MUST support [OIDC Discovery
-    spec](https://openid.net/specs/openid-connect-discovery-1_0.html)
-
-    1.  MUST include and support proper
+    spec](https://openid.net/specs/openid-connect-discovery-1_0.html) and 
+        MUST include and support proper
         [Metadata](https://openid.net/specs/openid-connect-discovery-1_0.html#ProviderMetadata)
         (i.e. must have a `jwks_uri` as required that’s reachable by a Claim
         Clearinghouse)
@@ -313,8 +313,7 @@ the Broker.
 
     2.  When presented with a valid access token, the endpoint MUST return
         claims in the specified
-        [Format]
-       (#claims-sent-to-data-holder-by-a-broker-via-token-or-userinfo) using
+        [Format](#claims-sent-to-data-holder-by-a-broker-via-token-or-userinfo-endpoint) using
         either an `application/json` or `application/jwt` encoding.
 
     3.  The Broker MUST include the claims_parameter_supported in the discovery service
@@ -369,8 +368,6 @@ the Broker.
     authenticity, or trustworthiness of the claims from such tokens and any such
     assurances are made by the issuer of the Visa, i.e. the Visa Issuer).
 
-TODO embedded-access-token is this a passport access token or a visa access token or something else
-
 <a name="conformance-for-visa-issuers"></a>
 #### Conformance for Visa Issuers
 
@@ -404,7 +401,7 @@ TODO embedded-access-token is this a passport access token or a visa access toke
             however returning GA4GH Claims from the UserInfo Endpoint for Visa Access Tokens is 
             OPTIONAL.
 
-        1.  If the Visa Access Token's `exp` exceeds the `iat` by
+        5.  If the Visa Access Token's `exp` exceeds the `iat` by
             more than 1 hour, the Visa Issuer should expect
             Passport Clearninghouses to use [Access Token Polling](#at-polling) and
             MUST provide a means to revoke Visa Access Tokens. The
@@ -413,9 +410,9 @@ TODO embedded-access-token is this a passport access token or a visa access toke
             when provided an Visa Access Token that has completed the
             revocation process.
 
-        2.  The JWS header MUST NOT have `jku` specified.
+        6.  The JWS header MUST NOT have `jku` specified.
 
-        3.  Visa Issuer MUST provide protection against
+        7.  Visa Issuer MUST provide protection against
             attacks as outlined in [RFC
             6819](https://tools.ietf.org/html/rfc6819).
 
@@ -468,9 +465,7 @@ TODO embedded-access-token is this a passport access token or a visa access toke
     
     2. Passports SHOULD be signed in the same way that Brokers sign access tokens.
 
-3.  Passports themselves are JWTs that contain Visas. Passports use this format [Format](#claims-sent-to-data-holder-by-a-broker-via-token-or-userinfo) as a signed JWT.  
-    
-    1. It is RECOMMENDED for Passports to conform to the <https://tools.ietf.org/html/rfc7515> (JWS) Specification.  
+3.  Passports themselves are JWTs that contain Visas. Passports use this format [Format](#claims-sent-to-data-holder-by-a-broker-via-token-or-userinfo-endpoint) as a signed JWT. It is RECOMMENDED for Passports to conform to the <https://tools.ietf.org/html/rfc7515> (JWS) Specification.  
     
 4.  Passports MAY be issued from a Token Endpoint using the [token exchange OAuth extension](https://datatracker.ietf.org/doc/html/rfc8693), modulo the following clarifications:
 
@@ -505,15 +500,11 @@ TODO embedded-access-token is this a passport access token or a visa access toke
         1.  If treating the token as a JWT a Passport Clearninghouse:
 
             1. Even though JWTs are expected to be submitted against a Broker's Token or UserInfo Endpoint, a Passport Clearninghouse SHOULD check the Token’s signature via JWKS or having stored the
-            public key.
-
-                1.  A metadata URL (.well-known URL) SHOULD be used here to use the
+            public key. A metadata URL (.well-known URL) SHOULD be used here to use the
                 jwks_uri parameter.
                 
             2.  MUST check `iss` attribute to ensure a trusted Broker has generated
-            the token.
-            
-                1.  If evaluating Visa, trust MUST be established based
+            the token. If evaluating Visa, trust MUST be established based
                 on the signer of the Visa itself. In Claim
                 Clearinghouses participating in open federation, the Claim
                 Clearinghouse does not necessarily have to trust the Broker that
@@ -532,15 +523,13 @@ TODO embedded-access-token is this a passport access token or a visa access toke
         advance where to find a corresponding Token Endpoint. This may limit the
         functionality of accepting tokens from some Brokers. 
 
-    1.  For Passport flows, Passport Clearninghouses MUST check the validity of the JWT token. Follow the guidance in the JWT access tokens for validity.
+    2.  For Passport flows, Passport Clearninghouses MUST check the validity of the JWT token. Follow the guidance in the JWT access tokens for validity.
 
 3.  Passport Clearninghouses service can be a Broker itself and would follow the
     [Conformance For Brokers](#conformance-for-brokers).
 
 4.  Passport Clearninghouses MUST provide protection against attacks as outlined in
-    [RFC 6819](https://tools.ietf.org/html/rfc6819).
-
-    1. Section 5.1.6 of RFC 6819 contains a SHOULD section that states `Ensure that client applications do not share tokens with 3rd parties.` This profile provides a mechanism for Clearinghouses to consume access tokens from multiple brokers in a manner that does not involve 3rd parties. Client applications SHOULD take care to not spread the tokens to any other services that would be considered 3rd parties.
+    [RFC 6819](https://tools.ietf.org/html/rfc6819). Section 5.1.6 of RFC 6819 contains a SHOULD section that states `Ensure that client applications do not share tokens with 3rd parties.` This profile provides a mechanism for Clearinghouses to consume access tokens from multiple brokers in a manner that does not involve 3rd parties. Client applications SHOULD take care to not spread the tokens to any other services that would be considered 3rd parties.
         
 5.  If making use of [Visas](#term-visa) directly from a Token Endpoint or from a Passport:
 
