@@ -458,6 +458,10 @@ TODO embedded-access-token is this a passport access token or a visa access toke
     except for accommodating for `exp` timestamps to be represented as
     indicated above.
 
+<br/>
+<hr/>    
+<br/>
+
 #### Conformance for Passport Issuers
 
 1.  Passport Issuers are used to package Visas into signed Passports.
@@ -485,7 +489,39 @@ TODO embedded-access-token is this a passport access token or a visa access toke
     6. The Token Endpoint SHOULD require one or more scopes to be present in the given AAI access token (ex. `"scope": "ga4gh_passport_v1"`).
 
     7. The Token Endpoint MAY accept or require any other optional parameters defined in [RFC8693](https://datatracker.ietf.org/doc/html/rfc8693).
-    
+
+    <br/> <u>Passport Issuing via Token Exchange (non-normative)</u>
+
+@startuml
+skinparam componentStyle rectangle
+left to right direction
+
+component "<b>Client</b>" as Client
+
+component "<b>Broker</b>" as Broker {
+    component "<b>Passport Issuer</b>\n(role)" as PassportIssuer {
+        component "<b>Token Endpoint</b>" as TokenEndpoint
+    }
+}
+
+component "<b>Visa Issuer</b> (1)" as VisaIssuer1
+component "<b>Visa Issuer</b> (2)" as VisaIssuer2
+
+note "Signed visas can be sourced from\nmultiple visa issuers\neither on demand\nor via batch transfer/cached" as VisaNote
+
+VisaIssuer1 --> VisaNote : Visa A, B
+VisaIssuer2 --> VisaNote : Visa C
+
+Client <-- Broker #text:red : (step 1) login flow results in\nan AAI access token
+Client ---> TokenEndpoint #text:red : (step 2) request for token exchange
+VisaNote --> PassportIssuer #text:red : (step 3) visas obtained
+Client <-- TokenEndpoint  #text:red : (step 4) passport issued (passport contains visa A,B,C)
+
+@enduml
+
+<br/>
+<hr/>    
+<br/>
 
 #### Conformance for Passport Clearninghouses (consuming Passports or Visas to give access to data)
 
