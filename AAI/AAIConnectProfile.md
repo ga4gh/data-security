@@ -186,7 +186,8 @@ specific assignment within the organization that made the assertion.
 [RFC-8725](https://www.rfc-editor.org/info/rfc8725)  Sheffer, Y., Hardt, D., and M. Jones, "JSON Web Token Best
         Current Practices", BCP 225, RFC 8725,
         DOI 10.17487/RFC8725, February 2020.
-            
+
+<hr style="border: 2px solid; margin: 2em auto;"/>    
 
 ### Flow of Assertions
 
@@ -241,6 +242,8 @@ combined into one service. For example, some implementations MAY deploy one
 service that handles the responsibilities of both the Visa Issuer and
 the Broker.
 
+<hr style="border: 2px solid; margin: 2em auto;"/>    
+
 ### Profile Requirements
 
 #### Client/Application Conformance
@@ -277,6 +280,8 @@ the Broker.
 
 5.  MUST provide protection against Client attacks as outlined in
     [RFC 6819](https://tools.ietf.org/html/rfc6819).
+
+<hr style="width: 10em; margin: 2em auto;"/>    
 
 #### Conformance for Brokers
 
@@ -371,6 +376,8 @@ the Broker.
 
 TODO embedded-access-token is this a passport access token or a visa access token or something else
 
+<hr style="width: 10em; margin: 2em auto;"/>    
+
 <a name="conformance-for-visa-issuers"></a>
 #### Conformance for Visa Issuers
 
@@ -458,9 +465,7 @@ TODO embedded-access-token is this a passport access token or a visa access toke
     except for accommodating for `exp` timestamps to be represented as
     indicated above.
 
-<br/>
-<hr/>    
-<br/>
+<hr style="width: 10em; margin: 2em auto;"/>    
 
 #### Conformance for Passport Issuers
 
@@ -500,28 +505,26 @@ component "<b>Client</b>" as Client
 
 component "<b>Broker</b>" as Broker {
     component "<b>Passport Issuer</b>\n(role)" as PassportIssuer {
-        component "<b>Token Endpoint</b>" as TokenEndpoint
+        interface "Token\nEndpoint" as TokenEndpoint
     }
 }
 
 component "<b>Visa Issuer</b> (1)" as VisaIssuer1
 component "<b>Visa Issuer</b> (2)" as VisaIssuer2
 
-note "Signed visas can be sourced from\nmultiple visa issuers\neither on demand\nor via batch transfer/cached" as VisaNote
+note "Signed visas can be sourced from\nmultiple visa issuers or visa assertion sources\n- either on demand or via batch transfer/cached" as VisaNote
 
-VisaIssuer1 --> VisaNote : Visa A, B
-VisaIssuer2 --> VisaNote : Visa C
+VisaIssuer1 --up--> VisaNote : Visa A, B
+VisaIssuer2 --up--> VisaNote : Visa C
 
 Client <-- Broker #text:red : (step 1) login flow results in\nan AAI access token
 Client ---> TokenEndpoint #text:red : (step 2) request for token exchange
-VisaNote --> PassportIssuer #text:red : (step 3) visas obtained
+VisaNote ---right---> PassportIssuer #text:red : (step 3) visas obtained
 Client <-- TokenEndpoint  #text:red : (step 4) passport issued (passport contains visa A,B,C)
 
 @enduml
 
-<br/>
-<hr/>    
-<br/>
+<hr style="width: 10em; margin: 2em auto;"/>    
 
 #### Conformance for Passport Clearninghouses (consuming Passports or Visas to give access to data)
 
@@ -635,6 +638,8 @@ Client <-- TokenEndpoint  #text:red : (step 4) passport issued (passport contain
         Clearinghouse is unable to adjust for the updated GA4GH Claims, then
         it MUST act as though the token was revoked.
 
+<hr style="border: 2px solid; margin: 2em auto;"/>    
+
 ### GA4GH JWT Formats
 
 A well-formed JWS-Encoded JSON Web Token (JWT) consists of three concatenated
@@ -643,6 +648,8 @@ payload and signature. These JWTs follow [RFC7515](https://tools.ietf.org/html/r
 and utilize a number of [standard JWT claim names](https://www.iana.org/assignments/jwt/jwt.xhtml)
 as per the registration process.
 This profile is agnostic to the format of the id_token.
+
+<hr style="width: 10em; margin: 2em auto;"/>    
 
 <a name="access_token-issued-by-broker"></a>
 #### Passport-Scoped Access Token issued by Broker
@@ -702,6 +709,8 @@ Payload:
     The `scope` claim is defined by [RFC8693 section 4.2](https://datatracker.ietf.org/doc/html/rfc8693#section-4.2).
 
 -   `addtional claims`: OPTIONAL. Any other additional non-GA4GH claims are allowed. This specification does not dictate the format of other claims.
+
+<hr style="width: 10em; margin: 2em auto;"/>    
 
 #### Claims sent to Data Holder by a Broker via Token or UserInfo Endpoint
 
@@ -796,6 +805,8 @@ Only the GA4GH claims truly must be as prescribed here. The
 
 - `ga4gh_passport_v1`: REQUIRED. An array of GA4GH Visas. May be empty if a user has no visas. See the
 [Passport spec](https://github.com/ga4gh-duri/ga4gh-duri.github.io) for more details on types of visas.
+
+<hr style="width: 10em; margin: 2em auto;"/>    
 
 <a name="visa-issued-by-visa-issuer"></a>
 #### Visa issued by Visa Issuer
@@ -916,8 +927,9 @@ See the [GA4GH Passport
 Claim Format](https://github.com/ga4gh-duri/ga4gh-duri.github.io/blob/master/researcher_ids/ga4gh_passport_v1.md#passport-claim-format)
 for more details.
 
-Token Revocation
-----------------
+<hr style="border: 2px solid; margin: 2em auto;"/>    
+
+### Token Revocation
 
 #### Visa Assertion Source Revokes Claim
 
@@ -1001,6 +1013,8 @@ following:
 4.  Any signed tokens that may be stored by participating services SHOULD be
     encrypted at rest and follow best practices to limit the ability of
     administrators from decrypting this content.
+
+<hr style="border: 2px solid; margin: 2em auto;"/>    
 
 ### Specification Revision History
 
