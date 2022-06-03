@@ -464,7 +464,7 @@ TODO embedded-access-token is this a passport access token or a visa access toke
 
 2.  Passport Issuers SHOULD be Brokers.
 
-3.  Passports themselves are JWTs that contain Visas. Passports use [this format](#claims-sent-to-data-holder-by-a-broker-via-token-or-userinfo) as a signed JWT.
+3.  Passports themselves are JWTs that contain Visas. Passports use [this format](#claims-sent-to-data-holder-by-a-broker-via-token-or-userinfo-endpoint) as a signed JWT.
     
     1. It is RECOMMENDED for Passports to conform to the <https://tools.ietf.org/html/rfc7515> (JWS) Specification.  
 
@@ -699,50 +699,13 @@ Payload:
 
 ##### Claims via UserInfo Endpoint
 
-The endpoint MAY use `application/json` or `application/jwt`. It is RECOMMENDED that if desiring to return a JWT, a
-Token Endpoint supporting AAI token exchange exists to do that and that the UserInfo Endpoint returns
-an `application/json` blob.
+The [UserInfo](https://openid.net/specs/openid-connect-core-1_0.html#UserInfo) endpoint MAY use `application/json`
+or `application/jwt`. It is RECOMMENDED that if desiring to return a JWT, a Token Endpoint supporting
+AAI token exchange exists to do that and that the UserInfo Endpoint returns an `application/json` blob.
+Only the GA4GH claims truly must be as prescribed here. Refer to OIDC Spec for more information.
 
-Only the GA4GH claims truly must be as prescribed here. Refer to OIDC Spec for
-more information.
-
-If `application/jwt` is returned, it MUST be signed like UserInfo responses as per
-[UserInfo](https://openid.net/specs/openid-connect-core-1_0.html#UserInfoResponse).  
-
-If this is a JWT, it MAY be used as a Passport token, but it is RECOMMENDED to obtain a token from the token endpoint
-instead.
-
-If this information is a JWT, the JWT should include additional attributes.
-
-```
-{
- "iss": "https://<issuer-website>/",
- "sub": "<subject-identifier>",
- "aud": [
-  "<client-id1>",
-  "<client-id2>" ...
- ],
- "iat": <seconds-since-epoch>,
- "exp": <seconds-since-epoch>,
- <ga4gh-spec-claims>
-}
-```
-
-- `iss` and `sub`: REQUIRED.
-
-- `aud`: OPTIONAL.
-
-- `iat`: REQUIRED only if JWT Otherwise OPTIONAL. Time issued.
-
-- `exp`: REQUIRED only if JWT Otherwise OPTIONAL. Time expired.
-
-- `<ga4gh-spec-claims>`: OPTIONAL. GA4GH Claims are generally included as
-    part of one or more GA4GH standard specifications based on the scopes
-    provided. Even when requested by the appropriate scopes, these GA4GH Claims
-    may not be included in the response for various reasons, such as if the
-    user does not have any GA4GH Claims. See
-    [Authorization/Claims](#authorizationclaims) for an example of a GA4GH
-    Claim.
+The UserInfo payload MAY include a `ga4gh_passport_v1` claim. See [Authorization/Claims](#authorizationclaims)
+for an example of a GA4GH Claim.
 
 ##### Passport Token Contents
 
@@ -755,7 +718,7 @@ with the `requested_token_type=urn:ga4gh:params:oauth:token-type:passport` is su
 This spec prescribes the following JWS headers for Passport tokens
 in addition to the guidelines established in [RFC7515](https://datatracker.ietf.org/doc/html/rfc7515):
 
-- `typ`: REQUIRED where the value must be `application/vnd.ga4gh.passport+jwt` for Passport tokens.
+- `typ`: REQUIRED where the value must be `vnd.ga4gh.passport+jwt` for Passport tokens.
 
 ###### Claims
 
