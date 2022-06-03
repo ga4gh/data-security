@@ -969,57 +969,13 @@ The <code class="language-plaintext highlighter-rouge">scope</code> claim is def
 
 <h5 id="claims-via-userinfo-endpoint">Claims via UserInfo Endpoint</h5>
 
-<p>The endpoint MAY use <code class="language-plaintext highlighter-rouge">application/json</code> or <code class="language-plaintext highlighter-rouge">application/jwt</code>. It is RECOMMENDED that if desiring to return a JWT, a
-Token Endpoint supporting AAI token exchange exists to do that and that the UserInfo Endpoint returns
-an <code class="language-plaintext highlighter-rouge">application/json</code> blob.</p>
+<p>The <a href="https://openid.net/specs/openid-connect-core-1_0.html#UserInfo">UserInfo</a> endpoint MAY use <code class="language-plaintext highlighter-rouge">application/json</code>
+or <code class="language-plaintext highlighter-rouge">application/jwt</code>. It is RECOMMENDED that if desiring to return a JWT, a Token Endpoint supporting
+AAI token exchange exists to do that and that the UserInfo Endpoint returns an <code class="language-plaintext highlighter-rouge">application/json</code> blob.
+Only the GA4GH claims truly must be as prescribed here. Refer to OIDC Spec for more information.</p>
 
-<p>Only the GA4GH claims truly must be as prescribed here. Refer to OIDC Spec for
-more information.</p>
-
-<p>If <code class="language-plaintext highlighter-rouge">application/jwt</code> is returned, it MUST be signed like UserInfo responses as per
-<a href="https://openid.net/specs/openid-connect-core-1_0.html#UserInfoResponse">UserInfo</a>.</p>
-
-<p>If this is a JWT, it MAY be used as a Passport token, but it is RECOMMENDED to obtain a token from the token endpoint
-instead.</p>
-
-<p>If this information is a JWT, the JWT should include additional attributes.</p>
-
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>{
- "iss": "https://&lt;issuer-website&gt;/",
- "sub": "&lt;subject-identifier&gt;",
- "aud": [
-  "&lt;client-id1&gt;",
-  "&lt;client-id2&gt;" ...
- ],
- "iat": &lt;seconds-since-epoch&gt;,
- "exp": &lt;seconds-since-epoch&gt;,
- &lt;ga4gh-spec-claims&gt;
-}
-</code></pre></div></div>
-
-<ul>
-  <li>
-    <p><code class="language-plaintext highlighter-rouge">iss</code> and <code class="language-plaintext highlighter-rouge">sub</code>: REQUIRED.</p>
-  </li>
-  <li>
-    <p><code class="language-plaintext highlighter-rouge">aud</code>: OPTIONAL.</p>
-  </li>
-  <li>
-    <p><code class="language-plaintext highlighter-rouge">iat</code>: REQUIRED only if JWT Otherwise OPTIONAL. Time issued.</p>
-  </li>
-  <li>
-    <p><code class="language-plaintext highlighter-rouge">exp</code>: REQUIRED only if JWT Otherwise OPTIONAL. Time expired.</p>
-  </li>
-  <li>
-    <p><code class="language-plaintext highlighter-rouge">&lt;ga4gh-spec-claims&gt;</code>: OPTIONAL. GA4GH Claims are generally included as
-  part of one or more GA4GH standard specifications based on the scopes
-  provided. Even when requested by the appropriate scopes, these GA4GH Claims
-  may not be included in the response for various reasons, such as if the
-  user does not have any GA4GH Claims. See
-  <a href="#authorizationclaims">Authorization/Claims</a> for an example of a GA4GH
-  Claim.</p>
-  </li>
-</ul>
+<p>The UserInfo payload MAY include a <code class="language-plaintext highlighter-rouge">ga4gh_passport_v1</code> claim. See <a href="#authorizationclaims">Authorization/Claims</a>
+for an example of a GA4GH Claim.</p>
 
 <h5 id="passport-token-contents">Passport Token Contents</h5>
 
@@ -1034,7 +990,7 @@ in addition to the guidelines established in <a href="https://datatracker.ietf.o
 
 <ul>
   <li>
-<code class="language-plaintext highlighter-rouge">typ</code>: REQUIRED where the value must be <code class="language-plaintext highlighter-rouge">application/vnd.ga4gh.passport+jwt</code> for Passport tokens.</li>
+<code class="language-plaintext highlighter-rouge">typ</code>: REQUIRED where the value must be <code class="language-plaintext highlighter-rouge">vnd.ga4gh.passport+jwt</code> for Passport tokens.</li>
 </ul>
 
 <h6 id="claims">Claims</h6>
