@@ -1,4 +1,4 @@
-FROM jekyll/builder:4
+FROM jekyll/builder:4.2.0
 
 ENV PLANTUML_VERSION=1.2021.10
 ENV LANG en_US.UTF-8
