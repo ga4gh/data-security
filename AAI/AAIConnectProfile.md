@@ -701,8 +701,8 @@ Payload:
 
 The [UserInfo](https://openid.net/specs/openid-connect-core-1_0.html#UserInfo) endpoint MAY use `application/json`
 or `application/jwt`. It is RECOMMENDED that if desiring to return a JWT, a Token Endpoint supporting
-AAI token exchange exists to do that and that the UserInfo Endpoint returns an `application/json` blob.
-Only the GA4GH claims truly must be as prescribed here. Refer to OIDC Spec for more information.
+AAI token exchange exists to do that and that the UserInfo Endpoint returns an `application/json` response.
+Only the GA4GH claims must be as prescribed here. Refer to OIDC Spec for more information.
 
 The UserInfo payload MAY include a `ga4gh_passport_v1` claim. See [Authorization/Claims](#authorizationclaims)
 for an example of a GA4GH Claim.
@@ -722,7 +722,7 @@ in addition to the guidelines established in [RFC7515](https://datatracker.ietf.
 
 ###### Claims
 
-Only the GA4GH claims truly must be as prescribed here. The
+Only the GA4GH claims must be as prescribed here. See the
 [JWT specification](https://datatracker.ietf.org/doc/html/rfc7519) for more details.
 
 ```
