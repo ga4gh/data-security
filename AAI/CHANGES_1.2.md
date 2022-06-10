@@ -1,11 +1,11 @@
 ---
 layout: page
-title: Changes Between Versions 1.0.0 and 1.2
+title: Changes Between Versions 1.0 and 1.2
 permalink: changes-1_2
 ---
 
 This document lists changes between 
- * GA4GH AAI OIDC Profile [1.0](https://github.com/ga4gh/data-security/blob/AAIv1.0/AAI/AAIConnectProfile.md) and [1.2](https://ga4gh.github.io/data-security/1.2-draft-main/aai-openid-connect-profile)
+ * GA4GH AAI OIDC Profile [1.0.0](https://github.com/ga4gh/data-security/blob/AAIv1.0/AAI/AAIConnectProfile.md) and [1.2](https://ga4gh.github.io/data-security/1.2-draft-main/aai-openid-connect-profile)
  * GA4GH Passport [1.0.0](https://github.com/ga4gh-duri/ga4gh-duri.github.io/blob/v1.0.0/researcher_ids/ga4gh_passport_v1.md) and 1.2
 
 ### Table of Contents
@@ -66,4 +66,17 @@ Broker may optionally become a Passport Issuer by supporting Token Exchange for 
 
 Brokers conforming to version 1.0 are still compatible with version 1.2, because Token Echange support is optional.
 
+## Added more signing algorithms
+
+The version 1.0 allowed only **RS256** algorithm for JWT signing.
+It is RSA-based algorithm using keys of size 2048 bits or larger and SHA-256 hash function.
+
+The AAI specification version 1.2 allows also the **ES256** algorithm which is
+ECDSA-based using P-256 elliptic curve and SHA-256 hash function.
+
+Elliptic Curve Cryptography allows much shorter keys and signatures than RSA.
+A short Elliptic Curve key of around 256 bits provides the same security as a 3072 bit RSA key.
+
+For a detailed discussion of signing algorithms, see the article
+[JWTs: Which Signing Algorithm Should I Use?](https://www.scottbrady91.com/jose/jwts-which-signing-algorithm-should-i-use)
 
