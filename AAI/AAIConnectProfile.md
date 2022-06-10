@@ -160,10 +160,9 @@ specific assignment within the organization that made the assertion.
         Authorization Code Flow and Implicit Flow will generate id_tokens and
         access_tokens from the Broker.
 
-[RFC-7519](https://tools.ietf.org/html/rfc7519) - Specific implementations MAY extend
+[RFC-7519](https://tools.ietf.org/html/rfc7519) - JSON Web Token (JWT) - Specific implementations MAY extend
         this structure with their own service-specific JWT claim names as top-level
-        members of this JSON object. Recommended "extensions" are in the
-        [Permissions](#authorizationclaims) section. The JWT specified here follows JWS
+        members of this JSON object. The JWT specified here follows JWS
         headers specification from [RFC7515-JWS](https://tools.ietf.org/html/rfc7515).
 
 [RFC-7515](https://tools.ietf.org/html/rfc7515) - JSON Web Signature (JWS) is the
@@ -713,7 +712,7 @@ Passport Issuers MUST issue a Passport conforming to the requirements in this se
 with the `requested_token_type=urn:ga4gh:params:oauth:token-type:passport` is successfully performed
 (as described in the [Conformance for Passport Issuers](#conformance-for-passport-issuers) section).
 
-Passports are defined as signed JWTs. [RFC7519 (JWT)](https://datatracker.ietf.org/doc/html/rfc7519),
+Passports are defined as signed JWTs. [RFC7519 (JWT)](https://datatracker.ietf.org/doc/html/rfc7519)
 states that JWTs can be either signed and encoded using JWS Compact Serialization, 
 or encrypted and encoded using JWE Compact Serialization. 
 Passports are signed JWTs, which implies that they must be encoded using JWS Compact Serialization.
@@ -827,58 +826,7 @@ Conforms with JWS format requirements and is signed by a Visa Issuer.
 3. MUST NOT contain "openid" as a space-delimited substring of the `scope`
    JWT claim, if the `scope` claim is provided.
 
-4. The following headers and JWT claims in the payload are REQUIRED
-   (here shown in its decoded JSON form):
-
-   ```
-   {
-     "typ": "JWT",
-     "alg": "<algorithm>",
-     "jku": "https://<jwk-URL>",
-     "kid": "<key-identifier>"
-   }.
-   {
-     "iss": "https://<issuer-website>/",
-     "sub": "<subject-identifier>",
-     "iat": <seconds-since-epoch>,
-     "exp": <seconds-since-epoch>,
-     "jti": <token-identifier>,
-     <ga4gh-visa-claims>
-   }.
-   <signature>
-   ```
-
-    -   `typ`: MUST be "JWT".
-
-    -   `alg`: MUST be "RS256" or "ES256"
-
-    -   `jti`: RECOMMENDED. A unique identifier for the token as per
-        [RFC7519 Section 4.1.7](https://tools.ietf.org/html/rfc7519#section-4.1.7)
-        is RECOMMENDED.
-
-    -   `<ga4gh-visa-claims>`: OPTIONAL. One or more GA4GH Claims MAY be
-        provided. See [Authorization/Claims](#authorizationclaims) for an
-        example.
-
-#### Authorization/Claims
-
-User attributes and claims are being developed in the [GA4GH Passport
-specification](https://github.com/ga4gh-duri/ga4gh-duri.github.io/blob/master/researcher_ids/ga4gh_passport_v1.md)
-by the DURI work stream.
-
-A non-normative example of a GA4GH Passport, as referred to
-in as `<ga4gh-passport-claims>` within the JWT formatting sections of this
-specification, is:
-
-```
-"ga4gh_passport_v1": [
-  <ga4gh passport value>
-]
-```
-
-See the [GA4GH Passport
-Claim Format](https://github.com/ga4gh-duri/ga4gh-duri.github.io/blob/master/researcher_ids/ga4gh_passport_v1.md#passport-claim-format)
-for more details.
+4. Payload claims are specified in [Passport Visa Format](https://github.com/ga4gh-duri/ga4gh-duri.github.io/blob/master/researcher_ids/ga4gh_passport_v1.md#passport-visa-format)
 
 Token Revocation
 ----------------
