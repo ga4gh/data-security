@@ -467,7 +467,7 @@ TODO embedded-access-token is this a passport access token or a visa access toke
 
 2.  Passport Issuers SHOULD be Brokers.
 
-3.  Passports themselves are signed JWTs that contain Visas. Passports use [this format](#claims-sent-to-data-holder-by-a-broker-via-token-or-userinfo-endpoint).
+3.  Passports themselves are signed JWTs that contain Visas. Passports use [this format](#passport-format).
     
 4.  Passports MUST be signed with the `RS256` or `ES256` algorithm.
     
