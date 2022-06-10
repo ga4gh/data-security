@@ -29,7 +29,7 @@ applicable to (but not limited to) the sharing of restricted datasets.
 In particular, this specification profiles tokens, endpoints and flows that
 enable an OIDC provider (called a [Broker](#term-broker)) to
 provide [Passports](#term-passport) and [Visas](#term-visa) to downstream consumers
-called [Passport Clearninghouses](#term-passport-clearinghouse).
+called [Passport Clearinghouses](#term-passport-clearinghouse).
 
 [GA4GH DURI Passports](https://github.com/ga4gh-duri/ga4gh-duri.github.io/blob/master/researcher_ids/ga4gh_passport_v1.md) can then be used for authorization purposes by downstream
 systems.
@@ -76,7 +76,7 @@ ERACommons. IdPs MAY be assertion sources.
 authenticates a user (potentially by an Identity Provider), collects user's
 [Visas](#term-visa) from internal and/or external [Visa Issuers](#term-visa-issuer) and provides them
 to [Passport Clearinghouses](#term-passport-clearinghouse).
-Brokers may also be Passport Clearninghouses of other upstream Brokers (i.e.
+Brokers may also be Passport Clearinghouses of other upstream Brokers (i.e.
 create a chain of Brokers like in the
 [Flow of Assertions diagram](#flow-of-assertions)).
 
@@ -97,7 +97,7 @@ issue Passports that contain a new set or subset of Visas for downstream consump
 protects a specific set of data. They hold data (or its copy) and respects
 and enforces the data controller's decisions on who can access it. A data controller
 can also be a data holder. Data holders run an
-[Passport Clearninghouse Server](#term-passport-clearinghouse) at a minimum.
+[Passport Clearinghouse Server](#term-passport-clearinghouse) at a minimum.
 
 <a name="term-data-controller"></a> **Data Controller** -- An organization that manages
 data and, in that role, has capacity to decide who can access it. For
@@ -396,7 +396,7 @@ TODO embedded-access-token is this a passport access token or a visa access toke
             spec](https://openid.net/specs/openid-connect-discovery-1_0.html),
             and provide `jwks_uri` as
             [Metadata](https://openid.net/specs/openid-connect-discovery-1_0.html#ProviderMetadata)
-            that may be reachable by a Passport Clearninghouse.
+            that may be reachable by a Passport Clearinghouse.
 
         4.  Visa Issuer MUST support public-facing UserInfo Endpoint. When presented with a valid 
             Visa Access Token, the UserInfo Endpoint MUST return a success status and MAY return 
@@ -406,7 +406,7 @@ TODO embedded-access-token is this a passport access token or a visa access toke
 
         1.  If the Visa Access Token's `exp` exceeds the `iat` by
             more than 1 hour, the Visa Issuer should expect
-            Passport Clearninghouses to use [Access Token Polling](#at-polling) and
+            Passport Clearinghouses to use [Access Token Polling](#at-polling) and
             MUST provide a means to revoke Visa Access Tokens. The
             Token or UserInfo Endpoint MUST return an HTTP status 401 as per
             [RFC6750 section 3.1](https://tools.ietf.org/html/rfc6750#section-3.1)
@@ -443,12 +443,12 @@ TODO embedded-access-token is this a passport access token or a visa access toke
             a space-delimited substring.
 
 2.  A Visa Issuer MAY generate the `exp` timestamp to enforce
-    its policies and allow Passport Clearninghouses to understand the intent of
+    its policies and allow Passport Clearinghouses to understand the intent of
     how long the assertion may be used before needing to return to the Visa Issuer
     to refresh the Visa. As a non-normative example, if an
     assertion expires in 25 years, the Visa Issuer could set the `exp` to
     1 day into the future plus issue a refresh token in order to force the
-    refresh token to be used when a downstream Passport Clearninghouse is still
+    refresh token to be used when a downstream Passport Clearinghouse is still
     interested in using such an assertion after 1 day elapses.
 
 3.  By signing a Visa, a Visa Issuer asserts that
@@ -462,15 +462,13 @@ TODO embedded-access-token is this a passport access token or a visa access toke
 
 1.  Passport Issuers are used to package Visas into signed Passports.
 
-2.  Passport Issuers do not need to be a be a OIDC provider, and MAY provide a .well-known endpoint that doesn't conform to the OIDC Discovery specification for ease of finding signing keys.  
+2.  Passport Issuers SHOULD be Brokers.
 
-    1. Passport Issuers MAY be AAI Clients, Clearinghouses, Brokers or any other entity and do not need to be part of the OIDC flow.  
-    
-    2. Passports SHOULD be signed in the same way that Brokers sign access tokens.
-
-3.  Passports themselves are JWTs that contain Visas. Passports use this format [Format](#claims-sent-to-data-holder-by-a-broker-via-token-or-userinfo) as a signed JWT.  
+3.  Passports themselves are JWTs that contain Visas. Passports use [this format](#claims-sent-to-data-holder-by-a-broker-via-token-or-userinfo-endpoint) as a signed JWT.
     
     1. It is RECOMMENDED for Passports to conform to the <https://tools.ietf.org/html/rfc7515> (JWS) Specification.  
+
+    2. Passports MUST be signed with the `RS256` or `ES256` algorithm.
     
 4.  Passports MAY be issued from a Token Endpoint using the [token exchange OAuth extension](https://datatracker.ietf.org/doc/html/rfc8693), modulo the following clarifications:
 
@@ -478,7 +476,7 @@ TODO embedded-access-token is this a passport access token or a visa access toke
 
     2. Client authentication is REQUIRED (using [OAuth2 client authentication](https://datatracker.ietf.org/doc/html/rfc6749#section-2.3.1) is RECOMMENDED).
 
-    3. The `requested_token_type` parameter MUST be present with the value `urn:ietf:params:oauth:token-type:jwt`.
+    3. The `requested_token_type` parameter MUST be present with the value `urn:ga4gh:params:oauth:token-type:passport`.
 
     4. The `subject_token` parameter value MUST be a valid AAI access token issued to the requesting client.
 
@@ -487,24 +485,52 @@ TODO embedded-access-token is this a passport access token or a visa access toke
     6. The Token Endpoint SHOULD require one or more scopes to be present in the given AAI access token (ex. `"scope": "ga4gh_passport_v1"`).
 
     7. The Token Endpoint MAY accept or require any other optional parameters defined in [RFC8693](https://datatracker.ietf.org/doc/html/rfc8693).
-    
 
-#### Conformance for Passport Clearninghouses (consuming Passports or Visas to give access to data)
+    <br/> <u>Passport Issuing via Token Exchange (non-normative)</u>
 
-1.  Passport Clearninghouses MUST trust at least one Broker.
+@startuml
+skinparam componentStyle rectangle
+left to right direction
 
-    1.  Passport Clearninghouses MAY trust more than one Broker
+component "<b>Client</b>" as Client
+
+component "<b>Broker</b>" as Broker {
+component "<b>Passport Issuer</b>\n(role)" as PassportIssuer {
+interface "Token\nEndpoint" as TokenEndpoint
+}
+}
+
+component "<b>Visa Issuer</b> (1)" as VisaIssuer1
+component "<b>Visa Issuer</b> (2)" as VisaIssuer2
+
+note "Signed visas can be sourced from\nmultiple visa issuers\n- either on demand or via batch transfer/cached" as VisaNote
+
+VisaIssuer1 --up--> VisaNote : Visa A, B
+VisaIssuer2 --up--> VisaNote : Visa C
+
+Client <-- Broker #text:red : (step 1) login flow results in\nan AAI access token
+Client ---> TokenEndpoint #text:red : (step 2) request for token exchange
+VisaNote ---right---> PassportIssuer #text:red : (step 3) visas obtained
+Client <-- TokenEndpoint  #text:red : (step 4) passport issued (passport contains visa A,B,C)
+
+@enduml    
+
+#### Conformance for Passport Clearinghouses (consuming Passports or Visas to give access to data)
+
+1.  Passport Clearinghouses MUST trust at least one Broker.
+
+    1.  Passport Clearinghouses MAY trust more than one Broker
     
-    2.  The responsibility of risk assessment of a Broker is on the Passport Clearninghouse to trust a token. 
+    2.  The responsibility of risk assessment of a Broker is on the Passport Clearinghouse to trust a token. 
     
-2.  Passport Clearninghouses MUST process access tokens to access a Broker's Token or UserInfo Endpoint to get access to GA4GH Claims OR MUST process Passports and their Visas. 
+2.  Passport Clearinghouses MUST process access tokens to access a Broker's Token or UserInfo Endpoint to get access to GA4GH Claims OR MUST process Passports and their Visas. 
            
-    1.  For access token flows, Passport Clearninghouses MUST either check the validity of the access token or treat the access
+    1.  For access token flows, Passport Clearinghouses MUST either check the validity of the access token or treat the access
     token as opaque.
 
-        1.  If treating the token as a JWT a Passport Clearninghouse:
+        1.  If treating the token as a JWT a Passport Clearinghouse:
 
-            1. Even though JWTs are expected to be submitted against a Broker's Token or UserInfo Endpoint, a Passport Clearninghouse SHOULD check the Token’s signature via JWKS or having stored the
+            1. Even though JWTs are expected to be submitted against a Broker's Token or UserInfo Endpoint, a Passport Clearinghouse SHOULD check the Token’s signature via JWKS or having stored the
             public key.
 
                 1.  A metadata URL (.well-known URL) SHOULD be used here to use the
@@ -518,9 +544,9 @@ TODO embedded-access-token is this a passport access token or a visa access toke
                 Clearinghouses participating in open federation, the Claim
                 Clearinghouse does not necessarily have to trust the Broker that
                 includes Visas within another token in order to use
-                the Visa (although the Passport Clearninghouse MAY require
+                the Visa (although the Passport Clearinghouse MAY require
                 any other Broker involved in the propagation of the claims to
-                also be trusted if the Passport Clearninghouse needs to restrict its
+                also be trusted if the Passport Clearinghouse needs to restrict its
                 trust model).
 
             3.  MUST check `exp` to ensure the token has not expired.
@@ -528,23 +554,23 @@ TODO embedded-access-token is this a passport access token or a visa access toke
             4.  MAY additionally check `aud` to make sure Relying Party is trusted
             (client_id).
 
-        2.  If treating the token as opaque a Passport Clearninghouse MUST know in
+        2.  If treating the token as opaque a Passport Clearinghouse MUST know in
         advance where to find a corresponding Token Endpoint. This may limit the
         functionality of accepting tokens from some Brokers. 
 
-    1.  For Passport flows, Passport Clearninghouses MUST check the validity of the JWT token. Follow the guidance in the JWT access tokens for validity.
+    1.  For Passport flows, Passport Clearinghouses MUST check the validity of the JWT token. Follow the guidance in the JWT access tokens for validity.
 
-3.  Passport Clearninghouses service can be a Broker itself and would follow the
+3.  Passport Clearinghouses service can be a Broker itself and would follow the
     [Conformance For Brokers](#conformance-for-brokers).
 
-4.  Passport Clearninghouses MUST provide protection against attacks as outlined in
+4.  Passport Clearinghouses MUST provide protection against attacks as outlined in
     [RFC 6819](https://tools.ietf.org/html/rfc6819).
 
     1. Section 5.1.6 of RFC 6819 contains a SHOULD section that states `Ensure that client applications do not share tokens with 3rd parties.` This profile provides a mechanism for Clearinghouses to consume access tokens from multiple brokers in a manner that does not involve 3rd parties. Client applications SHOULD take care to not spread the tokens to any other services that would be considered 3rd parties.
         
 5.  If making use of [Visas](#term-visa) directly from a Token Endpoint or from a Passport:
 
-    1.  The Passport Clearninghouse MUST validate that all token checks pass (such as
+    1.  The Passport Clearinghouse MUST validate that all token checks pass (such as
         the token hasn’t expired) as described elsewhere in this specification and
         the underlying OIDC specifications.
 
@@ -564,9 +590,9 @@ TODO embedded-access-token is this a passport access token or a visa access toke
             Clearinghouse has received the keys for the given `iss` via a trusted,
             out-of-band process.
 
-        2.  If a Passport Clearninghouse is to use the `jku` URL to fetch the public
+        2.  If a Passport Clearinghouse is to use the `jku` URL to fetch the public
             keys to verify the signature, then it MUST verify that the `jku` is
-            trusted for the given `iss` as part of the Passport Clearninghouse's
+            trusted for the given `iss` as part of the Passport Clearinghouse's
             trusted issuer configuration. This check MUST be performed before
             calling the `jku` endpoint.
 
@@ -576,7 +602,7 @@ TODO embedded-access-token is this a passport access token or a visa access toke
     whether the user still meets the access requirements.
 
     This MUST NOT be done more than once per hour (excluding any optional retries)
-    per Passport Clearninghouse. Any request retries MUST include exponential backoff
+    per Passport Clearinghouse. Any request retries MUST include exponential backoff
     delays based on best practices (e.g. include appropriate jitter). At a
     minimum, the client MUST stop checking once any of the following occurs:
 
@@ -601,7 +627,7 @@ TODO embedded-access-token is this a passport access token or a visa access toke
         Clearinghouse is unable to adjust for the updated GA4GH Claims, then
         it MUST act as though the token was revoked.
 
-### GA4GH JWT Format
+### GA4GH JWT Formats
 
 A well-formed JWS-Encoded JSON Web Token (JWT) consists of three concatenated
 Base64url-encoded strings, separated by dots (.) The three sections are: header,
@@ -671,16 +697,33 @@ Payload:
 
 #### Claims sent to Data Holder by a Broker via Token or UserInfo Endpoint
 
-Only the GA4GH claims truly must be as prescribed here. Refer to OIDC Spec for
-more information. The endpoint MAY use `application/json` or
-`application/jwt`.  It is RECOMMENDED that if desiring to return a JWT, a Token Endpoint supporting AAI token exchange exists to do that and that the UserInfo Endpoint returns a general blob.
+##### Claims via UserInfo Endpoint
 
-If `application/jwt` is returned, it MUST be signed like UserInfo responses as per
-[UserInfo](https://openid.net/specs/openid-connect-core-1_0.html#UserInfoResponse).  
+The [UserInfo](https://openid.net/specs/openid-connect-core-1_0.html#UserInfo) endpoint MAY use `application/json`
+or `application/jwt`. It is RECOMMENDED that if desiring to return a JWT, a Token Endpoint supporting
+AAI token exchange exists to do that and that the UserInfo Endpoint returns an `application/json` response.
+Only the GA4GH claims must be as prescribed here. Refer to OIDC Spec for more information.
 
-If this is a JWT, it MAY be used as a Passport.  
+The UserInfo payload MAY include a `ga4gh_passport_v1` claim. See [Authorization/Claims](#authorizationclaims)
+for an example of a GA4GH Claim.
 
-If this information is a JWT, especially from the recommended Token Endpoint, the JWT should include additional attributes.
+##### Passport Token Contents
+
+Passport Issuers MUST issue a Passport token conforming to the requirements in this section when a token exchange
+with the `requested_token_type=urn:ga4gh:params:oauth:token-type:passport` is successfully performed
+(as described in the [Conformance for Passport Issuers](#conformance-for-passport-issuers) section).
+
+###### Header
+
+This spec prescribes the following JWS headers for Passport tokens
+in addition to the guidelines established in [RFC7515](https://datatracker.ietf.org/doc/html/rfc7515):
+
+- `typ`: REQUIRED where the value must be `vnd.ga4gh.passport+jwt` for Passport tokens.
+
+###### Claims
+
+Only the GA4GH claims must be as prescribed here. See the
+[JWT specification](https://datatracker.ietf.org/doc/html/rfc7519) for more details.
 
 ```
 {
@@ -696,21 +739,18 @@ If this information is a JWT, especially from the recommended Token Endpoint, th
 }
 ```
 
--   `iss` and `sub`: REQUIRED.
+- `iss` and `sub`: REQUIRED.
 
--   `aud`: OPTIONAL.
+- `aud`: OPTIONAL.
 
--   `iat`: REQUIRED only if JWT Otherwise OPTIONAL. Time issued.
+- `iat`: REQUIRED.
 
--   `exp`: REQUIRED only if JWT Otherwise OPTIONAL. Time expired.
+- `exp`: REQUIRED.
 
--   `<ga4gh-spec-claims>`: OPTIONAL. GA4GH Claims are generally included as
-    part of one or more GA4GH standard specifications based on the scopes
-    provided. Even when requested by the appropriate scopes, these GA4GH Claims
-    may not be included in the response for various reasons, such as if the
-    user does not have any GA4GH Claims. See
-    [Authorization/Claims](#authorizationclaims) for an example of a GA4GH
-    Claim.
+- `jti`: RECOMMENDED.
+
+- `ga4gh_passport_v1`: REQUIRED. An array of GA4GH Visas. May be empty if a user has no visas. See the
+[Passport spec](https://github.com/ga4gh-duri/ga4gh-duri.github.io) for more details on types of visas.
 
 <a name="visa-issued-by-visa-issuer"></a>
 #### Visa issued by Visa Issuer
@@ -844,7 +884,7 @@ During the lifetime of the downstream access token, some systems may require
 that claims are no longer inspected nor updated.
 
 In the event that a [Visa Assertion Source](#term-visa-assertion-source) revokes a claim,
-downstream Visa Issuers, Brokers, Passport Clearninghouses, and other Authorization or Resource
+downstream Visa Issuers, Brokers, Passport Clearinghouses, and other Authorization or Resource
 Servers MUST at a minimum provide a means to limit the lifespan of any given
 access tokens generated as a result of claims. To achieve this goal, servers
 involved with access may employ one or more of the following options:
@@ -870,7 +910,7 @@ involved with access may employ one or more of the following options:
     level of delay to reach out to a user to try to resolve the issue may be
     desirable).
 
-4. Provide some other means for downstream Passport Clearninghouses or other
+4. Provide some other means for downstream Passport Clearinghouses or other
     systems that create downstream access tokens to be informed of a material
     change in upstream claims such that action can be taken to revoke the token,
     revoke the refresh token, or revoke the access privileges associated with
