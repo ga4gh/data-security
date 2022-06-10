@@ -6,9 +6,9 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 <!-- Begin Jekyll SEO tag v2.7.1 -->
-<title>Changes Between Versions 1.0.0 and 1.2 | GA4GH Data Security</title>
+<title>Changes Between Versions 1.0 and 1.2 | GA4GH Data Security</title>
 <meta name="generator" content="Jekyll v4.2.0">
-<meta property="og:title" content="Changes Between Versions 1.0.0 and 1.2">
+<meta property="og:title" content="Changes Between Versions 1.0 and 1.2">
 <meta property="og:locale" content="en_US">
 <meta name="description" content="AAI">
 <meta property="og:description" content="AAI">
@@ -16,9 +16,9 @@
 <meta property="og:url" content="/data-security/1.2-draft-changes/changes-1_2">
 <meta property="og:site_name" content="GA4GH Data Security">
 <meta name="twitter:card" content="summary">
-<meta property="twitter:title" content="Changes Between Versions 1.0.0 and 1.2">
+<meta property="twitter:title" content="Changes Between Versions 1.0 and 1.2">
 <script type="application/ld+json">
-{"description":"AAI","url":"/data-security/1.2-draft-changes/changes-1_2","@type":"WebPage","headline":"Changes Between Versions 1.0.0 and 1.2","@context":"https://schema.org"}</script>
+{"description":"AAI","url":"/data-security/1.2-draft-changes/changes-1_2","@type":"WebPage","headline":"Changes Between Versions 1.0 and 1.2","@context":"https://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 <link rel="stylesheet" href="/data-security/1.2-draft-changes/assets/main.css">
 <link type="application/atom+xml" rel="alternate" href="/data-security/1.2-draft-changes/feed.xml" title="GA4GH Data Security">
@@ -48,13 +48,13 @@
         <article class="post">
 
   <header class="post-header">
-    <h1 class="post-title">Changes Between Versions 1.0.0 and 1.2</h1>
+    <h1 class="post-title">Changes Between Versions 1.0 and 1.2</h1>
   </header>
 
   <div class="post-content">
     <p>This document lists changes between</p>
 <ul>
-  <li>GA4GH AAI OIDC Profile <a href="https://github.com/ga4gh/data-security/blob/AAIv1.0/AAI/AAIConnectProfile.md">1.0</a> and <a href="https://ga4gh.github.io/data-security/1.2-draft-main/aai-openid-connect-profile">1.2</a>
+  <li>GA4GH AAI OIDC Profile <a href="https://github.com/ga4gh/data-security/blob/AAIv1.0/AAI/AAIConnectProfile.md">1.0.0</a> and <a href="https://ga4gh.github.io/data-security/1.2-draft-main/aai-openid-connect-profile">1.2</a>
 </li>
   <li>GA4GH Passport <a href="https://github.com/ga4gh-duri/ga4gh-duri.github.io/blob/v1.0.0/researcher_ids/ga4gh_passport_v1.md">1.0.0</a> and 1.2</li>
 </ul>
@@ -71,6 +71,7 @@
   <li><a href="#introduced-token-exchange-mechanism" id="markdown-toc-introduced-token-exchange-mechanism">Introduced Token Exchange mechanism</a></li>
   <li><a href="#redefined-passport-as-a-jwt-containing-visas" id="markdown-toc-redefined-passport-as-a-jwt-containing-visas">Redefined Passport as a JWT containing Visas</a></li>
   <li><a href="#defined-passport-issuer" id="markdown-toc-defined-passport-issuer">Defined Passport Issuer</a></li>
+  <li><a href="#added-more-signing-algorithms" id="markdown-toc-added-more-signing-algorithms">Added more signing algorithms</a></li>
 </ul>
 
 <h2 id="terminology-changes">Terminology changes</h2>
@@ -155,6 +156,20 @@ A <strong>Broker</strong> is an OIDC Provider service that collects Visas from V
 <p>Broker may optionally become a Passport Issuer by supporting Token Exchange for issuance of Passports.</p>
 
 <p>Brokers conforming to version 1.0 are still compatible with version 1.2, because Token Echange support is optional.</p>
+
+<h2 id="added-more-signing-algorithms">Added more signing algorithms</h2>
+
+<p>The version 1.0 allowed only <strong>RS256</strong> algorithm for JWT signing.
+It is RSA-based algorithm using keys of size 2048 bits or larger and SHA-256 hash function.</p>
+
+<p>The AAI specification version 1.2 allows also the <strong>ES256</strong> algorithm which is
+ECDSA-based using P-256 elliptic curve and SHA-256 hash function.</p>
+
+<p>Elliptic Curve Cryptography allows much shorter keys and signatures than RSA.
+A short Elliptic Curve key of around 256 bits provides the same security as a 3072 bit RSA key.</p>
+
+<p>For a detailed discussion of signing algorithms, see the article
+<a href="https://www.scottbrady91.com/jose/jwts-which-signing-algorithm-should-i-use">JWTs: Which Signing Algorithm Should I Use?</a></p>
 
 
   </div>
