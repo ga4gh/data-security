@@ -159,7 +159,6 @@ systems.</p>
           <li><a href="#visa-document-token-format" id="markdown-toc-visa-document-token-format">Visa Document Token Format</a></li>
         </ul>
       </li>
-      <li><a href="#authorizationclaims" id="markdown-toc-authorizationclaims">Authorization/Claims</a></li>
     </ul>
   </li>
   <li>
@@ -298,10 +297,9 @@ user and is responsible for making and maintaining the assertion.</li>
         Authorization Code Flow and Implicit Flow will generate id_tokens and
         access_tokens from the Broker.</p>
 
-<p><a href="https://tools.ietf.org/html/rfc7519">RFC-7519</a> - Specific implementations MAY extend
+<p><a href="https://tools.ietf.org/html/rfc7519">RFC-7519</a> - JSON Web Token (JWT) - Specific implementations MAY extend
         this structure with their own service-specific JWT claim names as top-level
-        members of this JSON object. Recommended “extensions” are in the
-        <a href="#authorizationclaims">Permissions</a> section. The JWT specified here follows JWS
+        members of this JSON object. The JWT specified here follows JWS
         headers specification from <a href="https://tools.ietf.org/html/rfc7515">RFC7515-JWS</a>.</p>
 
 <p><a href="https://tools.ietf.org/html/rfc7515">RFC-7515</a> - JSON Web Signature (JWS) is the
@@ -980,7 +978,7 @@ was used for accessing it.</p>
 with the <code class="language-plaintext highlighter-rouge">requested_token_type=urn:ga4gh:params:oauth:token-type:passport</code> is successfully performed
 (as described in the <a href="#conformance-for-passport-issuers">Conformance for Passport Issuers</a> section).</p>
 
-<p>Passports are defined as signed JWTs. <a href="https://datatracker.ietf.org/doc/html/rfc7519">RFC7519 (JWT)</a>,
+<p>Passports are defined as signed JWTs. <a href="https://datatracker.ietf.org/doc/html/rfc7519">RFC7519 (JWT)</a>
 states that JWTs can be either signed and encoded using JWS Compact Serialization, 
 or encrypted and encoded using JWE Compact Serialization. 
 Passports are signed JWTs, which implies that they must be encoded using JWS Compact Serialization.</p>
@@ -1121,66 +1119,9 @@ name is defined by <a href="https://datatracker.ietf.org/doc/html/rfc8693#sectio
 JWT claim, if the <code class="language-plaintext highlighter-rouge">scope</code> claim is provided.</p>
   </li>
   <li>
-    <p>The following headers and JWT claims in the payload are REQUIRED
-(here shown in its decoded JSON form):</p>
-
-    <div class="language-plaintext highlighter-rouge">
-<div class="highlight"><pre class="highlight"><code>{
-  "typ": "JWT",
-  "alg": "&lt;algorithm&gt;",
-  "jku": "https://&lt;jwk-URL&gt;",
-  "kid": "&lt;key-identifier&gt;"
-}.
-{
-  "iss": "https://&lt;issuer-website&gt;/",
-  "sub": "&lt;subject-identifier&gt;",
-  "iat": &lt;seconds-since-epoch&gt;,
-  "exp": &lt;seconds-since-epoch&gt;,
-  "jti": &lt;token-identifier&gt;,
-  &lt;ga4gh-visa-claims&gt;
-}.
-&lt;signature&gt;
-</code></pre></div>    </div>
-
-    <ul>
-      <li>
-        <p><code class="language-plaintext highlighter-rouge">typ</code>: MUST be “JWT”.</p>
-      </li>
-      <li>
-        <p><code class="language-plaintext highlighter-rouge">alg</code>: MUST be “RS256” or “ES256”</p>
-      </li>
-      <li>
-        <p><code class="language-plaintext highlighter-rouge">jti</code>: RECOMMENDED. A unique identifier for the token as per
-<a href="https://tools.ietf.org/html/rfc7519#section-4.1.7">RFC7519 Section 4.1.7</a>
-is RECOMMENDED.</p>
-      </li>
-      <li>
-        <p><code class="language-plaintext highlighter-rouge">&lt;ga4gh-visa-claims&gt;</code>: OPTIONAL. One or more GA4GH Claims MAY be
-provided. See <a href="#authorizationclaims">Authorization/Claims</a> for an
-example.</p>
-      </li>
-    </ul>
+    <p>Payload claims are specified in <a href="https://github.com/ga4gh-duri/ga4gh-duri.github.io/blob/master/researcher_ids/ga4gh_passport_v1.md#passport-visa-format">Passport Visa Format</a></p>
   </li>
 </ol>
-
-<h4 id="authorizationclaims">Authorization/Claims</h4>
-
-<p>User attributes and claims are being developed in the <a href="https://github.com/ga4gh-duri/ga4gh-duri.github.io/blob/master/researcher_ids/ga4gh_passport_v1.md">GA4GH Passport
-specification</a>
-by the DURI work stream.</p>
-
-<p>A non-normative example of a GA4GH Passport, as referred to
-in as <code class="language-plaintext highlighter-rouge">&lt;ga4gh-passport-claims&gt;</code> within the JWT formatting sections of this
-specification, is:</p>
-
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>"ga4gh_passport_v1": [
-  &lt;ga4gh passport value&gt;
-]
-</code></pre></div></div>
-
-<p>See the <a href="https://github.com/ga4gh-duri/ga4gh-duri.github.io/blob/master/researcher_ids/ga4gh_passport_v1.md#passport-claim-format">GA4GH Passport
-Claim Format</a>
-for more details.</p>
 
 <h2 id="token-revocation">Token Revocation</h2>
 
