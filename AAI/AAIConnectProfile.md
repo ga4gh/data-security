@@ -107,7 +107,7 @@ instance, a Data Access Committee (DAC).
 An OIDC access token with [scope](https://datatracker.ietf.org/doc/html/rfc6749#section-3.3)
 including the identifier `ga4gh_passport_v1`.
 
-The access token MUST be a JWS-encoded JWT token containing `oidc` and `ga4gh_passport_v1`
+The access token MUST be a JWS-encoded JWT token containing `openid` and `ga4gh_passport_v1`
 entries in the value of its `scope` claim.
 It is RECOMMENDED that Passport-Scoped Access Tokens follow the [RFC9068 JWT Profile for OAuth 2.0 Access Tokens](https://datatracker.ietf.org/doc/html/rfc9068) specification.
 
