@@ -64,7 +64,7 @@ A **Broker** is an OIDC Provider service that collects Visas from Visa Issuers a
 
 Broker may optionally become a Passport Issuer by supporting Token Exchange for issuance of Passports.
 
-Brokers conforming to version 1.0 are still compatible with version 1.2, because Token Echange support is optional.
+Brokers conforming to version 1.0 are still compatible with version 1.2, because Token Exchange support is optional.
 
 ## Added more signing algorithms
 
