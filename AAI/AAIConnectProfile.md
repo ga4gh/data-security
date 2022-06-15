@@ -4,20 +4,6 @@ title: AAI OIDC Profile
 permalink: aai-openid-connect-profile
 ---
 
-### 1.2 Draft Work In Progress 
-
-| Date       | Editor    | Notes                                                                         |
-|------------|-----------|-------------------------------------------------------------------------------|
-| 2022-05-31 | martin-kuba | Terminology fixes                                                           |
-| 2022-05-20 | TomConner | Terminology fixes per issue 62                                                |
-| 2022-05-12 | TomConner | Edits per discussion in PR and call                                           |
-| 2022-05-09 | TomConner | Changed wording in Abstract per Max's comments                                |
-| 2022-05-06 | TomConner | Embedded Token and Token Container -> Visa and Passport                       |
-| 2022-05-05 | TomConner | Data owner -> data controller                                                 |
-| 2022-03-16 | Patto     | Abstract clarified to support all flows                                       |
-| 2022-03-10 | TomConner | Token endpoints; spec references                                              |
-| 2022-02-24 | TomConner | Merged edits from David Bernick's bernick_clearinghouse_clarifications branch |
-
 ### Abstract
 {:.no_toc}
 
