@@ -80,12 +80,11 @@ note right
 end note
 end
 
-clearing <- broker : UserInfo Endpoint returns passport content (plain JSON, not signed JWT)
+clearing <- broker : UserInfo Endpoint returns passport content
 note right
 {
   "iss": "https://<issuer-website>/",
   "sub": "<subject-identifier>",
-  "jti": "<token-identifier>",
   "ga4gh_passport_v1": [
     "<visa1>",
     "<visa2>",
@@ -114,10 +113,10 @@ client <- clearing : Client is given data
 
 The exchange flow does not ever distribute the initial *Passport-Scoped Access Token* beyond
 the client application. A token exchange operation is executed by the client, in
-exchange for a *Passport Token* that may be used downstream to access resources. In this example flow, the
-*Passport Token* is included as authorisation in the POST to a DRS server. The token
+exchange for a *Passport* JWT that may be used downstream to access resources. In this example flow, the
+*Passport* is included as authorisation in the POST to a DRS server. The token
 exchange has also specified a known resource server website that will limit the audience
-of the *Passport Token*.
+of the *Passport*.
 
 {% plantuml %}
 
@@ -178,7 +177,7 @@ client <- broker : Token exchange return
 note right
 {
   "access_token": "<passport token (base64 encoded)>",
-  "issued_token_type": "<TBD>",
+  "issued_token_type": "urn:ga4gh:params:oauth:token-type:passport",
   "token_type": "Bearer",
   "expires_in": 60
 }
@@ -186,7 +185,7 @@ note right
 ▼ passport token content decoded from base64 (generally opaque to the client) ▼
 
 {
-  "typ": TBD,
+  "typ": "vnd.ga4gh.passport+jwt",
   "alg": "RS256",
   "kid": "<key-identifier>"
 } .
@@ -204,7 +203,7 @@ note right
     "<visa2>",
     ...
   ]
-} . <secret>
+} . <signature>
 end note
 
 ==Use==
@@ -234,7 +233,7 @@ client <- clearing : Client is given data
 
 Yes. This specification allows for groups to organize themselves in many ways.
 
-A trusted group of Brokers and Claims Clearinghouses are permitted to
+A trusted group of Brokers and Passport Clearinghouses are permitted to
 format `/userinfo` output as a JWT and use that as a means of how their
 services communicate. They can also take `/userinfo` JSON output and
 format it through some other means into a JWT. Proper due-diligence and
@@ -268,7 +267,7 @@ explicit OIDC-style consent.
 ### What is the danger of using a fully scoped (or audience-less) token in a multi node workflow
 
 Unless down-scoped by the initial OIDC flow - the *Passport Scoped Access Token* is
-a token that can unlock all data that the user in entitled too. Furthermore, it is
+a token that can unlock all data that the user is entitled to. Furthermore, it is
 unscoped in audience - with no indications of 
 the Clearinghouse (or downstream services) it is intended for.
 
