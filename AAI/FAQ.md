@@ -4,18 +4,20 @@ title: AAI FAQ
 permalink: aai-faq
 ---
 
+A collection of questions (and hopefully useful answers).
+
+<hr style="border: 2px solid; margin: 2em auto;"/>    
+
 ## Flows
 
 The following sequence diagrams are included to help explain the intended flows
-documented in this specification. These diagrams should be considered non-normative - if there are
-any discrepancies between the diagrams and the text of the specification, the text
-of the specification will take precedence.
+documented in the accompanying specification. 
 
-#### What is the complete end to end flow using `/userinfo`?
+### What is the complete end to end flow using `/userinfo`?
 
 (last updated June 2022)
 
-The flow as used by Elixir uses the initial *Passport-Scoped OAuth Access Token* as
+The flow as used by Elixir uses the initial *Passport-Scoped Access Token* as
 a token handed to downstream resource servers. These servers can use this token, in conjunction
 with a callback to the *Userinfo Endpoint* of the broker, to obtain the *Passport* content in
 JSON format.
@@ -48,7 +50,7 @@ end box
 ==OIDC==
 
 ref over user, client, broker, idps
-OIDC flow results in the client holding a *Passport-Scoped OAuth Access Token*.
+OIDC flow results in the client holding a *Passport-Scoped Access Token*.
 end ref
 
 ==Use==
@@ -56,14 +58,14 @@ end ref
 client -> clearing : Client requests data
 note right
 {
-Authorization: Bearer <Passport-Scoped OAuth Access Token>
+Authorization: Bearer <Passport-Scoped Access Token>
 }
 end note
 
 clearing -> broker : Clearing house asks for passport content
 note right
 {
-Authorization: Bearer <Passport-Scoped OAuth Access Token>
+Authorization: Bearer <Passport-Scoped Access Token>
 }
 end note
 
@@ -104,11 +106,13 @@ client <- clearing : Client is given data
 
 {% endplantuml %}
 
-#### What is the complete end to end flow using token exchange?
+<hr style="width: 10em; margin: 2em auto;"/>   
+
+### What is the complete end to end flow using token exchange?
 
 (last updated June 2022)
 
-The exchange flow does not ever distribute the initial *Passport-Scoped OAuth Access Token* beyond
+The exchange flow does not ever distribute the initial *Passport-Scoped Access Token* beyond
 the client application. A token exchange operation is executed by the client, in
 exchange for a *Passport Token* - or any
 other token that may be used downstream to access resources. In this example flow, the
@@ -144,7 +148,7 @@ end box
 ==OIDC==
 
 ref over user, client, broker, idps
-OIDC flow results in the client holding a *Passport-Scoped OAuth Access Token*.
+OIDC flow results in the client holding a *Passport-Scoped Access Token*.
 end ref
 
 ==Exchange==
@@ -155,7 +159,7 @@ Content-Type: application/x-www-form-urlencoded
 
 grant_type=urn:ietf:params:oauth:grant-type:token-exchange
 requested_token_type=urn:ietf:params:oauth:token-type:jwt
-subject_token=<Passport-Scoped OAuth Access Token>
+subject_token=<Passport-Scoped Access Token>
 subject_token_type=urn:ietf:params:oauth:token-type:access_token
 audience=https://<drs-resource-server-website>/
 end note
@@ -223,6 +227,8 @@ client <- clearing : Client is given data
 
 {% endplantuml %}
 
+<hr style="width: 10em; margin: 2em auto;"/>   
+
 ### Can a JWT alone be used for authentication even if the spec mostly talks about OIDC Flow?
 
 (last updated ??? 2020)
@@ -254,19 +260,67 @@ in place in order to make this a secure method of authentication and that the Us
 is aware that they are exchanging information with another stack without
 explicit OIDC-style consent.
 
-![JWT-Only Flow between trusted stacks](GA4GH_JWT-only_flow.png)
+![JWT-Only Flow between trusted stacks](./GA4GH_JWT-only_flow.png)
+
+<hr style="border: 2px solid; margin: 2em auto;"/>    
 
 ## Threat Analysis
 
 ### What is the danger of using a fully scoped (or audience-less) token in a multi node workflow
 
+Unless down-scoped by the initial OIDC flow - the *Passport Scoped Access Token* is
+a token that can unlock all data that the user in entitled too. Furthermore, it is
+unscoped in audience - with no indications of 
+the Clearinghouse (or downstream services) it is intended for.
 
+The result of this is that if passed to a bad actor (a Clearinghouse that has been
+compromised for example) - the bad actor can use the token
+for sideways movement amongst the other nodes.
 
+Insert diagram.
 
+The addition of audiences to the token, or down-scoping of permissions - possible via token exchange - limits
+the scope of damage if the token ends up with a bad actor.
+
+<hr style="border: 2px solid; margin: 2em auto;"/>    
+
+## Client Software
+
+### Use of GA4GH passport/visas in Single Page Apps (SPAs)
+
+A Single Page App (SPA) such as a React/VueJs website
+contains all the source of the application in public - and hence cannot
+possess a 'secret' in an OIDC flow (the 'secret' is used to prove the identity of the
+client software).
+
+The registration of a callback URL - in conjunction with the cryptographic techniques
+of PKCE - does allow a SPA to safely participate in an OIDC authorisation flow - though
+it makes weak guarantees regarding the client identity.
+
+However, when it comes to token exchange - there is no equivalent of a registered
+callback URL - that can even weakly assert client identity.
+
+It is impossible for the SPA to prove that is correct/desired piece of code
+executing the exchange - and not some other system that has somehow captured a
+*Passport-Scoped Access Token* from the browser and is making an exchange.
+
+For these reasons, it is recommended at this point that SPAs are not used for
+applications where the SPA is solely responsible for the dissemination of
+genomic data.
+
+It is possible for a SPA to predominantly execute in browser - but to still use
+a (small) backend set of services to execute any OIDC flows and token exchanges. These
+backend service *can* retain a secret and hence can prove client identity.
+
+Insert diagram.
+
+<hr style="border: 2px solid; margin: 2em auto;"/>    
 
 ## Legacy
 
 ### Can the output of `/userinfo` be used as a JWT for Authentication?
+
+(consider removing as now dealt with more in spec)
 
 The spec says that `/userinfo` may be formatted as a JWT. A Clearinghouse that
 sends an access token to a `/userinfo` endpoint might get either JSON or a
