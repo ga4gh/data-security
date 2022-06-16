@@ -19,7 +19,7 @@ documented in the accompanying specification.
 
 The flow as used by Elixir uses the initial *Passport-Scoped Access Token* as
 a token handed to downstream resource servers. These servers can use this token, in conjunction
-with a callback to the *Userinfo Endpoint* of the broker, to obtain the *Passport* content in
+with a callback to the broker's *Userinfo Endpoint*, to obtain the *Passport* content in
 JSON format.
 
 {% plantuml %}
@@ -58,24 +58,24 @@ end ref
 client -> clearing : Client requests data
 note right
 {
-Authorization: Bearer <Passport-Scoped Access Token>
+  Authorization: Bearer <Passport-Scoped Access Token>
 }
 end note
 
 clearing -> broker : Clearing house asks for passport content
 note right
 {
-Authorization: Bearer <Passport-Scoped Access Token>
+  Authorization: Bearer <Passport-Scoped Access Token>
 }
 end note
 
-group#DeepSkyBlue #LightSkyBlue Informative Only (not defined in this specification)
+group#DeepSkyBlue #LightSkyBlue Informative Only (not defined in the specification)
 broker -> issuers : Fetch signed visa(s) for user
 broker <- issuers : Return signed visa(s) for user
 note right
 [
-"<visa1>",
-"<visa2>"
+  "<visa1>",
+  "<visa2>"
 ]
 end note
 end
@@ -83,14 +83,14 @@ end
 clearing <- broker : UserInfo Endpoint returns passport content (plain JSON, not signed JWT)
 note right
 {
-"iss": "https://<issuer-website>/",
-"sub": "<subject-identifier>",
-"jti": "<token-identifier>",
-"ga4gh_passport_v1": [
-"<visa1>",
-"<visa2>",
-...
-]
+  "iss": "https://<issuer-website>/",
+  "sub": "<subject-identifier>",
+  "jti": "<token-identifier>",
+  "ga4gh_passport_v1": [
+    "<visa1>",
+    "<visa2>",
+   ...
+  ]
 }
 end note
 
@@ -114,11 +114,10 @@ client <- clearing : Client is given data
 
 The exchange flow does not ever distribute the initial *Passport-Scoped Access Token* beyond
 the client application. A token exchange operation is executed by the client, in
-exchange for a *Passport Token* - or any
-other token that may be used downstream to access resources. In this example flow, the
+exchange for a *Passport Token* that may be used downstream to access resources. In this example flow, the
 *Passport Token* is included as authorisation in the POST to a DRS server. The token
 exchange has also specified a known resource server website that will limit the audience
-of the returned token.
+of the *Passport Token*.
 
 {% plantuml %}
 
@@ -158,19 +157,19 @@ note right
 Content-Type: application/x-www-form-urlencoded
 
 grant_type=urn:ietf:params:oauth:grant-type:token-exchange
-requested_token_type=urn:ietf:params:oauth:token-type:jwt
+requested_token_type=urn:ga4gh:params:oauth:token-type:passport
 subject_token=<Passport-Scoped Access Token>
 subject_token_type=urn:ietf:params:oauth:token-type:access_token
 audience=https://<drs-resource-server-website>/
 end note
 
-group#DeepSkyBlue #LightSkyBlue Informative Only (not defined in this specification)
+group#DeepSkyBlue #LightSkyBlue Informative Only (not defined in the specification)
 broker -> issuers : Fetch signed visa(s) for user
 broker <- issuers : Return signed visa(s) for user
 note right
 [
-"<visa1>",
-"<visa2>"
+  "<visa1>",
+  "<visa2>"
 ]
 end note
 end
@@ -178,33 +177,33 @@ end
 client <- broker : Token exchange return
 note right
 {
-"access_token": "<passport token (base64 encoded)>",
-"issued_token_type": "<TBD>",
-"token_type": "Bearer",
-"expires_in": 60
+  "access_token": "<passport token (base64 encoded)>",
+  "issued_token_type": "<TBD>",
+  "token_type": "Bearer",
+  "expires_in": 60
 }
 
 ▼ passport token content decoded from base64 (generally opaque to the client) ▼
 
 {
-"typ": TBD,
-"alg": "RS256",
-"kid": "<key-identifier>"
+  "typ": TBD,
+  "alg": "RS256",
+  "kid": "<key-identifier>"
 } .
 {
-"iss": "https://<issuer-website>/",
-"sub": "<subject-identifier>",
-"aud": [
-"https://<drs-resource-server-website>/"
-],
-"iat": <seconds-since-epoch>,
-"exp": <seconds-since-epoch>,
-"jti": "<token-identifier>",
-"ga4gh_passport_v1": [
-"<visa1>",
-"<visa2>",
-...
-]
+  "iss": "https://<issuer-website>/",
+  "sub": "<subject-identifier>",
+  "aud": [
+    "https://<drs-resource-server-website>/"
+  ],
+  "iat": <seconds-since-epoch>,
+  "exp": <seconds-since-epoch>,
+  "jti": "<token-identifier>",
+  "ga4gh_passport_v1": [
+    "<visa1>",
+    "<visa2>",
+    ...
+  ]
 } . <secret>
 end note
 
