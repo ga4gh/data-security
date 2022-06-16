@@ -355,7 +355,7 @@ the Broker.
     3.  A user's withdrawal of this agreement does not need to apply to
         previously generated access tokens.
 
-7.  By signing an access token, an Broker asserts that the GA4GH Claims that
+7.  By signing an access token, a Broker asserts that the GA4GH Claims that
     token makes available at the UserInfo or Token Endpoint -- 
     not including any Visas -- were legitimately derived from their [Visa Assertion Sources](#term-visa-assertion-source),
     and the content is presented and/or
