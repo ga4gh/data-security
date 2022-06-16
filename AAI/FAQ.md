@@ -259,7 +259,7 @@ in place in order to make this a secure method of authentication and that the Us
 is aware that they are exchanging information with another stack without
 explicit OIDC-style consent.
 
-![JWT-Only Flow between trusted stacks](./GA4GH_JWT-only_flow.png)
+![JWT-Only Flow between trusted stacks](./AAI/GA4GH_JWT-only_flow.png)
 
 <hr style="border: 2px solid; margin: 2em auto;"/>    
 
