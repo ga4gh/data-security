@@ -13,108 +13,16 @@ A collection of questions (and hopefully useful answers).
 The following sequence diagrams are included to help explain the intended flows
 documented in the accompanying specification. 
 
-### What is the complete end to end flow using `/userinfo`?
-
-(last updated June 2022)
-
-The flow as used by Elixir uses the initial *Passport-Scoped Access Token* as
-a token handed to downstream resource servers. These servers can use this token, in conjunction
-with a callback to the broker's *Userinfo Endpoint*, to obtain the *Passport* content in
-JSON format.
-
-{% plantuml %}
-
-hide footbox
-skinparam BoxPadding 10
-skinparam ParticipantPadding 20
-
-box "Researcher"  #eee
-actor       "User Agent"                as user
-participant Client                      as client
-end box
-
-box "AAI"
-participant Broker                      as broker
-collections "IdP"                       as idps
-end box
-
-box "Data Owner"
-collections "Visa Issuer(s)"            as issuers
-end box
-
-box "Data Holder"
-participant "Clearing House"            as clearing
-participant "Data"                      as data
-end box
-
-==OIDC==
-
-ref over user, client, broker, idps
-OIDC flow results in the client holding a *Passport-Scoped Access Token*.
-end ref
-
-==Use==
-
-client -> clearing : Client requests data
-note right
-{
-  Authorization: Bearer <Passport-Scoped Access Token>
-}
-end note
-
-clearing -> broker : Clearing house asks for passport content
-note right
-{
-  Authorization: Bearer <Passport-Scoped Access Token>
-}
-end note
-
-group#DeepSkyBlue #LightSkyBlue Informative Only (not defined in the specification)
-broker -> issuers : Fetch signed visa(s) for user
-broker <- issuers : Return signed visa(s) for user
-note right
-[
-  "<visa1>",
-  "<visa2>"
-]
-end note
-end
-
-clearing <- broker : UserInfo Endpoint returns passport content
-note right
-{
-  "iss": "https://<issuer-website>/",
-  "sub": "<subject-identifier>",
-  "ga4gh_passport_v1": [
-    "<visa1>",
-    "<visa2>",
-   ...
-  ]
-}
-end note
-
-
-note over clearing, data  #FFCCCB
-Decision is made to release data using information contained in the
-passport - and this decision is coordinated with the data system to
-facilitate that actual data release.
-end note
-
-client <- clearing : Client is given data
-
-
-{% endplantuml %}
-
-<hr style="width: 10em; margin: 2em auto;"/>   
-
 ### What is the complete end to end flow using token exchange?
 
 (last updated June 2022)
 
+**This flow is the preferred flow for v1.2+ of the specification.**
+
 The exchange flow does not ever distribute the initial *Passport-Scoped Access Token* beyond
 the client application. A token exchange operation is executed by the client, in
 exchange for a *Passport* JWT that may be used downstream to access resources. In this example flow, the
-*Passport* is included as authorisation in the POST to a DRS server. The token
+*Passport* is included as authorization in the POST to a DRS server. The token
 exchange has also specified a known resource server website that will limit the audience
 of the *Passport*.
 
@@ -134,7 +42,7 @@ participant Broker                      as broker
 collections "IdP"                       as idps
 end box
 
-box "Data Owner"
+box "Data Controller"
 collections "Visa Issuer(s)"            as issuers
 end box
 
@@ -159,7 +67,7 @@ grant_type=urn:ietf:params:oauth:grant-type:token-exchange
 requested_token_type=urn:ga4gh:params:oauth:token-type:passport
 subject_token=<Passport-Scoped Access Token>
 subject_token_type=urn:ietf:params:oauth:token-type:access_token
-audience=https://<drs-resource-server-website>/
+audience=https://<drs-resource-server-website>
 end note
 
 group#DeepSkyBlue #LightSkyBlue Informative Only (not defined in the specification)
@@ -176,13 +84,13 @@ end
 client <- broker : Token exchange return
 note right
 {
-  "access_token": "<passport token (base64 encoded)>",
+  "access_token": "<Passport>",
   "issued_token_type": "urn:ga4gh:params:oauth:token-type:passport",
   "token_type": "Bearer",
   "expires_in": 60
 }
 
-▼ passport token content decoded from base64 (generally opaque to the client) ▼
+▼ Passport content as example (decoded from the base64 of the JWT Passport) ▼
 
 {
   "typ": "vnd.ga4gh.passport+jwt",
@@ -190,10 +98,10 @@ note right
   "kid": "<key-identifier>"
 } .
 {
-  "iss": "https://<issuer-website>/",
+  "iss": "https://<issuer-website>",
   "sub": "<subject-identifier>",
   "aud": [
-    "https://<drs-resource-server-website>/"
+    "https://<drs-resource-server-website>"
   ],
   "iat": <seconds-since-epoch>,
   "exp": <seconds-since-epoch>,
@@ -211,7 +119,7 @@ end note
 client -> clearing : Client requests data
 note right
 {
-REPLACE WITH CORRECT DRS DETAILS
+  REPLACE WITH CORRECT DRS DETAILS
 }
 end note
 
@@ -227,38 +135,100 @@ client <- clearing : Client is given data
 
 <hr style="width: 10em; margin: 2em auto;"/>   
 
-### Can a JWT alone be used for authentication even if the spec mostly talks about OIDC Flow?
+### What is the complete end to end flow using `/userinfo`?
 
-(last updated ??? 2020)
+(last updated June 2022)
 
-Yes. This specification allows for groups to organize themselves in many ways.
+**This flow is the flow for v1.0 implementations of the specification.**
 
-A trusted group of Brokers and Passport Clearinghouses are permitted to
-format `/userinfo` output as a JWT and use that as a means of how their
-services communicate. They can also take `/userinfo` JSON output and
-format it through some other means into a JWT. Proper due-diligence and
-handling of tokens must be followed.
+The flow as used by Elixir uses the initial *Passport-Scoped Access Token* as
+a token handed to downstream resource servers. These servers can use this token, in conjunction
+with a callback to the broker's *Userinfo Endpoint*, to obtain the *Passport* content in
+JSON format.
 
-This specification does not prohibit services from using JWTs as authentication
-outside of an OIDC flow.
+{% plantuml %}
 
-An example: Two different stacks of software all have a similar user-base and
-often use the same shared data resource -- a biobank, for instance. The User
-authenticates with Biobank Broker on Software stack S1 and gets `/userinfo` output
-as a JWT. The JWT includes GA4GH Passport Visas for a Dataset that the Broker holds
-permissions for. S1 might not hold the data, S2 might hold the data. The User may
-be allowed to bring that JWT to Software Stack S2 and get data authorized by the
-claim in the JWT and held by S2, provided that S2 can trust S1 as a valid and
-trustworthy client.
+hide footbox
+skinparam BoxPadding 10
+skinparam ParticipantPadding 20
 
-This enables two or more software stacks to work together more fluidly than having
-the same user authenticate twice across two stacks to access the same data. There
-is an assumption that these two software stacks have agreements and risk assessment
-in place in order to make this a secure method of authentication and that the User
-is aware that they are exchanging information with another stack without
-explicit OIDC-style consent.
+box "Researcher"  #eee
+actor       "User Agent"                as user
+participant Client                      as client
+end box
 
-![JWT-Only Flow between trusted stacks](./AAI/GA4GH_JWT-only_flow.png)
+box "AAI"
+participant Broker                      as broker
+collections "IdP"                       as idps
+end box
+
+box "Data Controller"
+collections "Visa Issuer(s)"            as issuers
+end box
+
+box "Data Holder"
+participant "Clearing House"            as clearing
+participant "Data"                      as data
+end box
+
+==OIDC==
+
+ref over user, client, broker, idps
+OIDC flow results in the client holding a *Passport-Scoped Access Token*.
+end ref
+
+==Use==
+
+client -> clearing : Client requests data
+note right
+{
+  Authorization: Bearer <Passport-Scoped Access Token>
+}
+end note
+
+clearing -> broker : Clearing house asks for list of signed visa(s)
+note right
+{
+  Authorization: Bearer <Passport-Scoped Access Token>
+}
+end note
+
+group#DeepSkyBlue #LightSkyBlue Informative Only (not defined in the specification)
+broker -> issuers : Fetch signed visa(s) for user
+broker <- issuers : Return signed visa(s) for user
+note right
+[
+  "<visa1>",
+  "<visa2>"
+]
+end note
+end
+
+clearing <- broker : UserInfo endpoint returns list of signed visa(s)
+note right
+{
+  "iss": "https://<issuer-website>/",
+  "sub": "<subject-identifier>",
+  "ga4gh_passport_v1": [
+    "<visa1>",
+    "<visa2>",
+   ...
+  ]
+}
+end note
+
+
+note over clearing, data  #FFCCCB
+Decision is made to release data using information contained in the
+passport - and this decision is coordinated with the data system to
+facilitate that actual data release.
+end note
+
+client <- clearing : Client is given data
+
+
+{% endplantuml %}
+
 
 <hr style="border: 2px solid; margin: 2em auto;"/>    
 
@@ -292,7 +262,7 @@ possess a 'secret' in an OIDC flow (the 'secret' is used to prove the identity o
 client software).
 
 The registration of a callback URL - in conjunction with the cryptographic techniques
-of PKCE - does allow a SPA to safely participate in an OIDC authorisation flow - though
+of PKCE - does allow a SPA to safely participate in an OIDC authorization flow - though
 it makes weak guarantees regarding the client identity.
 
 However, when it comes to token exchange - there is no equivalent of a registered
@@ -310,23 +280,45 @@ It is possible for a SPA to predominantly execute in browser - but to still use
 a (small) backend set of services to execute any OIDC flows and token exchanges. These
 backend service *can* retain a secret and hence can prove client identity.
 
-Insert diagram.
+Insert source example/diagram.
+
+See also the emerging standard DPoP
+([OAuth 2.0 Demonstrating Proof-of-Possession at the Application Layer](https://datatracker.ietf.org/doc/html/draft-ietf-oauth-dpop-09))
+which will be considered for future versions of the AAI specification.
 
 <hr style="border: 2px solid; margin: 2em auto;"/>    
 
 ## Legacy
 
-### Can the output of `/userinfo` be used as a JWT for Authentication?
+### Can a JWT alone be used for authentication even if the spec mostly talks about OIDC Flow?
 
-(consider removing as now dealt with more in spec)
+(last updated 2020)
 
-The spec says that `/userinfo` may be formatted as a JWT. A Clearinghouse that
-sends an access token to a `/userinfo` endpoint might get either JSON or a
-formatted and signed JWT from a broker. The JWT can be used downstream as
-an authentication mechanism if downstream services like Clearinghouses
-support it and know what to do with it. 
+Yes. This specification allows for groups to organize themselves in many ways.
 
-It is probable that a special token endpoint will exist in a future
-version of this profile that should prevent the `/userinfo` endpoint
-from being overloaded.
+A trusted group of Brokers and Passport Clearinghouses are permitted to
+format `/userinfo` output as a JWT and use that as a means of how their
+services communicate. They can also take `/userinfo` JSON output and
+format it through some other means into a JWT. Proper due-diligence and
+handling of tokens must be followed.
 
+This specification does not prohibit services from using JWTs as authentication
+outside of an OIDC flow.
+
+An example: Two different stacks of software all have a similar user-base and
+often use the same shared data resource -- a biobank, for instance. The User
+authenticates with Biobank Broker on Software stack S1 and gets `/userinfo` output
+as a JWT. The JWT includes GA4GH Passport Visas for a Dataset that the Broker holds
+permissions for. S1 might not hold the data, S2 might hold the data. The User may
+be allowed to bring that JWT to Software Stack S2 and get data authorized by the
+claim in the JWT and held by S2, provided that S2 can trust S1 as a valid and
+trustworthy client.
+
+This enables two or more software stacks to work together more fluidly than having
+the same user authenticate twice across two stacks to access the same data. There
+is an assumption that these two software stacks have agreements and risk assessment
+in place in order to make this a secure method of authentication and that the User
+is aware that they are exchanging information with another stack without
+explicit OIDC-style consent.
+
+![JWT-Only Flow between trusted stacks](./AAI/GA4GH_JWT-only_flow.png)
