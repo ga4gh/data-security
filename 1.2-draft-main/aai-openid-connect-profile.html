@@ -106,9 +106,10 @@ systems.</p>
       <li><a href="#visa-assertion-source-revokes-claim" id="markdown-toc-visa-assertion-source-revokes-claim">Visa Assertion Source Revokes Claim</a></li>
       <li><a href="#revoking-access-from-bad-actors" id="markdown-toc-revoking-access-from-bad-actors">Revoking Access from Bad Actors</a></li>
       <li><a href="#limited-damage-of-leaked-tokens" id="markdown-toc-limited-damage-of-leaked-tokens">Limited Damage of Leaked Tokens</a></li>
-      <li><a href="#specification-revision-history" id="markdown-toc-specification-revision-history">Specification Revision History</a></li>
     </ul>
   </li>
+  <li><a href="#signing-algorithms" id="markdown-toc-signing-algorithms">Signing Algorithms</a></li>
+  <li><a href="#specification-revision-history" id="markdown-toc-specification-revision-history">Specification Revision History</a></li>
 </ul>
 
 <h3 id="requirements-notation-and-conventions">Requirements Notation and Conventions</h3>
@@ -234,18 +235,18 @@ user and is responsible for making and maintaining the assertion.</li>
 <h3 id="relevant-specifications">Relevant Specifications</h3>
 
 <p><a href="http://openid.net/specs/openid-connect-core-1_0.html">OIDC-Core</a> -
-        Authorization Code Flow and Implicit Flow will generate id_tokens and
+        Authorization Code Flow will generate id_tokens and
         access_tokens from the Broker.</p>
 
-<p><a href="https://tools.ietf.org/html/rfc7519">RFC-7519</a> - JSON Web Token (JWT) - Specific implementations MAY extend
+<p><a href="https://tools.ietf.org/html/rfc7519">RFC7519</a> - JSON Web Token (JWT) - Specific implementations MAY extend
         this structure with their own service-specific JWT claim names as top-level
         members of this JSON object. The JWT specified here follows JWS
         headers specification from <a href="https://tools.ietf.org/html/rfc7515">RFC7515-JWS</a>.</p>
 
-<p><a href="https://tools.ietf.org/html/rfc7515">RFC-7515</a> - JSON Web Signature (JWS) is the
+<p><a href="https://tools.ietf.org/html/rfc7515">RFC7515</a> - JSON Web Signature (JWS) is the
         specific JWT to use for this spec.</p>
 
-<p><a href="https://tools.ietf.org/html/rfc5246">RFC-5246</a> - Transport Layer Security.
+<p><a href="https://tools.ietf.org/html/rfc5246">RFC5246</a> - Transport Layer Security.
         Information passed among clients, Applications, Brokers, and Passport
         Clearinghouses MUST be protected using TLS.</p>
 
@@ -253,16 +254,16 @@ user and is responsible for making and maintaining the assertion.</li>
 
 <p><a href="https://github.com/ga4gh-duri/ga4gh-duri.github.io/blob/master/researcher_ids/ga4gh_passport_v1.md">GA4GH-Passport</a> - DURI</p>
 
-<p><a href="https://www.rfc-editor.org/info/rfc8693">RFC-8693</a>  Jones, M., Nadalin, A., Campbell, B., Ed., Bradley, J.,
+<p><a href="https://www.rfc-editor.org/info/rfc8693">RFC8693</a>  Jones, M., Nadalin, A., Campbell, B., Ed., Bradley, J.,
         and C. Mortimore, “OAuth 2.0 Token Exchange”, RFC 8693,
         DOI 10.17487/RFC8693, January 2020.</p>
 
-<p><a href="https://www.rfc-editor.org/info/rfc6819">RFC-6819</a> 
+<p><a href="https://www.rfc-editor.org/info/rfc6819">RFC6819</a> 
         Lodderstedt, T, McGloin, M., and P. Hunt, 
         “OAuth 2.0 Threat Model and Security Considerations”, 
         RFC 6819, January 2013.</p>
 
-<p><a href="https://www.rfc-editor.org/info/rfc8725">RFC-8725</a>  Sheffer, Y., Hardt, D., and M. Jones, “JSON Web Token Best
+<p><a href="https://www.rfc-editor.org/info/rfc8725">RFC8725</a>  Sheffer, Y., Hardt, D., and M. Jones, “JSON Web Token Best
         Current Practices”, BCP 225, RFC 8725,
         DOI 10.17487/RFC8725, February 2020.</p>
 
@@ -301,20 +302,6 @@ the Broker.</p>
 server-side web-applications) MUST implement OIDC Authorization Code
 Flow (with Confidential Client)
 <a href="http://openid.net/specs/openid-connect-basic-1_0.html">http://openid.net/specs/openid-connect-basic-1_0.html</a></p>
-  </li>
-  <li>
-    <p>Public Clients (typically javascript browser clients)
-SHOULD implement OIDC Implicit Flow
-(<a href="http://openid.net/specs/openid-connect-implicit-1_0.html">http://openid.net/specs/openid-connect-implicit-1_0.html</a>)</p>
-
-    <ol>
-      <li>
-        <p>MUST use “id_token token” response_type for authentication.</p>
-      </li>
-      <li>
-        <p>Public Clients like mobile apps that use Authorization Code Grant SHOULD implement some additional protection such as PKCE (<a href="https://tools.ietf.org/html/rfc7636">https://tools.ietf.org/html/rfc7636</a>) .</p>
-      </li>
-    </ol>
   </li>
   <li>
     <p>Conform to <a href="#token-revocation">revocation requirements</a>.</p>
@@ -479,8 +466,6 @@ assurances are made by the issuer of the Visa, i.e. the Visa Issuer).</p>
   </li>
 </ol>
 
-<p>TODO embedded-access-token is this a passport access token or a visa access token or something else</p>
-
 <p><a name="conformance-for-visa-issuers"></a></p>
 <h4 id="conformance-for-visa-issuers">Conformance for Visa Issuers</h4>
 
@@ -610,7 +595,7 @@ indicated above.</p>
     <p>Passports themselves are signed JWTs that contain Visas. Passports use <a href="#passport-format">this format</a>.</p>
   </li>
   <li>
-    <p>Passports MUST be signed with the <code class="language-plaintext highlighter-rouge">RS256</code> or <code class="language-plaintext highlighter-rouge">ES256</code> algorithm.</p>
+    <p>Passports MUST be signed with a <a href="#signing-algorithms">conformant signing algorithm</a>.</p>
   </li>
   <li>
     <p>Passports MAY be issued from a <a href="#term-token-endpoint">Token Endpoint</a> using <a href="#term-token-exchange">Token Exchange</a>, with the following clarifications:</p>
@@ -842,7 +827,7 @@ This profile is agnostic to the format of the id_token.</p>
  if the token format follows RFC9068.</p>
   </li>
   <li>
-    <p><code class="language-plaintext highlighter-rouge">alg</code>: REQUIRED. MUST be “RS256” or “ES256”.</p>
+    <p><code class="language-plaintext highlighter-rouge">alg</code>: REQUIRED. See <a href="#signing-algorithms">Signing Algorithms</a>.</p>
   </li>
   <li>
     <p><code class="language-plaintext highlighter-rouge">kid</code>: REQUIRED. Key ID, see <a href="https://tools.ietf.org/html/rfc7515#section-4.1.4">RFC7515 section 4.1.4</a></p>
@@ -880,7 +865,7 @@ can be used just to help inform if that is what a data controller or data holder
 needs.</p>
   </li>
   <li>
-    <p><code class="language-plaintext highlighter-rouge">aud</code>: OPTIONAL. If provided, it MUST contain the Oauth Client ID of the
+    <p><code class="language-plaintext highlighter-rouge">aud</code>: OPTIONAL. If provided, it MUST contain the OAuth Client ID of the
 relying party.</p>
   </li>
   <li>
@@ -998,7 +983,7 @@ in addition to the guidelines established in <a href="https://datatracker.ietf.o
 
 <ol>
   <li>
-    <p><code class="language-plaintext highlighter-rouge">alg</code> MUST be “RS256” or “ES256”</p>
+    <p><code class="language-plaintext highlighter-rouge">alg</code> MUST comply with <a href="#signing-algorithms">Signing Algorithms</a>.</p>
   </li>
   <li>
     <p>The header MUST NOT contain a <code class="language-plaintext highlighter-rouge">jku</code>.</p>
@@ -1172,7 +1157,16 @@ administrators from decrypting this content.</p>
   </li>
 </ol>
 
-<h3 id="specification-revision-history">Specification Revision History</h3>
+<h2 id="signing-algorithms">Signing Algorithms</h2>
+
+<p>JWTs MUST be issued with signatures using with the <code class="language-plaintext highlighter-rouge">ES256</code> or <code class="language-plaintext highlighter-rouge">RS256</code> algorithm.
+Clients, applications, and clearinghouses must validate signatures and must 
+take care to perform validation securely and resist tampering with the validation
+process, taking 
+<a href="https://www.rfc-editor.org/rfc/rfc8725.html#name-best-practices">RFC8725 JSON Web Token Best Current Practices</a>
+into consideration.</p>
+
+<h2 id="specification-revision-history">Specification Revision History</h2>
 
 <table>
   <thead>
