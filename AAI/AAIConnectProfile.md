@@ -143,18 +143,18 @@ specific assignment within the organization that made the assertion.
 ### Relevant Specifications
 
 [OIDC-Core](http://openid.net/specs/openid-connect-core-1_0.html) -
-        Authorization Code Flow and Implicit Flow will generate id_tokens and
+        Authorization Code Flow will generate id_tokens and
         access_tokens from the Broker.
 
-[RFC-7519](https://tools.ietf.org/html/rfc7519) - JSON Web Token (JWT) - Specific implementations MAY extend
+[RFC7519](https://tools.ietf.org/html/rfc7519) - JSON Web Token (JWT) - Specific implementations MAY extend
         this structure with their own service-specific JWT claim names as top-level
         members of this JSON object. The JWT specified here follows JWS
         headers specification from [RFC7515-JWS](https://tools.ietf.org/html/rfc7515).
 
-[RFC-7515](https://tools.ietf.org/html/rfc7515) - JSON Web Signature (JWS) is the
+[RFC7515](https://tools.ietf.org/html/rfc7515) - JSON Web Signature (JWS) is the
         specific JWT to use for this spec.
 
-[RFC-5246](https://tools.ietf.org/html/rfc5246) - Transport Layer Security.
+[RFC5246](https://tools.ietf.org/html/rfc5246) - Transport Layer Security.
         Information passed among clients, Applications, Brokers, and Passport
         Clearinghouses MUST be protected using TLS.
 
@@ -162,16 +162,16 @@ specific assignment within the organization that made the assertion.
 
 [GA4GH-Passport](https://github.com/ga4gh-duri/ga4gh-duri.github.io/blob/master/researcher_ids/ga4gh_passport_v1.md) - DURI
 
-[RFC-8693](https://www.rfc-editor.org/info/rfc8693)  Jones, M., Nadalin, A., Campbell, B., Ed., Bradley, J.,
+[RFC8693](https://www.rfc-editor.org/info/rfc8693)  Jones, M., Nadalin, A., Campbell, B., Ed., Bradley, J.,
         and C. Mortimore, "OAuth 2.0 Token Exchange", RFC 8693,
         DOI 10.17487/RFC8693, January 2020.
 
-[RFC-6819](https://www.rfc-editor.org/info/rfc6819) 
+[RFC6819](https://www.rfc-editor.org/info/rfc6819) 
         Lodderstedt, T, McGloin, M., and P. Hunt, 
         "OAuth 2.0 Threat Model and Security Considerations", 
         RFC 6819, January 2013.
 
-[RFC-8725](https://www.rfc-editor.org/info/rfc8725)  Sheffer, Y., Hardt, D., and M. Jones, "JSON Web Token Best
+[RFC8725](https://www.rfc-editor.org/info/rfc8725)  Sheffer, Y., Hardt, D., and M. Jones, "JSON Web Token Best
         Current Practices", BCP 225, RFC 8725,
         DOI 10.17487/RFC8725, February 2020.
             
@@ -238,17 +238,9 @@ the Broker.
     Flow (with Confidential Client)
     <http://openid.net/specs/openid-connect-basic-1_0.html>
 
-2.  Public Clients (typically javascript browser clients)
-    SHOULD implement OIDC Implicit Flow
-    (<http://openid.net/specs/openid-connect-implicit-1_0.html>)
+2.  Conform to [revocation requirements](#token-revocation).
 
-    1.  MUST use "id_token token" response_type for authentication.
-
-    2.  Public Clients like mobile apps that use Authorization Code Grant SHOULD implement some additional protection such as PKCE (<https://tools.ietf.org/html/rfc7636>) .
-
-3.  Conform to [revocation requirements](#token-revocation).
-
-4.  Protection of Confidential Information
+3.  Protection of Confidential Information
 
     1.  Sensitive information (e.g., including client secrets,
         authorization codes, id_tokens, access_tokens) will be passed over
@@ -263,7 +255,7 @@ the Broker.
 
         2.  Pragma: no-cache
 
-5.  MUST provide protection against Client attacks as outlined in
+4.  MUST provide protection against Client attacks as outlined in
     [RFC 6819](https://tools.ietf.org/html/rfc6819).
 
 #### Conformance for Brokers
@@ -356,8 +348,6 @@ the Broker.
     them "as is" (i.e. it provides no additional assurance as to the quality,
     authenticity, or trustworthiness of the claims from such tokens and any such
     assurances are made by the issuer of the Visa, i.e. the Visa Issuer).
-
-TODO embedded-access-token is this a passport access token or a visa access token or something else
 
 <a name="conformance-for-visa-issuers"></a>
 #### Conformance for Visa Issuers
@@ -454,7 +444,7 @@ TODO embedded-access-token is this a passport access token or a visa access toke
 
 3.  Passports themselves are signed JWTs that contain Visas. Passports use [this format](#passport-format).
     
-4.  Passports MUST be signed with the `RS256` or `ES256` algorithm.
+4.  Passports MUST be signed with a [conformant signing algorithm](#signing-algorithms).
     
 5.  Passports MAY be issued from a [Token Endpoint](#term-token-endpoint) using [Token Exchange](#term-token-exchange), with the following clarifications:
 
@@ -636,7 +626,7 @@ Header:
    or `at+jwt` as required in [RFC9068](https://datatracker.ietf.org/doc/html/rfc9068#section-2.1)
    if the token format follows RFC9068.
 
-- `alg`: REQUIRED. MUST be "RS256" or "ES256".
+- `alg`: REQUIRED. See [Signing Algorithms](#signing-algorithms).
 
 - `kid`: REQUIRED. Key ID, see [RFC7515 section 4.1.4](https://tools.ietf.org/html/rfc7515#section-4.1.4)
 
@@ -667,7 +657,7 @@ Payload:
     can be used just to help inform if that is what a data controller or data holder
     needs.
 
--   `aud`: OPTIONAL. If provided, it MUST contain the Oauth Client ID of the
+-   `aud`: OPTIONAL. If provided, it MUST contain the OAuth Client ID of the
     relying party.
 
 -   `iat`: REQUIRED. Time issued.
@@ -766,7 +756,7 @@ Header format:
 
 where:
 
-1.  `alg` MUST be "RS256" or "ES256"
+1.  `alg` MUST comply with [Signing Algorithms](#signing-algorithms).
 
 2.  The header MUST NOT contain a `jku`.
 
@@ -900,7 +890,16 @@ following:
     encrypted at rest and follow best practices to limit the ability of
     administrators from decrypting this content.
 
-### Specification Revision History
+## Signing Algorithms
+
+JWTs MUST be issued with signatures using with the `ES256` or `RS256` algorithm.
+Clients, applications, and clearinghouses must validate signatures and must 
+take care to perform validation securely and resist tampering with the validation
+process, taking 
+[RFC8725 JSON Web Token Best Current Practices](https://www.rfc-editor.org/rfc/rfc8725.html#name-best-practices)
+into consideration.
+
+## Specification Revision History
 
 | Version | Date    | Editor                                     | Notes                   |
 |---------|---------|--------------------------------------------|-------------------------|
