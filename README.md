@@ -23,9 +23,9 @@ http://localhost:4000/local/
 
 The following Liquid tags are used to separate
 
-Second level headers - {% hr2 %}  <hr style="border: 2px solid; margin: 2em auto;"/>
-Third level headers - <hr style="width: 10em; margin: 2em auto;"/>
-Fourth level headers - <hr style="border: 0; height: 0; margin: 1em auto;"/>
+Second level headers - {% hr2 %} 
+Third level headers - {% hr3 %}
+Fourth level headers - {% hr4 %}
 
 Note that level 5 and 6 headers render smaller than paragraph text and are not
 distinctive - and therefore should be avoided.

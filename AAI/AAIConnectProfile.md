@@ -477,7 +477,8 @@ the Broker.
 
     6. The Token Endpoint MAY accept or require any other optional parameters defined in [RFC8693](https://datatracker.ietf.org/doc/html/rfc8693).
 
-    <br/> <u>Passport Issuing via [Token Exchange](#term-token-exchange) (non-normative)</u>
+<br/>
+*Passport Issuing via [Token Exchange](#term-token-exchange) (non-normative)*
 
 @startuml
 skinparam componentStyle rectangle
@@ -494,12 +495,12 @@ interface "Token\nEndpoint" as TokenEndpoint
 component "<b>Visa Issuer</b> (1)" as VisaIssuer1
 component "<b>Visa Issuer</b> (2)" as VisaIssuer2
 
-note "Signed visas can be sourced from\nmultiple visa issuers\n- either on demand or via batch transfer/cached" as VisaNote
+note "Signed visas can be sourced from\nmultiple visa issuers - either on\ndemand or via batch transfer/cached" as VisaNote
 
 VisaIssuer1 --up--> VisaNote : Visa A, B
 VisaIssuer2 --up--> VisaNote : Visa C
 
-Client <-- Broker #text:red : (step 1) login flow results in\nan AAI access token
+Client <-- Broker #text:red : (step 1) login flow results in\nan AAI passport-scoped access token
 Client ---> TokenEndpoint #text:red : (step 2) request for token exchange
 VisaNote ---right---> PassportIssuer #text:red : (step 3) visas obtained
 Client <-- TokenEndpoint  #text:red : (step 4) passport issued (passport contains visa A,B,C)
