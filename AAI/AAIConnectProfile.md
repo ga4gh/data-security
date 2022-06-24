@@ -4,7 +4,7 @@ title: AAI OIDC Profile
 permalink: aai-openid-connect-profile
 ---
 
-### Abstract
+## Abstract
 {:.no_toc}
 
 This specification profiles the OpenID Connect protocol (OIDC) to provide a federated
@@ -20,13 +20,17 @@ called [Passport Clearinghouses](#term-passport-clearinghouse).
 [GA4GH DURI Passports](https://github.com/ga4gh-duri/ga4gh-duri.github.io/blob/master/researcher_ids/ga4gh_passport_v1.md) can then be used for authorization purposes by downstream
 systems.
 
-### Table of Contents
+{% hr2 %}
+
+## Table of Contents
 {:.no_toc}
 
 * toc
 {:toc}
 
-### Requirements Notation and Conventions
+{% hr2 %}
+
+## Requirements Notation and Conventions
 
 This specification inherits terminology from the [OpenID
 Connect](http://openid.net/specs/openid-connect-core-1_0.html) and the [OAuth
@@ -36,7 +40,9 @@ The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD",
 "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this specification are to
 be interpreted as described in [RFC2119](https://www.ietf.org/rfc/rfc2119.txt).
 
-### Terminology
+{% hr2 %}
+
+## Terminology
 
 <a name="term-jwt"></a>
 **JWT** -- JSON Web Token as defined in [RFC7519](https://datatracker.ietf.org/doc/html/rfc7519).
@@ -140,7 +146,9 @@ specific assignment within the organization that made the assertion.
     organization that has the authority to make the assertion on behalf of the
     user and is responsible for making and maintaining the assertion.
 
-### Relevant Specifications
+{% hr2 %}
+
+## Relevant Specifications
 
 [OIDC-Core](http://openid.net/specs/openid-connect-core-1_0.html) -
         Authorization Code Flow will generate id_tokens and
@@ -174,9 +182,10 @@ specific assignment within the organization that made the assertion.
 [RFC8725](https://www.rfc-editor.org/info/rfc8725)  Sheffer, Y., Hardt, D., and M. Jones, "JSON Web Token Best
         Current Practices", BCP 225, RFC 8725,
         DOI 10.17487/RFC8725, February 2020.
-            
 
-### Flow of Assertions
+{% hr2 %}
+
+## Flow of Assertions
 
 @startuml
 skinparam componentStyle rectangle
@@ -229,9 +238,11 @@ combined into one service. For example, some implementations MAY deploy one
 service that handles the responsibilities of both the Visa Issuer and
 the Broker.
 
-### Profile Requirements
+{% hr2 %}
 
-#### Client/Application Conformance
+## Profile Requirements
+
+### Client/Application Conformance
 
 1.  Confidential clients (keep the client secret secure - typically
     server-side web-applications) MUST implement OIDC Authorization Code
@@ -258,7 +269,9 @@ the Broker.
 4.  MUST provide protection against Client attacks as outlined in
     [RFC 6819](https://tools.ietf.org/html/rfc6819).
 
-#### Conformance for Brokers
+{% hr3 %}
+
+### Conformance for Brokers
 
 1.  Brokers operate downstream from IdPs or provide their own IdP service. They
     issue id_tokens and access_tokens (and potentially refresh tokens) for
@@ -349,10 +362,12 @@ the Broker.
     authenticity, or trustworthiness of the claims from such tokens and any such
     assurances are made by the issuer of the Visa, i.e. the Visa Issuer).
 
-<a name="conformance-for-visa-issuers"></a>
-#### Conformance for Visa Issuers
+{% hr3 %}
 
-1.  A [Visa Issuer](#term-visa-issuer) MUST provide one or more of the following
+<a name="conformance-for-visa-issuers"></a>
+### Conformance for Visa Issuers
+
+1. A [Visa Issuer](#term-visa-issuer) MUST provide one or more of the following
     types of [Visas](#term-visa):
 
     1. <a name="term-visa-access-token"></a> <a name="term-embedded-access-token"></a>
@@ -397,7 +412,7 @@ the Broker.
             attacks as outlined in [RFC
             6819](https://tools.ietf.org/html/rfc6819).
 
-    1. <a name="term-visa-document-token"></a> <a name="term-embedded-document-token"></a>
+    4. <a name="term-visa-document-token"></a> <a name="term-embedded-document-token"></a>
        **Visa Document Token** -- The Visa Issuer does not need to
        be a OIDC provider, and MAY provide tokens of this type without any
        revocation process.
@@ -420,7 +435,7 @@ the Broker.
         5.  The `scope` JWT claim, if included, MUST NOT contain "openid" as
             a space-delimited substring.
 
-2.  A Visa Issuer MAY generate the `exp` timestamp to enforce
+3. A Visa Issuer MAY generate the `exp` timestamp to enforce
     its policies and allow Passport Clearinghouses to understand the intent of
     how long the assertion may be used before needing to return to the Visa Issuer
     to refresh the Visa. As a non-normative example, if an
@@ -429,14 +444,16 @@ the Broker.
     refresh token to be used when a downstream Passport Clearinghouse is still
     interested in using such an assertion after 1 day elapses.
 
-3.  By signing a Visa, a Visa Issuer asserts that
+4. By signing a Visa, a Visa Issuer asserts that
     the [Visa Assertions](#term-visa-assertion) made available by the Visa were legitimately derived
     from their [Visa Assertion Sources](#term-visa-assertion-source), and the content is
     presented and/or transformed without misrepresenting the original intent,
     except for accommodating for `exp` timestamps to be represented as
     indicated above.
 
-#### Conformance for Passport Issuers
+{% hr3 %}
+
+### Conformance for Passport Issuers
 
 1.  Passport Issuers are used to package Visas into signed Passports.
 
@@ -489,7 +506,9 @@ Client <-- TokenEndpoint  #text:red : (step 4) passport issued (passport contain
 
 @enduml    
 
-#### Conformance for Passport Clearinghouses (consuming Passports or Visas to give access to data)
+{% hr3 %}
+
+### Conformance for Passport Clearinghouses (consuming Passports or Visas to give access to data)
 
 1.  Passport Clearinghouses MUST trust at least one Broker.
 
@@ -601,7 +620,9 @@ Client <-- TokenEndpoint  #text:red : (step 4) passport issued (passport contain
         Clearinghouse is unable to adjust for the updated GA4GH Claims, then
         it MUST act as though the token was revoked.
 
-### GA4GH JWT Formats
+{% hr2 %}
+
+## GA4GH JWT Formats
 
 A well-formed JWS-Encoded JSON Web Token (JWT) consists of three concatenated
 Base64url-encoded strings, separated by dots (.) The three sections are: header,
@@ -610,10 +631,13 @@ and utilize a number of [standard JWT claim names](https://www.iana.org/assignme
 as per the registration process.
 This profile is agnostic to the format of the id_token.
 
-<a name="access_token-issued-by-broker"></a>
-#### Passport-Scoped Access Token issued by Broker
+{% hr3 %}
 
-Header:
+<a name="access_token-issued-by-broker"></a>
+### Passport-Scoped Access Token issued by Broker
+
+**Header**
+
 ```
 {
  "typ": "<jwt-type-identifier>",
@@ -630,7 +654,8 @@ Header:
 
 - `kid`: REQUIRED. Key ID, see [RFC7515 section 4.1.4](https://tools.ietf.org/html/rfc7515#section-4.1.4)
 
-Payload:
+**Payload**
+
 ```
 {
  "iss": "https://<issuer-website>/",
@@ -672,7 +697,9 @@ Payload:
 
 -   additional claims: OPTIONAL. Any other additional non-GA4GH claims are allowed. This specification does not dictate the format of other claims.
 
-#### Visas provided by a Broker via UserInfo Endpoint
+{% hr3 %}
+
+### Visas provided by a Broker via UserInfo Endpoint
 
 The [UserInfo](https://openid.net/specs/openid-connect-core-1_0.html#UserInfo) endpoint MAY use `application/json`
 or `application/jwt`. It is RECOMMENDED that if desiring to return a JWT, a Token Endpoint supporting
@@ -682,7 +709,9 @@ Only the GA4GH claims must be as prescribed here. Refer to OIDC Spec for more in
 The UserInfo response MUST include a `ga4gh_passport_v1` claim if a [Passport-Scoped Access Token](#term-passport-scoped-access-token)
 was used for accessing it.
 
-#### Passport Format
+{% hr3 %}
+
+### Passport Format
 
 Passport Issuers MUST issue a Passport conforming to the requirements in this section when a [Token Exchange](#term-token-exchange)
 with the `requested_token_type=urn:ga4gh:params:oauth:token-type:passport` is successfully performed
@@ -693,14 +722,14 @@ states that JWTs can be either signed and encoded using JWS Compact Serializatio
 or encrypted and encoded using JWE Compact Serialization. 
 Passports are signed JWTs, which implies that they must be encoded using JWS Compact Serialization.
 
-##### Passport Header
+**Header**
 
 This spec prescribes the following JWS headers for Passports 
 in addition to the guidelines established in [RFC7515](https://datatracker.ietf.org/doc/html/rfc7515):
 
 - `typ`: REQUIRED where the value must be `vnd.ga4gh.passport+jwt` for Passports.
 
-##### Passport Payload
+**Payload**
 
 Only the GA4GH claims must be as prescribed here. See the
 [JWT specification](https://datatracker.ietf.org/doc/html/rfc7519) for more details.
@@ -736,15 +765,35 @@ Only the GA4GH claims must be as prescribed here. See the
 - `ga4gh_passport_v1`: REQUIRED. An array of GA4GH Visas. May be empty if a user has no visas. See the
 [Passport spec](https://github.com/ga4gh-duri/ga4gh-duri.github.io) for more details on types of visas.
 
+{% hr3 %}
+
 <a name="visa-issued-by-visa-issuer"></a>
-#### Visa issued by Visa Issuer
+### Visa issued by Visa Issuer
 
 There are two supported formats for Visas.
 
-<a name="embedded-access-token-format"></a>
-##### Visa Access Token Format
+{% hr4 %}
 
-Header format:
+<a name="embedded-document-token-format"></a>
+#### Visa Document Token Format
+
+Conforms with JWS format requirements and is signed by a Visa Issuer.
+
+1. MUST be a JWS string.
+
+2. MUST contain a `jku` in the header.
+
+3. MUST NOT contain "openid" as a space-delimited substring of the `scope`
+   JWT claim, if the `scope` claim is provided.
+
+4. Payload claims are specified in [Passport Visa Format](https://github.com/ga4gh-duri/ga4gh-duri.github.io/blob/master/researcher_ids/ga4gh_passport_v1.md#passport-visa-format)
+
+{% hr4 %}
+
+<a name="embedded-access-token-format"></a>
+#### Visa Access Token Format
+
+**Header**
 
 ```
 {
@@ -760,7 +809,7 @@ where:
 
 2.  The header MUST NOT contain a `jku`.
 
-Payload format:
+**Payload**
 
 ```
 {
@@ -790,24 +839,22 @@ where:
 
 5.  The payload claims MUST NOT include `aud`.
 
-<a name="embedded-document-token-format"></a>
-##### Visa Document Token Format
+{% hr3 %}
 
-Conforms with JWS format requirements and is signed by a Visa Issuer.
+### Signing Algorithms
 
-1. MUST be a JWS string.
+JWTs MUST be issued with signatures using the `ES256` or `RS256` algorithm.
+Clients, applications, and clearinghouses must validate signatures and must
+take care to perform validation securely and resist tampering with the validation
+process, taking
+[RFC8725 JSON Web Token Best Current Practices](https://www.rfc-editor.org/rfc/rfc8725.html#name-best-practices)
+into consideration.
 
-2. MUST contain a `jku` in the header.
+{% hr2 %}
 
-3. MUST NOT contain "openid" as a space-delimited substring of the `scope`
-   JWT claim, if the `scope` claim is provided.
+## Token Revocation
 
-4. Payload claims are specified in [Passport Visa Format](https://github.com/ga4gh-duri/ga4gh-duri.github.io/blob/master/researcher_ids/ga4gh_passport_v1.md#passport-visa-format)
-
-Token Revocation
-----------------
-
-#### Visa Assertion Source Revokes Claim
+### Visa Assertion Source Revokes Claim
 
 Given that claims can cause downstream access tokens to be minted by Claim
 Clearinghouses and such downstream access tokens may have little knowledge or no
@@ -849,7 +896,9 @@ involved with access may employ one or more of the following options:
     revoke the refresh token, or revoke the access privileges associated with
     such tokens.
 
-#### Revoking Access from Bad Actors
+{% hr3 %}
+
+### Revoking Access from Bad Actors
 
 In the event that a system or user detects that a specific user is misbehaving or
 has falsified claims despite previous assurances that access was appropriate,
@@ -871,7 +920,9 @@ claims to prevent further tokens from being minted.
 2.  A process MUST exist, manual or automated, to eventually remove or invalidate
     related claims at source and intermediate systems.
 
-#### Limited Damage of Leaked Tokens
+{% hr3 %}
+
+### Limited Damage of Leaked Tokens
 
 In order to limit damage of leaked tokens, systems MUST provide all of the
 following:
@@ -890,14 +941,7 @@ following:
     encrypted at rest and follow best practices to limit the ability of
     administrators from decrypting this content.
 
-## Signing Algorithms
-
-JWTs MUST be issued with signatures using with the `ES256` or `RS256` algorithm.
-Clients, applications, and clearinghouses must validate signatures and must 
-take care to perform validation securely and resist tampering with the validation
-process, taking 
-[RFC8725 JSON Web Token Best Current Practices](https://www.rfc-editor.org/rfc/rfc8725.html#name-best-practices)
-into consideration.
+{% hr2 %}
 
 ## Specification Revision History
 
