@@ -80,3 +80,15 @@ A short Elliptic Curve key of around 256 bits provides the same security as a 30
 For a detailed discussion of signing algorithms, see the article
 [JWTs: Which Signing Algorithm Should I Use?](https://www.scottbrady91.com/jose/jwts-which-signing-algorithm-should-i-use)
 
+## Media types for JWTs
+
+In version 1.0, all the mentioned JWTs (access tokens, visas) used in their `typ` (media type) header parameter
+the generic value `JWT` that marks a generic JWT.
+
+In version 1.2, the `typ` header parameter is used to distinguish the various types of JWTs:
+
+- access tokens conforming to [RFC9038](https://datatracker.ietf.org/doc/html/rfc9068#section-2.1)
+  use the value `at+jwt`
+- Passports use the value `vnd.ga4gh.passport+jwt`
+- Visas are recommended to use the value `vnd.ga4gh.visa+jwt` but allowed to use `JWT`
+  for backward compatibility with version 1.0
