@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- Begin Jekyll SEO tag v2.7.1 -->
+<title>AAI Introduction | GA4GH Data Security</title>
+<meta name="generator" content="Jekyll v4.2.0">
+<meta property="og:title" content="AAI Introduction">
+<meta property="og:locale" content="en_US">
+<meta name="description" content="AAI">
+<meta property="og:description" content="AAI">
+<link rel="canonical" href="/data-security/1.2-draft-conformance-fixes/aai-introduction">
+<meta property="og:url" content="/data-security/1.2-draft-conformance-fixes/aai-introduction">
+<meta property="og:site_name" content="GA4GH Data Security">
+<meta name="twitter:card" content="summary">
+<meta property="twitter:title" content="AAI Introduction">
+<script type="application/ld+json">
+{"description":"AAI","url":"/data-security/1.2-draft-conformance-fixes/aai-introduction","@type":"WebPage","headline":"AAI Introduction","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/data-security/1.2-draft-conformance-fixes/assets/main.css">
+<link type="application/atom+xml" rel="alternate" href="/data-security/1.2-draft-conformance-fixes/feed.xml" title="GA4GH Data Security">
+</head>
+<body>
+<header class="site-header" role="banner">
+
+  <div class="wrapper">
+<a class="site-title" rel="author" href="/data-security/1.2-draft-conformance-fixes/">GA4GH Data Security</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger">
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewbox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"></path>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger">
+<a class="page-link" href="/data-security/1.2-draft-conformance-fixes/aai-introduction">AAI Introduction</a><a class="page-link" href="/data-security/1.2-draft-conformance-fixes/aai-openid-connect-profile">AAI OIDC Profile</a>
+</div>
+      </nav>
+</div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post">
+
+  <header class="post-header">
+    <h1 class="post-title">AAI Introduction</h1>
+  </header>
+
+  <div class="post-content">
+    <h3 class="no_toc" id="quick-links">Quick Links</h3>
+
+<ul>
+  <li>Specification: <a href="/data-security/1.2-draft-conformance-fixes/aai-openid-connect-profile">GA4GH Authentication and Authorization Infrastructure (AAI) OpenID Connect Profile</a>
+</li>
+  <li>Other specifications that use the AAI profile: <a href="https://bit.ly/ga4gh-passport-v1">GA4GH Passport</a>
+</li>
+</ul>
+
+<h3 class="no_toc" id="table-of-contents">Table of Contents</h3>
+
+<ul id="markdown-toc">
+  <li><a href="#introduction" id="markdown-toc-introduction">Introduction</a></li>
+  <li>
+<a href="#background" id="markdown-toc-background">Background</a>    <ul>
+      <li><a href="#examples-of-broker-technologies" id="markdown-toc-examples-of-broker-technologies">Examples of broker technologies</a></li>
+      <li><a href="#why-brokers" id="markdown-toc-why-brokers">Why Brokers?</a></li>
+      <li><a href="#embedded-tokens-example-and-explanation" id="markdown-toc-embedded-tokens-example-and-explanation">Embedded Tokens example and explanation</a></li>
+      <li><a href="#services-parties-are-responsible-for-providing" id="markdown-toc-services-parties-are-responsible-for-providing">Services parties are responsible for providing</a></li>
+    </ul>
+  </li>
+  <li><a href="#future-topics-to-explore" id="markdown-toc-future-topics-to-explore">Future topics to explore</a></li>
+</ul>
+
+<h3 id="introduction">Introduction</h3>
+
+<p>The <a href="/data-security/1.2-draft-conformance-fixes/aai-openid-connect-profile">GA4GH AAI profile specification</a>
+leverages OpenID Connect (OIDC) Servers for use in authenticating the identity of
+researchers desiring to access clinical and genomic resources from <a href="/data-security/1.2-draft-conformance-fixes/aai-openid-connect-profile#term-data-holder">data
+holders</a>
+adhering to GA4GH standards, and to enable data holders to obtain security-related
+attributes of those researchers. This is intended to be endorsed as a GA4GH standard,
+implemented by GA4GH Driver Projects, and shared broadly.</p>
+
+<p>To help assure the authenticity of identities used to access data from GA4GH
+Driver Projects, and other projects that adopt GA4GH standards, the Data Use and
+Researcher Identity (DURI) Work Stream has developed a standard around
+<a href="https://github.com/ga4gh-duri/ga4gh-duri.github.io/tree/master/researcher_ids">claims</a>.
+This standard assumes that some GA4GH Claims provided
+by Brokers described in this document will conform to the DURI researcher-identity
+policy and standard. This standard does NOT assume that DURI’s GA4GH Claims will be
+the only ones used.</p>
+
+<p>This AAI standard aims at developing an approach that enables data holders’ and data owners 
+systems to have systems that recognize and accept identities from multiple Brokers – allowing for
+a federated approach. An organization can still use this specification and not
+support multiple Brokers, though they may find in that case that it’s just using
+a prescriptive version of OIDC.</p>
+
+<h3 id="background">Background</h3>
+
+<h4 id="examples-of-broker-technologies">Examples of broker technologies</h4>
+
+<p>Examples of suites that provide both functionalities in a single package are :
+<a href="https://auth0.com/">Auth0.com</a>, <a href="https://www.keycloak.org">Keycloak</a> (open
+source), <a href="https://github.com/ory/hydra">Hydra</a> (open source), OpenAM,
+<a href="https://www.okta.com/">Okta</a>, Globus Auth, <a href="https://github.com/uc-cdis/fence">Gen3
+Fence</a>,
+<a href="https://elixir-europe.org/services/compute/aai">ELIXIR</a>, NIH/VDS, <a href="https://aws.amazon.com/cognito/">AWS
+Cognito</a>.</p>
+
+<h4 id="why-brokers">Why Brokers?</h4>
+
+<p>We have found that there are widely used Identity Providers (IdP) such as Google
+Authentication. These authentication mechanisms provide no authorization
+information (custom claims or scopes) but are so pervasive at the institution
+level that they cannot be ignored. The use of a “brokers” and “clearinghouses”
+enables “inserting” information into the usual OIDC flow so that Google
+identities can be used but claims and scopes can be customized.</p>
+
+<p>We have also found that some brokers, such as ELIXIR for example, provide
+some useful “extra” claims on top of an IdP like Google, but an institution
+receiving ELIXIR claims might want to add even more claims. Brokers then
+had to have a mechanism for trusting claims from other Brokers while
+providing provenance and proof of where they came from. This led to
+the embedded token structure.</p>
+
+<p>Here is a diagram:
+<a href="https://www.lucidchart.com/invitations/accept/68f3089b-0c9b-4e64-acd2-abffae3c0c43">https://www.lucidchart.com/invitations/accept/68f3089b-0c9b-4e64-acd2-abffae3c0c43</a>
+of a full-broker. This is one possible way to use this spec.</p>
+
+<p><img src="/data-security/1.2-draft-conformance-fixes/AAI/flow.png" alt="flow diagram"></p>
+
+<p>In this diagram, the Data Owner Claim Clearinghouse, the Data Holder Claim
+Clearinghouse and the Broker are all different entities. However, some cases,
+the Broker and Data Owner might be the same entity and
+even be operated with the same OIDC Provider Software.</p>
+
+<p>Examples of implementations that provide both Identity Brokering and Data Owner
+Claim Clearinghouse services are:
+<a href="https://docs.google.com/document/d/1hD0lsxotLvPaML_CSydVX6rJ-zogAH2nRVl4ax4gW1o/edit#heading=h.eilp6df62hbd">ELIXIR</a>,
+<a href="http://auth0.com">Auth0</a>, <a href="http://keycloak.org">Keycloak</a>, <a href="https://www.globus.org/tags/globus-auth">Globus
+auth</a>, <a href="https://www.okta.com/">Okta</a>,
+<a href="https://github.com/ory/hydra">Hydra</a>, <a href="https://aws.amazon.com/cognito/">AWS
+Cognito</a>. These can be Brokers and/or
+Claim Clearinghouses. They’re not usually only used for Claim consumption (akin
+to a OAuth2 Resource Server in many ways). NGINX and Apache both offer reverse
+proxies for “Claim Consumption Only” functionality –
+<a href="https://github.com/zmartzone/lua-resty-openidc">https://github.com/zmartzone/lua-resty-openidc</a> (with
+<a href="https://github.com/cdbattags/lua-resty-jwt">https://github.com/cdbattags/lua-resty-jwt</a>) and
+<a href="https://github.com/zmartzone/mod_auth_openidc">https://github.com/zmartzone/mod_auth_openidc</a> respectively.</p>
+
+<p>Data holders and data owners should explore their options to decide what best
+fits their needs.</p>
+
+<h4 id="embedded-tokens-example-and-explanation">Embedded Tokens example and explanation</h4>
+
+<p>TODO consider Visa vs embedded token terminology.</p>
+
+<p><img src="/data-security/1.2-draft-conformance-fixes/AAI/embedded_Claims_flow.png" alt="embedded claims flow diagram"></p>
+
+<p>Consider two parties: Google and ELIXIR.</p>
+
+<p>In this example, Google Passport Clearinghouse makes access decisions based
+on ELIXIR Assertion Repository information via a chain of brokers that have
+passed along the Passport Visas in standard GA4GH Passport format where the
+Passports are signed by different Brokers but the Passport Visas retain
+the signature from the Passport Visa Issuer.</p>
+
+<p>The way this chain of brokers and trust is maintained is through
+“embedded tokens”. There are two types of embedded
+tokens: Embedded Access Tokens and Embedded Document Tokens.</p>
+
+<p>Embedded Access Tokens are claims in a Broker’s token that can then be
+sent to OTHER brokers’ <code class="language-plaintext highlighter-rouge">/userinfo</code> endpoints for further user claims.
+In GA4GH Passports, embedded access tokens will usually carry full claims
+so as not to interrogate <code class="language-plaintext highlighter-rouge">/userinfo</code> each time.</p>
+
+<p>Embedded Document Tokens cannot be revoked and no <code class="language-plaintext highlighter-rouge">/userinfo</code> endpoint
+is provided for them, however they still offer a signature that can
+be used to verify their provenance and always contain the necessary
+claims in them already.</p>
+
+<h4 id="services-parties-are-responsible-for-providing">Services parties are responsible for providing</h4>
+
+<p><strong>Data Holders:</strong></p>
+
+<p>Data holders are expected to protect their resources within a Claim
+Clearinghouse Server. These Servers should be able to get claims from one or
+more Brokers, with researcher authentication provided by one or more Identity
+Providers. <em>Note: Most Claim Clearinghouses can provide access to resources
+based on information in Claims – if not the Claim Clearinghouses themselves
+then in some downstream application that protects data.</em></p>
+
+<p><strong>Data Owners:</strong></p>
+
+<p>Data owners are not required to implement or operate an Identity Provider
+(though they may choose to do so) or an Broker.</p>
+
+<p>Data Owners may choose to operate a Claim Clearinghouse server configured
+to consume access_tokens from an upstream Broker and then hand out JWT
+claims to relying parties and other Claim Clearinghouses.</p>
+
+<p>Some data owners will own the whole “chain” providing all of the different kinds
+of brokers and will also operate Claim Clearinghouses. For instance, NIH is a
+data owner and might provide Cloud Buckets and operate an IDP and Broker to
+utilize ERACommons and other identity resources.</p>
+
+<p>A Data Owner should be able to, based on an Identity from an Identity Provider,
+express some sort of <a href="#ga4gh-jwt-format">permissions</a> via the Claim Clearinghouse
+GA4GH claims. It is the responsibility of the Data Owner to provide these
+permissions to their Claim Clearinghouse to be expressed claims within a standard
+/userinfo process for downstream use.</p>
+
+<p>It is possible that the IdPs might have special claims. The Claim Clearinghouse
+being operated by the Data Owner should be “looking” for those claims and
+incorporating them, if desired, into the claims that it eventually sends to the
+user.</p>
+
+<p>A data owner is expected to maintain the <a href="https://github.com/ga4gh/data-security">operational
+security</a> of their Claim Clearinghouse
+server and hold it to the GA4GH spec for <a href="https://github.com/ga4gh/data-security">operational
+security</a>. It is also acceptable to
+align the security to a known and accepted framework such as NIST-800-53,
+ISO-27001/ISO-27002.</p>
+
+<h3 id="future-topics-to-explore">Future topics to explore</h3>
+
+<p><a href="https://openid.net/specs/openid-connect-federation-1_0.html">https://openid.net/specs/openid-connect-federation-1_0.html</a> - OIDC federation</p>
+
+<p>Register the Claim - According to RFC 7519 (JSON Web Token) section 4.2
+<a href="https://tools.ietf.org/html/rfc7519#section-4.2">https://tools.ietf.org/html/rfc7519#section-4.2</a> claim names should be
+registered by IANA in its “JSON Web Token Claims” registry at
+<a href="https://www.iana.org/assignments/jwt/jwt.xml">https://www.iana.org/assignments/jwt/jwt.xml</a> . Register GA4GH.</p>
+
+  </div>
+
+</article>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/data-security/1.2-draft-conformance-fixes/"></data>
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">GA4GH Data Security</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li class="p-name">GA4GH Data Security</li>
+</ul>
+      </div>
+
+      <div class="footer-col footer-col-2">
+<ul class="social-media-list"></ul>
+</div>
+
+      <div class="footer-col footer-col-3">
+        <p>AAI</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>
