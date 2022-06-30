@@ -86,11 +86,15 @@ systems.</p>
   <li>
 <a href="#ga4gh-jwt-formats" id="markdown-toc-ga4gh-jwt-formats">GA4GH JWT Formats</a>    <ul>
       <li><a href="#passport-scoped-access-token-issued-by-broker" id="markdown-toc-passport-scoped-access-token-issued-by-broker">Passport-Scoped Access Token issued by Broker</a></li>
-      <li><a href="#visas-provided-by-a-broker-via-userinfo-endpoint" id="markdown-toc-visas-provided-by-a-broker-via-userinfo-endpoint">Visas provided by a Broker via UserInfo Endpoint</a></li>
       <li>
-<a href="#passport-format" id="markdown-toc-passport-format">Passport Format</a>        <ul>
-          <li><a href="#passport-header" id="markdown-toc-passport-header">Passport Header</a></li>
-          <li><a href="#passport-payload" id="markdown-toc-passport-payload">Passport Payload</a></li>
+<a href="#claims-sent-to-data-holder-by-a-broker-via-token-or-userinfo-endpoint" id="markdown-toc-claims-sent-to-data-holder-by-a-broker-via-token-or-userinfo-endpoint">Claims sent to Data Holder by a Broker via Token or UserInfo Endpoint</a>        <ul>
+          <li><a href="#claims-via-userinfo-endpoint" id="markdown-toc-claims-via-userinfo-endpoint">Claims via UserInfo Endpoint</a></li>
+          <li>
+<a href="#passport-token-contents" id="markdown-toc-passport-token-contents">Passport Token Contents</a>            <ul>
+              <li><a href="#header" id="markdown-toc-header">Header</a></li>
+              <li><a href="#claims" id="markdown-toc-claims">Claims</a></li>
+            </ul>
+          </li>
         </ul>
       </li>
       <li>
@@ -99,6 +103,7 @@ systems.</p>
           <li><a href="#visa-document-token-format" id="markdown-toc-visa-document-token-format">Visa Document Token Format</a></li>
         </ul>
       </li>
+      <li><a href="#authorizationclaims" id="markdown-toc-authorizationclaims">Authorization/Claims</a></li>
     </ul>
   </li>
   <li>
@@ -174,13 +179,14 @@ can also be a data holder. Data holders run an
 data and, in that role, has capacity to decide who can access it. For
 instance, a Data Access Committee (DAC).</p>
 
-<p><a name="term-passport-scoped-access-token"></a> <strong>Passport-Scoped Access Token</strong> –
-An OIDC access token with <a href="https://datatracker.ietf.org/doc/html/rfc6749#section-3.3">scope</a>
-including the identifier <code class="language-plaintext highlighter-rouge">ga4gh_passport_v1</code>.</p>
+<p><a name="term-passport-scoped-access-token"></a> <strong>Passport-Scoped Access
+Token</strong> – A JWT bearer token, returned as an OAuth2 access token as
+described herein, encoded via JWS Compact Serialization per
+<a href="https://datatracker.ietf.org/doc/html/rfc7515">RFC7515</a>, containing
+<code class="language-plaintext highlighter-rouge">ga4gh_passport_v1</code> as a space-separated entry within the <code class="language-plaintext highlighter-rouge">scope</code> claim but
+does not contain <a href="#term-visa">Visas</a>.</p>
 
-<p>The access token MUST be a JWS-encoded JWT token containing <code class="language-plaintext highlighter-rouge">openid</code> and <code class="language-plaintext highlighter-rouge">ga4gh_passport_v1</code>
-entries in the value of its <code class="language-plaintext highlighter-rouge">scope</code> claim.
-It is RECOMMENDED that Passport-Scoped Access Tokens follow the <a href="https://datatracker.ietf.org/doc/html/rfc9068">RFC9068 JWT Profile for OAuth 2.0 Access Tokens</a> specification.</p>
+<p>It is RECOMMENDED that Passport-Scoped Access Tokens follow the <a href="https://datatracker.ietf.org/doc/html/rfc9068">RFC9068 JWT Profile for OAuth 2.0 Access Tokens</a> specification.</p>
 
 <p><a name="term-passport"></a> <strong>Passport</strong> – A signed and verifiable JWT container for holding <a href="#term-visa">Visas</a>.</p>
 
@@ -195,10 +201,6 @@ as defined by <a href="http://openid.net/specs/openid-connect-core-1_0.html">OID
 
 <p><a name="term-userinfo-endpoint"></a> <strong>UserInfo Endpoint</strong> – 
 as defined by <a href="http://openid.net/specs/openid-connect-core-1_0.html">OIDC-Core</a>; see <a href="https://openid.net/specs/openid-connect-core-1_0.html#UserInfo">UserInfo Endpoint</a>.</p>
-
-<p><a name="term-token-exchange"></a> <strong>Token Exchange</strong> –
-the protocol defined in <a href="https://www.rfc-editor.org/info/rfc8693">RFC 8693</a> as extension of OAuth 2
-for exchanging access tokens for other tokens. A token exchange is performed at <a href="#term-token-endpoint">Token Endpoint</a></p>
 
 <p><a name="term-visa-assertion"></a>
 <strong>Visa Assertion</strong> – a piece of information about a user that is asserted by a <a href="#term-visa-assertion-source">Visa Assertion Source</a>. It is then encoded by a <a href="#term-visa-issuer">Visa Issuer</a> into a <a href="#Visa">Visa</a>.</p>
@@ -237,9 +239,10 @@ user and is responsible for making and maintaining the assertion.</li>
         Authorization Code Flow and Implicit Flow will generate id_tokens and
         access_tokens from the Broker.</p>
 
-<p><a href="https://tools.ietf.org/html/rfc7519">RFC-7519</a> - JSON Web Token (JWT) - Specific implementations MAY extend
+<p><a href="https://tools.ietf.org/html/rfc7519">RFC-7519</a> - Specific implementations MAY extend
         this structure with their own service-specific JWT claim names as top-level
-        members of this JSON object. The JWT specified here follows JWS
+        members of this JSON object. Recommended “extensions” are in the
+        <a href="#authorizationclaims">Permissions</a> section. The JWT specified here follows JWS
         headers specification from <a href="https://tools.ietf.org/html/rfc7515">RFC7515-JWS</a>.</p>
 
 <p><a href="https://tools.ietf.org/html/rfc7515">RFC-7515</a> - JSON Web Signature (JWS) is the
@@ -423,7 +426,7 @@ for the provided scopes eligible for release to the requester MUST be returned.<
     </ol>
   </li>
   <li>
-    <p>Broker MAY support <a href="#term-token-exchange">Token Exchange</a>. If implemented, it MUST behave as described 
+    <p>Broker MAY support a Token Exchange endpoint. If implemented, it MUST behave as described 
 for passport issuance in <a href="#conformance-for-passport-issuers">Conformance For Passport Issuers</a>.</p>
   </li>
   <li>
@@ -461,10 +464,10 @@ previously generated access tokens.</p>
     </ol>
   </li>
   <li>
-    <p>By signing an access token, a Broker asserts that the GA4GH Claims that
+    <p>By signing an access token, an Broker asserts that the GA4GH Claims that
 token makes available at the UserInfo or Token Endpoint – 
-not including any Visas – were legitimately derived from their <a href="#term-visa-assertion-source">Visa Assertion Sources</a>,
-and the content is presented and/or
+not including any Visas – were legitimately derived from their <a href="#term-claim-source">Claim
+Sources</a>, and the content is presented and/or
 transformed without misrepresenting the original intent.</p>
 
     <p>When a Broker acts as a Visa Issuer and signs Visas, then those signatures
@@ -607,13 +610,19 @@ indicated above.</p>
     <p>Passport Issuers SHOULD be Brokers.</p>
   </li>
   <li>
-    <p>Passports themselves are signed JWTs that contain Visas. Passports use <a href="#passport-format">this format</a>.</p>
+    <p>Passports themselves are JWTs that contain Visas. Passports use <a href="#claims-sent-to-data-holder-by-a-broker-via-token-or-userinfo-endpoint">this format</a> as a signed JWT.</p>
+
+    <ol>
+      <li>
+        <p>It is RECOMMENDED for Passports to conform to the <a href="https://tools.ietf.org/html/rfc7515">https://tools.ietf.org/html/rfc7515</a> (JWS) Specification.</p>
+      </li>
+      <li>
+        <p>Passports MUST be signed with the <code class="language-plaintext highlighter-rouge">RS256</code> or <code class="language-plaintext highlighter-rouge">ES256</code> algorithm.</p>
+      </li>
+    </ol>
   </li>
   <li>
-    <p>Passports MUST be signed with the <code class="language-plaintext highlighter-rouge">RS256</code> or <code class="language-plaintext highlighter-rouge">ES256</code> algorithm.</p>
-  </li>
-  <li>
-    <p>Passports MAY be issued from a <a href="#term-token-endpoint">Token Endpoint</a> using <a href="#term-token-exchange">Token Exchange</a>, with the following clarifications:</p>
+    <p>Passports MAY be issued from a Token Endpoint using the <a href="https://datatracker.ietf.org/doc/html/rfc8693">token exchange OAuth extension</a>, modulo the following clarifications:</p>
 
     <ol>
       <li>
@@ -626,17 +635,20 @@ indicated above.</p>
         <p>The <code class="language-plaintext highlighter-rouge">requested_token_type</code> parameter MUST be present with the value <code class="language-plaintext highlighter-rouge">urn:ga4gh:params:oauth:token-type:passport</code>.</p>
       </li>
       <li>
-        <p>The <code class="language-plaintext highlighter-rouge">subject_token</code> parameter value MUST be a valid <a href="#term-passport-scoped-access-token">Passport-Scoped Access Token</a>.</p>
+        <p>The <code class="language-plaintext highlighter-rouge">subject_token</code> parameter value MUST be a valid AAI access token issued to the requesting client.</p>
       </li>
       <li>
         <p>The <code class="language-plaintext highlighter-rouge">subject_token_type</code> parameter value MUST be <code class="language-plaintext highlighter-rouge">urn:ietf:params:oauth:token-type:access_token</code>.</p>
+      </li>
+      <li>
+        <p>The Token Endpoint SHOULD require one or more scopes to be present in the given AAI access token (ex. <code class="language-plaintext highlighter-rouge">"scope": "ga4gh_passport_v1"</code>).</p>
       </li>
       <li>
         <p>The Token Endpoint MAY accept or require any other optional parameters defined in <a href="https://datatracker.ietf.org/doc/html/rfc8693">RFC8693</a>.</p>
       </li>
     </ol>
 
-    <p><br> <u>Passport Issuing via [Token Exchange](#term-token-exchange) (non-normative)</u></p>
+    <p><br> <u>Passport Issuing via Token Exchange (non-normative)</u></p>
   </li>
 </ol>
 
@@ -706,7 +718,7 @@ trust model).</li>
           </li>
           <li>
             <p>If treating the token as opaque a Passport Clearinghouse MUST know in
-advance where to find a corresponding Introspection Endpoint. This may limit the
+advance where to find a corresponding Token Endpoint. This may limit the
 functionality of accepting tokens from some Brokers.</p>
           </li>
         </ol>
@@ -827,27 +839,15 @@ This profile is agnostic to the format of the id_token.</p>
 <p><a name="access_token-issued-by-broker"></a></p>
 <h4 id="passport-scoped-access-token-issued-by-broker">Passport-Scoped Access Token issued by Broker</h4>
 
-<p>Header:</p>
+<p>Header - The <code class="language-plaintext highlighter-rouge">kid</code> parameter (see <a href="https://tools.ietf.org/html/rfc7515#section-4.1.4">RFC7515 section
+4.1.4</a>) must be included
+and <code class="language-plaintext highlighter-rouge">alg</code> must be “RS256”.</p>
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>{
- "typ": "&lt;jwt-type-identifier&gt;",
- "alg": "&lt;algorithm-identifier&gt;",
+ "typ": "JWT",
+ "alg": "RS256",
  "kid": "&lt;key-identifier&gt;"
 }
 </code></pre></div></div>
-<ul>
-  <li>
-    <p><code class="language-plaintext highlighter-rouge">typ</code>: REQUIRED. Media type of the JWT. Value should be either 
- <code class="language-plaintext highlighter-rouge">JWT</code> as recommended in <a href="https://datatracker.ietf.org/doc/html/rfc7519#section-5.1">RFC7519</a>
- or <code class="language-plaintext highlighter-rouge">at+jwt</code> as required in <a href="https://datatracker.ietf.org/doc/html/rfc9068#section-2.1">RFC9068</a>
- if the token format follows RFC9068.</p>
-  </li>
-  <li>
-    <p><code class="language-plaintext highlighter-rouge">alg</code>: REQUIRED. MUST be “RS256” or “ES256”.</p>
-  </li>
-  <li>
-    <p><code class="language-plaintext highlighter-rouge">kid</code>: REQUIRED. Key ID, see <a href="https://tools.ietf.org/html/rfc7515#section-4.1.4">RFC7515 section 4.1.4</a></p>
-  </li>
-</ul>
 
 <p>Payload:</p>
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>{
@@ -861,7 +861,7 @@ This profile is agnostic to the format of the id_token.</p>
  "iat": &lt;seconds-since-epoch&gt;,
  "exp": &lt;seconds-since-epoch&gt;,
  "jti": &lt;token-identifier&gt;,
- "scope": "openid ga4gh_passport_v1 &lt;additional-scopes&gt;",
+ "scope": "openid &lt;ga4gh-passport-scopes&gt;",
  &lt;additional claims&gt;
 }
 </code></pre></div></div>
@@ -894,46 +894,46 @@ relying party.</p>
 <a href="https://tools.ietf.org/html/rfc7519#section-4.1.7">RFC7519 Section 4.1.7</a></p>
   </li>
   <li>
-    <p><code class="language-plaintext highlighter-rouge">scope</code>: REQUIRED. Includes verified scopes. MUST include <code class="language-plaintext highlighter-rouge">openid</code> and <code class="language-plaintext highlighter-rouge">ga4gh_passport_v1</code>.
+    <p><code class="language-plaintext highlighter-rouge">scope</code>: REQUIRED. Includes verified scopes. MUST include “openid”. Will also
+include any <code class="language-plaintext highlighter-rouge">&lt;ga4gh-passport-scopes&gt;</code> from the GA4GH Passport specification
+(e.g. “ga4gh_passport_v1” is the <a href="https://github.com/ga4gh-duri/ga4gh-duri.github.io/blob/master/researcher_ids/ga4gh_passport_v1.md#requirement-7">scope for GA4GH
+Passports</a>).
 The <code class="language-plaintext highlighter-rouge">scope</code> claim is defined by <a href="https://datatracker.ietf.org/doc/html/rfc8693#section-4.2">RFC8693 section 4.2</a>.</p>
   </li>
   <li>
-    <p>additional claims: OPTIONAL. Any other additional non-GA4GH claims are allowed. This specification does not dictate the format of other claims.</p>
+    <p><code class="language-plaintext highlighter-rouge">addtional claims</code>: OPTIONAL. Any other additional non-GA4GH claims are allowed. This specification does not dictate the format of other claims.</p>
   </li>
 </ul>
 
-<h4 id="visas-provided-by-a-broker-via-userinfo-endpoint">Visas provided by a Broker via UserInfo Endpoint</h4>
+<h4 id="claims-sent-to-data-holder-by-a-broker-via-token-or-userinfo-endpoint">Claims sent to Data Holder by a Broker via Token or UserInfo Endpoint</h4>
+
+<h5 id="claims-via-userinfo-endpoint">Claims via UserInfo Endpoint</h5>
 
 <p>The <a href="https://openid.net/specs/openid-connect-core-1_0.html#UserInfo">UserInfo</a> endpoint MAY use <code class="language-plaintext highlighter-rouge">application/json</code>
 or <code class="language-plaintext highlighter-rouge">application/jwt</code>. It is RECOMMENDED that if desiring to return a JWT, a Token Endpoint supporting
-<a href="#term-token-exchange">Token Exchange</a> exists to do that and that the UserInfo Endpoint returns an <code class="language-plaintext highlighter-rouge">application/json</code> response.
+AAI token exchange exists to do that and that the UserInfo Endpoint returns an <code class="language-plaintext highlighter-rouge">application/json</code> response.
 Only the GA4GH claims must be as prescribed here. Refer to OIDC Spec for more information.</p>
 
-<p>The UserInfo response MUST include a <code class="language-plaintext highlighter-rouge">ga4gh_passport_v1</code> claim if a <a href="#term-passport-scoped-access-token">Passport-Scoped Access Token</a>
-was used for accessing it.</p>
+<p>The UserInfo payload MAY include a <code class="language-plaintext highlighter-rouge">ga4gh_passport_v1</code> claim. See <a href="#authorizationclaims">Authorization/Claims</a>
+for an example of a GA4GH Claim.</p>
 
-<h4 id="passport-format">Passport Format</h4>
+<h5 id="passport-token-contents">Passport Token Contents</h5>
 
-<p>Passport Issuers MUST issue a Passport conforming to the requirements in this section when a <a href="#term-token-exchange">Token Exchange</a>
+<p>Passport Issuers MUST issue a Passport token conforming to the requirements in this section when a token exchange
 with the <code class="language-plaintext highlighter-rouge">requested_token_type=urn:ga4gh:params:oauth:token-type:passport</code> is successfully performed
 (as described in the <a href="#conformance-for-passport-issuers">Conformance for Passport Issuers</a> section).</p>
 
-<p>Passports are defined as signed JWTs. <a href="https://datatracker.ietf.org/doc/html/rfc7519">RFC7519 (JWT)</a>
-states that JWTs can be either signed and encoded using JWS Compact Serialization, 
-or encrypted and encoded using JWE Compact Serialization. 
-Passports are signed JWTs, which implies that they must be encoded using JWS Compact Serialization.</p>
+<h6 id="header">Header</h6>
 
-<h5 id="passport-header">Passport Header</h5>
-
-<p>This spec prescribes the following JWS headers for Passports 
+<p>This spec prescribes the following JWS headers for Passport tokens
 in addition to the guidelines established in <a href="https://datatracker.ietf.org/doc/html/rfc7515">RFC7515</a>:</p>
 
 <ul>
   <li>
-<code class="language-plaintext highlighter-rouge">typ</code>: REQUIRED where the value must be <code class="language-plaintext highlighter-rouge">vnd.ga4gh.passport+jwt</code> for Passports.</li>
+<code class="language-plaintext highlighter-rouge">typ</code>: REQUIRED where the value must be <code class="language-plaintext highlighter-rouge">vnd.ga4gh.passport+jwt</code> for Passport tokens.</li>
 </ul>
 
-<h5 id="passport-payload">Passport Payload</h5>
+<h6 id="claims">Claims</h6>
 
 <p>Only the GA4GH claims must be as prescribed here. See the
 <a href="https://datatracker.ietf.org/doc/html/rfc7519">JWT specification</a> for more details.</p>
@@ -947,11 +947,7 @@ in addition to the guidelines established in <a href="https://datatracker.ietf.o
  ],
  "iat": &lt;seconds-since-epoch&gt;,
  "exp": &lt;seconds-since-epoch&gt;,
- "ga4gh_passport_v1": [
-    &lt;Passport Visa&gt;,
-    &lt;Passport Visa (if more than one)&gt;,
-    ...
- ]
+ &lt;ga4gh-spec-claims&gt;
 }
 </code></pre></div></div>
 
@@ -1059,9 +1055,66 @@ name is defined by <a href="https://datatracker.ietf.org/doc/html/rfc8693#sectio
 JWT claim, if the <code class="language-plaintext highlighter-rouge">scope</code> claim is provided.</p>
   </li>
   <li>
-    <p>Payload claims are specified in <a href="https://github.com/ga4gh-duri/ga4gh-duri.github.io/blob/master/researcher_ids/ga4gh_passport_v1.md#passport-visa-format">Passport Visa Format</a></p>
+    <p>The following headers and JWT claims in the payload are REQUIRED
+(here shown in its decoded JSON form):</p>
+
+    <div class="language-plaintext highlighter-rouge">
+<div class="highlight"><pre class="highlight"><code>{
+  "typ": "JWT",
+  "alg": "&lt;algorithm&gt;",
+  "jku": "https://&lt;jwk-URL&gt;",
+  "kid": "&lt;key-identifier&gt;"
+}.
+{
+  "iss": "https://&lt;issuer-website&gt;/",
+  "sub": "&lt;subject-identifier&gt;",
+  "iat": &lt;seconds-since-epoch&gt;,
+  "exp": &lt;seconds-since-epoch&gt;,
+  "jti": &lt;token-identifier&gt;,
+  &lt;ga4gh-visa-claims&gt;
+}.
+&lt;signature&gt;
+</code></pre></div>    </div>
+
+    <ul>
+      <li>
+        <p><code class="language-plaintext highlighter-rouge">typ</code>: MUST be “JWT”.</p>
+      </li>
+      <li>
+        <p><code class="language-plaintext highlighter-rouge">alg</code>: MUST be “RS256” or “ES256”</p>
+      </li>
+      <li>
+        <p><code class="language-plaintext highlighter-rouge">jti</code>: RECOMMENDED. A unique identifier for the token as per
+<a href="https://tools.ietf.org/html/rfc7519#section-4.1.7">RFC7519 Section 4.1.7</a>
+is RECOMMENDED.</p>
+      </li>
+      <li>
+        <p><code class="language-plaintext highlighter-rouge">&lt;ga4gh-visa-claims&gt;</code>: OPTIONAL. One or more GA4GH Claims MAY be
+provided. See <a href="#authorizationclaims">Authorization/Claims</a> for an
+example.</p>
+      </li>
+    </ul>
   </li>
 </ol>
+
+<h4 id="authorizationclaims">Authorization/Claims</h4>
+
+<p>User attributes and claims are being developed in the <a href="https://github.com/ga4gh-duri/ga4gh-duri.github.io/blob/master/researcher_ids/ga4gh_passport_v1.md">GA4GH Passport
+specification</a>
+by the DURI work stream.</p>
+
+<p>A non-normative example of a GA4GH Passport, as referred to
+in as <code class="language-plaintext highlighter-rouge">&lt;ga4gh-passport-claims&gt;</code> within the JWT formatting sections of this
+specification, is:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>"ga4gh_passport_v1": [
+  &lt;ga4gh passport value&gt;
+]
+</code></pre></div></div>
+
+<p>See the <a href="https://github.com/ga4gh-duri/ga4gh-duri.github.io/blob/master/researcher_ids/ga4gh_passport_v1.md#passport-claim-format">GA4GH Passport
+Claim Format</a>
+for more details.</p>
 
 <h2 id="token-revocation">Token Revocation</h2>
 
