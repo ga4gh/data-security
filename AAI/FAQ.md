@@ -23,7 +23,7 @@ The exchange flow does not ever distribute the initial *Passport-Scoped Access T
 the client application. A token exchange operation is executed by the client, in
 exchange for a *Passport* JWT that may be used downstream to access resources. In this example flow, the
 *Passport* is included as authorization in the POST to a DRS server. The token
-exchange has also specified a known resource server website that will limit the audience
+exchange has also specified known resources that will limit the audience
 of the *Passport*.
 
 {% plantuml %}
@@ -61,13 +61,15 @@ end ref
 
 client -> broker : Token exchange
 note right
+(note: for clarity these form values have not actually been URL encoded)
 Content-Type: application/x-www-form-urlencoded
 
 grant_type=urn:ietf:params:oauth:grant-type:token-exchange
-requested_token_type=urn:ga4gh:params:oauth:token-type:passport
-subject_token=<Passport-Scoped Access Token>
-subject_token_type=urn:ietf:params:oauth:token-type:access_token
-audience=https://<drs-resource-server-website>
+&requested_token_type=urn:ga4gh:params:oauth:token-type:passport
+&subject_token_type=urn:ietf:params:oauth:token-type:access_token
+&subject_token=<Passport-Scoped Access Token>
+&resource=https://drs.example.com/dataset1
+&resource=https://drs.example.com/dataset2
 end note
 
 group#DeepSkyBlue #LightSkyBlue Informative Only (not defined in the specification)
@@ -101,7 +103,7 @@ note right
   "iss": "https://<issuer-website>",
   "sub": "<subject-identifier>",
   "aud": [
-    "https://<drs-resource-server-website>"
+    "https://drs.example.com"
   ],
   "iat": <seconds-since-epoch>,
   "exp": <seconds-since-epoch>,
@@ -117,9 +119,15 @@ end note
 ==Use==
 
 client -> clearing : Client requests data
-note right
+note right 
+POST /ga4gh/drs/v1/objects/dataset1/access/s3 HTTP/1.1
+Host: drs.example.com
+Content-Type: application/json
+
 {
-  REPLACE WITH CORRECT DRS DETAILS
+  "passports": [
+    "<Passport>"
+  ]
 }
 end note
 
@@ -236,16 +244,52 @@ client <- clearing : Client is given data
 
 ### What is the danger of using a fully scoped (or audience-less) token in a multi node workflow
 
-Unless down-scoped by the initial OIDC flow - the *Passport Scoped Access Token* is
-a token that can unlock all data that the user is entitled to. Furthermore, it is
-unscoped in audience - with no indications of 
-the Clearinghouse (or downstream services) it is intended for.
+The *Passport Scoped Access Token* is
+a token that can unlock **all** data that the user is entitled to, and not just
+that data needed for any particular analysis. 
 
-The result of this is that if passed to a bad actor (a Clearinghouse that has been
+The result of this is that if passed to a bad actor (some service that has been
 compromised for example) - the bad actor can use the token
 for sideways movement amongst the other nodes.
 
-Insert diagram.
+In the below example - a passport has been passed via a compute service to a resource server that
+is compromised. The assumption now is that data controlled by that resource
+server may be lost. 
+
+However, because the passport has no resource scope or audience - the bad actor
+can also move sideways in the system to access Dataset #2 and #3 - and not just Dataset #1
+that has already been compromised.
+
+In a system where passports can be down-scoped - the Passport passed to Resource Server #B
+as part of the attack on the rest of the system would be rejected - because
+it would be scoped only for Resource Server #A / Dataset #1.
+
+{% plantuml %}
+left to right direction
+
+rectangle "Client Trust Boundary" as clientboundary #white;line:green;line.dashed;text:green {
+  rectangle Client 
+}
+rectangle "Compute Server #1\ne.g. WES" as Compute
+rectangle "Resource Server #A\ne.g. DRS\n (compromised)" as RSA #pink;line:red;line.bold
+rectangle "Resource Server #B\ne.g. DRS" as RSB
+rectangle "Authorization Server\n(GA4GH Broker)" as Auth
+database "Dataset #1\n(assumed\ncompromised)" as DS1 #orange;line:red;line.bold
+database "Dataset #2" as DS2
+database "Dataset #3" as DS3
+
+[Client] ---right---> [Auth]
+
+[RSA] --> [DS1]
+[RSB] --> [DS2]
+[RSB] --> [DS3]
+
+[Client] --> [Compute] : asked to run job\n(sending passport downstream)
+[Compute] --> [RSA]
+
+[RSA] -[#red,plain,thickness=16]-> [RSB] : attack
+
+{% endplantuml %}
 
 The addition of audiences to the token, or down-scoping of permissions - possible via token exchange - limits
 the scope of damage if the token ends up with a bad actor.
