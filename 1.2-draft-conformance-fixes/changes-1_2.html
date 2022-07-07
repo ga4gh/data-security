@@ -72,6 +72,7 @@
   <li><a href="#redefined-passport-as-a-jwt-containing-visas" id="markdown-toc-redefined-passport-as-a-jwt-containing-visas">Redefined Passport as a JWT containing Visas</a></li>
   <li><a href="#defined-passport-issuer" id="markdown-toc-defined-passport-issuer">Defined Passport Issuer</a></li>
   <li><a href="#added-more-signing-algorithms" id="markdown-toc-added-more-signing-algorithms">Added more signing algorithms</a></li>
+  <li><a href="#media-types-for-jwts" id="markdown-toc-media-types-for-jwts">Media types for JWTs</a></li>
 </ul>
 
 <h2 id="terminology-changes">Terminology changes</h2>
@@ -171,6 +172,22 @@ A short Elliptic Curve key of around 256 bits provides the same security as a 30
 <p>For a detailed discussion of signing algorithms, see the article
 <a href="https://www.scottbrady91.com/jose/jwts-which-signing-algorithm-should-i-use">JWTs: Which Signing Algorithm Should I Use?</a></p>
 
+<h2 id="media-types-for-jwts">Media types for JWTs</h2>
+
+<p>In version 1.0, all the mentioned JWTs (access tokens, visas) used in their <code class="language-plaintext highlighter-rouge">typ</code> (media type) header parameter
+the generic value <code class="language-plaintext highlighter-rouge">JWT</code> that marks a generic JWT.</p>
+
+<p>In version 1.2, the <code class="language-plaintext highlighter-rouge">typ</code> header parameter is used to distinguish the various types of JWTs:</p>
+
+<ul>
+  <li>access tokens conforming to <a href="https://datatracker.ietf.org/doc/html/rfc9068#section-2.1">RFC9038</a>
+use the value <code class="language-plaintext highlighter-rouge">at+jwt</code>
+</li>
+  <li>Passports use the value <code class="language-plaintext highlighter-rouge">vnd.ga4gh.passport+jwt</code>
+</li>
+  <li>Visas are recommended to use the value <code class="language-plaintext highlighter-rouge">vnd.ga4gh.visa+jwt</code> but allowed to use <code class="language-plaintext highlighter-rouge">JWT</code>
+for backward compatibility with version 1.0</li>
+</ul>
 
   </div>
 
