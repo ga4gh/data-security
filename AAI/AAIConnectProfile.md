@@ -299,7 +299,7 @@ the Broker.
 
 3.  Broker MUST support a Token Endpoint or UserInfo Endpoint.
 
-    1. [Token Exchange](#term-token-exchange) at Token Endpoint SHOULD be used for [Visas](#term-visa) in 
+    1. [Token Exchange](#term-token-exchange) at the Token Endpoint SHOULD be used for [Visas](#term-visa) in 
        preference to the UserInfo Endpoint.
 
     2. When presented with a valid [Passport-scoped Access Token](#term-passport-scoped-access-token),
