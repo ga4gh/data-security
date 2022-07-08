@@ -574,6 +574,148 @@ Country: US
 
 <hr style="border: 2px solid; margin: 2em auto;">
 
+<h2 id="trust">Trust</h2>
+
+<h3 id="whats-with-all-the-signed-passports-and-visas-etc-why-so-complex">What’s with all the signed passports and visas etc? Why so complex?</h3>
+
+<p>The practical operation of a loosely coupled
+federated ecoystem like GA4GH Passports requires establishing trust
+relationships between the participating entities.</p>
+
+<p>Any entity that is asked to make a decision about sharing data needs to have apriori
+made the decision “which other entities do I trust?”. When presented with a
+Passport and Visas from entities that they trust - they can rely on the information (claims) provided
+to make data sharing decisions. If presented with information from entities that are
+untrusted - the content of the message is irrelevant as there is no basis on which to believe
+the content.</p>
+
+<p>So we can see that trust is a crucial element of a working federation. How do we establish
+these trust relationships?</p>
+
+<p>GA4GH Passports and Visas leverage the mechanisms present in JWT (ref) as used
+by the OIDC standards (ref) to cryptographically “sign” tokens. Signed tokens can be
+“verified” using public/private keys.</p>
+
+<h3 id="why-are-the-visa-claims-formatted-as-jwts-inside-the-passport">Why are the Visa claims formatted as JWTs inside the Passport?</h3>
+
+<p>A section on the importance to the NiH of retaining original authority in visas.</p>
+
+<h3 id="what-are-the-ways-that-key-management-is-done-in-practice">What are the ways that key management is done in practice?</h3>
+
+<p>There are a variety of approaches that can be used for key
+management for Passports and Visas. We will first detail those that can be used for Passports
+and then discuss some extra wrinkles for Visas.</p>
+
+<p>For this discussion we assume there is a concrete JWT from issuer <code class="language-plaintext highlighter-rouge">https://issuer.example.org</code>
+(possibly a Broker <em>or</em> a Visa Issuer).</p>
+
+<p>My clearing house service ‘trusts’ the above issuer to help make data
+access decisions - and that trust is stated probably through some sort of explicit
+configuration. For our example lets imagine it has a hypothetical YAML configuration file</p>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">trusted_brokers</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="s">https://issuer.example.org</span>
+  <span class="pi">-</span> <span class="s">https://login.broker.com</span>
+
+<span class="na">trusted_visa_issuers</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="s">https://dac.gov.world</span>
+</code></pre></div></div>
+
+<p>The service now wants to verify a Passport or Visa
+JWT purporting to be from that issuer.</p>
+
+<hr>
+
+<h4 id="use-jku-in-the-header-of-the-jwt">Use <code class="language-plaintext highlighter-rouge">jku</code> in the header of the JWT</h4>
+
+<p>The JKU is the URL of a JSON file containing the issuers’ public keys.</p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"iss"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://issuer.example.org"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"jku"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://issuer.example.org/public-keys.json"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"kid"</span><span class="p">:</span><span class="w"> </span><span class="s2">"key-october-1"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<p>For our concrete example we say that it is a JSON file residing
+at <code class="language-plaintext highlighter-rouge">https://issuer.example.org/public-keys.json</code>. We should note that
+there is no requirement that the file is hosted at the same
+location as the issuer (it could have been at <code class="language-plaintext highlighter-rouge">https://keys.example.org</code> for instance).</p>
+
+<p><strong>IMPORTANTLY</strong>, for the secure use of this key management technique - the JKU 
+<strong>MUST</strong> also be whitelisted as part of the configuration of <strong>OUR</strong> service.
+Maybe we expand out of service configuration file to include the JKU.</p>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">trusted_brokers</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="na">issuer</span><span class="pi">:</span> <span class="s">https://issuer.example.org</span>
+    <span class="na">jku</span><span class="pi">:</span> <span class="s">https://issuer.example.org/public-keys.json</span>
+
+  <span class="pi">-</span> <span class="na">issuer</span><span class="pi">:</span> <span class="s">https://login.broker.com</span>
+    <span class="na">jku</span><span class="pi">:</span> <span class="s">https://keys.broker.com/set</span>
+</code></pre></div></div>
+
+<p>It is <strong>NEVER</strong> valid to even attempt to access a JKU from a JWT header - unless the URL
+is already known to belong to the given issuer. (linkt to attack)</p>
+
+<p>To verify a JWT, the content of the JKU file is loaded and the <code class="language-plaintext highlighter-rouge">kid</code> is
+looked up in key set. The signature is validated using the public key found.</p>
+
+<p>Although this configuration requires explicit registration of JKUs, the content
+of the key sets can allow the best practice of key rotation.</p>
+
+<p>The content of the JKU file is designed to be cached aggressively but the set of keys
+can evolve/rotate slowly (think weeks/months - not hours).</p>
+
+<hr>
+
+<h4 id="use-the-kid-in-the-header-of-the-jwt-along-with-oidc-discovery">Use the <code class="language-plaintext highlighter-rouge">kid</code> in the header of the JWT along with OIDC Discovery</h4>
+
+<p>The OIDC discovery protocol allows the use of the JWT issuer - in conjunction with a call
+to a .well-known/openid-configuration to look up the location of the public key file.</p>
+
+<p>As wtih JKU, the content of the discovery protocol and key sets can be cached
+aggressively.</p>
+
+<hr>
+
+<h4 id="exchange-public-keys-beforehand-with-each-trusted-entity">Exchange public keys beforehand with each trusted entity</h4>
+
+<p>This is an approach used by the NiH - and is appropriate if the number
+of trusted entities is small - such that the public keys of each trusted entity can be exchanged
+out of band (and their rotation/updating can also be managed out of band).</p>
+
+<p>Configuration may be</p>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">trusted_brokers</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="na">issuer</span><span class="pi">:</span> <span class="s">https://issuer.example.org</span>
+    <span class="na">keys</span><span class="pi">:</span>
+      <span class="na">key-october-1</span><span class="pi">:</span> <span class="s2">"</span><span class="s">ABCDTRTFDSFSDFSF...."</span>
+
+  <span class="pi">-</span> <span class="na">issuer</span><span class="pi">:</span> <span class="s">https://login.broker.com</span>
+    <span class="na">keys</span><span class="pi">:</span>
+      <span class="na">kid123456</span><span class="pi">:</span> <span class="s2">"</span><span class="s">ABCDTRTFDSFSDFSF...."</span>
+</code></pre></div></div>
+
+<p>For any <code class="language-plaintext highlighter-rouge">kid</code>
+encountered in a JWT, the corresponding public key is already available for signature validation.</p>
+
+<p>An even safer version of this approach is to perform
+the key verification across every public key you hold before even decoding the JWT JSON
+and then confirm the <code class="language-plaintext highlighter-rouge">kid</code>. This avoids ever even needing to JSON decode
+data from untrusted entities.</p>
+
+<hr>
+
+<p>When it comes to Visas, there is an extra wrinkle - unlike Brokers, Visa Issuers do not
+need to have been part of an OIDC flow. It is possible that the visa issuer URI is not
+even a locatable reference
+(e.g. <code class="language-plaintext highlighter-rouge">urn:example.com:dac-world-visa-issuer</code>).</p>
+
+<p>Therefore the OIDC Discovery technique is not appropriate and hence the requirements
+of the AAI standard regarding the presence of JKUs.</p>
+
+<hr style="border: 2px solid; margin: 2em auto;">
+
 <h2 id="threat-analysis">Threat Analysis</h2>
 
 <h3 id="what-is-the-danger-of-using-a-fully-scoped-or-audience-less-token-in-a-multi-node-workflow">What is the danger of using a fully scoped (or audience-less) token in a multi node workflow</h3>
@@ -759,8 +901,6 @@ genomic data.</p>
 <p>It is possible for a SPA to predominantly execute in browser - but to still use
 a (small) backend set of services to execute any OIDC flows and token exchanges. These
 backend service <em>can</em> retain a secret and hence can prove client identity.</p>
-
-<p>Insert source example/diagram.</p>
 
 <p>See also the emerging standard DPoP
 (<a href="https://datatracker.ietf.org/doc/html/draft-ietf-oauth-dpop-09">OAuth 2.0 Demonstrating Proof-of-Possession at the Application Layer</a>)
