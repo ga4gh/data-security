@@ -244,12 +244,20 @@ client <- clearing : Client is given data
 
 ### What's with all the signed passports and visas etc? Why so complex?
 
+(last updated July 2022)
+
 The practical operation of a loosely coupled
-federated ecoystem like GA4GH Passports requires establishing trust
-relationships between the participating entities.
+federated ecosystem like GA4GH Passports requires establishing trust
+relationships between the participating entities (see
+[OpenID Connect Federation](https://openid.net/specs/openid-connect-federation-1_0.html)
+for an interesting discussion of the properties of multilateral federations).
 
 Any entity that is asked to make a decision about sharing data needs to have apriori
-made the decision "which other entities do I trust?". When presented with a
+made the decision "which other entities do I trust?". In genomics, a single decision
+to allow data sharing might involve simultaneous trusting of
+multiple entities - human genomics is complex!
+
+When presented with a
 Passport and Visas from entities that they trust - they can rely on the information (claims) provided
 to make data sharing decisions. If presented with information from entities that are
 untrusted - the content of the message is irrelevant as there is no basis on which to believe
@@ -258,8 +266,10 @@ the content.
 So we can see that trust is a crucial element of a working federation. How do we establish
 these trust relationships?
 
-GA4GH Passports and Visas leverage the mechanisms present in JWT (ref) as used
-by the OIDC standards (ref) to cryptographically "sign" tokens. Signed tokens can be
+GA4GH Passports and Visas leverage the mechanisms
+present in [JWT](https://datatracker.ietf.org/doc/html/rfc7519) as used
+by the [OIDC standards](https://openid.net/specs/openid-connect-core-1_0.html) 
+to cryptographically "sign" tokens containing claims. Signed tokens can be
 "verified" using public/private keys.
 
 
@@ -269,6 +279,8 @@ A section on the importance to the NiH of retaining original authority in visas.
 
 
 ### What are the ways that key management is done in practice?
+
+(last updated July 2022)
 
 There are a variety of approaches that can be used for key
 management for Passports and Visas. We will first detail those that can be used for Passports
@@ -308,7 +320,8 @@ The JKU is the URL of a JSON file containing the issuers' public keys.
 ```
 
 For our concrete example we say that it is a JSON file residing
-at `https://issuer.example.org/public-keys.json`. We should note that
+at `https://issuer.example.org/public-keys.json` (see
+[RFC 7517 "JSON Web Key"](https://datatracker.ietf.org/doc/html/rfc7517)). We should note that
 there is no requirement that the file is hosted at the same
 location as the issuer (it could have been at `https://keys.example.org` for instance).
 
@@ -326,7 +339,8 @@ trusted_brokers:
 ```
 
 It is **NEVER** valid to even attempt to access a JKU from a JWT header - unless the URL
-is already known to belong to the given issuer. (linkt to attack)
+is already known to belong to the given issuer. See
+["JWT Forgery via unvalidated jku parameter"](https://www.invicti.com/web-vulnerability-scanner/vulnerabilities/jwt-forgery-via-unvalidated-jku-parameter/).
 
 To verify a JWT, the content of the JKU file is loaded and the `kid` is
 looked up in key set. The signature is validated using the public key found.
@@ -334,19 +348,30 @@ looked up in key set. The signature is validated using the public key found.
 Although this configuration requires explicit registration of JKUs, the content
 of the key sets can allow the best practice of key rotation.
 
-The content of the JKU file is designed to be cached aggressively but the set of keys
-can evolve/rotate slowly (think weeks/months - not hours).
-
+The content of the JKU file is designed to be cached aggressively - but as long as
+the files is fetched every few days/weeks the set of keys
+can evolve/rotate.
 
 ---
 
 #### Use the `kid` in the header of the JWT along with OIDC Discovery
 
-The OIDC discovery protocol allows the use of the JWT issuer - in conjunction with a call
-to a .well-known/openid-configuration to look up the location of the public key file.
+The [OpenID Connect Discovery](https://openid.net/specs/openid-connect-discovery-1_0.html)
+protocol allows the use of the JWT issuer URL - in conjunction with a fetch
+of a `/.well-known/openid-configuration` - to look up the location of the public key set file. See
+[OpenID Provider Metadata specification](https://openid.net/specs/openid-connect-discovery-1_0.html#ProviderMetadata)
+and the `jwks_uri` entry.
 
-As wtih JKU, the content of the discovery protocol and key sets can be cached
-aggressively.
+As with JKU - it is important that OIDC discovery is limited only to JWT issuer URLs that are
+in some way whitelisted. It is **NEVER** valid to perform discovery on an arbitrary issuer
+encountered in a JWT. Luckily, the concept of whitelisting issuers is already in some way
+inherent to the way trust relationships are established, and hence this whitelist should
+already be present in the system.
+
+Also as with JKU, the content of the discovery protocol and key sets can be cached
+aggressively. This means that the double step of the discovery protocol is not
+required on every JWT verification.
+
 
 ---
 
@@ -378,6 +403,8 @@ and then confirm the `kid`. This avoids ever even needing to JSON decode
 data from untrusted entities.
 
 ---
+
+#### Requirement for JKU in Visas
 
 When it comes to Visas, there is an extra wrinkle - unlike Brokers, Visa Issuers do not
 need to have been part of an OIDC flow. It is possible that the visa issuer URI is not
@@ -417,9 +444,7 @@ it would be scoped only for Resource Server #A / Dataset #1.
 {% plantuml %}
 left to right direction
 
-rectangle "Client Trust Boundary" as clientboundary #white;line:green;line.dashed;text:green {
-  rectangle Client 
-}
+rectangle Client 
 rectangle "Compute Server #1\ne.g. WES" as Compute
 rectangle "Resource Server #A\ne.g. DRS\n (compromised)" as RSA #pink;line:red;line.bold
 rectangle "Resource Server #B\ne.g. DRS" as RSB
@@ -428,7 +453,7 @@ database "Dataset #1\n(assumed\ncompromised)" as DS1 #orange;line:red;line.bold
 database "Dataset #2" as DS2
 database "Dataset #3" as DS3
 
-[Client] ---right---> [Auth]
+[Client] <---right---> [Auth]
 
 [RSA] --> [DS1]
 [RSB] --> [DS2]
@@ -436,6 +461,7 @@ database "Dataset #3" as DS3
 
 [Client] --> [Compute] : asked to run job\n(sending passport downstream)
 [Compute] --> [RSA]
+[Compute] --> [RSB]
 
 [RSA] -[#red,plain,thickness=16]-> [RSB] : attack
 
