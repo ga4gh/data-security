@@ -3,6 +3,7 @@ layout: page
 permalink: aai-openid-connect-profile
 ---
 
+#### Version 1.0.4
 <details><summary>Open to view version history</summary>
        
 | Version | Date    | Editor                                     | Notes                   |
