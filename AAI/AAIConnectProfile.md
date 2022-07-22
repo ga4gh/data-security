@@ -3,6 +3,8 @@ layout: page
 permalink: aai-openid-connect-profile
 ---
 
+<details><summary>Open to view version history</summary>
+       
 | Version | Date    | Editor                                     | Notes                   |
 |---------|---------|--------------------------------------------|-------------------------|
 | 1.0.4   | 2021-07 | Craig Voisin                               | Improve existing terminology and define Passport and Visa JWTs |
@@ -17,6 +19,7 @@ permalink: aai-openid-connect-profile
 | 0.9.2   | 2019-07 | David Bernick                              | Made changes based on feedback from review |
 | 0.9.1   | 2019-06 | Craig Voisin                               | Added terminology links |
 | 0.9.0   | 2017-   | Mikael Linden, Craig Voisin, David Bernick | Initial working version |
+</details>
 
 ### Abstract
 
