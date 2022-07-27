@@ -18,6 +18,8 @@ kramdown:
 header_pages:
   - AAI/README.md
   - AAI/AAIConnectProfile.md
+  - AAI/FAQ.md
+  - AAI/CHANGES_1.2.md
 
 # Due to the way we publish to github pages - it is useful that Jekyll keeps any .git in the destination around
 keep_files: [.git]
