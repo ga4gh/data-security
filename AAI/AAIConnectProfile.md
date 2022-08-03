@@ -86,7 +86,7 @@ Clearinghouse may act like a resource server). Some Passport Clearinghouses may
 issue Passports that contain a new set or subset of Visas for downstream consumption.
 
 <a name="term-data-holder"></a> **Data Holder** -- An organization that
-protects a specific set of data. They hold data (or its copy) and respects
+holds a specific set of data (or its copy) and respects
 and enforces the data controller's decisions on who can access it. A data controller
 can also be a data holder. Data holders run a
 [Passport Clearinghouse Server](#term-passport-clearinghouse) at a minimum.
