@@ -66,13 +66,14 @@
 <ul id="markdown-toc">
   <li>
 <a href="#introduction" id="markdown-toc-introduction">Introduction</a>    <ul>
+      <li><a href="#technical-summary" id="markdown-toc-technical-summary">Technical Summary</a></li>
+      <li><a href="#visa-tokens" id="markdown-toc-visa-tokens">Visa Tokens</a></li>
       <li><a href="#separation-of-data-holders-and-data-controllers" id="markdown-toc-separation-of-data-holders-and-data-controllers">Separation of Data Holders and Data Controllers</a></li>
     </ul>
   </li>
   <li>
 <a href="#background" id="markdown-toc-background">Background</a>    <ul>
       <li><a href="#why-brokers" id="markdown-toc-why-brokers">Why Brokers?</a></li>
-      <li><a href="#visa-tokens-explanation" id="markdown-toc-visa-tokens-explanation">Visa Tokens Explanation</a></li>
     </ul>
   </li>
 </ul>
@@ -94,22 +95,49 @@ assumes that GA4GH Claims provided by Brokers described in this document
 MAY conform to the DURI researcher-identity policy and standard. This standard
 does NOT assume that DURI’s GA4GH Claims will be the only ones used.</p>
 
+<h4 id="technical-summary">Technical Summary</h4>
+
+<p>At its core, the AAI specification defines cryptographically secure tokens for exchanging
+researcher attributes called <a href="aai-openid-connect-profile#term-visa">Visas</a>, and how various
+participants can interact to authenticate researchers, and obtain and validate visas.</p>
+
+<p>The main components identified in the specification are:</p>
+<ul>
+  <li>
+<a href="aai-openid-connect-profile#term-visa-issuer">Visa Issuers</a>, that cryptographically sign researcher attributes in the
+form of visas.</li>
+  <li>
+<a href="aai-openid-connect-profile#term-broker">Brokers</a>, that authenticate researchers and broker access to visas associated
+with researchers.</li>
+  <li>
+<a href="aai-openid-connect-profile#term-passport-clearinghouse">Passport Clearinghouses</a>, that accept tokens containing or
+otherwise availing researcher visas for the purposes of enforcing access control.</li>
+</ul>
+
+<h4 id="visa-tokens">Visa Tokens</h4>
+
+<p>The recommended approach to using AAI involves signed-JWTs called Visas,
+for securely transmitting authorizations or attributes of a researcher.
+Visas are signed by the Visa Issuer, which may be a service other than
+the Broker. Using JWTs signed by private key, allows Clearinghouses to
+validate Visas from known issuers in situations where they may not have
+network connections to the issuers.</p>
+
 <h4 id="separation-of-data-holders-and-data-controllers">Separation of Data Holders and Data Controllers</h4>
 
 <p>It is a fairly common situation that, for a single dataset, the
 <a href="aai-openid-connect-profile#term-data-controller">data controller</a>
 (the authority managing who has access to dataset) is not the same party as the 
 <a href="aai-openid-connect-profile#term-data-holder">data holder</a> (the organization
-enforcing access based on the policies of the data controller).</p>
+that hosts the data, while respecting the data controller’s access policies).</p>
 
 <p>For these situations, AAI is a standard mechanism for data holders to obtain
-and validate authorizations from data controllers.</p>
+and validate authorizations from data controllers, by specifying the interactions
+between Visa Issuers, Brokers, and Clearinghouses.</p>
 
 <p>The AAI standard enables data holders’ and data controllers’ systems to recognize
 and accept identities from multiple Brokers — allowing for an even more federated
-approach.</p>
-
-<p>An organization can still use this specification with a single Broker and Visa Issuer,
+approach. An organization can still use this specification with a single Broker and Visa Issuer,
 though they may find in that case that there are few benefits beyond standard OIDC.</p>
 
 <h3 id="background">Background</h3>
@@ -119,21 +147,13 @@ though they may find in that case that there are few benefits beyond standard OI
 <p>We have found that there are widely used Identity Providers (IdP) such as Google
 Authentication. These authentication mechanisms provide no authorization
 information (custom claims or scopes) but are so pervasive at the institution
-level that they cannot be ignored. The use of a “broker” and “clearinghouse”
+level that they cannot be ignored. The use of a Broker and Clearinghouse
 enables attaching information to the usual OIDC flow so that Google and other
 prominent identity providers can be used with customized claims and scopes.</p>
 
-<p>We have also found that some brokers, such as ELIXIR for example, provide
-useful “extra” claims on top of IdPs like Google, but institutions
-receiving ELIXIR claims might have cause to add even more claims.</p>
-
-<p>The Broker model is flexible enough to accommodate this kind of “chaining”
-(where one broker relies on and enriches the identity of another), provided
-that Visa assertions are always signed-by the original asserting authority.</p>
-
 <p>Here is a diagram of a single broker. This is one possible way to use this spec.</p>
 
-<p><img class="plantuml" src="http://www.plantuml.com/plantuml/svg/~h407374617274756d6c0a736b696e706172616d20636f6d706f6e656e745374796c652072656374616e676c650a6c65667420746f20726967687420646972656374696f6e0a0a7061636b6167652022556e73706563696669656420636c69656e74732c206164646974696f6e616c2073657276696365732c2070726f746f636f6c7322207b0a636f6d706f6e656e7420223c623e5669736120417373657274696f6e20536f757263653c2f623e202831295c6e6f7267616e69736174696f6e222061732056697361536f75726365310a636f6d706f6e656e7420223c623e5669736120417373657274696f6e20536f757263653c2f623e202832295c6e6f7267616e69736174696f6e222061732056697361536f75726365320a636f6d706f6e656e7420223c623e5669736120417373657274696f6e20536f757263653c2f623e20282e2e2e295c6e6f7267616e69736174696f6e222061732056697361536f757263654e0a0a646174616261736520223c623e5669736120417373657274696f6e205265706f7369746f72793c2f623e5c6e616273747261637420736572766963652220617320566973615265706f7369746f72790a636f6d706f6e656e7420223c623e56697361204973737565723c2f623e5c6e616273747261637420736572766963655c6e286f7074696f6e616c2922206173204554490a7d0a0a7061636b61676520225370656369666965642047413447482041414920636c69656e74732c2073657276696365732c2070726f746f636f6c7322207b0a636f6d706f6e656e7420223c623e42726f6b65723c2f623e5c6e73657276696365222061732042726f6b657220234641464144320a636f6d706f6e656e7420223c623e50617373706f727420436c656172696e67686f7573653c2f623e5c6e736572766963652220617320436c656172696e67486f75736520233945374242350a7d0a0a56697361536f7572636531202d2d3e20566973615265706f7369746f7279203a2028756e737065636966696564290a56697361536f7572636532202d2d3e20566973615265706f7369746f7279203a2028756e737065636966696564290a56697361536f757263654e202d2d3e20566973615265706f7369746f7279203a2028756e737065636966696564290a566973615265706f7369746f7279202d2d3e20455449203a2028756e737065636966696564290a0a0a566973615265706f7369746f7279202d2d3e2042726f6b6572203a2028756e737065636966696564290a455449202d2d3e2042726f6b6572203a2028756e737065636966696564290a42726f6b6572202d2d3e20436c656172696e67486f757365203a2047413447482041414920737065630a0a40656e64756d6c"></p>
+<p><img class="plantuml" src="http://www.plantuml.com/plantuml/svg/~h407374617274756d6c0a736b696e706172616d20636f6d706f6e656e745374796c652072656374616e676c650a6c65667420746f20726967687420646972656374696f6e0a0a636f6d706f6e656e7420223c623e566973612049737375657220313c2f623e5c6e736572766963652220617320497373756572310a636f6d706f6e656e7420223c623e566973612049737375657220323c2f623e5c6e736572766963652220617320497373756572320a636f6d706f6e656e7420223c623e5669736120497373756572204e3c2f623e5c6e7365727669636522206173204973737565724e0a0a636f6d706f6e656e7420223c623e42726f6b65723c2f623e5c6e73657276696365222061732042726f6b657220234641464144320a636f6d706f6e656e7420223c623e50617373706f727420436c656172696e67686f7573653c2f623e5c6e736572766963652220617320436c656172696e67486f75736520233945374242350a0a49737375657231203c2d2d2042726f6b6572203a2046657463682056697361730a49737375657232203c2d2d2042726f6b6572203a2046657463682056697361730a4973737565724e203c2d2d2042726f6b6572203a2046657463682056697361730a42726f6b6572203c2d2d20436c656172696e67486f757365203a2052657175657374205573657220566973617320772f2041636365737320546f6b656e0a4973737565724e203c2d2d20436c656172696e67486f757365203a2052657175657374205075626c6963204b657920772f204a574b530a0a40656e64756d6c"></p>
 
 <p>In this diagram, the Broker relies on a separate service for fetching visas, which
 stores assertions from multiple sources. The visa assertions are obtained by the
@@ -142,19 +162,8 @@ access in the Clearinghouse system.</p>
 
 <p>The Broker, Clearinghouse, and Visa Issuer may be separate services (as shown
 in this diagram), but in other configurations they may be run as parts of a single
-service, or as separate services run by single organization.</p>
-
-<p>Data holders and data controllers should explore their options to decide what best
-fits their needs.</p>
-
-<h4 id="visa-tokens-explanation">Visa Tokens Explanation</h4>
-
-<p>The recommended approach to using AAI involves signed-JWTs called Visas,
-for securely transmitting authorizations or attributes of a researcher.
-Visas are signed by the Visa Issuer, which may be a service other than
-the Broker. Using JWTs signed by private key, allows Clearinghouses to
-validate Visas from known issuers in situations where they may not have
-network connections to the issuers.</p>
+service, or as separate services run by single organization. Data holders and data
+controllers should explore their options to decide what best fits their needs.</p>
 
   </div>
 
