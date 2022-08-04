@@ -6,7 +6,7 @@ permalink: aai-faq
 
 A collection of questions (and hopefully useful answers).
 
-<hr style="border: 2px solid; margin: 2em auto;"/>    
+{% hr2 %}
 
 ## Flows
 
@@ -238,7 +238,182 @@ client <- clearing : Client is given data
 {% endplantuml %}
 
 
-<hr style="border: 2px solid; margin: 2em auto;"/>    
+{% hr2 %}
+
+## Trust
+
+### What's with all the signed passports and visas etc? Why so complex?
+
+(last updated July 2022)
+
+The practical operation of a loosely coupled
+federated ecosystem like GA4GH Passports requires establishing trust
+relationships between the participating entities (see
+[OpenID Connect Federation](https://openid.net/specs/openid-connect-federation-1_0.html)
+for an interesting discussion of the properties of multilateral federations).
+
+Any entity that is asked to make a decision about sharing data needs to have apriori
+made the decision "which other entities do I trust?". In genomics, a single decision
+to allow data sharing might involve simultaneous trusting of
+multiple entities - human genomics is complex!
+
+When presented with a
+Passport and Visas from entities that they trust - they can rely on the information (claims) provided
+to make data sharing decisions. If presented with information from entities that are
+untrusted - the content of the message is irrelevant as there is no basis on which to believe
+the content.
+
+So we can see that trust is a crucial element of a working federation. How do we establish
+these trust relationships?
+
+GA4GH Passports and Visas leverage the mechanisms
+present in [JWT](https://datatracker.ietf.org/doc/html/rfc7519) as used
+by the [OIDC standards](https://openid.net/specs/openid-connect-core-1_0.html) 
+to cryptographically "sign" tokens containing claims. Signed tokens can be
+"verified" using public/private keys.
+
+
+### Why are the Visa claims formatted as JWTs inside the Passport?
+
+A section on the importance to the NiH of retaining original authority in visas.
+
+
+### What are the ways that key management is done in practice?
+
+(last updated July 2022)
+
+There are a variety of approaches that can be used for key
+management for Passports and Visas. We will first detail those that can be used for Passports
+and then discuss some extra wrinkles for Visas.
+
+For this discussion we assume there is a concrete JWT from issuer `https://issuer.example.org`
+(possibly a Broker *or* a Visa Issuer).
+
+My clearing house service 'trusts' the above issuer to help make data
+access decisions - and that trust is stated probably through some sort of explicit
+configuration. For our example lets imagine it has a hypothetical YAML configuration file
+
+```yaml
+trusted_brokers:
+  - https://issuer.example.org
+  - https://login.broker.com
+
+trusted_visa_issuers:
+  - https://dac.gov.world
+``` 
+ 
+The service now wants to verify a Passport or Visa
+JWT purporting to be from that issuer.
+
+---
+
+#### Use `jku` in the header of the JWT
+
+The JKU is the URL of a JSON file containing the issuers' public keys.
+
+```json
+{
+  "iss": "https://issuer.example.org",
+  "jku": "https://issuer.example.org/public-keys.json",
+  "kid": "key-october-1"
+}
+```
+
+For our concrete example we say that it is a JSON file residing
+at `https://issuer.example.org/public-keys.json` (see
+[RFC 7517 "JSON Web Key"](https://datatracker.ietf.org/doc/html/rfc7517)).
+
+**IMPORTANTLY**, for the secure use of this key management technique - the JKU 
+**MUST** also be whitelisted as part of the configuration of **OUR** service.
+For example, maybe we expand out of service configuration file to include the JKU.
+
+```yaml
+trusted_brokers:
+  - issuer: https://issuer.example.org
+    jku: https://issuer.example.org/public-keys.json
+
+  - issuer: https://login.broker.com
+    jku: https://keys.broker.com/set
+```
+
+It is **NEVER** valid to even attempt to access a JKU from a JWT header - unless the URL
+is already known to belong to the given issuer. See
+["JWT Forgery via unvalidated jku parameter"](https://www.invicti.com/web-vulnerability-scanner/vulnerabilities/jwt-forgery-via-unvalidated-jku-parameter/).
+
+To verify a JWT, the content of the JKU file is loaded and the `kid` is
+looked up in key set. The signature is validated using the public key found.
+
+Although this configuration requires explicit registration of JKUs, the content
+of the key sets can allow the best practice of key rotation.
+
+The content of the JKU file is designed to be cached aggressively - but as long as
+the files is fetched every few days/weeks the set of keys
+can evolve/rotate.
+
+---
+
+#### Use the `kid` in the header of the JWT along with OIDC Discovery
+
+The [OpenID Connect Discovery](https://openid.net/specs/openid-connect-discovery-1_0.html)
+protocol allows the use of the JWT issuer URL - in conjunction with a fetch
+of a `/.well-known/openid-configuration` - to look up the location of the public key set file. See
+[OpenID Provider Metadata specification](https://openid.net/specs/openid-connect-discovery-1_0.html#ProviderMetadata)
+and the `jwks_uri` entry.
+
+As with JKU - it is important that OIDC discovery is limited only to JWT issuer URLs that are
+in some way whitelisted. It is **NEVER** valid to perform discovery on an arbitrary issuer
+encountered in a JWT. Luckily, the concept of whitelisting issuers is already in some way
+inherent to the way trust relationships are established, and hence this whitelist should
+already be present in the system.
+
+Also as with JKU, the content of the discovery protocol and key sets can be cached
+aggressively. This means that the double step of the discovery protocol is not
+required on every JWT verification.
+
+
+---
+
+#### Exchange public keys beforehand with each trusted entity
+
+This is an approach used by the [NIH](https://www.nih.gov) - and is appropriate if the number
+of trusted entities is small - such that the public keys of each trusted entity can be exchanged
+out of band (and their rotation/updating can also be managed out of band).
+
+Configuration may be
+
+```yaml
+trusted_brokers:
+  - issuer: https://issuer.example.org
+    keys:
+      key-october-1: "ABCDTRTFDSFSDFSF...."
+
+  - issuer: https://login.broker.com
+    keys:
+      kid123456: "ABCDTRTFDSFSDFSF...."
+```
+
+For any `kid`
+encountered in a JWT, the corresponding public key is already available for signature validation.
+
+An even safer version of this approach is to perform
+the key verification across every public key you hold before even decoding the JWT JSON
+and then confirm the `kid`. This avoids ever even needing to JSON decode
+data from untrusted entities.
+
+---
+
+#### Requirement for JKU in Visas
+
+When it comes to Visas, there is an extra wrinkle - unlike Brokers, Visa Issuers do not
+need to have been part of an OIDC flow. It is possible that the visa issuer URI is not
+even a locatable reference
+(e.g. `urn:example.com:dac-world-visa-issuer`).
+
+Therefore the OIDC Discovery technique is not appropriate and hence the requirements
+of the AAI standard regarding the presence of JKUs.
+
+
+{% hr2 %}
 
 ## Threat Analysis
 
@@ -246,7 +421,7 @@ client <- clearing : Client is given data
 
 The *Passport Scoped Access Token* is
 a token that can unlock **all** data that the user is entitled to, and not just
-that data needed for any particular analysis. 
+a subset of data needed for any particular analysis. 
 
 The result of this is that if passed to a bad actor (some service that has been
 compromised for example) - the bad actor can use the token
@@ -254,31 +429,32 @@ for sideways movement amongst the other nodes.
 
 In the below example - a passport has been passed via a compute service to a resource server that
 is compromised. The assumption now is that data controlled by that resource
-server may be lost. 
+server may be lost. This is bad - but at least the scope of the loss is limited.
 
-However, because the passport has no resource scope or audience - the bad actor
-can also move sideways in the system to access Dataset #2 and #3 - and not just Dataset #1
+However, if the token in use is the *Passport Scoped Access Token* (or any other token
+that has no restrictions on use) - the bad actor
+can also move sideways in the system to access Dataset #2 and #3 via Resource
+Server #B - and not just Dataset #1
 that has already been compromised.
 
-In a system where passports can be down-scoped - the Passport passed to Resource Server #B
-as part of the attack on the rest of the system would be rejected - because
-it would be scoped only for Resource Server #A / Dataset #1.
+The safer alternative is a system where passports can be down-scoped before use -
+the Passport that is maliciously being passed from Resource Server #A
+to Resource Server #B would then be rejected - because
+it would be scoped only for Resource Server #A / Dataset #1. 
 
 {% plantuml %}
 left to right direction
 
-rectangle "Client Trust Boundary" as clientboundary #white;line:green;line.dashed;text:green {
-  rectangle Client 
-}
+rectangle Client 
 rectangle "Compute Server #1\ne.g. WES" as Compute
 rectangle "Resource Server #A\ne.g. DRS\n (compromised)" as RSA #pink;line:red;line.bold
 rectangle "Resource Server #B\ne.g. DRS" as RSB
 rectangle "Authorization Server\n(GA4GH Broker)" as Auth
 database "Dataset #1\n(assumed\ncompromised)" as DS1 #orange;line:red;line.bold
-database "Dataset #2" as DS2
-database "Dataset #3" as DS3
+database "Dataset #2\n(now possibly compromised)" as DS2 #gold;line:red;line.bold
+database "Dataset #3\n(now possibly compromised)" as DS3 #gold;line:red;line.bold
 
-[Client] ---right---> [Auth]
+[Client] <---right---> [Auth]
 
 [RSA] --> [DS1]
 [RSB] --> [DS2]
@@ -286,6 +462,7 @@ database "Dataset #3" as DS3
 
 [Client] --> [Compute] : asked to run job\n(sending passport downstream)
 [Compute] --> [RSA]
+[Compute] --> [RSB]
 
 [RSA] -[#red,plain,thickness=16]-> [RSB] : attack
 
@@ -294,7 +471,7 @@ database "Dataset #3" as DS3
 The addition of audiences to the token, or down-scoping of permissions - possible via token exchange - limits
 the scope of damage if the token ends up with a bad actor.
 
-<hr style="border: 2px solid; margin: 2em auto;"/>    
+{% hr2 %}
 
 ## Client Software
 
@@ -303,7 +480,8 @@ the scope of damage if the token ends up with a bad actor.
 A Single Page App (SPA) such as a React/VueJs website
 contains all the source of the application in public - and hence cannot
 possess a 'secret' in an OIDC flow (the 'secret' is used to prove the identity of the
-client software).
+client software and is an important risk mitigation that prevents unconstrained
+use of an accidentally leaked/stolen token).
 
 The registration of a callback URL - in conjunction with the cryptographic techniques
 of PKCE - does allow a SPA to safely participate in an OIDC authorization flow - though
@@ -322,21 +500,22 @@ genomic data.
 
 It is possible for a SPA to predominantly execute in browser - but to still use
 a (small) backend set of services to execute any OIDC flows and token exchanges. These
-backend service *can* retain a secret and hence can prove client identity.
+backend service *can* retain a secret and hence can prove client identity. These
+techniques are recommended for any genomic application that is predominantly deployed
+as a SPA.
 
-Insert source example/diagram.
-
-See also the emerging standard DPoP
+There is also an emerging standard DPoP
 ([OAuth 2.0 Demonstrating Proof-of-Possession at the Application Layer](https://datatracker.ietf.org/doc/html/draft-ietf-oauth-dpop-09))
 which will be considered for future versions of the AAI specification.
 
-<hr style="border: 2px solid; margin: 2em auto;"/>    
+{% hr2 %}
 
+{% comment %}
 ## Legacy
 
 ### Can a JWT alone be used for authentication even if the spec mostly talks about OIDC Flow?
 
-(last updated 2020)
+(last updated 2020 - Removed from the 1.2 version of the FAQ. If not missed - then can be deleted entirely in 2.0)
 
 Yes. This specification allows for groups to organize themselves in many ways.
 
@@ -366,3 +545,4 @@ is aware that they are exchanging information with another stack without
 explicit OIDC-style consent.
 
 ![JWT-Only Flow between trusted stacks](./AAI/GA4GH_JWT-only_flow.png)
+{% endcomment %}
