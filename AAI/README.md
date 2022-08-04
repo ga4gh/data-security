@@ -101,7 +101,6 @@ Issuer1 <-- Broker : Fetch Visas
 Issuer2 <-- Broker : Fetch Visas
 IssuerN <-- Broker : Fetch Visas
 Broker <-- ClearingHouse : Request User Visas w/ Access Token
-IssuerN <-- ClearingHouse : Request Public Key w/ JWKS
 
 @enduml
 
