@@ -651,13 +651,11 @@ JWT purporting to be from that issuer.</p>
 
 <p>For our concrete example we say that it is a JSON file residing
 at <code class="language-plaintext highlighter-rouge">https://issuer.example.org/public-keys.json</code> (see
-<a href="https://datatracker.ietf.org/doc/html/rfc7517">RFC 7517 “JSON Web Key”</a>). We should note that
-there is no requirement that the file is hosted at the same
-location as the issuer (it could have been at <code class="language-plaintext highlighter-rouge">https://keys.example.org</code> for instance).</p>
+<a href="https://datatracker.ietf.org/doc/html/rfc7517">RFC 7517 “JSON Web Key”</a>).</p>
 
 <p><strong>IMPORTANTLY</strong>, for the secure use of this key management technique - the JKU 
 <strong>MUST</strong> also be whitelisted as part of the configuration of <strong>OUR</strong> service.
-Maybe we expand out of service configuration file to include the JKU.</p>
+For example, maybe we expand out of service configuration file to include the JKU.</p>
 
 <div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">trusted_brokers</span><span class="pi">:</span>
   <span class="pi">-</span> <span class="na">issuer</span><span class="pi">:</span> <span class="s">https://issuer.example.org</span>
@@ -705,7 +703,7 @@ required on every JWT verification.</p>
 
 <h4 id="exchange-public-keys-beforehand-with-each-trusted-entity">Exchange public keys beforehand with each trusted entity</h4>
 
-<p>This is an approach used by the NiH - and is appropriate if the number
+<p>This is an approach used by the <a href="https://www.nih.gov">NIH</a> - and is appropriate if the number
 of trusted entities is small - such that the public keys of each trusted entity can be exchanged
 out of band (and their rotation/updating can also be managed out of band).</p>
 
@@ -749,7 +747,7 @@ of the AAI standard regarding the presence of JKUs.</p>
 
 <p>The <em>Passport Scoped Access Token</em> is
 a token that can unlock <strong>all</strong> data that the user is entitled to, and not just
-that data needed for any particular analysis.</p>
+a subset of data needed for any particular analysis.</p>
 
 <p>The result of this is that if passed to a bad actor (some service that has been
 compromised for example) - the bad actor can use the token
@@ -757,19 +755,22 @@ for sideways movement amongst the other nodes.</p>
 
 <p>In the below example - a passport has been passed via a compute service to a resource server that
 is compromised. The assumption now is that data controlled by that resource
-server may be lost.</p>
+server may be lost. This is bad - but at least the scope of the loss is limited.</p>
 
-<p>However, because the passport has no resource scope or audience - the bad actor
-can also move sideways in the system to access Dataset #2 and #3 - and not just Dataset #1
+<p>However, if the token in use is the <em>Passport Scoped Access Token</em> (or any other token
+that has no restrictions on use) - the bad actor
+can also move sideways in the system to access Dataset #2 and #3 via Resource
+Server #B - and not just Dataset #1
 that has already been compromised.</p>
 
-<p>In a system where passports can be down-scoped - the Passport passed to Resource Server #B
-as part of the attack on the rest of the system would be rejected - because
+<p>The safer alternative is a system where passports can be down-scoped before use -
+the Passport that is maliciously being passed from Resource Server #A
+to Resource Server #B would then be rejected - because
 it would be scoped only for Resource Server #A / Dataset #1.</p>
 
-<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" contentscripttype="application/ecmascript" contentstyletype="text/css" preserveaspectratio="none" version="1.1" viewbox="0 0 1239 244" zoomandpan="magnify">
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" contentscripttype="application/ecmascript" contentstyletype="text/css" preserveaspectratio="none" version="1.1" viewbox="0 0 1358 244" zoomandpan="magnify">
   <defs>
-    <filter height="300%" id="f1lw3082b0w1mv" width="300%" x="-1" y="-1">
+    <filter height="300%" id="f16rhl1ojmxsb1" width="300%" x="-1" y="-1">
       <fegaussianblur result="blurOut" stddeviation="2.0"></fegaussianblur>
       <fecolormatrix in="blurOut" result="blurOut2" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .4 0"></fecolormatrix>
       <feoffset dx="4.0" dy="4.0" in="blurOut2" result="blurOut3"></feoffset>
@@ -779,46 +780,48 @@ it would be scoped only for Resource Server #A / Dataset #1.</p>
   <g>
     <!--MD5=[0ba5ee7700168656dc1b457c6fe9fdac]
 entity Client-->
-    <rect fill="#FEFECE" filter="url(#f1lw3082b0w1mv)" height="36.2969" style="stroke:#000000;stroke-width:1.5;" width="59" x="57" y="108"></rect>
+    <rect fill="#FEFECE" filter="url(#f16rhl1ojmxsb1)" height="36.2969" style="stroke:#000000;stroke-width:1.5;" width="59" x="57" y="108"></rect>
     <text fill="#000000" font-family="sans-serif" font-size="14" lengthadjust="spacing" textlength="39" x="67" y="130.9951">Client</text>
     <!--MD5=[aa32c188748e3e400a53c2b3699c78ac]
 entity Compute-->
-    <rect fill="#FEFECE" filter="url(#f1lw3082b0w1mv)" height="52.5938" style="stroke:#000000;stroke-width:1.5;" width="157" x="431" y="99.5"></rect>
+    <rect fill="#FEFECE" filter="url(#f16rhl1ojmxsb1)" height="52.5938" style="stroke:#000000;stroke-width:1.5;" width="157" x="431" y="99.5"></rect>
     <text fill="#000000" font-family="sans-serif" font-size="14" lengthadjust="spacing" textlength="137" x="441" y="122.4951">Compute Server #1</text>
     <text fill="#000000" font-family="sans-serif" font-size="14" lengthadjust="spacing" textlength="61" x="441" y="138.792">e.g. WES</text>
     <!--MD5=[fe17c2dacdbd17915f88e020b2fbf4f7]
 entity RSA-->
-    <rect fill="#FFC0CB" filter="url(#f1lw3082b0w1mv)" height="68.8906" style="stroke:#FF0000;stroke-width:2.0;" width="160" x="649" y="23.5"></rect>
+    <rect fill="#FFC0CB" filter="url(#f16rhl1ojmxsb1)" height="68.8906" style="stroke:#FF0000;stroke-width:2.0;" width="160" x="649" y="23.5"></rect>
     <text fill="#000000" font-family="sans-serif" font-size="14" lengthadjust="spacing" textlength="140" x="659" y="46.4951">Resource Server #A</text>
     <text fill="#000000" font-family="sans-serif" font-size="14" lengthadjust="spacing" textlength="60" x="659" y="62.792">e.g. DRS</text>
     <text fill="#000000" font-family="sans-serif" font-size="14" lengthadjust="spacing" textlength="105" x="663" y="79.0889">(compromised)</text>
     <!--MD5=[ddb0e92f65770d6570c058bb0b424171]
 entity RSB-->
-    <rect fill="#FEFECE" filter="url(#f1lw3082b0w1mv)" height="52.5938" style="stroke:#000000;stroke-width:1.5;" width="161" x="911" y="119.5"></rect>
+    <rect fill="#FEFECE" filter="url(#f16rhl1ojmxsb1)" height="52.5938" style="stroke:#000000;stroke-width:1.5;" width="161" x="911" y="119.5"></rect>
     <text fill="#000000" font-family="sans-serif" font-size="14" lengthadjust="spacing" textlength="141" x="921" y="142.4951">Resource Server #B</text>
     <text fill="#000000" font-family="sans-serif" font-size="14" lengthadjust="spacing" textlength="60" x="921" y="158.792">e.g. DRS</text>
     <!--MD5=[39222abbbfd087a4fdab60e627dc976f]
 entity Auth-->
-    <rect fill="#FEFECE" filter="url(#f1lw3082b0w1mv)" height="52.5938" style="stroke:#000000;stroke-width:1.5;" width="159" x="7" y="179.5"></rect>
+    <rect fill="#FEFECE" filter="url(#f16rhl1ojmxsb1)" height="52.5938" style="stroke:#000000;stroke-width:1.5;" width="159" x="7" y="179.5"></rect>
     <text fill="#000000" font-family="sans-serif" font-size="14" lengthadjust="spacing" textlength="139" x="17" y="202.4951">Authorization Server</text>
     <text fill="#000000" font-family="sans-serif" font-size="14" lengthadjust="spacing" textlength="110" x="17" y="218.792">(GA4GH Broker)</text>
     <!--MD5=[010939f4fd7c296c65038bf57c89fb22]
 entity DS1-->
-    <path d="M931.5,16 C931.5,6 991.5,6 991.5,6 C991.5,6 1051.5,6 1051.5,16 L1051.5,73.8906 C1051.5,83.8906 991.5,83.8906 991.5,83.8906 C991.5,83.8906 931.5,83.8906 931.5,73.8906 L931.5,16 " fill="#FFA500" filter="url(#f1lw3082b0w1mv)" style="stroke:#FF0000;stroke-width:2.0;"></path>
+    <path d="M931.5,16 C931.5,6 991.5,6 991.5,6 C991.5,6 1051.5,6 1051.5,16 L1051.5,73.8906 C1051.5,83.8906 991.5,83.8906 991.5,83.8906 C991.5,83.8906 931.5,83.8906 931.5,73.8906 L931.5,16 " fill="#FFA500" filter="url(#f16rhl1ojmxsb1)" style="stroke:#FF0000;stroke-width:2.0;"></path>
     <path d="M931.5,16 C931.5,26 991.5,26 991.5,26 C991.5,26 1051.5,26 1051.5,16 " fill="none" style="stroke:#FF0000;stroke-width:2.0;"></path>
     <text fill="#000000" font-family="sans-serif" font-size="14" lengthadjust="spacing" textlength="79" x="941.5" y="42.9951">Dataset #1</text>
     <text fill="#000000" font-family="sans-serif" font-size="14" lengthadjust="spacing" textlength="69" x="941.5" y="59.292">(assumed</text>
     <text fill="#000000" font-family="sans-serif" font-size="14" lengthadjust="spacing" textlength="100" x="941.5" y="75.5889">compromised)</text>
     <!--MD5=[304edd5c1afeedb61f9a38e3efe0d931]
 entity DS2-->
-    <path d="M1133,93.5 C1133,83.5 1182.5,83.5 1182.5,83.5 C1182.5,83.5 1232,83.5 1232,93.5 L1232,118.7969 C1232,128.7969 1182.5,128.7969 1182.5,128.7969 C1182.5,128.7969 1133,128.7969 1133,118.7969 L1133,93.5 " fill="#FEFECE" filter="url(#f1lw3082b0w1mv)" style="stroke:#000000;stroke-width:1.5;"></path>
-    <path d="M1133,93.5 C1133,103.5 1182.5,103.5 1182.5,103.5 C1182.5,103.5 1232,103.5 1232,93.5 " fill="none" style="stroke:#000000;stroke-width:1.5;"></path>
-    <text fill="#000000" font-family="sans-serif" font-size="14" lengthadjust="spacing" textlength="79" x="1143" y="120.4951">Dataset #2</text>
+    <path d="M1133,76 C1133,66 1242,66 1242,66 C1242,66 1351,66 1351,76 L1351,117.5938 C1351,127.5938 1242,127.5938 1242,127.5938 C1242,127.5938 1133,127.5938 1133,117.5938 L1133,76 " fill="#FFD700" filter="url(#f16rhl1ojmxsb1)" style="stroke:#FF0000;stroke-width:2.0;"></path>
+    <path d="M1133,76 C1133,86 1242,86 1242,86 C1242,86 1351,86 1351,76 " fill="none" style="stroke:#FF0000;stroke-width:2.0;"></path>
+    <text fill="#000000" font-family="sans-serif" font-size="14" lengthadjust="spacing" textlength="79" x="1143" y="102.9951">Dataset #2</text>
+    <text fill="#000000" font-family="sans-serif" font-size="14" lengthadjust="spacing" textlength="198" x="1143" y="119.292">(now possibly compromised)</text>
     <!--MD5=[334979a6aa3025b7ab4cac3a46906e02]
 entity DS3-->
-    <path d="M1133,173.5 C1133,163.5 1182.5,163.5 1182.5,163.5 C1182.5,163.5 1232,163.5 1232,173.5 L1232,198.7969 C1232,208.7969 1182.5,208.7969 1182.5,208.7969 C1182.5,208.7969 1133,208.7969 1133,198.7969 L1133,173.5 " fill="#FEFECE" filter="url(#f1lw3082b0w1mv)" style="stroke:#000000;stroke-width:1.5;"></path>
-    <path d="M1133,173.5 C1133,183.5 1182.5,183.5 1182.5,183.5 C1182.5,183.5 1232,183.5 1232,173.5 " fill="none" style="stroke:#000000;stroke-width:1.5;"></path>
-    <text fill="#000000" font-family="sans-serif" font-size="14" lengthadjust="spacing" textlength="79" x="1143" y="200.4951">Dataset #3</text>
+    <path d="M1133,173 C1133,163 1242,163 1242,163 C1242,163 1351,163 1351,173 L1351,214.5938 C1351,224.5938 1242,224.5938 1242,224.5938 C1242,224.5938 1133,224.5938 1133,214.5938 L1133,173 " fill="#FFD700" filter="url(#f16rhl1ojmxsb1)" style="stroke:#FF0000;stroke-width:2.0;"></path>
+    <path d="M1133,173 C1133,183 1242,183 1242,183 C1242,183 1351,183 1351,173 " fill="none" style="stroke:#FF0000;stroke-width:2.0;"></path>
+    <text fill="#000000" font-family="sans-serif" font-size="14" lengthadjust="spacing" textlength="79" x="1143" y="199.9951">Dataset #3</text>
+    <text fill="#000000" font-family="sans-serif" font-size="14" lengthadjust="spacing" textlength="198" x="1143" y="216.292">(now possibly compromised)</text>
     <!--MD5=[b764131a8b155fba864cfde0b4b850e6]
 link Client to Auth-->
     <path d="M86.5,149.5 C86.5,157.75 86.5,165.99 86.5,174.23 " fill="none" id="Client-Auth" style="stroke:#A80036;stroke-width:1.0;"></path>
@@ -830,12 +833,12 @@ link RSA to DS1-->
     <polygon fill="#A80036" points="931.1,47.96,921.916,44.4026,926.1059,48.2033,922.3053,52.3931,931.1,47.96" style="stroke:#A80036;stroke-width:1.0;"></polygon>
     <!--MD5=[6f08b051cb4e0e97b5da88a5efffb93c]
 link RSB to DS2-->
-    <path d="M1072.11,129.15 C1090.85,125.19 1110.39,121.05 1127.69,117.39 " fill="none" id="RSB-to-DS2" style="stroke:#A80036;stroke-width:1.0;"></path>
-    <polygon fill="#A80036" points="1132.98,116.27,1123.3502,114.2042,1128.0866,117.2972,1124.9937,122.0336,1132.98,116.27" style="stroke:#A80036;stroke-width:1.0;"></polygon>
+    <path d="M1072.15,130.29 C1089.8,126.81 1108.83,123.06 1127.54,119.37 " fill="none" id="RSB-to-DS2" style="stroke:#A80036;stroke-width:1.0;"></path>
+    <polygon fill="#A80036" points="1132.8,118.34,1123.2001,116.1396,1127.8927,119.2986,1124.7338,123.9912,1132.8,118.34" style="stroke:#A80036;stroke-width:1.0;"></polygon>
     <!--MD5=[6c71e4fb054e05b0d5ade1b014430795]
 link RSB to DS3-->
-    <path d="M1072.11,162.85 C1090.85,166.81 1110.39,170.95 1127.69,174.61 " fill="none" id="RSB-to-DS3" style="stroke:#A80036;stroke-width:1.0;"></path>
-    <polygon fill="#A80036" points="1132.98,175.73,1124.9937,169.9664,1128.0866,174.7028,1123.3502,177.7958,1132.98,175.73" style="stroke:#A80036;stroke-width:1.0;"></polygon>
+    <path d="M1072.15,161.39 C1089.8,164.79 1108.83,168.47 1127.54,172.08 " fill="none" id="RSB-to-DS3" style="stroke:#A80036;stroke-width:1.0;"></path>
+    <polygon fill="#A80036" points="1132.8,173.1,1124.7149,167.4758,1127.8896,172.1579,1123.2075,175.3325,1132.8,173.1" style="stroke:#A80036;stroke-width:1.0;"></polygon>
     <!--MD5=[946e14f4ed9844ad20112a0a05f5a5f4]
 link Client to Compute-->
     <path d="M116.11,126 C178.83,126 330.47,126 425.81,126 " fill="none" id="Client-to-Compute" style="stroke:#A80036;stroke-width:1.0;"></path>
@@ -855,7 +858,7 @@ link RSA to RSB-->
     <path d="M809.22,84.76 C840.05,95.18 875.42,107.12 906.68,117.68 " fill="none" id="RSA-to-RSB" style="stroke:#FF0000;stroke-width:16.0;"></path>
     <polygon fill="#FF0000" points="911.66,119.37,904.4169,112.6964,906.9238,117.7674,901.8527,120.2743,911.66,119.37" style="stroke:#FF0000;stroke-width:16.0;"></polygon>
     <text fill="#000000" font-family="sans-serif" font-size="13" lengthadjust="spacing" textlength="40" x="840" y="93.0669">attack</text>
-    <!--MD5=[f4075c160d1960b90f31fa84fb5d9808]
+    <!--MD5=[e90f7eaac9ea7c518f4373610090416c]
 @startuml
 skinparamlocked svgDimensionStyle false
 
@@ -867,8 +870,8 @@ rectangle "Resource Server #A\ne.g. DRS\n (compromised)" as RSA #pink;line:red;l
 rectangle "Resource Server #B\ne.g. DRS" as RSB
 rectangle "Authorization Server\n(GA4GH Broker)" as Auth
 database "Dataset #1\n(assumed\ncompromised)" as DS1 #orange;line:red;line.bold
-database "Dataset #2" as DS2
-database "Dataset #3" as DS3
+database "Dataset #2\n(now possibly compromised)" as DS2 #gold;line:red;line.bold
+database "Dataset #3\n(now possibly compromised)" as DS3 #gold;line:red;line.bold
 
 [Client] <- - -right- - -> [Auth]
 
@@ -908,7 +911,8 @@ the scope of damage if the token ends up with a bad actor.</p>
 <p>A Single Page App (SPA) such as a React/VueJs website
 contains all the source of the application in public - and hence cannot
 possess a ‘secret’ in an OIDC flow (the ‘secret’ is used to prove the identity of the
-client software).</p>
+client software and is an important risk mitigation that prevents unconstrained
+use of an accidentally leaked/stolen token).</p>
 
 <p>The registration of a callback URL - in conjunction with the cryptographic techniques
 of PKCE - does allow a SPA to safely participate in an OIDC authorization flow - though
@@ -927,48 +931,16 @@ genomic data.</p>
 
 <p>It is possible for a SPA to predominantly execute in browser - but to still use
 a (small) backend set of services to execute any OIDC flows and token exchanges. These
-backend service <em>can</em> retain a secret and hence can prove client identity.</p>
+backend service <em>can</em> retain a secret and hence can prove client identity. These
+techniques are recommended for any genomic application that is predominantly deployed
+as a SPA.</p>
 
-<p>See also the emerging standard DPoP
+<p>There is also an emerging standard DPoP
 (<a href="https://datatracker.ietf.org/doc/html/draft-ietf-oauth-dpop-09">OAuth 2.0 Demonstrating Proof-of-Possession at the Application Layer</a>)
 which will be considered for future versions of the AAI specification.</p>
 
 <hr style="border: 2px solid; margin: 2em auto;">
 
-<h2 id="legacy">Legacy</h2>
-
-<h3 id="can-a-jwt-alone-be-used-for-authentication-even-if-the-spec-mostly-talks-about-oidc-flow">Can a JWT alone be used for authentication even if the spec mostly talks about OIDC Flow?</h3>
-
-<p>(last updated 2020)</p>
-
-<p>Yes. This specification allows for groups to organize themselves in many ways.</p>
-
-<p>A trusted group of Brokers and Passport Clearinghouses are permitted to
-format <code class="language-plaintext highlighter-rouge">/userinfo</code> output as a JWT and use that as a means of how their
-services communicate. They can also take <code class="language-plaintext highlighter-rouge">/userinfo</code> JSON output and
-format it through some other means into a JWT. Proper due-diligence and
-handling of tokens must be followed.</p>
-
-<p>This specification does not prohibit services from using JWTs as authentication
-outside of an OIDC flow.</p>
-
-<p>An example: Two different stacks of software all have a similar user-base and
-often use the same shared data resource – a biobank, for instance. The User
-authenticates with Biobank Broker on Software stack S1 and gets <code class="language-plaintext highlighter-rouge">/userinfo</code> output
-as a JWT. The JWT includes GA4GH Passport Visas for a Dataset that the Broker holds
-permissions for. S1 might not hold the data, S2 might hold the data. The User may
-be allowed to bring that JWT to Software Stack S2 and get data authorized by the
-claim in the JWT and held by S2, provided that S2 can trust S1 as a valid and
-trustworthy client.</p>
-
-<p>This enables two or more software stacks to work together more fluidly than having
-the same user authenticate twice across two stacks to access the same data. There
-is an assumption that these two software stacks have agreements and risk assessment
-in place in order to make this a secure method of authentication and that the User
-is aware that they are exchanging information with another stack without
-explicit OIDC-style consent.</p>
-
-<p><img src="./AAI/GA4GH_JWT-only_flow.png" alt="JWT-Only Flow between trusted stacks"></p>
 
   </div>
 
