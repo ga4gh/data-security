@@ -321,13 +321,11 @@ The JKU is the URL of a JSON file containing the issuers' public keys.
 
 For our concrete example we say that it is a JSON file residing
 at `https://issuer.example.org/public-keys.json` (see
-[RFC 7517 "JSON Web Key"](https://datatracker.ietf.org/doc/html/rfc7517)). We should note that
-there is no requirement that the file is hosted at the same
-location as the issuer (it could have been at `https://keys.example.org` for instance).
+[RFC 7517 "JSON Web Key"](https://datatracker.ietf.org/doc/html/rfc7517)).
 
 **IMPORTANTLY**, for the secure use of this key management technique - the JKU 
 **MUST** also be whitelisted as part of the configuration of **OUR** service.
-Maybe we expand out of service configuration file to include the JKU.
+For example, maybe we expand out of service configuration file to include the JKU.
 
 ```yaml
 trusted_brokers:
@@ -377,7 +375,7 @@ required on every JWT verification.
 
 #### Exchange public keys beforehand with each trusted entity
 
-This is an approach used by the NiH - and is appropriate if the number
+This is an approach used by the [NIH](https://www.nih.gov) - and is appropriate if the number
 of trusted entities is small - such that the public keys of each trusted entity can be exchanged
 out of band (and their rotation/updating can also be managed out of band).
 
@@ -423,7 +421,7 @@ of the AAI standard regarding the presence of JKUs.
 
 The *Passport Scoped Access Token* is
 a token that can unlock **all** data that the user is entitled to, and not just
-that data needed for any particular analysis. 
+a subset of data needed for any particular analysis. 
 
 The result of this is that if passed to a bad actor (some service that has been
 compromised for example) - the bad actor can use the token
@@ -431,15 +429,18 @@ for sideways movement amongst the other nodes.
 
 In the below example - a passport has been passed via a compute service to a resource server that
 is compromised. The assumption now is that data controlled by that resource
-server may be lost. 
+server may be lost. This is bad - but at least the scope of the loss is limited.
 
-However, because the passport has no resource scope or audience - the bad actor
-can also move sideways in the system to access Dataset #2 and #3 - and not just Dataset #1
+However, if the token in use is the *Passport Scoped Access Token* (or any other token
+that has no restrictions on use) - the bad actor
+can also move sideways in the system to access Dataset #2 and #3 via Resource
+Server #B - and not just Dataset #1
 that has already been compromised.
 
-In a system where passports can be down-scoped - the Passport passed to Resource Server #B
-as part of the attack on the rest of the system would be rejected - because
-it would be scoped only for Resource Server #A / Dataset #1.
+The safer alternative is a system where passports can be down-scoped before use -
+the Passport that is maliciously being passed from Resource Server #A
+to Resource Server #B would then be rejected - because
+it would be scoped only for Resource Server #A / Dataset #1. 
 
 {% plantuml %}
 left to right direction
@@ -450,8 +451,8 @@ rectangle "Resource Server #A\ne.g. DRS\n (compromised)" as RSA #pink;line:red;l
 rectangle "Resource Server #B\ne.g. DRS" as RSB
 rectangle "Authorization Server\n(GA4GH Broker)" as Auth
 database "Dataset #1\n(assumed\ncompromised)" as DS1 #orange;line:red;line.bold
-database "Dataset #2" as DS2
-database "Dataset #3" as DS3
+database "Dataset #2\n(now possibly compromised)" as DS2 #gold;line:red;line.bold
+database "Dataset #3\n(now possibly compromised)" as DS3 #gold;line:red;line.bold
 
 [Client] <---right---> [Auth]
 
@@ -479,7 +480,8 @@ the scope of damage if the token ends up with a bad actor.
 A Single Page App (SPA) such as a React/VueJs website
 contains all the source of the application in public - and hence cannot
 possess a 'secret' in an OIDC flow (the 'secret' is used to prove the identity of the
-client software).
+client software and is an important risk mitigation that prevents unconstrained
+use of an accidentally leaked/stolen token).
 
 The registration of a callback URL - in conjunction with the cryptographic techniques
 of PKCE - does allow a SPA to safely participate in an OIDC authorization flow - though
@@ -498,19 +500,22 @@ genomic data.
 
 It is possible for a SPA to predominantly execute in browser - but to still use
 a (small) backend set of services to execute any OIDC flows and token exchanges. These
-backend service *can* retain a secret and hence can prove client identity.
+backend service *can* retain a secret and hence can prove client identity. These
+techniques are recommended for any genomic application that is predominantly deployed
+as a SPA.
 
-See also the emerging standard DPoP
+There is also an emerging standard DPoP
 ([OAuth 2.0 Demonstrating Proof-of-Possession at the Application Layer](https://datatracker.ietf.org/doc/html/draft-ietf-oauth-dpop-09))
 which will be considered for future versions of the AAI specification.
 
 {% hr2 %}
 
+{% comment %}
 ## Legacy
 
 ### Can a JWT alone be used for authentication even if the spec mostly talks about OIDC Flow?
 
-(last updated 2020)
+(last updated 2020 - Removed from the 1.2 version of the FAQ. If not missed - then can be deleted entirely in 2.0)
 
 Yes. This specification allows for groups to organize themselves in many ways.
 
@@ -540,3 +545,4 @@ is aware that they are exchanging information with another stack without
 explicit OIDC-style consent.
 
 ![JWT-Only Flow between trusted stacks](./AAI/GA4GH_JWT-only_flow.png)
+{% endcomment %}
