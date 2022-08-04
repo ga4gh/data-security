@@ -38,7 +38,7 @@
         </label>
 
         <div class="trigger">
-<a class="page-link" href="/data-security/1.2-draft-main/aai-introduction">AAI Introduction</a><a class="page-link" href="/data-security/1.2-draft-main/aai-openid-connect-profile">AAI OIDC Profile</a>
+<a class="page-link" href="/data-security/1.2-draft-main/aai-introduction">AAI Introduction</a><a class="page-link" href="/data-security/1.2-draft-main/aai-openid-connect-profile">AAI OIDC Profile</a><a class="page-link" href="/data-security/1.2-draft-main/aai-faq">AAI FAQ</a><a class="page-link" href="/data-security/1.2-draft-main/changes-1_2">Changes Between Versions 1.0 and 1.2</a>
 </div>
       </nav>
 </div>
@@ -64,178 +64,106 @@
 <h3 class="no_toc" id="table-of-contents">Table of Contents</h3>
 
 <ul id="markdown-toc">
-  <li><a href="#introduction" id="markdown-toc-introduction">Introduction</a></li>
   <li>
-<a href="#background" id="markdown-toc-background">Background</a>    <ul>
-      <li><a href="#examples-of-broker-technologies" id="markdown-toc-examples-of-broker-technologies">Examples of broker technologies</a></li>
-      <li><a href="#why-brokers" id="markdown-toc-why-brokers">Why Brokers?</a></li>
-      <li><a href="#embedded-tokens-example-and-explanation" id="markdown-toc-embedded-tokens-example-and-explanation">Embedded Tokens example and explanation</a></li>
-      <li><a href="#services-parties-are-responsible-for-providing" id="markdown-toc-services-parties-are-responsible-for-providing">Services parties are responsible for providing</a></li>
+<a href="#introduction" id="markdown-toc-introduction">Introduction</a>    <ul>
+      <li><a href="#technical-summary" id="markdown-toc-technical-summary">Technical Summary</a></li>
+      <li><a href="#visa-tokens" id="markdown-toc-visa-tokens">Visa Tokens</a></li>
+      <li><a href="#separation-of-data-holders-and-data-controllers" id="markdown-toc-separation-of-data-holders-and-data-controllers">Separation of Data Holders and Data Controllers</a></li>
     </ul>
   </li>
-  <li><a href="#future-topics-to-explore" id="markdown-toc-future-topics-to-explore">Future topics to explore</a></li>
+  <li>
+<a href="#background" id="markdown-toc-background">Background</a>    <ul>
+      <li><a href="#why-brokers" id="markdown-toc-why-brokers">Why Brokers?</a></li>
+    </ul>
+  </li>
 </ul>
 
 <h3 id="introduction">Introduction</h3>
 
 <p>The <a href="/data-security/1.2-draft-main/aai-openid-connect-profile">GA4GH AAI profile specification</a>
-leverages OpenID Connect (OIDC) Servers for use in authenticating the identity of
-researchers desiring to access clinical and genomic resources from <a href="/data-security/1.2-draft-main/aai-openid-connect-profile#term-data-holder">data
+leverages OpenID Connect (OIDC) Servers to authenticate researchers
+desiring to access clinical and genomic resources from <a href="/data-security/1.2-draft-main/aai-openid-connect-profile#term-data-holder">data
 holders</a>
-adhering to GA4GH standards, and to enable data holders to obtain security-related
-attributes of those researchers. This is intended to be endorsed as a GA4GH standard,
-implemented by GA4GH Driver Projects, and shared broadly.</p>
+adhering to GA4GH standards. Beyond standard OIDC authentication, AAI enables
+data holders to obtain security-related attributes and authorizations of those
+researchers.</p>
 
-<p>To help assure the authenticity of identities used to access data from GA4GH
-Driver Projects, and other projects that adopt GA4GH standards, the Data Use and
-Researcher Identity (DURI) Work Stream has developed a standard around
-<a href="https://github.com/ga4gh-duri/ga4gh-duri.github.io/tree/master/researcher_ids">claims</a>.
-This standard assumes that some GA4GH Claims provided
-by Brokers described in this document will conform to the DURI researcher-identity
-policy and standard. This standard does NOT assume that DURI’s GA4GH Claims will be
-the only ones used.</p>
+<p>The Data Use and Researcher Identity (DURI) Work Stream has developed standard
+<a href="https://github.com/ga4gh-duri/ga4gh-duri.github.io/tree/master/researcher_ids">claims</a>
+for representing common researcher authorizations and attributes. This standard
+assumes that GA4GH Claims provided by Brokers described in this document
+MAY conform to the DURI researcher-identity policy and standard. This standard
+does NOT assume that DURI’s GA4GH Claims will be the only ones used.</p>
 
-<p>This AAI standard aims at developing an approach that enables data holders’ and data owners 
-systems to have systems that recognize and accept identities from multiple Brokers – allowing for
-a federated approach. An organization can still use this specification and not
-support multiple Brokers, though they may find in that case that it’s just using
-a prescriptive version of OIDC.</p>
+<h4 id="technical-summary">Technical Summary</h4>
+
+<p>At its core, the AAI specification defines cryptographically secure tokens for exchanging
+researcher attributes called <a href="aai-openid-connect-profile#term-visa">Visas</a>, and how various
+participants can interact to authenticate researchers, and obtain and validate visas.</p>
+
+<p>The main components identified in the specification are:</p>
+<ul>
+  <li>
+<a href="aai-openid-connect-profile#term-visa-issuer">Visa Issuers</a>, that cryptographically sign researcher attributes in the
+form of visas.</li>
+  <li>
+<a href="aai-openid-connect-profile#term-broker">Brokers</a>, that authenticate researchers and broker access to visas associated
+with researchers.</li>
+  <li>
+<a href="aai-openid-connect-profile#term-passport-clearinghouse">Passport Clearinghouses</a>, that accept tokens containing or
+otherwise availing researcher visas for the purposes of enforcing access control.</li>
+</ul>
+
+<h4 id="visa-tokens">Visa Tokens</h4>
+
+<p>The recommended approach to using AAI involves signed-JWTs called Visas,
+for securely transmitting authorizations or attributes of a researcher.
+Visas are signed by the Visa Issuer, which may be a service other than
+the Broker. Using JWTs signed by private key, allows Clearinghouses to
+validate Visas from known issuers in situations where they may not have
+network connections to the issuers.</p>
+
+<h4 id="separation-of-data-holders-and-data-controllers">Separation of Data Holders and Data Controllers</h4>
+
+<p>It is a fairly common situation that, for a single dataset, the
+<a href="aai-openid-connect-profile#term-data-controller">data controller</a>
+(the authority managing who has access to dataset) is not the same party as the 
+<a href="aai-openid-connect-profile#term-data-holder">data holder</a> (the organization
+that hosts the data, while respecting the data controller’s access policies).</p>
+
+<p>For these situations, AAI is a standard mechanism for data holders to obtain
+and validate authorizations from data controllers, by specifying the interactions
+between Visa Issuers, Brokers, and Clearinghouses.</p>
+
+<p>The AAI standard enables data holders’ and data controllers’ systems to recognize
+and accept identities from multiple Brokers — allowing for an even more federated
+approach. An organization can still use this specification with a single Broker and Visa Issuer,
+though they may find in that case that there are few benefits beyond standard OIDC.</p>
 
 <h3 id="background">Background</h3>
-
-<h4 id="examples-of-broker-technologies">Examples of broker technologies</h4>
-
-<p>Examples of suites that provide both functionalities in a single package are :
-<a href="https://auth0.com/">Auth0.com</a>, <a href="https://www.keycloak.org">Keycloak</a> (open
-source), <a href="https://github.com/ory/hydra">Hydra</a> (open source), OpenAM,
-<a href="https://www.okta.com/">Okta</a>, Globus Auth, <a href="https://github.com/uc-cdis/fence">Gen3
-Fence</a>,
-<a href="https://elixir-europe.org/services/compute/aai">ELIXIR</a>, NIH/VDS, <a href="https://aws.amazon.com/cognito/">AWS
-Cognito</a>.</p>
 
 <h4 id="why-brokers">Why Brokers?</h4>
 
 <p>We have found that there are widely used Identity Providers (IdP) such as Google
 Authentication. These authentication mechanisms provide no authorization
-information (custom claims or scopes) but are so pervasive at the institution
-level that they cannot be ignored. The use of a “brokers” and “clearinghouses”
-enables “inserting” information into the usual OIDC flow so that Google
-identities can be used but claims and scopes can be customized.</p>
+information (custom claims or scopes) but are ubiquitous for authentication at the institution level.
+The use of a Broker and Clearinghouse
+enables attaching information to the usual OIDC flow so that Google and other
+prominent identity providers can be used with customized claims and scopes.</p>
 
-<p>We have also found that some brokers, such as ELIXIR for example, provide
-some useful “extra” claims on top of an IdP like Google, but an institution
-receiving ELIXIR claims might want to add even more claims. Brokers then
-had to have a mechanism for trusting claims from other Brokers while
-providing provenance and proof of where they came from. This led to
-the embedded token structure.</p>
+<p>Here is a diagram of a single broker. This is one possible way to use this spec.</p>
 
-<p>Here is a diagram:
-<a href="https://www.lucidchart.com/invitations/accept/68f3089b-0c9b-4e64-acd2-abffae3c0c43">https://www.lucidchart.com/invitations/accept/68f3089b-0c9b-4e64-acd2-abffae3c0c43</a>
-of a full-broker. This is one possible way to use this spec.</p>
+<p><img class="plantuml" src="http://www.plantuml.com/plantuml/svg/~h407374617274756d6c0a736b696e706172616d20636f6d706f6e656e745374796c652072656374616e676c650a6c65667420746f20726967687420646972656374696f6e0a0a636f6d706f6e656e7420223c623e566973612049737375657220313c2f623e5c6e736572766963652220617320497373756572310a636f6d706f6e656e7420223c623e566973612049737375657220323c2f623e5c6e736572766963652220617320497373756572320a636f6d706f6e656e7420223c623e5669736120497373756572204e3c2f623e5c6e7365727669636522206173204973737565724e0a0a636f6d706f6e656e7420223c623e42726f6b65723c2f623e5c6e73657276696365222061732042726f6b657220234641464144320a636f6d706f6e656e7420223c623e50617373706f727420436c656172696e67686f7573653c2f623e5c6e736572766963652220617320436c656172696e67486f75736520233945374242350a0a49737375657231203c2d2d2042726f6b6572203a2046657463682056697361730a49737375657232203c2d2d2042726f6b6572203a2046657463682056697361730a4973737565724e203c2d2d2042726f6b6572203a2046657463682056697361730a42726f6b6572203c2d2d20436c656172696e67486f757365203a2052657175657374205573657220566973617320772f2041636365737320546f6b656e0a0a40656e64756d6c"></p>
 
-<p><img src="/data-security/1.2-draft-main/AAI/flow.png" alt="flow diagram"></p>
+<p>In this diagram, the Broker relies on a separate service for fetching visas, which
+stores assertions from multiple sources. The visa assertions are obtained by the
+Clearinghouse after a successful login, and used to determine a researcher’s
+access in the Clearinghouse system.</p>
 
-<p>In this diagram, the Data Owner Claim Clearinghouse, the Data Holder Claim
-Clearinghouse and the Broker are all different entities. However, some cases,
-the Broker and Data Owner might be the same entity and
-even be operated with the same OIDC Provider Software.</p>
-
-<p>Examples of implementations that provide both Identity Brokering and Data Owner
-Claim Clearinghouse services are:
-<a href="https://docs.google.com/document/d/1hD0lsxotLvPaML_CSydVX6rJ-zogAH2nRVl4ax4gW1o/edit#heading=h.eilp6df62hbd">ELIXIR</a>,
-<a href="http://auth0.com">Auth0</a>, <a href="http://keycloak.org">Keycloak</a>, <a href="https://www.globus.org/tags/globus-auth">Globus
-auth</a>, <a href="https://www.okta.com/">Okta</a>,
-<a href="https://github.com/ory/hydra">Hydra</a>, <a href="https://aws.amazon.com/cognito/">AWS
-Cognito</a>. These can be Brokers and/or
-Claim Clearinghouses. They’re not usually only used for Claim consumption (akin
-to a OAuth2 Resource Server in many ways). NGINX and Apache both offer reverse
-proxies for “Claim Consumption Only” functionality –
-<a href="https://github.com/zmartzone/lua-resty-openidc">https://github.com/zmartzone/lua-resty-openidc</a> (with
-<a href="https://github.com/cdbattags/lua-resty-jwt">https://github.com/cdbattags/lua-resty-jwt</a>) and
-<a href="https://github.com/zmartzone/mod_auth_openidc">https://github.com/zmartzone/mod_auth_openidc</a> respectively.</p>
-
-<p>Data holders and data owners should explore their options to decide what best
-fits their needs.</p>
-
-<h4 id="embedded-tokens-example-and-explanation">Embedded Tokens example and explanation</h4>
-
-<p>TODO consider Visa vs embedded token terminology.</p>
-
-<p><img src="/data-security/1.2-draft-main/AAI/embedded_Claims_flow.png" alt="embedded claims flow diagram"></p>
-
-<p>Consider two parties: Google and ELIXIR.</p>
-
-<p>In this example, Google Passport Clearinghouse makes access decisions based
-on ELIXIR Assertion Repository information via a chain of brokers that have
-passed along the Passport Visas in standard GA4GH Passport format where the
-Passports are signed by different Brokers but the Passport Visas retain
-the signature from the Passport Visa Issuer.</p>
-
-<p>The way this chain of brokers and trust is maintained is through
-“embedded tokens”. There are two types of embedded
-tokens: Embedded Access Tokens and Embedded Document Tokens.</p>
-
-<p>Embedded Access Tokens are claims in a Broker’s token that can then be
-sent to OTHER brokers’ <code class="language-plaintext highlighter-rouge">/userinfo</code> endpoints for further user claims.
-In GA4GH Passports, embedded access tokens will usually carry full claims
-so as not to interrogate <code class="language-plaintext highlighter-rouge">/userinfo</code> each time.</p>
-
-<p>Embedded Document Tokens cannot be revoked and no <code class="language-plaintext highlighter-rouge">/userinfo</code> endpoint
-is provided for them, however they still offer a signature that can
-be used to verify their provenance and always contain the necessary
-claims in them already.</p>
-
-<h4 id="services-parties-are-responsible-for-providing">Services parties are responsible for providing</h4>
-
-<p><strong>Data Holders:</strong></p>
-
-<p>Data holders are expected to protect their resources within a Claim
-Clearinghouse Server. These Servers should be able to get claims from one or
-more Brokers, with researcher authentication provided by one or more Identity
-Providers. <em>Note: Most Claim Clearinghouses can provide access to resources
-based on information in Claims – if not the Claim Clearinghouses themselves
-then in some downstream application that protects data.</em></p>
-
-<p><strong>Data Owners:</strong></p>
-
-<p>Data owners are not required to implement or operate an Identity Provider
-(though they may choose to do so) or an Broker.</p>
-
-<p>Data Owners may choose to operate a Claim Clearinghouse server configured
-to consume access_tokens from an upstream Broker and then hand out JWT
-claims to relying parties and other Claim Clearinghouses.</p>
-
-<p>Some data owners will own the whole “chain” providing all of the different kinds
-of brokers and will also operate Claim Clearinghouses. For instance, NIH is a
-data owner and might provide Cloud Buckets and operate an IDP and Broker to
-utilize ERACommons and other identity resources.</p>
-
-<p>A Data Owner should be able to, based on an Identity from an Identity Provider,
-express some sort of <a href="#ga4gh-jwt-format">permissions</a> via the Claim Clearinghouse
-GA4GH claims. It is the responsibility of the Data Owner to provide these
-permissions to their Claim Clearinghouse to be expressed claims within a standard
-/userinfo process for downstream use.</p>
-
-<p>It is possible that the IdPs might have special claims. The Claim Clearinghouse
-being operated by the Data Owner should be “looking” for those claims and
-incorporating them, if desired, into the claims that it eventually sends to the
-user.</p>
-
-<p>A data owner is expected to maintain the <a href="https://github.com/ga4gh/data-security">operational
-security</a> of their Claim Clearinghouse
-server and hold it to the GA4GH spec for <a href="https://github.com/ga4gh/data-security">operational
-security</a>. It is also acceptable to
-align the security to a known and accepted framework such as NIST-800-53,
-ISO-27001/ISO-27002.</p>
-
-<h3 id="future-topics-to-explore">Future topics to explore</h3>
-
-<p><a href="https://openid.net/specs/openid-connect-federation-1_0.html">https://openid.net/specs/openid-connect-federation-1_0.html</a> - OIDC federation</p>
-
-<p>Register the Claim - According to RFC 7519 (JSON Web Token) section 4.2
-<a href="https://tools.ietf.org/html/rfc7519#section-4.2">https://tools.ietf.org/html/rfc7519#section-4.2</a> claim names should be
-registered by IANA in its “JSON Web Token Claims” registry at
-<a href="https://www.iana.org/assignments/jwt/jwt.xml">https://www.iana.org/assignments/jwt/jwt.xml</a> . Register GA4GH.</p>
+<p>The Broker, Clearinghouse, and Visa Issuer may be separate services (as shown
+in this diagram), but in other configurations they may be run as parts of a single
+service, or as separate services run by single organization. Data holders and data
+controllers should explore their options to decide what best fits their needs.</p>
 
   </div>
 
