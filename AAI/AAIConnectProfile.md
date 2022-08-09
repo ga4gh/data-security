@@ -261,9 +261,9 @@ the Broker.
         information MUST include the following HTTP response header fields and
         values (as per [OIDC Implementation Guide](https://openid.net/specs/openid-connect-basic-1_0.html)).
 
-        1.  Cache-Control: no-cache, no-store
+        1.  `Cache-Control: no-cache, no-store`
 
-        2.  Pragma: no-cache
+        2.  `Pragma: no-cache`
 
 4.  MUST provide protection against Client attacks as outlined in
     [RFC 6819](https://tools.ietf.org/html/rfc6819).
