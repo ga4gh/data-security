@@ -255,11 +255,11 @@ the Broker.
     1.  Sensitive information (e.g., including client secrets,
         authorization codes, id_tokens, access_tokens) will be passed over
         encrypted channels as per
-        [OpenIDC Implementation Guide](https://openid.net/specs/openid-connect-basic-1_0.html).
+        [OIDC Implementation Guide](https://openid.net/specs/openid-connect-basic-1_0.html).
 
     2.  All responses that contain tokens, secrets, or other sensitive
         information MUST include the following HTTP response header fields and
-        values (as per [OpenIDC Implementation Guide](https://openid.net/specs/openid-connect-basic-1_0.html)).
+        values (as per [OIDC Implementation Guide](https://openid.net/specs/openid-connect-basic-1_0.html)).
 
         1.  Cache-Control: no-cache, no-store
 
