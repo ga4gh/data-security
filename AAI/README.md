@@ -19,7 +19,7 @@ permalink: aai-introduction
 ### Introduction
 
 The [GA4GH AAI profile specification]({% link AAI/AAIConnectProfile.md %})
-leverages OpenID Connect (OIDC) Servers to authenticate researchers
+leverages OpenID Connect (OIDC) to authenticate researchers
 desiring to access clinical and genomic resources from [data
 holders]({% link AAI/AAIConnectProfile.md %}#term-data-holder)
 adhering to GA4GH standards. Beyond standard OIDC authentication, AAI enables
