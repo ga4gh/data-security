@@ -46,7 +46,7 @@ be interpreted as described in [RFC2119](https://www.ietf.org/rfc/rfc2119.txt).
 
 <a name="term-jwt"></a>
 **JWT** -- JSON Web Token as defined in [RFC7519](https://datatracker.ietf.org/doc/html/rfc7519).
-JWT contains a set of [claims](https://datatracker.ietf.org/doc/html/rfc7519#section-2).
+A JWT contains a set of [claims](https://datatracker.ietf.org/doc/html/rfc7519#section-2).
 A claim is a piece of information asserted about a subject, represented as a name/value pair consisting of
 a claim name (a string) and a claim value (any JSON value). This definiton of claims
 is inherited by [OIDC](http://openid.net/specs/openid-connect-core-1_0.html) from RFC7519.
@@ -62,7 +62,7 @@ for the claim as this is a reference to a GA4GH documented standard only.
 service that provides to users an identity, authenticates it; and provides
 assertions to a Broker using standard protocols, such as OpenID Connect, SAML or
 other federation protocols. Example: eduGAIN, Google Identity, Facebook, NIH
-ERACommons. IdPs MAY be assertion sources.
+ERACommons. IdPs MAY be [Visa Assertion Sources](#term-visa-assertion-source).
 
 <a name="term-broker"></a> **Broker** -- An OIDC Provider service that
 authenticates a user (potentially by an Identity Provider), collects user's
