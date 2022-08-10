@@ -291,6 +291,7 @@ the Broker.
         3.  Access tokens MAY contain non-GA4GH Claims directly in the access token.
 
 2. Broker MUST be an OpenID Provider
+ 
     1. Broker MUST conform to the [OIDC Core Specification](http://openid.net/specs/openid-connect-core-1_0.html)
 
     2. Broker MUST support [OIDC Discovery spec](https://openid.net/specs/openid-connect-discovery-1_0.html)
