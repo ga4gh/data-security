@@ -46,7 +46,7 @@ be interpreted as described in [RFC2119](https://www.ietf.org/rfc/rfc2119.txt).
 
 <a name="term-jwt"></a>
 **JWT** -- JSON Web Token as defined in [RFC7519](https://datatracker.ietf.org/doc/html/rfc7519).
-JWT contains a set of [claims](https://datatracker.ietf.org/doc/html/rfc7519#section-2).
+A JWT contains a set of [claims](https://datatracker.ietf.org/doc/html/rfc7519#section-2).
 A claim is a piece of information asserted about a subject, represented as a name/value pair consisting of
 a claim name (a string) and a claim value (any JSON value). This definiton of claims
 is inherited by [OIDC](http://openid.net/specs/openid-connect-core-1_0.html) from RFC7519.
@@ -62,7 +62,7 @@ for the claim as this is a reference to a GA4GH documented standard only.
 service that provides to users an identity, authenticates it; and provides
 assertions to a Broker using standard protocols, such as OpenID Connect, SAML or
 other federation protocols. Example: eduGAIN, Google Identity, Facebook, NIH
-ERACommons. IdPs MAY be assertion sources.
+ERACommons. IdPs MAY be [Visa Assertion Sources](#term-visa-assertion-source).
 
 <a name="term-broker"></a> **Broker** -- An OIDC Provider service that
 authenticates a user (potentially by an Identity Provider), collects user's
@@ -169,16 +169,16 @@ specific assignment within the organization that made the assertion.
 
 [GA4GH-Passport](https://github.com/ga4gh-duri/ga4gh-duri.github.io/blob/master/researcher_ids/ga4gh_passport_v1.md) - DURI
 
-[RFC8693](https://www.rfc-editor.org/info/rfc8693)  Jones, M., Nadalin, A., Campbell, B., Ed., Bradley, J.,
+[RFC8693](https://www.rfc-editor.org/info/rfc8693) - Jones, M., Nadalin, A., Campbell, B., Ed., Bradley, J.,
         and C. Mortimore, "OAuth 2.0 Token Exchange", RFC 8693,
         DOI 10.17487/RFC8693, January 2020.
 
-[RFC6819](https://www.rfc-editor.org/info/rfc6819) 
+[RFC6819](https://www.rfc-editor.org/info/rfc6819) -
         Lodderstedt, T, McGloin, M., and P. Hunt, 
         "OAuth 2.0 Threat Model and Security Considerations", 
         RFC 6819, January 2013.
 
-[RFC8725](https://www.rfc-editor.org/info/rfc8725)  Sheffer, Y., Hardt, D., and M. Jones, "JSON Web Token Best
+[RFC8725](https://www.rfc-editor.org/info/rfc8725) - Sheffer, Y., Hardt, D., and M. Jones, "JSON Web Token Best
         Current Practices", BCP 225, RFC 8725,
         DOI 10.17487/RFC8725, February 2020.
 
@@ -255,15 +255,15 @@ the Broker.
     1.  Sensitive information (e.g., including client secrets,
         authorization codes, id_tokens, access_tokens) will be passed over
         encrypted channels as per
-        [OpenIDC Implementation Guide](https://openid.net/specs/openid-connect-basic-1_0.html).
+        [OIDC Implementation Guide](https://openid.net/specs/openid-connect-basic-1_0.html).
 
     2.  All responses that contain tokens, secrets, or other sensitive
         information MUST include the following HTTP response header fields and
-        values (as per [OpenIDC Implementation Guide](https://openid.net/specs/openid-connect-basic-1_0.html)).
+        values (as per [OIDC Implementation Guide](https://openid.net/specs/openid-connect-basic-1_0.html)).
 
-        1.  Cache-Control: no-cache, no-store
+        1.  `Cache-Control: no-cache, no-store`
 
-        2.  Pragma: no-cache
+        2.  `Pragma: no-cache`
 
 4.  MUST provide protection against Client attacks as outlined in
     [RFC 6819](https://tools.ietf.org/html/rfc6819).
