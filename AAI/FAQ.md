@@ -275,8 +275,13 @@ to cryptographically "sign" tokens containing claims. Signed tokens can be
 
 ### Why are the Visa claims formatted as JWTs inside the Passport?
 
-A section on the importance to the NiH of retaining original authority in visas.
+(last updated August 2022)
 
+If visas were not signed separately from a Passport, then Clearinghouses would require a high degree of confidence that
+the signing Passport Issuer or Broker was accurately representing the contents of Visas from the original Visa Issuer;
+there would be no mechanisms to prevent a malicious or defective Passport Issuer from misrepresenting Visa contents.
+By signing Visas separately from Passports, we prevent intermediate parties from tampering with Visa contents,
+allowing Clearinghouses to safely rely on Visa contents based on their trust relationship with the Visa Issuer.
 
 ### What are the ways that key management is done in practice?
 

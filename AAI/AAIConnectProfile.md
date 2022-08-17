@@ -69,8 +69,7 @@ authenticates a user (potentially by an Identity Provider), collects user's
 [Visas](#term-visa) from internal and/or external [Visa Issuers](#term-visa-issuer) and provides them
 to [Passport Clearinghouses](#term-passport-clearinghouse).
 Brokers may also be Passport Clearinghouses of other upstream Brokers (i.e.
-create a chain of Brokers like in the
-[Flow of Assertions diagram](#flow-of-assertions)).
+create a chain of Brokers).
 
 <a name="term-passport-clearinghouse"></a> **Passport Clearinghouse** -- A consumer
 of [Visas](#term-visa) (i.e. an OIDC Relying Party or a service
@@ -116,7 +115,7 @@ as defined by [OIDC-Core](http://openid.net/specs/openid-connect-core-1_0.html);
 
 <a name="term-token-exchange"></a> **Token Exchange** --
 the protocol defined in [RFC 8693](https://www.rfc-editor.org/info/rfc8693) as extension of OAuth 2
-for exchanging access tokens for other tokens. A token exchange is performed at [Token Endpoint](#term-token-endpoint)
+for exchanging access tokens for other tokens. A token exchange is performed at a [Token Endpoint](#term-token-endpoint)
 
 <a name="term-visa-assertion"></a>
 **Visa Assertion** -- a piece of information about a user that is asserted by a [Visa Assertion Source](#term-visa-assertion-source). It is then encoded by a [Visa Issuer](#term-visa-issuer) into a [Visa](#Visa).
@@ -286,9 +285,7 @@ the Broker.
         1.  Access tokens for GA4GH use MUST be a [GA4GH JWT](#ga4gh-jwt-format) using
             [Passport-Scoped Access Token format](#passport-scoped-access-token-issued-by-broker).
 
-        2.  Access tokens do not contain GA4GH Claims directly in the access token.
-
-        3.  Access tokens MAY contain non-GA4GH Claims directly in the access token.
+        2.  Access tokens MAY contain additional non-GA4GH Claims directly in the access token.
 
 2. Broker MUST be an OpenID Provider
  
@@ -367,7 +364,7 @@ the Broker.
             Format](#visa-access-token-format). This includes
             having GA4GH Claims as JWT claims directly in the Visa.
 
-        3.  Visa Issuer MUST support [OIDC Discovery
+        3.  Visa Issuers issuing Visa Access Tokens MUST support [OIDC Discovery
             spec](https://openid.net/specs/openid-connect-discovery-1_0.html),
             and provide `jwks_uri` as
             [Metadata](https://openid.net/specs/openid-connect-discovery-1_0.html#ProviderMetadata)
@@ -379,7 +376,7 @@ the Broker.
             however returning GA4GH Claims from the UserInfo Endpoint for Visa Access Tokens is 
             OPTIONAL.
 
-        1.  If the Visa Access Token's `exp` exceeds the `iat` by
+        5.  If the Visa Access Token's `exp` exceeds the `iat` by
             more than 1 hour, the Visa Issuer should expect
             Passport Clearinghouses to use [Access Token Polling](#at-polling) and
             MUST provide a means to revoke Visa Access Tokens. The
@@ -388,13 +385,22 @@ the Broker.
             when provided an Visa Access Token that has completed the
             revocation process.
 
-        2.  The JWS header MUST NOT have `jku` specified.
+        6.  The JWS header MUST NOT have `jku` specified.
 
-        3.  Visa Issuer MUST provide protection against
+        7.  Visa Issuer MUST provide protection against
             attacks as outlined in [RFC
             6819](https://tools.ietf.org/html/rfc6819).
 
-    4. <a name="term-visa-document-token"></a> <a name="term-embedded-document-token"></a>
+        8. A Visa Issuer MAY generate the `exp` timestamp to enforce
+           its policies and allow Passport Clearinghouses to understand the intent of
+           how long the assertion may be used before needing to return to the Visa Issuer
+           to refresh the Visa. As a non-normative example, if an
+           assertion expires in 25 years, the Visa Issuer could set the `exp` to
+           1 day into the future plus issue a refresh token in order to force the
+           refresh token to be used when a downstream Passport Clearinghouse is still
+           interested in using such an assertion after 1 day elapses.
+
+    2. <a name="term-visa-document-token"></a> <a name="term-embedded-document-token"></a>
        **Visa Document Token** -- The Visa Issuer does not need to
        be an OIDC provider, and MAY provide tokens of this type without any
        revocation process.
@@ -417,21 +423,10 @@ the Broker.
         5.  The `scope` JWT claim, if included, MUST NOT contain "openid" as
             a space-delimited substring.
 
-3. A Visa Issuer MAY generate the `exp` timestamp to enforce
-    its policies and allow Passport Clearinghouses to understand the intent of
-    how long the assertion may be used before needing to return to the Visa Issuer
-    to refresh the Visa. As a non-normative example, if an
-    assertion expires in 25 years, the Visa Issuer could set the `exp` to
-    1 day into the future plus issue a refresh token in order to force the
-    refresh token to be used when a downstream Passport Clearinghouse is still
-    interested in using such an assertion after 1 day elapses.
-
-4. By signing a Visa, a Visa Issuer asserts that
+2. By signing a Visa, a Visa Issuer asserts that
     the [Visa Assertions](#term-visa-assertion) made available by the Visa were legitimately derived
     from their [Visa Assertion Sources](#term-visa-assertion-source), and the content is
-    presented and/or transformed without misrepresenting the original intent,
-    except for accommodating for `exp` timestamps to be represented as
-    indicated above.
+    presented and/or transformed without misrepresenting the original intent.
 
 {% hr3 %}
 
@@ -848,7 +843,7 @@ involved with access may employ one or more of the following options:
 
 {% hr3 %}
 
-### Revoking Access from Bad Actors
+### Revoking Access Tokens from Bad Actors
 
 In the event that a system or user detects that a specific user is misbehaving or
 has falsified assertions despite previous assurances that access was appropriate,
@@ -875,7 +870,7 @@ assertions to prevent further tokens from being minted.
 ### Limited Damage of Leaked Tokens
 
 In order to limit damage of leaked tokens, systems MUST provide all of the
-following:
+following where applicable:
 
 1.  Be able to leverage mechanisms in place for revoking claims and tokens
     for other purposes to also limit exposure of leaked tokens.
@@ -894,19 +889,19 @@ following:
 
 ## Specification Revision History
 
-| Version | Date    | Editor                                     | Notes                   |
-|---------|---------|--------------------------------------------|-------------------------|
-| 1.2.0   | 2022-?? |                                            | ...  |
-| 1.1.0   | 2021-07 | Craig Voisin                               | *abandoned* version now reserved, new concepts moved to v1.2 |
-| 1.0.4   | 2021-07 | Craig Voisin                               | Improve existing terminology and define Passport and Visa JWTs |
-| 1.0.3   | 2021-06 | Craig Voisin                               | Links for "scope" claim |
-| 1.0.2   | 2020-02 | David Bernick                              | Clarify risk scenarios  |
-| 1.0.1   | 2019-10 | David Bernick                              | Clarify that non-GA4GH claims are allowed in tokens |
-| 1.0.0   | 2019-10 | Approved by GA4GH Steering Committee       |                         |
-| 0.9.9   | 2019-10 | David Bernick, Craig Voisin, Mikael Linden | Approved standard       |
-| 0.9.5   | 2019-09 | Craig Voisin                               | Update claim flow diagram and definitions |
-| 0.9.4   | 2019-08 | Craig Voisin                               | Embedded tokens for signed RI Claim Objects |
-| 0.9.3   | 2019-08 | Craig Voisin                               | Support for RI's embedded tokens |
-| 0.9.2   | 2019-07 | David Bernick                              | Made changes based on feedback from review |
-| 0.9.1   | 2019-06 | Craig Voisin                               | Added terminology links |
-| 0.9.0   | 2017-   | Mikael Linden, Craig Voisin, David Bernick | Initial working version |
+| Version       | Date    | Editor                                                                | Notes                                                                            |
+|---------------|---------|-----------------------------------------------------------------------|----------------------------------------------------------------------------------|
+| 1.2.0 (draft) | 2022-08 | Andrew Patterson, Martin Kuba, Kurt Rodarmer, Tom Conner, Max Barkley | Introduce token exchange and Passport format, incorporate Visas, update diagrams |
+| 1.1.0         | 2021-07 | Craig Voisin                                                          | *abandoned* version now reserved, new concepts moved to v1.2                     |
+| 1.0.4         | 2021-07 | Craig Voisin                                                          | Improve existing terminology and define Passport and Visa JWTs                   |
+| 1.0.3         | 2021-06 | Craig Voisin                                                          | Links for "scope" claim                                                          |
+| 1.0.2         | 2020-02 | David Bernick                                                         | Clarify risk scenarios                                                           |
+| 1.0.1         | 2019-10 | David Bernick                                                         | Clarify that non-GA4GH claims are allowed in tokens                              |
+| 1.0.0         | 2019-10 | Approved by GA4GH Steering Committee                                  |                                                                                  |
+| 0.9.9         | 2019-10 | David Bernick, Craig Voisin, Mikael Linden                            | Approved standard                                                                |
+| 0.9.5         | 2019-09 | Craig Voisin                                                          | Update claim flow diagram and definitions                                        |
+| 0.9.4         | 2019-08 | Craig Voisin                                                          | Embedded tokens for signed RI Claim Objects                                      |
+| 0.9.3         | 2019-08 | Craig Voisin                                                          | Support for RI's embedded tokens                                                 |
+| 0.9.2         | 2019-07 | David Bernick                                                         | Made changes based on feedback from review                                       |
+| 0.9.1         | 2019-06 | Craig Voisin                                                          | Added terminology links                                                          |
+| 0.9.0         | 2017-   | Mikael Linden, Craig Voisin, David Bernick                            | Initial working version                                                          |
