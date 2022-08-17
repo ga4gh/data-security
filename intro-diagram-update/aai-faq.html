@@ -1,0 +1,978 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- Begin Jekyll SEO tag v2.7.1 -->
+<title>AAI FAQ | GA4GH Data Security</title>
+<meta name="generator" content="Jekyll v4.2.0">
+<meta property="og:title" content="AAI FAQ">
+<meta property="og:locale" content="en_US">
+<meta name="description" content="AAI">
+<meta property="og:description" content="AAI">
+<link rel="canonical" href="/data-security/intro-diagram-update/aai-faq">
+<meta property="og:url" content="/data-security/intro-diagram-update/aai-faq">
+<meta property="og:site_name" content="GA4GH Data Security">
+<meta name="twitter:card" content="summary">
+<meta property="twitter:title" content="AAI FAQ">
+<script type="application/ld+json">
+{"description":"AAI","url":"/data-security/intro-diagram-update/aai-faq","@type":"WebPage","headline":"AAI FAQ","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/data-security/intro-diagram-update/assets/main.css">
+<link type="application/atom+xml" rel="alternate" href="/data-security/intro-diagram-update/feed.xml" title="GA4GH Data Security">
+</head>
+<body>
+<header class="site-header" role="banner">
+
+  <div class="wrapper">
+<a class="site-title" rel="author" href="/data-security/intro-diagram-update/">GA4GH Data Security</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger">
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewbox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"></path>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger">
+<a class="page-link" href="/data-security/intro-diagram-update/aai-introduction">AAI Introduction</a><a class="page-link" href="/data-security/intro-diagram-update/aai-openid-connect-profile">AAI OIDC Profile</a><a class="page-link" href="/data-security/intro-diagram-update/aai-faq">AAI FAQ</a><a class="page-link" href="/data-security/intro-diagram-update/changes-1_2">Changes Between Versions 1.0 and 1.2</a>
+</div>
+      </nav>
+</div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post">
+
+  <header class="post-header">
+    <h1 class="post-title">AAI FAQ</h1>
+  </header>
+
+  <div class="post-content">
+    <p>A collection of questions (and hopefully useful answers).</p>
+
+<hr style="border: 2px solid; margin: 2em auto;">
+
+<h2 id="flows">Flows</h2>
+
+<p>The following sequence diagrams are included to help explain the intended flows
+documented in the accompanying specification.</p>
+
+<h3 id="what-is-the-complete-end-to-end-flow-using-token-exchange">What is the complete end to end flow using token exchange?</h3>
+
+<p>(last updated June 2022)</p>
+
+<p><strong>This flow is the preferred flow for v1.2+ of the specification.</strong></p>
+
+<p>The exchange flow does not ever distribute the initial <em>Passport-Scoped Access Token</em> beyond
+the client application. A token exchange operation is executed by the client, in
+exchange for a <em>Passport</em> JWT that may be used downstream to access resources. In this example flow, the
+<em>Passport</em> is included as authorization in the POST to a DRS server. The token
+exchange has also specified known resources that will limit the audience
+of the <em>Passport</em>.</p>
+
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" contentscripttype="application/ecmascript" contentstyletype="text/css" preserveaspectratio="none" version="1.1" viewbox="0 0 1205 1336" zoomandpan="magnify">
+  <defs>
+    <filter height="300%" id="f1m79r05trejtj" width="300%" x="-1" y="-1">
+      <fegaussianblur result="blurOut" stddeviation="2.0"></fegaussianblur>
+      <fecolormatrix in="blurOut" result="blurOut2" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .4 0"></fecolormatrix>
+      <feoffset dx="4.0" dy="4.0" in="blurOut2" result="blurOut3"></feoffset>
+      <feblend in="SourceGraphic" in2="blurOut3" mode="normal"></feblend>
+    </filter>
+  </defs>
+  <g>
+    <rect fill="#EEEEEE" height="1317.6641" style="stroke:#A80036;stroke-width:1.0;" width="198" x="11" y="6"></rect>
+    <text fill="#000000" font-family="sans-serif" font-size="13" font-weight="bold" lengthadjust="spacing" textlength="83" x="68.5" y="18.0669">Researcher</text>
+    <rect fill="#DDDDDD" height="1317.6641" style="stroke:#A80036;stroke-width:1.0;" width="232.5" x="271.5" y="6"></rect>
+    <text fill="#000000" font-family="sans-serif" font-size="13" font-weight="bold" lengthadjust="spacing" textlength="24" x="375.75" y="18.0669">AAI</text>
+    <rect fill="#DDDDDD" height="1317.6641" style="stroke:#A80036;stroke-width:1.0;" width="162" x="526" y="6"></rect>
+    <text fill="#000000" font-family="sans-serif" font-size="13" font-weight="bold" lengthadjust="spacing" textlength="112" x="551" y="18.0669">Data Controller</text>
+    <rect fill="#DDDDDD" height="1317.6641" style="stroke:#A80036;stroke-width:1.0;" width="271" x="710" y="6"></rect>
+    <text fill="#000000" font-family="sans-serif" font-size="13" font-weight="bold" lengthadjust="spacing" textlength="89" x="801" y="18.0669">Data Holder</text>
+    <rect fill="#87CEFA" filter="url(#f1m79r05trejtj)" height="130.7969" style="stroke:#000000;stroke-width:2.0;" width="463.5" x="265.5" y="417.1563"></rect>
+    <line style="stroke:#A80036;stroke-width:1.0;stroke-dasharray:5.0,5.0;" x1="56" x2="56" y1="108.4297" y2="1329.6641"></line>
+    <line style="stroke:#A80036;stroke-width:1.0;stroke-dasharray:5.0,5.0;" x1="156" x2="156" y1="108.4297" y2="1329.6641"></line>
+    <line style="stroke:#A80036;stroke-width:1.0;stroke-dasharray:5.0,5.0;" x1="327.5" x2="327.5" y1="108.4297" y2="1329.6641"></line>
+    <line style="stroke:#A80036;stroke-width:1.0;stroke-dasharray:5.0,5.0;" x1="458" x2="458" y1="108.4297" y2="1329.6641"></line>
+    <line style="stroke:#A80036;stroke-width:1.0;stroke-dasharray:5.0,5.0;" x1="607" x2="607" y1="108.4297" y2="1329.6641"></line>
+    <line style="stroke:#A80036;stroke-width:1.0;stroke-dasharray:5.0,5.0;" x1="795" x2="795" y1="108.4297" y2="1329.6641"></line>
+    <line style="stroke:#A80036;stroke-width:1.0;stroke-dasharray:5.0,5.0;" x1="932" x2="932" y1="108.4297" y2="1329.6641"></line>
+    <text fill="#000000" font-family="sans-serif" font-size="14" lengthadjust="spacing" textlength="77" x="15" y="105.1279">User Agent</text>
+    <ellipse cx="56.5" cy="35.1328" fill="#FEFECE" filter="url(#f1m79r05trejtj)" rx="8" ry="8" style="stroke:#A80036;stroke-width:2.0;"></ellipse>
+    <path d="M56.5,43.1328 L56.5,70.1328 M43.5,51.1328 L69.5,51.1328 M56.5,70.1328 L43.5,85.1328 M56.5,70.1328 L69.5,85.1328 " fill="none" filter="url(#f1m79r05trejtj)" style="stroke:#A80036;stroke-width:2.0;"></path>
+    <rect fill="#FEFECE" filter="url(#f1m79r05trejtj)" height="30.2969" style="stroke:#A80036;stroke-width:1.5;" width="53" x="128" y="73.1328"></rect>
+    <text fill="#000000" font-family="sans-serif" font-size="14" lengthadjust="spacing" textlength="39" x="135" y="93.1279">Client</text>
+    <rect fill="#FEFECE" filter="url(#f1m79r05trejtj)" height="30.2969" style="stroke:#A80036;stroke-width:1.5;" width="60" x="295.5" y="73.1328"></rect>
+    <text fill="#000000" font-family="sans-serif" font-size="14" lengthadjust="spacing" textlength="46" x="302.5" y="93.1279">Broker</text>
+    <rect fill="#FEFECE" filter="url(#f1m79r05trejtj)" height="30.2969" style="stroke:#A80036;stroke-width:1.5;" width="35" x="441" y="69.1328"></rect>
+    <rect fill="#FEFECE" filter="url(#f1m79r05trejtj)" height="30.2969" style="stroke:#A80036;stroke-width:1.5;" width="35" x="437" y="73.1328"></rect>
+    <text fill="#000000" font-family="sans-serif" font-size="14" lengthadjust="spacing" textlength="21" x="444" y="93.1279">IdP</text>
+    <rect fill="#FEFECE" filter="url(#f1m79r05trejtj)" height="30.2969" style="stroke:#A80036;stroke-width:1.5;" width="106" x="554" y="69.1328"></rect>
+    <rect fill="#FEFECE" filter="url(#f1m79r05trejtj)" height="30.2969" style="stroke:#A80036;stroke-width:1.5;" width="106" x="550" y="73.1328"></rect>
+    <text fill="#000000" font-family="sans-serif" font-size="14" lengthadjust="spacing" textlength="92" x="557" y="93.1279">Visa Issuer(s)</text>
+    <rect fill="#FEFECE" filter="url(#f1m79r05trejtj)" height="30.2969" style="stroke:#A80036;stroke-width:1.5;" width="119" x="734" y="73.1328"></rect>
+    <text fill="#000000" font-family="sans-serif" font-size="14" lengthadjust="spacing" textlength="105" x="741" y="93.1279">Clearing House</text>
+    <rect fill="#FEFECE" filter="url(#f1m79r05trejtj)" height="30.2969" style="stroke:#A80036;stroke-width:1.5;" width="46" x="907" y="73.1328"></rect>
+    <text fill="#000000" font-family="sans-serif" font-size="14" lengthadjust="spacing" textlength="32" x="914" y="93.1279">Data</text>
+    <rect fill="#EEEEEE" filter="url(#f1m79r05trejtj)" height="3" style="stroke:#EEEEEE;stroke-width:1.0;" width="1198.5" x="0" y="138.9961"></rect>
+    <line style="stroke:#000000;stroke-width:1.0;" x1="0" x2="1198.5" y1="138.9961" y2="138.9961"></line>
+    <line style="stroke:#000000;stroke-width:1.0;" x1="0" x2="1198.5" y1="141.9961" y2="141.9961"></line>
+    <rect fill="#EEEEEE" filter="url(#f1m79r05trejtj)" height="23.1328" style="stroke:#000000;stroke-width:2.0;" width="50" x="574.25" y="128.4297"></rect>
+    <text fill="#000000" font-family="sans-serif" font-size="13" font-weight="bold" lengthadjust="spacing" textlength="36" x="580.25" y="144.4966">OIDC</text>
+    <rect fill="#FFFFFF" filter="url(#f1m79r05trejtj)" height="40.2656" style="stroke:#000000;stroke-width:2.0;" width="487" x="12" y="161.5625"></rect>
+    <path d="M12,161.5625 L78,161.5625 L78,168.5625 L68,178.5625 L12,178.5625 L12,161.5625 " fill="#EEEEEE" style="stroke:#000000;stroke-width:2.0;"></path>
+    <text fill="#000000" font-family="sans-serif" font-size="13" font-weight="bold" lengthadjust="spacing" textlength="21" x="25" y="175.6294">ref</text>
+    <text fill="#000000" font-family="sans-serif" font-size="13" lengthadjust="spacing" textlength="469" x="23" y="194.6294">OIDC flow results in the client holding a *Passport-Scoped Access Token*.</text>
+    <rect fill="#EEEEEE" filter="url(#f1m79r05trejtj)" height="3" style="stroke:#EEEEEE;stroke-width:1.0;" width="1198.5" x="0" y="227.3945"></rect>
+    <line style="stroke:#000000;stroke-width:1.0;" x1="0" x2="1198.5" y1="227.3945" y2="227.3945"></line>
+    <line style="stroke:#000000;stroke-width:1.0;" x1="0" x2="1198.5" y1="230.3945" y2="230.3945"></line>
+    <rect fill="#EEEEEE" filter="url(#f1m79r05trejtj)" height="23.1328" style="stroke:#000000;stroke-width:2.0;" width="85" x="556.75" y="216.8281"></rect>
+    <text fill="#000000" font-family="sans-serif" font-size="13" font-weight="bold" lengthadjust="spacing" textlength="71" x="562.75" y="232.895">Exchange</text>
+    <polygon fill="#A80036" points="315.5,332.625,325.5,336.625,315.5,340.625,319.5,336.625" style="stroke:#A80036;stroke-width:1.0;"></polygon>
+    <line style="stroke:#A80036;stroke-width:1.0;" x1="156.5" x2="321.5" y1="336.625" y2="336.625"></line>
+    <text fill="#000000" font-family="sans-serif" font-size="13" lengthadjust="spacing" textlength="104" x="163.5" y="331.5591">Token exchange</text>
+    <path d="M332,254.9609 L332,400.9609 L815,400.9609 L815,264.9609 L805,254.9609 L332,254.9609 " fill="#FBFB77" filter="url(#f1m79r05trejtj)" style="stroke:#A80036;stroke-width:1.0;"></path>
+    <path d="M805,254.9609 L805,264.9609 L815,264.9609 L805,254.9609 " fill="#FBFB77" style="stroke:#A80036;stroke-width:1.0;"></path>
+    <text fill="#000000" font-family="sans-serif" font-size="13" lengthadjust="spacing" textlength="462" x="338" y="272.0278">(note: for clarity these form values have not actually been URL encoded)</text>
+    <text fill="#000000" font-family="sans-serif" font-size="13" lengthadjust="spacing" textlength="317" x="338" y="287.1606">Content-Type: application/x-www-form-urlencoded</text>
+    <text fill="#000000" font-family="sans-serif" font-size="13" lengthadjust="spacing" textlength="0" x="342" y="302.2935"></text>
+    <text fill="#000000" font-family="sans-serif" font-size="13" lengthadjust="spacing" textlength="397" x="338" y="317.4263">grant_type=urn:ietf:params:oauth:grant-type:token-exchange</text>
+    <text fill="#000000" font-family="sans-serif" font-size="13" lengthadjust="spacing" textlength="457" x="338" y="332.5591">&amp;requested_token_type=urn:ga4gh:params:oauth:token-type:passport</text>
+    <text fill="#000000" font-family="sans-serif" font-size="13" lengthadjust="spacing" textlength="449" x="338" y="347.6919">&amp;subject_token_type=urn:ietf:params:oauth:token-type:access_token</text>
+    <text fill="#000000" font-family="sans-serif" font-size="13" lengthadjust="spacing" textlength="333" x="338" y="362.8247">&amp;subject_token=&lt;Passport-Scoped Access Token&gt;</text>
+    <text fill="#000000" font-family="sans-serif" font-size="13" lengthadjust="spacing" textlength="295" x="338" y="377.9575">&amp;resource=https://drs.example.com/dataset1</text>
+    <text fill="#000000" font-family="sans-serif" font-size="13" lengthadjust="spacing" textlength="295" x="338" y="393.0903">&amp;resource=https://drs.example.com/dataset2</text>
+    <path d="M265.5,417.1563 L680.5,417.1563 L680.5,424.1563 L670.5,434.1563 L265.5,434.1563 L265.5,417.1563 " fill="#00BFFF" style="stroke:#000000;stroke-width:1.0;"></path>
+    <rect fill="none" height="130.7969" style="stroke:#000000;stroke-width:2.0;" width="463.5" x="265.5" y="417.1563"></rect>
+    <text fill="#000000" font-family="sans-serif" font-size="13" font-weight="bold" lengthadjust="spacing" textlength="370" x="280.5" y="430.2231">Informative Only (not defined in the specification)</text>
+    <polygon fill="#A80036" points="595,451.4219,605,455.4219,595,459.4219,599,455.4219" style="stroke:#A80036;stroke-width:1.0;"></polygon>
+    <line style="stroke:#A80036;stroke-width:1.0;" x1="327.5" x2="601" y1="455.4219" y2="455.4219"></line>
+    <text fill="#000000" font-family="sans-serif" font-size="13" lengthadjust="spacing" textlength="180" x="334.5" y="450.356">Fetch signed visa(s) for user</text>
+    <polygon fill="#A80036" points="338.5,508.2539,328.5,512.2539,338.5,516.2539,334.5,512.2539" style="stroke:#A80036;stroke-width:1.0;"></polygon>
+    <line style="stroke:#A80036;stroke-width:1.0;" x1="332.5" x2="606" y1="512.2539" y2="512.2539"></line>
+    <text fill="#000000" font-family="sans-serif" font-size="13" lengthadjust="spacing" textlength="187" x="344.5" y="507.188">Return signed visa(s) for user</text>
+    <path d="M612,468.4219 L612,538.4219 L710,538.4219 L710,478.4219 L700,468.4219 L612,468.4219 " fill="#FBFB77" filter="url(#f1m79r05trejtj)" style="stroke:#A80036;stroke-width:1.0;"></path>
+    <path d="M700,468.4219 L700,478.4219 L710,478.4219 L700,468.4219 " fill="#FBFB77" style="stroke:#A80036;stroke-width:1.0;"></path>
+    <text fill="#000000" font-family="sans-serif" font-size="13" lengthadjust="spacing" textlength="5" x="618" y="485.4888">[</text>
+    <text fill="#000000" font-family="sans-serif" font-size="13" lengthadjust="spacing" textlength="69" x="626" y="500.6216">"&lt;visa1&gt;",</text>
+    <text fill="#000000" font-family="sans-serif" font-size="13" lengthadjust="spacing" textlength="65" x="626" y="515.7544">"&lt;visa2&gt;"</text>
+    <text fill="#000000" font-family="sans-serif" font-size="13" lengthadjust="spacing" textlength="5" x="618" y="530.8872">]</text>
+    <polygon fill="#A80036" points="167.5,788.9453,157.5,792.9453,167.5,796.9453,163.5,792.9453" style="stroke:#A80036;stroke-width:1.0;"></polygon>
+    <line style="stroke:#A80036;stroke-width:1.0;" x1="161.5" x2="326.5" y1="792.9453" y2="792.9453"></line>
+    <text fill="#000000" font-family="sans-serif" font-size="13" lengthadjust="spacing" textlength="147" x="173.5" y="787.8794">Token exchange return</text>
+    <path d="M332,559.9531 L332,1007.9531 L873,1007.9531 L873,569.9531 L863,559.9531 L332,559.9531 " fill="#FBFB77" filter="url(#f1m79r05trejtj)" style="stroke:#A80036;stroke-width:1.0;"></path>
+    <path d="M863,559.9531 L863,569.9531 L873,569.9531 L863,559.9531 " fill="#FBFB77" style="stroke:#A80036;stroke-width:1.0;"></path>
+    <text fill="#000000" font-family="sans-serif" font-size="13" lengthadjust="spacing" textlength="8" x="338" y="577.02">{</text>
+    <text fill="#000000" font-family="sans-serif" font-size="13" lengthadjust="spacing" textlength="197" x="346" y="592.1528">"access_token": "&lt;Passport&gt;",</text>
+    <text fill="#000000" font-family="sans-serif" font-size="13" lengthadjust="spacing" textlength="443" x="346" y="607.2856">"issued_token_type": "urn:ga4gh:params:oauth:token-type:passport",</text>
+    <text fill="#000000" font-family="sans-serif" font-size="13" lengthadjust="spacing" textlength="146" x="346" y="622.4185">"token_type": "Bearer",</text>
+    <text fill="#000000" font-family="sans-serif" font-size="13" lengthadjust="spacing" textlength="98" x="346" y="637.5513">"expires_in": 60</text>
+    <text fill="#000000" font-family="sans-serif" font-size="13" lengthadjust="spacing" textlength="8" x="338" y="652.6841">}</text>
+    <text fill="#000000" font-family="sans-serif" font-size="13" lengthadjust="spacing" textlength="0" x="342" y="667.8169"></text>
+    <text fill="#000000" font-family="sans-serif" font-size="13" lengthadjust="spacing" textlength="520" x="338" y="682.9497">▼ Passport content as example (decoded from the base64 of the JWT Passport) ▼</text>
+    <text fill="#000000" font-family="sans-serif" font-size="13" lengthadjust="spacing" textlength="0" x="342" y="698.0825"></text>
+    <text fill="#000000" font-family="sans-serif" font-size="13" lengthadjust="spacing" textlength="8" x="338" y="713.2153">{</text>
+    <text fill="#000000" font-family="sans-serif" font-size="13" lengthadjust="spacing" textlength="207" x="346" y="728.3481">"typ": "vnd.ga4gh.passport+jwt",</text>
+    <text fill="#000000" font-family="sans-serif" font-size="13" lengthadjust="spacing" textlength="92" x="346" y="743.481">"alg": "RS256",</text>
+    <text fill="#000000" font-family="sans-serif" font-size="13" lengthadjust="spacing" textlength="150" x="346" y="758.6138">"kid": "&lt;key-identifier&gt;"</text>
+    <text fill="#000000" font-family="sans-serif" font-size="13" lengthadjust="spacing" textlength="16" x="338" y="773.7466">} .</text>
+    <text fill="#000000" font-family="sans-serif" font-size="13" lengthadjust="spacing" textlength="8" x="338" y="788.8794">{</text>
+    <text fill="#000000" font-family="sans-serif" font-size="13" lengthadjust="spacing" textlength="207" x="346" y="804.0122">"iss": "https://&lt;issuer-website&gt;",</text>
+    <text fill="#000000" font-family="sans-serif" font-size="13" lengthadjust="spacing" textlength="183" x="346" y="819.145">"sub": "&lt;subject-identifier&gt;",</text>
+    <text fill="#000000" font-family="sans-serif" font-size="13" lengthadjust="spacing" textlength="47" x="346" y="834.2778">"aud": [</text>
+    <text fill="#000000" font-family="sans-serif" font-size="13" lengthadjust="spacing" textlength="166" x="354" y="849.4106">"https://drs.example.com"</text>
+    <text fill="#000000" font-family="sans-serif" font-size="13" lengthadjust="spacing" textlength="9" x="346" y="864.5435">],</text>
+    <text fill="#000000" font-family="sans-serif" font-size="13" lengthadjust="spacing" textlength="195" x="346" y="879.6763">"iat": &lt;seconds-since-epoch&gt;,</text>
+    <text fill="#000000" font-family="sans-serif" font-size="13" lengthadjust="spacing" textlength="202" x="346" y="894.8091">"exp": &lt;seconds-since-epoch&gt;,</text>
+    <text fill="#000000" font-family="sans-serif" font-size="13" lengthadjust="spacing" textlength="161" x="346" y="909.9419">"jti": "&lt;token-identifier&gt;",</text>
+    <text fill="#000000" font-family="sans-serif" font-size="13" lengthadjust="spacing" textlength="148" x="346" y="925.0747">"ga4gh_passport_v1": [</text>
+    <text fill="#000000" font-family="sans-serif" font-size="13" lengthadjust="spacing" textlength="69" x="354" y="940.2075">"&lt;visa1&gt;",</text>
+    <text fill="#000000" font-family="sans-serif" font-size="13" lengthadjust="spacing" textlength="69" x="354" y="955.3403">"&lt;visa2&gt;",</text>
+    <text fill="#000000" font-family="sans-serif" font-size="13" lengthadjust="spacing" textlength="12" x="354" y="970.4731">...</text>
+    <text fill="#000000" font-family="sans-serif" font-size="13" lengthadjust="spacing" textlength="5" x="346" y="985.606">]</text>
+    <text fill="#000000" font-family="sans-serif" font-size="13" lengthadjust="spacing" textlength="102" x="338" y="1000.7388">} . &lt;signature&gt;</text>
+    <rect fill="#EEEEEE" filter="url(#f1m79r05trejtj)" height="3" style="stroke:#EEEEEE;stroke-width:1.0;" width="1198.5" x="0" y="1038.3711"></rect>
+    <line style="stroke:#000000;stroke-width:1.0;" x1="0" x2="1198.5" y1="1038.3711" y2="1038.3711"></line>
+    <line style="stroke:#000000;stroke-width:1.0;" x1="0" x2="1198.5" y1="1041.3711" y2="1041.3711"></line>
+    <rect fill="#EEEEEE" filter="url(#f1m79r05trejtj)" height="23.1328" style="stroke:#000000;stroke-width:2.0;" width="41" x="578.75" y="1027.8047"></rect>
+    <text fill="#000000" font-family="sans-serif" font-size="13" font-weight="bold" lengthadjust="spacing" textlength="27" x="584.75" y="1043.8716">Use</text>
+    <polygon fill="#A80036" points="783.5,1143.6016,793.5,1147.6016,783.5,1151.6016,787.5,1147.6016" style="stroke:#A80036;stroke-width:1.0;"></polygon>
+    <line style="stroke:#A80036;stroke-width:1.0;" x1="156.5" x2="789.5" y1="1147.6016" y2="1147.6016"></line>
+    <text fill="#000000" font-family="sans-serif" font-size="13" lengthadjust="spacing" textlength="129" x="163.5" y="1142.5356">Client requests data</text>
+    <path d="M800,1065.9375 L800,1211.9375 L1184,1211.9375 L1184,1075.9375 L1174,1065.9375 L800,1065.9375 " fill="#FBFB77" filter="url(#f1m79r05trejtj)" style="stroke:#A80036;stroke-width:1.0;"></path>
+    <path d="M1174,1065.9375 L1174,1075.9375 L1184,1075.9375 L1174,1065.9375 " fill="#FBFB77" style="stroke:#A80036;stroke-width:1.0;"></path>
+    <text fill="#000000" font-family="sans-serif" font-size="13" lengthadjust="spacing" textlength="363" x="806" y="1083.0044">POST /ga4gh/drs/v1/objects/dataset1/access/s3 HTTP/1.1</text>
+    <text fill="#000000" font-family="sans-serif" font-size="13" lengthadjust="spacing" textlength="149" x="806" y="1098.1372">Host: drs.example.com</text>
+    <text fill="#000000" font-family="sans-serif" font-size="13" lengthadjust="spacing" textlength="193" x="806" y="1113.27">Content-Type: application/json</text>
+    <text fill="#000000" font-family="sans-serif" font-size="13" lengthadjust="spacing" textlength="0" x="810" y="1128.4028"></text>
+    <text fill="#000000" font-family="sans-serif" font-size="13" lengthadjust="spacing" textlength="8" x="806" y="1143.5356">{</text>
+    <text fill="#000000" font-family="sans-serif" font-size="13" lengthadjust="spacing" textlength="86" x="814" y="1158.6685">"passports": [</text>
+    <text fill="#000000" font-family="sans-serif" font-size="13" lengthadjust="spacing" textlength="88" x="822" y="1173.8013">"&lt;Passport&gt;"</text>
+    <text fill="#000000" font-family="sans-serif" font-size="13" lengthadjust="spacing" textlength="5" x="814" y="1188.9341">]</text>
+    <text fill="#000000" font-family="sans-serif" font-size="13" lengthadjust="spacing" textlength="8" x="806" y="1204.0669">}</text>
+    <path d="M618,1226.1328 L618,1281.1328 L1104,1281.1328 L1104,1236.1328 L1094,1226.1328 L618,1226.1328 " fill="#FFCCCB" filter="url(#f1m79r05trejtj)" style="stroke:#A80036;stroke-width:1.0;"></path>
+    <path d="M1094,1226.1328 L1094,1236.1328 L1104,1236.1328 L1094,1226.1328 " fill="#FFCCCB" style="stroke:#A80036;stroke-width:1.0;"></path>
+    <text fill="#000000" font-family="sans-serif" font-size="13" lengthadjust="spacing" textlength="432" x="624" y="1243.1997">Decision is made to release data using information contained in the</text>
+    <text fill="#000000" font-family="sans-serif" font-size="13" lengthadjust="spacing" textlength="465" x="624" y="1258.3325">passport token - and this decision is coordinated with the data system to</text>
+    <text fill="#000000" font-family="sans-serif" font-size="13" lengthadjust="spacing" textlength="215" x="624" y="1273.4653">facilitate that actual data release.</text>
+    <polygon fill="#A80036" points="167.5,1307.6641,157.5,1311.6641,167.5,1315.6641,163.5,1311.6641" style="stroke:#A80036;stroke-width:1.0;"></polygon>
+    <line style="stroke:#A80036;stroke-width:1.0;" x1="161.5" x2="794.5" y1="1311.6641" y2="1311.6641"></line>
+    <text fill="#000000" font-family="sans-serif" font-size="13" lengthadjust="spacing" textlength="121" x="173.5" y="1306.5981">Client is given data</text>
+    <!--MD5=[0e7403183daff3a2cca26a3c01f6a8f8]
+@startuml
+skinparamlocked svgDimensionStyle false
+
+
+hide footbox
+skinparam BoxPadding 10
+skinparam ParticipantPadding 20
+
+box "Researcher"  #eee
+actor       "User Agent"                as user
+participant Client                      as client
+end box
+
+box "AAI"
+participant Broker                      as broker
+collections "IdP"                       as idps
+end box
+
+box "Data Controller"
+collections "Visa Issuer(s)"            as issuers
+end box
+
+box "Data Holder"
+participant "Clearing House"            as clearing
+participant "Data"                      as data
+end box
+
+==OIDC==
+
+ref over user, client, broker, idps
+OIDC flow results in the client holding a *Passport-Scoped Access Token*.
+end ref
+
+==Exchange==
+
+client -> broker : Token exchange
+note right
+(note: for clarity these form values have not actually been URL encoded)
+Content-Type: application/x-www-form-urlencoded
+
+grant_type=urn:ietf:params:oauth:grant-type:token-exchange
+&requested_token_type=urn:ga4gh:params:oauth:token-type:passport
+&subject_token_type=urn:ietf:params:oauth:token-type:access_token
+&subject_token=<Passport-Scoped Access Token>
+&resource=https://drs.example.com/dataset1
+&resource=https://drs.example.com/dataset2
+end note
+
+group#DeepSkyBlue #LightSkyBlue Informative Only (not defined in the specification)
+broker -> issuers : Fetch signed visa(s) for user
+broker <- issuers : Return signed visa(s) for user
+note right
+[
+  "<visa1>",
+  "<visa2>"
+]
+end note
+end
+
+client <- broker : Token exchange return
+note right
+{
+  "access_token": "<Passport>",
+  "issued_token_type": "urn:ga4gh:params:oauth:token-type:passport",
+  "token_type": "Bearer",
+  "expires_in": 60
+}
+
+▼ Passport content as example (decoded from the base64 of the JWT Passport) ▼
+
+{
+  "typ": "vnd.ga4gh.passport+jwt",
+  "alg": "RS256",
+  "kid": "<key-identifier>"
+} .
+{
+  "iss": "https://<issuer-website>",
+  "sub": "<subject-identifier>",
+  "aud": [
+    "https://drs.example.com"
+  ],
+  "iat": <seconds-since-epoch>,
+  "exp": <seconds-since-epoch>,
+  "jti": "<token-identifier>",
+  "ga4gh_passport_v1": [
+    "<visa1>",
+    "<visa2>",
+    ...
+  ]
+} . <signature>
+end note
+
+==Use==
+
+client -> clearing : Client requests data
+note right 
+POST /ga4gh/drs/v1/objects/dataset1/access/s3 HTTP/1.1
+Host: drs.example.com
+Content-Type: application/json
+
+{
+  "passports": [
+    "<Passport>"
+  ]
+}
+end note
+
+note over clearing, data  #FFCCCB
+Decision is made to release data using information contained in the
+passport token - and this decision is coordinated with the data system to
+facilitate that actual data release.
+end note
+
+client <- clearing : Client is given data
+
+
+@enduml
+
+PlantUML version 1.2021.10(Mon Aug 30 13:43:48 GMT 2021)
+(GPL source distribution)
+Java Runtime: OpenJDK Runtime Environment
+JVM: OpenJDK 64-Bit Server VM
+Default Encoding: UTF-8
+Language: en
+Country: US
+-->
+  </g>
+</svg>
+
+<hr style="width: 10em; margin: 2em auto;">
+
+<h3 id="what-is-the-complete-end-to-end-flow-using-userinfo">What is the complete end to end flow using <code class="language-plaintext highlighter-rouge">/userinfo</code>?</h3>
+
+<p>(last updated June 2022)</p>
+
+<p><strong>This flow is the flow for v1.0 implementations of the specification.</strong></p>
+
+<p>The flow as used by Elixir uses the initial <em>Passport-Scoped Access Token</em> as
+a token handed to downstream resource servers. These servers can use this token, in conjunction
+with a callback to the broker’s <em>Userinfo Endpoint</em>, to obtain the <em>Passport</em> content in
+JSON format.</p>
+
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" contentscripttype="application/ecmascript" contentstyletype="text/css" preserveaspectratio="none" version="1.1" viewbox="0 0 1212 809" zoomandpan="magnify">
+  <defs>
+    <filter height="300%" id="f18nzr0fkpqy24" width="300%" x="-1" y="-1">
+      <fegaussianblur result="blurOut" stddeviation="2.0"></fegaussianblur>
+      <fecolormatrix in="blurOut" result="blurOut2" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .4 0"></fecolormatrix>
+      <feoffset dx="4.0" dy="4.0" in="blurOut2" result="blurOut3"></feoffset>
+      <feblend in="SourceGraphic" in2="blurOut3" mode="normal"></feblend>
+    </filter>
+  </defs>
+  <g>
+    <rect fill="#EEEEEE" height="790.2813" style="stroke:#A80036;stroke-width:1.0;" width="198" x="11" y="6"></rect>
+    <text fill="#000000" font-family="sans-serif" font-size="13" font-weight="bold" lengthadjust="spacing" textlength="83" x="68.5" y="18.0669">Researcher</text>
+    <rect fill="#DDDDDD" height="790.2813" style="stroke:#A80036;stroke-width:1.0;" width="273" x="231" y="6"></rect>
+    <text fill="#000000" font-family="sans-serif" font-size="13" font-weight="bold" lengthadjust="spacing" textlength="24" x="355.5" y="18.0669">AAI</text>
+    <rect fill="#DDDDDD" height="790.2813" style="stroke:#A80036;stroke-width:1.0;" width="162" x="526" y="6"></rect>
+    <text fill="#000000" font-family="sans-serif" font-size="13" font-weight="bold" lengthadjust="spacing" textlength="112" x="551" y="18.0669">Data Controller</text>
+    <rect fill="#DDDDDD" height="790.2813" style="stroke:#A80036;stroke-width:1.0;" width="271" x="710" y="6"></rect>
+    <text fill="#000000" font-family="sans-serif" font-size="13" font-weight="bold" lengthadjust="spacing" textlength="89" x="801" y="18.0669">Data Holder</text>
+    <rect fill="#87CEFA" filter="url(#f18nzr0fkpqy24)" height="130.7969" style="stroke:#000000;stroke-width:2.0;" width="504" x="225" y="395.7578"></rect>
+    <line style="stroke:#A80036;stroke-width:1.0;stroke-dasharray:5.0,5.0;" x1="56" x2="56" y1="108.4297" y2="802.2813"></line>
+    <line style="stroke:#A80036;stroke-width:1.0;stroke-dasharray:5.0,5.0;" x1="156" x2="156" y1="108.4297" y2="802.2813"></line>
+    <line style="stroke:#A80036;stroke-width:1.0;stroke-dasharray:5.0,5.0;" x1="287" x2="287" y1="108.4297" y2="802.2813"></line>
+    <line style="stroke:#A80036;stroke-width:1.0;stroke-dasharray:5.0,5.0;" x1="458" x2="458" y1="108.4297" y2="802.2813"></line>
+    <line style="stroke:#A80036;stroke-width:1.0;stroke-dasharray:5.0,5.0;" x1="607" x2="607" y1="108.4297" y2="802.2813"></line>
+    <line style="stroke:#A80036;stroke-width:1.0;stroke-dasharray:5.0,5.0;" x1="795" x2="795" y1="108.4297" y2="802.2813"></line>
+    <line style="stroke:#A80036;stroke-width:1.0;stroke-dasharray:5.0,5.0;" x1="932" x2="932" y1="108.4297" y2="802.2813"></line>
+    <text fill="#000000" font-family="sans-serif" font-size="14" lengthadjust="spacing" textlength="77" x="15" y="105.1279">User Agent</text>
+    <ellipse cx="56.5" cy="35.1328" fill="#FEFECE" filter="url(#f18nzr0fkpqy24)" rx="8" ry="8" style="stroke:#A80036;stroke-width:2.0;"></ellipse>
+    <path d="M56.5,43.1328 L56.5,70.1328 M43.5,51.1328 L69.5,51.1328 M56.5,70.1328 L43.5,85.1328 M56.5,70.1328 L69.5,85.1328 " fill="none" filter="url(#f18nzr0fkpqy24)" style="stroke:#A80036;stroke-width:2.0;"></path>
+    <rect fill="#FEFECE" filter="url(#f18nzr0fkpqy24)" height="30.2969" style="stroke:#A80036;stroke-width:1.5;" width="53" x="128" y="73.1328"></rect>
+    <text fill="#000000" font-family="sans-serif" font-size="14" lengthadjust="spacing" textlength="39" x="135" y="93.1279">Client</text>
+    <rect fill="#FEFECE" filter="url(#f18nzr0fkpqy24)" height="30.2969" style="stroke:#A80036;stroke-width:1.5;" width="60" x="255" y="73.1328"></rect>
+    <text fill="#000000" font-family="sans-serif" font-size="14" lengthadjust="spacing" textlength="46" x="262" y="93.1279">Broker</text>
+    <rect fill="#FEFECE" filter="url(#f18nzr0fkpqy24)" height="30.2969" style="stroke:#A80036;stroke-width:1.5;" width="35" x="441" y="69.1328"></rect>
+    <rect fill="#FEFECE" filter="url(#f18nzr0fkpqy24)" height="30.2969" style="stroke:#A80036;stroke-width:1.5;" width="35" x="437" y="73.1328"></rect>
+    <text fill="#000000" font-family="sans-serif" font-size="14" lengthadjust="spacing" textlength="21" x="444" y="93.1279">IdP</text>
+    <rect fill="#FEFECE" filter="url(#f18nzr0fkpqy24)" height="30.2969" style="stroke:#A80036;stroke-width:1.5;" width="106" x="554" y="69.1328"></rect>
+    <rect fill="#FEFECE" filter="url(#f18nzr0fkpqy24)" height="30.2969" style="stroke:#A80036;stroke-width:1.5;" width="106" x="550" y="73.1328"></rect>
+    <text fill="#000000" font-family="sans-serif" font-size="14" lengthadjust="spacing" textlength="92" x="557" y="93.1279">Visa Issuer(s)</text>
+    <rect fill="#FEFECE" filter="url(#f18nzr0fkpqy24)" height="30.2969" style="stroke:#A80036;stroke-width:1.5;" width="119" x="734" y="73.1328"></rect>
+    <text fill="#000000" font-family="sans-serif" font-size="14" lengthadjust="spacing" textlength="105" x="741" y="93.1279">Clearing House</text>
+    <rect fill="#FEFECE" filter="url(#f18nzr0fkpqy24)" height="30.2969" style="stroke:#A80036;stroke-width:1.5;" width="46" x="907" y="73.1328"></rect>
+    <text fill="#000000" font-family="sans-serif" font-size="14" lengthadjust="spacing" textlength="32" x="914" y="93.1279">Data</text>
+    <rect fill="#EEEEEE" filter="url(#f18nzr0fkpqy24)" height="3" style="stroke:#EEEEEE;stroke-width:1.0;" width="1205.5" x="0" y="138.9961"></rect>
+    <line style="stroke:#000000;stroke-width:1.0;" x1="0" x2="1205.5" y1="138.9961" y2="138.9961"></line>
+    <line style="stroke:#000000;stroke-width:1.0;" x1="0" x2="1205.5" y1="141.9961" y2="141.9961"></line>
+    <rect fill="#EEEEEE" filter="url(#f18nzr0fkpqy24)" height="23.1328" style="stroke:#000000;stroke-width:2.0;" width="50" x="577.75" y="128.4297"></rect>
+    <text fill="#000000" font-family="sans-serif" font-size="13" font-weight="bold" lengthadjust="spacing" textlength="36" x="583.75" y="144.4966">OIDC</text>
+    <rect fill="#FFFFFF" filter="url(#f18nzr0fkpqy24)" height="40.2656" style="stroke:#000000;stroke-width:2.0;" width="487" x="12" y="161.5625"></rect>
+    <path d="M12,161.5625 L78,161.5625 L78,168.5625 L68,178.5625 L12,178.5625 L12,161.5625 " fill="#EEEEEE" style="stroke:#000000;stroke-width:2.0;"></path>
+    <text fill="#000000" font-family="sans-serif" font-size="13" font-weight="bold" lengthadjust="spacing" textlength="21" x="25" y="175.6294">ref</text>
+    <text fill="#000000" font-family="sans-serif" font-size="13" lengthadjust="spacing" textlength="469" x="23" y="194.6294">OIDC flow results in the client holding a *Passport-Scoped Access Token*.</text>
+    <rect fill="#EEEEEE" filter="url(#f18nzr0fkpqy24)" height="3" style="stroke:#EEEEEE;stroke-width:1.0;" width="1205.5" x="0" y="227.3945"></rect>
+    <line style="stroke:#000000;stroke-width:1.0;" x1="0" x2="1205.5" y1="227.3945" y2="227.3945"></line>
+    <line style="stroke:#000000;stroke-width:1.0;" x1="0" x2="1205.5" y1="230.3945" y2="230.3945"></line>
+    <rect fill="#EEEEEE" filter="url(#f18nzr0fkpqy24)" height="23.1328" style="stroke:#000000;stroke-width:2.0;" width="41" x="582.25" y="216.8281"></rect>
+    <text fill="#000000" font-family="sans-serif" font-size="13" font-weight="bold" lengthadjust="spacing" textlength="27" x="588.25" y="232.895">Use</text>
+    <polygon fill="#A80036" points="783.5,287.2266,793.5,291.2266,783.5,295.2266,787.5,291.2266" style="stroke:#A80036;stroke-width:1.0;"></polygon>
+    <line style="stroke:#A80036;stroke-width:1.0;" x1="156.5" x2="789.5" y1="291.2266" y2="291.2266"></line>
+    <text fill="#000000" font-family="sans-serif" font-size="13" lengthadjust="spacing" textlength="129" x="163.5" y="286.1606">Client requests data</text>
+    <path d="M800,254.9609 L800,309.9609 L1191,309.9609 L1191,264.9609 L1181,254.9609 L800,254.9609 " fill="#FBFB77" filter="url(#f18nzr0fkpqy24)" style="stroke:#A80036;stroke-width:1.0;"></path>
+    <path d="M1181,254.9609 L1181,264.9609 L1191,264.9609 L1181,254.9609 " fill="#FBFB77" style="stroke:#A80036;stroke-width:1.0;"></path>
+    <text fill="#000000" font-family="sans-serif" font-size="13" lengthadjust="spacing" textlength="8" x="806" y="272.0278">{</text>
+    <text fill="#000000" font-family="sans-serif" font-size="13" lengthadjust="spacing" textlength="362" x="814" y="287.1606">Authorization: Bearer &lt;Passport-Scoped Access Token&gt;</text>
+    <text fill="#000000" font-family="sans-serif" font-size="13" lengthadjust="spacing" textlength="8" x="806" y="302.2935">}</text>
+    <polygon fill="#A80036" points="298,356.625,288,360.625,298,364.625,294,360.625" style="stroke:#A80036;stroke-width:1.0;"></polygon>
+    <line style="stroke:#A80036;stroke-width:1.0;" x1="292" x2="794.5" y1="360.625" y2="360.625"></line>
+    <text fill="#000000" font-family="sans-serif" font-size="13" lengthadjust="spacing" textlength="279" x="304" y="355.5591">Clearing house asks for list of signed visa(s)</text>
+    <path d="M800,324.3594 L800,379.3594 L1191,379.3594 L1191,334.3594 L1181,324.3594 L800,324.3594 " fill="#FBFB77" filter="url(#f18nzr0fkpqy24)" style="stroke:#A80036;stroke-width:1.0;"></path>
+    <path d="M1181,324.3594 L1181,334.3594 L1191,334.3594 L1181,324.3594 " fill="#FBFB77" style="stroke:#A80036;stroke-width:1.0;"></path>
+    <text fill="#000000" font-family="sans-serif" font-size="13" lengthadjust="spacing" textlength="8" x="806" y="341.4263">{</text>
+    <text fill="#000000" font-family="sans-serif" font-size="13" lengthadjust="spacing" textlength="362" x="814" y="356.5591">Authorization: Bearer &lt;Passport-Scoped Access Token&gt;</text>
+    <text fill="#000000" font-family="sans-serif" font-size="13" lengthadjust="spacing" textlength="8" x="806" y="371.6919">}</text>
+    <path d="M225,395.7578 L640,395.7578 L640,402.7578 L630,412.7578 L225,412.7578 L225,395.7578 " fill="#00BFFF" style="stroke:#000000;stroke-width:1.0;"></path>
+    <rect fill="none" height="130.7969" style="stroke:#000000;stroke-width:2.0;" width="504" x="225" y="395.7578"></rect>
+    <text fill="#000000" font-family="sans-serif" font-size="13" font-weight="bold" lengthadjust="spacing" textlength="370" x="240" y="408.8247">Informative Only (not defined in the specification)</text>
+    <polygon fill="#A80036" points="595,430.0234,605,434.0234,595,438.0234,599,434.0234" style="stroke:#A80036;stroke-width:1.0;"></polygon>
+    <line style="stroke:#A80036;stroke-width:1.0;" x1="287" x2="601" y1="434.0234" y2="434.0234"></line>
+    <text fill="#000000" font-family="sans-serif" font-size="13" lengthadjust="spacing" textlength="180" x="294" y="428.9575">Fetch signed visa(s) for user</text>
+    <polygon fill="#A80036" points="298,486.8555,288,490.8555,298,494.8555,294,490.8555" style="stroke:#A80036;stroke-width:1.0;"></polygon>
+    <line style="stroke:#A80036;stroke-width:1.0;" x1="292" x2="606" y1="490.8555" y2="490.8555"></line>
+    <text fill="#000000" font-family="sans-serif" font-size="13" lengthadjust="spacing" textlength="187" x="304" y="485.7896">Return signed visa(s) for user</text>
+    <path d="M612,447.0234 L612,517.0234 L710,517.0234 L710,457.0234 L700,447.0234 L612,447.0234 " fill="#FBFB77" filter="url(#f18nzr0fkpqy24)" style="stroke:#A80036;stroke-width:1.0;"></path>
+    <path d="M700,447.0234 L700,457.0234 L710,457.0234 L700,447.0234 " fill="#FBFB77" style="stroke:#A80036;stroke-width:1.0;"></path>
+    <text fill="#000000" font-family="sans-serif" font-size="13" lengthadjust="spacing" textlength="5" x="618" y="464.0903">[</text>
+    <text fill="#000000" font-family="sans-serif" font-size="13" lengthadjust="spacing" textlength="69" x="626" y="479.2231">"&lt;visa1&gt;",</text>
+    <text fill="#000000" font-family="sans-serif" font-size="13" lengthadjust="spacing" textlength="65" x="626" y="494.356">"&lt;visa2&gt;"</text>
+    <text fill="#000000" font-family="sans-serif" font-size="13" lengthadjust="spacing" textlength="5" x="618" y="509.4888">]</text>
+    <polygon fill="#A80036" points="783.5,616.2188,793.5,620.2188,783.5,624.2188,787.5,620.2188" style="stroke:#A80036;stroke-width:1.0;"></polygon>
+    <line style="stroke:#A80036;stroke-width:1.0;" x1="287" x2="789.5" y1="620.2188" y2="620.2188"></line>
+    <text fill="#000000" font-family="sans-serif" font-size="13" lengthadjust="spacing" textlength="293" x="294" y="615.1528">UserInfo endpoint returns list of signed visa(s)</text>
+    <path d="M800,538.5547 L800,684.5547 L1040,684.5547 L1040,548.5547 L1030,538.5547 L800,538.5547 " fill="#FBFB77" filter="url(#f18nzr0fkpqy24)" style="stroke:#A80036;stroke-width:1.0;"></path>
+    <path d="M1030,538.5547 L1030,548.5547 L1040,548.5547 L1030,538.5547 " fill="#FBFB77" style="stroke:#A80036;stroke-width:1.0;"></path>
+    <text fill="#000000" font-family="sans-serif" font-size="13" lengthadjust="spacing" textlength="8" x="806" y="555.6216">{</text>
+    <text fill="#000000" font-family="sans-serif" font-size="13" lengthadjust="spacing" textlength="211" x="814" y="570.7544">"iss": "https://&lt;issuer-website&gt;/",</text>
+    <text fill="#000000" font-family="sans-serif" font-size="13" lengthadjust="spacing" textlength="183" x="814" y="585.8872">"sub": "&lt;subject-identifier&gt;",</text>
+    <text fill="#000000" font-family="sans-serif" font-size="13" lengthadjust="spacing" textlength="148" x="814" y="601.02">"ga4gh_passport_v1": [</text>
+    <text fill="#000000" font-family="sans-serif" font-size="13" lengthadjust="spacing" textlength="69" x="822" y="616.1528">"&lt;visa1&gt;",</text>
+    <text fill="#000000" font-family="sans-serif" font-size="13" lengthadjust="spacing" textlength="69" x="822" y="631.2856">"&lt;visa2&gt;",</text>
+    <text fill="#000000" font-family="sans-serif" font-size="13" lengthadjust="spacing" textlength="12" x="818" y="646.4185">...</text>
+    <text fill="#000000" font-family="sans-serif" font-size="13" lengthadjust="spacing" textlength="5" x="814" y="661.5513">]</text>
+    <text fill="#000000" font-family="sans-serif" font-size="13" lengthadjust="spacing" textlength="8" x="806" y="676.6841">}</text>
+    <path d="M635,698.75 L635,753.75 L1088,753.75 L1088,708.75 L1078,698.75 L635,698.75 " fill="#FFCCCB" filter="url(#f18nzr0fkpqy24)" style="stroke:#A80036;stroke-width:1.0;"></path>
+    <path d="M1078,698.75 L1078,708.75 L1088,708.75 L1078,698.75 " fill="#FFCCCB" style="stroke:#A80036;stroke-width:1.0;"></path>
+    <text fill="#000000" font-family="sans-serif" font-size="13" lengthadjust="spacing" textlength="432" x="641" y="715.8169">Decision is made to release data using information contained in the</text>
+    <text fill="#000000" font-family="sans-serif" font-size="13" lengthadjust="spacing" textlength="425" x="641" y="730.9497">passport - and this decision is coordinated with the data system to</text>
+    <text fill="#000000" font-family="sans-serif" font-size="13" lengthadjust="spacing" textlength="215" x="641" y="746.0825">facilitate that actual data release.</text>
+    <polygon fill="#A80036" points="167.5,780.2813,157.5,784.2813,167.5,788.2813,163.5,784.2813" style="stroke:#A80036;stroke-width:1.0;"></polygon>
+    <line style="stroke:#A80036;stroke-width:1.0;" x1="161.5" x2="794.5" y1="784.2813" y2="784.2813"></line>
+    <text fill="#000000" font-family="sans-serif" font-size="13" lengthadjust="spacing" textlength="121" x="173.5" y="779.2153">Client is given data</text>
+    <!--MD5=[6932a54b839797202aa97a61796197e1]
+@startuml
+skinparamlocked svgDimensionStyle false
+
+
+hide footbox
+skinparam BoxPadding 10
+skinparam ParticipantPadding 20
+
+box "Researcher"  #eee
+actor       "User Agent"                as user
+participant Client                      as client
+end box
+
+box "AAI"
+participant Broker                      as broker
+collections "IdP"                       as idps
+end box
+
+box "Data Controller"
+collections "Visa Issuer(s)"            as issuers
+end box
+
+box "Data Holder"
+participant "Clearing House"            as clearing
+participant "Data"                      as data
+end box
+
+==OIDC==
+
+ref over user, client, broker, idps
+OIDC flow results in the client holding a *Passport-Scoped Access Token*.
+end ref
+
+==Use==
+
+client -> clearing : Client requests data
+note right
+{
+  Authorization: Bearer <Passport-Scoped Access Token>
+}
+end note
+
+clearing -> broker : Clearing house asks for list of signed visa(s)
+note right
+{
+  Authorization: Bearer <Passport-Scoped Access Token>
+}
+end note
+
+group#DeepSkyBlue #LightSkyBlue Informative Only (not defined in the specification)
+broker -> issuers : Fetch signed visa(s) for user
+broker <- issuers : Return signed visa(s) for user
+note right
+[
+  "<visa1>",
+  "<visa2>"
+]
+end note
+end
+
+clearing <- broker : UserInfo endpoint returns list of signed visa(s)
+note right
+{
+  "iss": "https://<issuer-website>/",
+  "sub": "<subject-identifier>",
+  "ga4gh_passport_v1": [
+    "<visa1>",
+    "<visa2>",
+   ...
+  ]
+}
+end note
+
+
+note over clearing, data  #FFCCCB
+Decision is made to release data using information contained in the
+passport - and this decision is coordinated with the data system to
+facilitate that actual data release.
+end note
+
+client <- clearing : Client is given data
+
+
+
+@enduml
+
+PlantUML version 1.2021.10(Mon Aug 30 13:43:48 GMT 2021)
+(GPL source distribution)
+Java Runtime: OpenJDK Runtime Environment
+JVM: OpenJDK 64-Bit Server VM
+Default Encoding: UTF-8
+Language: en
+Country: US
+-->
+  </g>
+</svg>
+
+<hr style="border: 2px solid; margin: 2em auto;">
+
+<h2 id="trust">Trust</h2>
+
+<h3 id="whats-with-all-the-signed-passports-and-visas-etc-why-so-complex">What’s with all the signed passports and visas etc? Why so complex?</h3>
+
+<p>(last updated July 2022)</p>
+
+<p>The practical operation of a loosely coupled
+federated ecosystem like GA4GH Passports requires establishing trust
+relationships between the participating entities (see
+<a href="https://openid.net/specs/openid-connect-federation-1_0.html">OpenID Connect Federation</a>
+for an interesting discussion of the properties of multilateral federations).</p>
+
+<p>Any entity that is asked to make a decision about sharing data needs to have apriori
+made the decision “which other entities do I trust?”. In genomics, a single decision
+to allow data sharing might involve simultaneous trusting of
+multiple entities - human genomics is complex!</p>
+
+<p>When presented with a
+Passport and Visas from entities that they trust - they can rely on the information (claims) provided
+to make data sharing decisions. If presented with information from entities that are
+untrusted - the content of the message is irrelevant as there is no basis on which to believe
+the content.</p>
+
+<p>So we can see that trust is a crucial element of a working federation. How do we establish
+these trust relationships?</p>
+
+<p>GA4GH Passports and Visas leverage the mechanisms
+present in <a href="https://datatracker.ietf.org/doc/html/rfc7519">JWT</a> as used
+by the <a href="https://openid.net/specs/openid-connect-core-1_0.html">OIDC standards</a> 
+to cryptographically “sign” tokens containing claims. Signed tokens can be
+“verified” using public/private keys.</p>
+
+<h3 id="why-are-the-visa-claims-formatted-as-jwts-inside-the-passport">Why are the Visa claims formatted as JWTs inside the Passport?</h3>
+
+<p>A section on the importance to the NiH of retaining original authority in visas.</p>
+
+<h3 id="what-are-the-ways-that-key-management-is-done-in-practice">What are the ways that key management is done in practice?</h3>
+
+<p>(last updated July 2022)</p>
+
+<p>There are a variety of approaches that can be used for key
+management for Passports and Visas. We will first detail those that can be used for Passports
+and then discuss some extra wrinkles for Visas.</p>
+
+<p>For this discussion we assume there is a concrete JWT from issuer <code class="language-plaintext highlighter-rouge">https://issuer.example.org</code>
+(possibly a Broker <em>or</em> a Visa Issuer).</p>
+
+<p>My clearing house service ‘trusts’ the above issuer to help make data
+access decisions - and that trust is stated probably through some sort of explicit
+configuration. For our example lets imagine it has a hypothetical YAML configuration file</p>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">trusted_brokers</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="s">https://issuer.example.org</span>
+  <span class="pi">-</span> <span class="s">https://login.broker.com</span>
+
+<span class="na">trusted_visa_issuers</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="s">https://dac.gov.world</span>
+</code></pre></div></div>
+
+<p>The service now wants to verify a Passport or Visa
+JWT purporting to be from that issuer.</p>
+
+<hr>
+
+<h4 id="use-jku-in-the-header-of-the-jwt">Use <code class="language-plaintext highlighter-rouge">jku</code> in the header of the JWT</h4>
+
+<p>The JKU is the URL of a JSON file containing the issuers’ public keys.</p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"iss"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://issuer.example.org"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"jku"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://issuer.example.org/public-keys.json"</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"kid"</span><span class="p">:</span><span class="w"> </span><span class="s2">"key-october-1"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<p>For our concrete example we say that it is a JSON file residing
+at <code class="language-plaintext highlighter-rouge">https://issuer.example.org/public-keys.json</code> (see
+<a href="https://datatracker.ietf.org/doc/html/rfc7517">RFC 7517 “JSON Web Key”</a>).</p>
+
+<p><strong>IMPORTANTLY</strong>, for the secure use of this key management technique - the JKU 
+<strong>MUST</strong> also be whitelisted as part of the configuration of <strong>OUR</strong> service.
+For example, maybe we expand out of service configuration file to include the JKU.</p>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">trusted_brokers</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="na">issuer</span><span class="pi">:</span> <span class="s">https://issuer.example.org</span>
+    <span class="na">jku</span><span class="pi">:</span> <span class="s">https://issuer.example.org/public-keys.json</span>
+
+  <span class="pi">-</span> <span class="na">issuer</span><span class="pi">:</span> <span class="s">https://login.broker.com</span>
+    <span class="na">jku</span><span class="pi">:</span> <span class="s">https://keys.broker.com/set</span>
+</code></pre></div></div>
+
+<p>It is <strong>NEVER</strong> valid to even attempt to access a JKU from a JWT header - unless the URL
+is already known to belong to the given issuer. See
+<a href="https://www.invicti.com/web-vulnerability-scanner/vulnerabilities/jwt-forgery-via-unvalidated-jku-parameter/">“JWT Forgery via unvalidated jku parameter”</a>.</p>
+
+<p>To verify a JWT, the content of the JKU file is loaded and the <code class="language-plaintext highlighter-rouge">kid</code> is
+looked up in key set. The signature is validated using the public key found.</p>
+
+<p>Although this configuration requires explicit registration of JKUs, the content
+of the key sets can allow the best practice of key rotation.</p>
+
+<p>The content of the JKU file is designed to be cached aggressively - but as long as
+the files is fetched every few days/weeks the set of keys
+can evolve/rotate.</p>
+
+<hr>
+
+<h4 id="use-the-kid-in-the-header-of-the-jwt-along-with-oidc-discovery">Use the <code class="language-plaintext highlighter-rouge">kid</code> in the header of the JWT along with OIDC Discovery</h4>
+
+<p>The <a href="https://openid.net/specs/openid-connect-discovery-1_0.html">OpenID Connect Discovery</a>
+protocol allows the use of the JWT issuer URL - in conjunction with a fetch
+of a <code class="language-plaintext highlighter-rouge">/.well-known/openid-configuration</code> - to look up the location of the public key set file. See
+<a href="https://openid.net/specs/openid-connect-discovery-1_0.html#ProviderMetadata">OpenID Provider Metadata specification</a>
+and the <code class="language-plaintext highlighter-rouge">jwks_uri</code> entry.</p>
+
+<p>As with JKU - it is important that OIDC discovery is limited only to JWT issuer URLs that are
+in some way whitelisted. It is <strong>NEVER</strong> valid to perform discovery on an arbitrary issuer
+encountered in a JWT. Luckily, the concept of whitelisting issuers is already in some way
+inherent to the way trust relationships are established, and hence this whitelist should
+already be present in the system.</p>
+
+<p>Also as with JKU, the content of the discovery protocol and key sets can be cached
+aggressively. This means that the double step of the discovery protocol is not
+required on every JWT verification.</p>
+
+<hr>
+
+<h4 id="exchange-public-keys-beforehand-with-each-trusted-entity">Exchange public keys beforehand with each trusted entity</h4>
+
+<p>This is an approach used by the <a href="https://www.nih.gov">NIH</a> - and is appropriate if the number
+of trusted entities is small - such that the public keys of each trusted entity can be exchanged
+out of band (and their rotation/updating can also be managed out of band).</p>
+
+<p>Configuration may be</p>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">trusted_brokers</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="na">issuer</span><span class="pi">:</span> <span class="s">https://issuer.example.org</span>
+    <span class="na">keys</span><span class="pi">:</span>
+      <span class="na">key-october-1</span><span class="pi">:</span> <span class="s2">"</span><span class="s">ABCDTRTFDSFSDFSF...."</span>
+
+  <span class="pi">-</span> <span class="na">issuer</span><span class="pi">:</span> <span class="s">https://login.broker.com</span>
+    <span class="na">keys</span><span class="pi">:</span>
+      <span class="na">kid123456</span><span class="pi">:</span> <span class="s2">"</span><span class="s">ABCDTRTFDSFSDFSF...."</span>
+</code></pre></div></div>
+
+<p>For any <code class="language-plaintext highlighter-rouge">kid</code>
+encountered in a JWT, the corresponding public key is already available for signature validation.</p>
+
+<p>An even safer version of this approach is to perform
+the key verification across every public key you hold before even decoding the JWT JSON
+and then confirm the <code class="language-plaintext highlighter-rouge">kid</code>. This avoids ever even needing to JSON decode
+data from untrusted entities.</p>
+
+<hr>
+
+<h4 id="requirement-for-jku-in-visas">Requirement for JKU in Visas</h4>
+
+<p>When it comes to Visas, there is an extra wrinkle - unlike Brokers, Visa Issuers do not
+need to have been part of an OIDC flow. It is possible that the visa issuer URI is not
+even a locatable reference
+(e.g. <code class="language-plaintext highlighter-rouge">urn:example.com:dac-world-visa-issuer</code>).</p>
+
+<p>Therefore the OIDC Discovery technique is not appropriate and hence the requirements
+of the AAI standard regarding the presence of JKUs.</p>
+
+<hr style="border: 2px solid; margin: 2em auto;">
+
+<h2 id="threat-analysis">Threat Analysis</h2>
+
+<h3 id="what-is-the-danger-of-using-a-fully-scoped-or-audience-less-token-in-a-multi-node-workflow">What is the danger of using a fully scoped (or audience-less) token in a multi node workflow</h3>
+
+<p>The <em>Passport Scoped Access Token</em> is
+a token that can unlock <strong>all</strong> data that the user is entitled to, and not just
+a subset of data needed for any particular analysis.</p>
+
+<p>The result of this is that if passed to a bad actor (some service that has been
+compromised for example) - the bad actor can use the token
+for sideways movement amongst the other nodes.</p>
+
+<p>In the below example - a passport has been passed via a compute service to a resource server that
+is compromised. The assumption now is that data controlled by that resource
+server may be lost. This is bad - but at least the scope of the loss is limited.</p>
+
+<p>However, if the token in use is the <em>Passport Scoped Access Token</em> (or any other token
+that has no restrictions on use) - the bad actor
+can also move sideways in the system to access Dataset #2 and #3 via Resource
+Server #B - and not just Dataset #1
+that has already been compromised.</p>
+
+<p>The safer alternative is a system where passports can be down-scoped before use -
+the Passport that is maliciously being passed from Resource Server #A
+to Resource Server #B would then be rejected - because
+it would be scoped only for Resource Server #A / Dataset #1.</p>
+
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" contentscripttype="application/ecmascript" contentstyletype="text/css" preserveaspectratio="none" version="1.1" viewbox="0 0 1358 244" zoomandpan="magnify">
+  <defs>
+    <filter height="300%" id="f16rhl1ojmxsb1" width="300%" x="-1" y="-1">
+      <fegaussianblur result="blurOut" stddeviation="2.0"></fegaussianblur>
+      <fecolormatrix in="blurOut" result="blurOut2" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .4 0"></fecolormatrix>
+      <feoffset dx="4.0" dy="4.0" in="blurOut2" result="blurOut3"></feoffset>
+      <feblend in="SourceGraphic" in2="blurOut3" mode="normal"></feblend>
+    </filter>
+  </defs>
+  <g>
+    <!--MD5=[0ba5ee7700168656dc1b457c6fe9fdac]
+entity Client-->
+    <rect fill="#FEFECE" filter="url(#f16rhl1ojmxsb1)" height="36.2969" style="stroke:#000000;stroke-width:1.5;" width="59" x="57" y="108"></rect>
+    <text fill="#000000" font-family="sans-serif" font-size="14" lengthadjust="spacing" textlength="39" x="67" y="130.9951">Client</text>
+    <!--MD5=[aa32c188748e3e400a53c2b3699c78ac]
+entity Compute-->
+    <rect fill="#FEFECE" filter="url(#f16rhl1ojmxsb1)" height="52.5938" style="stroke:#000000;stroke-width:1.5;" width="157" x="431" y="99.5"></rect>
+    <text fill="#000000" font-family="sans-serif" font-size="14" lengthadjust="spacing" textlength="137" x="441" y="122.4951">Compute Server #1</text>
+    <text fill="#000000" font-family="sans-serif" font-size="14" lengthadjust="spacing" textlength="61" x="441" y="138.792">e.g. WES</text>
+    <!--MD5=[fe17c2dacdbd17915f88e020b2fbf4f7]
+entity RSA-->
+    <rect fill="#FFC0CB" filter="url(#f16rhl1ojmxsb1)" height="68.8906" style="stroke:#FF0000;stroke-width:2.0;" width="160" x="649" y="23.5"></rect>
+    <text fill="#000000" font-family="sans-serif" font-size="14" lengthadjust="spacing" textlength="140" x="659" y="46.4951">Resource Server #A</text>
+    <text fill="#000000" font-family="sans-serif" font-size="14" lengthadjust="spacing" textlength="60" x="659" y="62.792">e.g. DRS</text>
+    <text fill="#000000" font-family="sans-serif" font-size="14" lengthadjust="spacing" textlength="105" x="663" y="79.0889">(compromised)</text>
+    <!--MD5=[ddb0e92f65770d6570c058bb0b424171]
+entity RSB-->
+    <rect fill="#FEFECE" filter="url(#f16rhl1ojmxsb1)" height="52.5938" style="stroke:#000000;stroke-width:1.5;" width="161" x="911" y="119.5"></rect>
+    <text fill="#000000" font-family="sans-serif" font-size="14" lengthadjust="spacing" textlength="141" x="921" y="142.4951">Resource Server #B</text>
+    <text fill="#000000" font-family="sans-serif" font-size="14" lengthadjust="spacing" textlength="60" x="921" y="158.792">e.g. DRS</text>
+    <!--MD5=[39222abbbfd087a4fdab60e627dc976f]
+entity Auth-->
+    <rect fill="#FEFECE" filter="url(#f16rhl1ojmxsb1)" height="52.5938" style="stroke:#000000;stroke-width:1.5;" width="159" x="7" y="179.5"></rect>
+    <text fill="#000000" font-family="sans-serif" font-size="14" lengthadjust="spacing" textlength="139" x="17" y="202.4951">Authorization Server</text>
+    <text fill="#000000" font-family="sans-serif" font-size="14" lengthadjust="spacing" textlength="110" x="17" y="218.792">(GA4GH Broker)</text>
+    <!--MD5=[010939f4fd7c296c65038bf57c89fb22]
+entity DS1-->
+    <path d="M931.5,16 C931.5,6 991.5,6 991.5,6 C991.5,6 1051.5,6 1051.5,16 L1051.5,73.8906 C1051.5,83.8906 991.5,83.8906 991.5,83.8906 C991.5,83.8906 931.5,83.8906 931.5,73.8906 L931.5,16 " fill="#FFA500" filter="url(#f16rhl1ojmxsb1)" style="stroke:#FF0000;stroke-width:2.0;"></path>
+    <path d="M931.5,16 C931.5,26 991.5,26 991.5,26 C991.5,26 1051.5,26 1051.5,16 " fill="none" style="stroke:#FF0000;stroke-width:2.0;"></path>
+    <text fill="#000000" font-family="sans-serif" font-size="14" lengthadjust="spacing" textlength="79" x="941.5" y="42.9951">Dataset #1</text>
+    <text fill="#000000" font-family="sans-serif" font-size="14" lengthadjust="spacing" textlength="69" x="941.5" y="59.292">(assumed</text>
+    <text fill="#000000" font-family="sans-serif" font-size="14" lengthadjust="spacing" textlength="100" x="941.5" y="75.5889">compromised)</text>
+    <!--MD5=[304edd5c1afeedb61f9a38e3efe0d931]
+entity DS2-->
+    <path d="M1133,76 C1133,66 1242,66 1242,66 C1242,66 1351,66 1351,76 L1351,117.5938 C1351,127.5938 1242,127.5938 1242,127.5938 C1242,127.5938 1133,127.5938 1133,117.5938 L1133,76 " fill="#FFD700" filter="url(#f16rhl1ojmxsb1)" style="stroke:#FF0000;stroke-width:2.0;"></path>
+    <path d="M1133,76 C1133,86 1242,86 1242,86 C1242,86 1351,86 1351,76 " fill="none" style="stroke:#FF0000;stroke-width:2.0;"></path>
+    <text fill="#000000" font-family="sans-serif" font-size="14" lengthadjust="spacing" textlength="79" x="1143" y="102.9951">Dataset #2</text>
+    <text fill="#000000" font-family="sans-serif" font-size="14" lengthadjust="spacing" textlength="198" x="1143" y="119.292">(now possibly compromised)</text>
+    <!--MD5=[334979a6aa3025b7ab4cac3a46906e02]
+entity DS3-->
+    <path d="M1133,173 C1133,163 1242,163 1242,163 C1242,163 1351,163 1351,173 L1351,214.5938 C1351,224.5938 1242,224.5938 1242,224.5938 C1242,224.5938 1133,224.5938 1133,214.5938 L1133,173 " fill="#FFD700" filter="url(#f16rhl1ojmxsb1)" style="stroke:#FF0000;stroke-width:2.0;"></path>
+    <path d="M1133,173 C1133,183 1242,183 1242,183 C1242,183 1351,183 1351,173 " fill="none" style="stroke:#FF0000;stroke-width:2.0;"></path>
+    <text fill="#000000" font-family="sans-serif" font-size="14" lengthadjust="spacing" textlength="79" x="1143" y="199.9951">Dataset #3</text>
+    <text fill="#000000" font-family="sans-serif" font-size="14" lengthadjust="spacing" textlength="198" x="1143" y="216.292">(now possibly compromised)</text>
+    <!--MD5=[b764131a8b155fba864cfde0b4b850e6]
+link Client to Auth-->
+    <path d="M86.5,149.5 C86.5,157.75 86.5,165.99 86.5,174.23 " fill="none" id="Client-Auth" style="stroke:#A80036;stroke-width:1.0;"></path>
+    <polygon fill="#A80036" points="86.5,179.44,90.5,170.44,86.5,174.44,82.5,170.44,86.5,179.44" style="stroke:#A80036;stroke-width:1.0;"></polygon>
+    <polygon fill="#A80036" points="86.5,144.37,82.5,153.37,86.5,149.37,90.5,153.37,86.5,144.37" style="stroke:#A80036;stroke-width:1.0;"></polygon>
+    <!--MD5=[b244a957eedfd8dcd631cc0e42dbb058]
+link RSA to DS1-->
+    <path d="M809.22,54.05 C846.6,52.18 890.64,49.98 925.95,48.22 " fill="none" id="RSA-to-DS1" style="stroke:#A80036;stroke-width:1.0;"></path>
+    <polygon fill="#A80036" points="931.1,47.96,921.916,44.4026,926.1059,48.2033,922.3053,52.3931,931.1,47.96" style="stroke:#A80036;stroke-width:1.0;"></polygon>
+    <!--MD5=[6f08b051cb4e0e97b5da88a5efffb93c]
+link RSB to DS2-->
+    <path d="M1072.15,130.29 C1089.8,126.81 1108.83,123.06 1127.54,119.37 " fill="none" id="RSB-to-DS2" style="stroke:#A80036;stroke-width:1.0;"></path>
+    <polygon fill="#A80036" points="1132.8,118.34,1123.2001,116.1396,1127.8927,119.2986,1124.7338,123.9912,1132.8,118.34" style="stroke:#A80036;stroke-width:1.0;"></polygon>
+    <!--MD5=[6c71e4fb054e05b0d5ade1b014430795]
+link RSB to DS3-->
+    <path d="M1072.15,161.39 C1089.8,164.79 1108.83,168.47 1127.54,172.08 " fill="none" id="RSB-to-DS3" style="stroke:#A80036;stroke-width:1.0;"></path>
+    <polygon fill="#A80036" points="1132.8,173.1,1124.7149,167.4758,1127.8896,172.1579,1123.2075,175.3325,1132.8,173.1" style="stroke:#A80036;stroke-width:1.0;"></polygon>
+    <!--MD5=[946e14f4ed9844ad20112a0a05f5a5f4]
+link Client to Compute-->
+    <path d="M116.11,126 C178.83,126 330.47,126 425.81,126 " fill="none" id="Client-to-Compute" style="stroke:#A80036;stroke-width:1.0;"></path>
+    <polygon fill="#A80036" points="430.87,126,421.87,122,425.87,126,421.87,130,430.87,126" style="stroke:#A80036;stroke-width:1.0;"></polygon>
+    <text fill="#000000" font-family="sans-serif" font-size="13" lengthadjust="spacing" textlength="103" x="247" y="107.0669">asked to run job</text>
+    <text fill="#000000" font-family="sans-serif" font-size="13" lengthadjust="spacing" textlength="203" x="197" y="122.1997">(sending passport downstream)</text>
+    <!--MD5=[97a5077a4d96c09d5b960f8c034d6b74]
+link Compute to RSA-->
+    <path d="M588.1,101.74 C606.17,96.09 625.48,90.05 643.82,84.32 " fill="none" id="Compute-to-RSA" style="stroke:#A80036;stroke-width:1.0;"></path>
+    <polygon fill="#A80036" points="648.96,82.71,639.1777,81.5665,644.1861,84.1965,641.5561,89.2048,648.96,82.71" style="stroke:#A80036;stroke-width:1.0;"></polygon>
+    <!--MD5=[079baafb8e667b26c4cb36ed0d967a12]
+link Compute to RSB-->
+    <path d="M588.15,129.24 C675.26,132.87 816.08,138.73 905.92,142.48 " fill="none" id="Compute-to-RSB" style="stroke:#A80036;stroke-width:1.0;"></path>
+    <polygon fill="#A80036" points="910.96,142.69,902.1395,138.3083,905.9646,142.4759,901.797,146.301,910.96,142.69" style="stroke:#A80036;stroke-width:1.0;"></polygon>
+    <!--MD5=[49fe443b0e8ce97e62ca73ab77011beb]
+link RSA to RSB-->
+    <path d="M809.22,84.76 C840.05,95.18 875.42,107.12 906.68,117.68 " fill="none" id="RSA-to-RSB" style="stroke:#FF0000;stroke-width:16.0;"></path>
+    <polygon fill="#FF0000" points="911.66,119.37,904.4169,112.6964,906.9238,117.7674,901.8527,120.2743,911.66,119.37" style="stroke:#FF0000;stroke-width:16.0;"></polygon>
+    <text fill="#000000" font-family="sans-serif" font-size="13" lengthadjust="spacing" textlength="40" x="840" y="93.0669">attack</text>
+    <!--MD5=[e90f7eaac9ea7c518f4373610090416c]
+@startuml
+skinparamlocked svgDimensionStyle false
+
+left to right direction
+
+rectangle Client 
+rectangle "Compute Server #1\ne.g. WES" as Compute
+rectangle "Resource Server #A\ne.g. DRS\n (compromised)" as RSA #pink;line:red;line.bold
+rectangle "Resource Server #B\ne.g. DRS" as RSB
+rectangle "Authorization Server\n(GA4GH Broker)" as Auth
+database "Dataset #1\n(assumed\ncompromised)" as DS1 #orange;line:red;line.bold
+database "Dataset #2\n(now possibly compromised)" as DS2 #gold;line:red;line.bold
+database "Dataset #3\n(now possibly compromised)" as DS3 #gold;line:red;line.bold
+
+[Client] <- - -right- - -> [Auth]
+
+[RSA] - -> [DS1]
+[RSB] - -> [DS2]
+[RSB] - -> [DS3]
+
+[Client] - -> [Compute] : asked to run job\n(sending passport downstream)
+[Compute] - -> [RSA]
+[Compute] - -> [RSB]
+
+[RSA] -[#red,plain,thickness=16]-> [RSB] : attack
+
+
+@enduml
+
+PlantUML version 1.2021.10(Mon Aug 30 13:43:48 GMT 2021)
+(GPL source distribution)
+Java Runtime: OpenJDK Runtime Environment
+JVM: OpenJDK 64-Bit Server VM
+Default Encoding: UTF-8
+Language: en
+Country: US
+-->
+  </g>
+</svg>
+
+<p>The addition of audiences to the token, or down-scoping of permissions - possible via token exchange - limits
+the scope of damage if the token ends up with a bad actor.</p>
+
+<hr style="border: 2px solid; margin: 2em auto;">
+
+<h2 id="client-software">Client Software</h2>
+
+<h3 id="use-of-ga4gh-passportvisas-in-single-page-apps-spas">Use of GA4GH passport/visas in Single Page Apps (SPAs)</h3>
+
+<p>A Single Page App (SPA) such as a React/VueJs website
+contains all the source of the application in public - and hence cannot
+possess a ‘secret’ in an OIDC flow (the ‘secret’ is used to prove the identity of the
+client software and is an important risk mitigation that prevents unconstrained
+use of an accidentally leaked/stolen token).</p>
+
+<p>The registration of a callback URL - in conjunction with the cryptographic techniques
+of PKCE - does allow a SPA to safely participate in an OIDC authorization flow - though
+it makes weak guarantees regarding the client identity.</p>
+
+<p>However, when it comes to token exchange - there is no equivalent of a registered
+callback URL - that can even weakly assert client identity.</p>
+
+<p>It is impossible for the SPA to prove that is correct/desired piece of code
+executing the exchange - and not some other system that has somehow captured a
+<em>Passport-Scoped Access Token</em> from the browser and is making an exchange.</p>
+
+<p>For these reasons, it is recommended at this point that SPAs are not used for
+applications where the SPA is solely responsible for the dissemination of
+genomic data.</p>
+
+<p>It is possible for a SPA to predominantly execute in browser - but to still use
+a (small) backend set of services to execute any OIDC flows and token exchanges. These
+backend service <em>can</em> retain a secret and hence can prove client identity. These
+techniques are recommended for any genomic application that is predominantly deployed
+as a SPA.</p>
+
+<p>There is also an emerging standard DPoP
+(<a href="https://datatracker.ietf.org/doc/html/draft-ietf-oauth-dpop-09">OAuth 2.0 Demonstrating Proof-of-Possession at the Application Layer</a>)
+which will be considered for future versions of the AAI specification.</p>
+
+<hr style="border: 2px solid; margin: 2em auto;">
+
+
+  </div>
+
+</article>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/data-security/intro-diagram-update/"></data>
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">GA4GH Data Security</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li class="p-name">GA4GH Data Security</li>
+</ul>
+      </div>
+
+      <div class="footer-col footer-col-2">
+<ul class="social-media-list"></ul>
+</div>
+
+      <div class="footer-col footer-col-3">
+        <p>AAI</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>
