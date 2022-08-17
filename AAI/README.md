@@ -97,10 +97,10 @@ component "<b>Visa Issuer N</b>\nservice" as IssuerN
 component "<b>Broker</b>\nservice" as Broker #FAFAD2
 component "<b>Passport Clearinghouse</b>\nservice" as ClearingHouse #9E7BB5
 
-Issuer1 <-- Broker : Fetch Visas
-Issuer2 <-- Broker : Fetch Visas
-IssuerN <-- Broker : Fetch Visas
-Broker <-- ClearingHouse : Request User Visas w/ Access Token
+Issuer1 --> Broker : Provide Visas
+Issuer2 --> Broker : Provide Visas
+IssuerN --> Broker : Provide Visas
+Broker --> ClearingHouse : Provide Visas
 
 @enduml
 
