@@ -673,6 +673,8 @@ This profile is agnostic to the format of the id_token.
 -   `scope`: REQUIRED. Includes verified scopes. MUST include `openid` and `ga4gh_passport_v1`.
     The `scope` claim is defined by [RFC8693 section 4.2](https://datatracker.ietf.org/doc/html/rfc8693#section-4.2).
 
+-   GA4GH Claims (`ga4gh_passport_v1` or `ga4gh_visa_v1`): MUST NOT be included.
+
 -   additional claims: OPTIONAL. Any other additional non-GA4GH claims are allowed. This specification does not dictate the format of other claims.
 
 {% hr3 %}
