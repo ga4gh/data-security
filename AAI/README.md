@@ -100,7 +100,7 @@ component "<b>Passport Clearinghouse</b>\nservice" as ClearingHouse #9E7BB5
 Issuer1 --> Broker : Provide Visas
 Issuer2 --> Broker : Provide Visas
 IssuerN --> Broker : Provide Visas
-Broker --> ClearingHouse : Provide Visas
+Broker --> ClearingHouse : Provide Passport and Visas
 
 @enduml
 
