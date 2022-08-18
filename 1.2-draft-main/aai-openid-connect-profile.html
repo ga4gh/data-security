@@ -102,7 +102,7 @@ systems.</p>
   <li>
 <a href="#token-revocation" id="markdown-toc-token-revocation">Token Revocation</a>    <ul>
       <li><a href="#visa-assertion-source-revokes-a-visa-assertion" id="markdown-toc-visa-assertion-source-revokes-a-visa-assertion">Visa Assertion Source Revokes a Visa Assertion</a></li>
-      <li><a href="#revoking-access-from-bad-actors" id="markdown-toc-revoking-access-from-bad-actors">Revoking Access from Bad Actors</a></li>
+      <li><a href="#revoking-access-tokens-from-bad-actors" id="markdown-toc-revoking-access-tokens-from-bad-actors">Revoking Access Tokens from Bad Actors</a></li>
       <li><a href="#limited-damage-of-leaked-tokens" id="markdown-toc-limited-damage-of-leaked-tokens">Limited Damage of Leaked Tokens</a></li>
     </ul>
   </li>
@@ -150,8 +150,7 @@ authenticates a user (potentially by an Identity Provider), collects user’s
 <a href="#term-visa">Visas</a> from internal and/or external <a href="#term-visa-issuer">Visa Issuers</a> and provides them
 to <a href="#term-passport-clearinghouse">Passport Clearinghouses</a>.
 Brokers may also be Passport Clearinghouses of other upstream Brokers (i.e.
-create a chain of Brokers like in the
-<a href="#flow-of-assertions">Flow of Assertions diagram</a>).</p>
+create a chain of Brokers).</p>
 
 <p><a name="term-passport-clearinghouse"></a> <strong>Passport Clearinghouse</strong> – A consumer
 of <a href="#term-visa">Visas</a> (i.e. an OIDC Relying Party or a service
@@ -197,7 +196,7 @@ as defined by <a href="http://openid.net/specs/openid-connect-core-1_0.html">OID
 
 <p><a name="term-token-exchange"></a> <strong>Token Exchange</strong> –
 the protocol defined in <a href="https://www.rfc-editor.org/info/rfc8693">RFC 8693</a> as extension of OAuth 2
-for exchanging access tokens for other tokens. A token exchange is performed at <a href="#term-token-endpoint">Token Endpoint</a></p>
+for exchanging access tokens for other tokens. A token exchange is performed at a <a href="#term-token-endpoint">Token Endpoint</a></p>
 
 <p><a name="term-visa-assertion"></a>
 <strong>Visa Assertion</strong> – a piece of information about a user that is asserted by a <a href="#term-visa-assertion-source">Visa Assertion Source</a>. It is then encoded by a <a href="#term-visa-issuer">Visa Issuer</a> into a <a href="#Visa">Visa</a>.</p>
@@ -370,10 +369,7 @@ consumption within the GA4GH compliant environment.</p>
 <a href="#passport-scoped-access-token-issued-by-broker">Passport-Scoped Access Token format</a>.</p>
           </li>
           <li>
-            <p>Access tokens do not contain GA4GH Claims directly in the access token.</p>
-          </li>
-          <li>
-            <p>Access tokens MAY contain non-GA4GH Claims directly in the access token.</p>
+            <p>Access tokens MAY contain additional non-GA4GH Claims directly in the access token.</p>
           </li>
         </ol>
       </li>
@@ -488,7 +484,7 @@ Format</a>. This includes
 having GA4GH Claims as JWT claims directly in the Visa.</p>
           </li>
           <li>
-            <p>Visa Issuer MUST support <a href="https://openid.net/specs/openid-connect-discovery-1_0.html">OIDC Discovery
+            <p>Visa Issuers issuing Visa Access Tokens MUST support <a href="https://openid.net/specs/openid-connect-discovery-1_0.html">OIDC Discovery
 spec</a>,
 and provide <code class="language-plaintext highlighter-rouge">jwks_uri</code> as
 <a href="https://openid.net/specs/openid-connect-discovery-1_0.html#ProviderMetadata">Metadata</a>
@@ -518,6 +514,16 @@ revocation process.</p>
             <p>Visa Issuer MUST provide protection against
 attacks as outlined in <a href="https://tools.ietf.org/html/rfc6819">RFC
 6819</a>.</p>
+          </li>
+          <li>
+            <p>A Visa Issuer MAY generate the <code class="language-plaintext highlighter-rouge">exp</code> timestamp to enforce
+its policies and allow Passport Clearinghouses to understand the intent of
+how long the assertion may be used before needing to return to the Visa Issuer
+to refresh the Visa. As a non-normative example, if an
+assertion expires in 25 years, the Visa Issuer could set the <code class="language-plaintext highlighter-rouge">exp</code> to
+1 day into the future plus issue a refresh token in order to force the
+refresh token to be used when a downstream Passport Clearinghouse is still
+interested in using such an assertion after 1 day elapses.</p>
           </li>
         </ol>
       </li>
@@ -556,22 +562,10 @@ a space-delimited substring.</p>
     </ol>
   </li>
   <li>
-    <p>A Visa Issuer MAY generate the <code class="language-plaintext highlighter-rouge">exp</code> timestamp to enforce
- its policies and allow Passport Clearinghouses to understand the intent of
- how long the assertion may be used before needing to return to the Visa Issuer
- to refresh the Visa. As a non-normative example, if an
- assertion expires in 25 years, the Visa Issuer could set the <code class="language-plaintext highlighter-rouge">exp</code> to
- 1 day into the future plus issue a refresh token in order to force the
- refresh token to be used when a downstream Passport Clearinghouse is still
- interested in using such an assertion after 1 day elapses.</p>
-  </li>
-  <li>
     <p>By signing a Visa, a Visa Issuer asserts that
  the <a href="#term-visa-assertion">Visa Assertions</a> made available by the Visa were legitimately derived
  from their <a href="#term-visa-assertion-source">Visa Assertion Sources</a>, and the content is
- presented and/or transformed without misrepresenting the original intent,
- except for accommodating for <code class="language-plaintext highlighter-rouge">exp</code> timestamps to be represented as
- indicated above.</p>
+ presented and/or transformed without misrepresenting the original intent.</p>
   </li>
 </ol>
 
@@ -887,6 +881,9 @@ relying party.</p>
 The <code class="language-plaintext highlighter-rouge">scope</code> claim is defined by <a href="https://datatracker.ietf.org/doc/html/rfc8693#section-4.2">RFC8693 section 4.2</a>.</p>
   </li>
   <li>
+    <p>GA4GH Claims (<code class="language-plaintext highlighter-rouge">ga4gh_passport_v1</code> or <code class="language-plaintext highlighter-rouge">ga4gh_visa_v1</code>): MUST NOT be included.</p>
+  </li>
+  <li>
     <p>additional claims: OPTIONAL. Any other additional non-GA4GH claims are allowed. This specification does not dictate the format of other claims.</p>
   </li>
 </ul>
@@ -1092,7 +1089,7 @@ involved with access may employ one or more of the following options:</p>
 
 <hr style="width: 10em; margin: 2em auto;">
 
-<h3 id="revoking-access-from-bad-actors">Revoking Access from Bad Actors</h3>
+<h3 id="revoking-access-tokens-from-bad-actors">Revoking Access Tokens from Bad Actors</h3>
 
 <p>In the event that a system or user detects that a specific user is misbehaving or
 has falsified assertions despite previous assurances that access was appropriate,
@@ -1129,7 +1126,7 @@ related assertions at source and intermediate systems.</p>
 <h3 id="limited-damage-of-leaked-tokens">Limited Damage of Leaked Tokens</h3>
 
 <p>In order to limit damage of leaked tokens, systems MUST provide all of the
-following:</p>
+following where applicable:</p>
 
 <ol>
   <li>
@@ -1166,10 +1163,10 @@ administrators from decrypting this content.</p>
   </thead>
   <tbody>
     <tr>
-      <td>1.2.0</td>
-      <td>2022-??</td>
-      <td> </td>
-      <td>…</td>
+      <td>1.2.0 (draft)</td>
+      <td>2022-08</td>
+      <td>Andrew Patterson, Martin Kuba, Kurt Rodarmer, Tom Conner, Max Barkley</td>
+      <td>Introduce token exchange and Passport format, incorporate Visas, update diagrams</td>
     </tr>
     <tr>
       <td>1.1.0</td>
