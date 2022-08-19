@@ -348,13 +348,15 @@ the Broker.
 
 1. A [Visa Issuer](#term-visa-issuer) MUST provide one or more of the following
     types of [Visas](#term-visa):
+   
+    <p class="deprecation">The <b>Visa Access Token</b> is proposed for removal in a future
+     version of the specification. New implementations should issue Visas
+     as <b>Visa Document Token</b>s.</p> 
 
     1. <a name="term-visa-access-token"></a> <a name="term-embedded-access-token"></a>
        **Visa Access Token** -- The Visa Issuer is providing an OIDC provider
        service and issues OIDC-compliant access tokens in a specific format that can
-       be used as a Visa. Note: The **Visa Access Token** may be removed in a future 
-       version of the specification. New implementations should prefer to issue Visas 
-       as [Visa Document Tokens](#visa-document-token-format).
+       be used as a Visa.
 
         1.  The Visa payload MUST contain the "openid" scope. That
             is, it has a `scope` JWT claim that contains "openid" as a
