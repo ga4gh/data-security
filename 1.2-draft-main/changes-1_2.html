@@ -73,6 +73,11 @@
   <li><a href="#defined-passport-issuer" id="markdown-toc-defined-passport-issuer">Defined Passport Issuer</a></li>
   <li><a href="#added-more-signing-algorithms" id="markdown-toc-added-more-signing-algorithms">Added more signing algorithms</a></li>
   <li><a href="#media-types-for-jwts" id="markdown-toc-media-types-for-jwts">Media types for JWTs</a></li>
+  <li>
+<a href="#proposed-deprecations" id="markdown-toc-proposed-deprecations">Proposed Deprecations</a>    <ul>
+      <li><a href="#visa-access-tokens-also-referred-to-as-embedded-access-tokens" id="markdown-toc-visa-access-tokens-also-referred-to-as-embedded-access-tokens">Visa Access Tokens (also referred to as Embedded Access Tokens)</a></li>
+    </ul>
+  </li>
 </ul>
 
 <h2 id="terminology-changes">Terminology changes</h2>
@@ -188,6 +193,14 @@ use the value <code class="language-plaintext highlighter-rouge">at+jwt</code>
   <li>Visas are recommended to use the value <code class="language-plaintext highlighter-rouge">vnd.ga4gh.visa+jwt</code> but allowed to use <code class="language-plaintext highlighter-rouge">JWT</code>
 for backward compatibility with version 1.0</li>
 </ul>
+
+<h2 id="proposed-deprecations">Proposed Deprecations</h2>
+
+<h3 id="visa-access-tokens-also-referred-to-as-embedded-access-tokens">Visa Access Tokens (also referred to as Embedded Access Tokens)</h3>
+
+<p>It is proposed that the 1.x versions of this specification will be the last to support
+Visa Access Tokens. New implementations should issue Visas
+as Visa Document Tokens.</p>
 
   </div>
 

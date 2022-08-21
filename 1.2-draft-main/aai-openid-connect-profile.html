@@ -463,14 +463,16 @@ assurances are made by the issuer of the Visa, i.e. the Visa Issuer).</p>
     <p>A <a href="#term-visa-issuer">Visa Issuer</a> MUST provide one or more of the following
  types of <a href="#term-visa">Visas</a>:</p>
 
+    <p class="deprecation">The <b>Visa Access Token</b> is proposed for removal in a future
+  version of the specification. New implementations should issue Visas
+  as <b>Visa Document Token</b>s.</p>
+
     <ol>
       <li>
         <p><a name="term-visa-access-token"></a> <a name="term-embedded-access-token"></a>
 <strong>Visa Access Token</strong> – The Visa Issuer is providing an OIDC provider
 service and issues OIDC-compliant access tokens in a specific format that can
-be used as a Visa. Note: The <strong>Visa Access Token</strong> may be removed in a future 
-version of the specification. New implementations should prefer to issue Visas 
-as <a href="#visa-document-token-format">Visa Document Tokens</a>.</p>
+be used as a Visa.</p>
 
         <ol>
           <li>
