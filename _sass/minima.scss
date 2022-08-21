@@ -71,6 +71,8 @@ $border-radius: 5px;
 $callouts: (
   // rationale example callout
   rationale: (#008, rgba(#aaa, .2), 'RATIONALE'),
+  // deprecation warning callout
+  deprecation: (#FFA500, rgba(#ddd, .2), 'DEPRECATION WARNING'),
 );
 
 @each $class, $props in $callouts {

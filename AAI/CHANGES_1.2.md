@@ -92,3 +92,11 @@ In version 1.2, the `typ` header parameter is used to distinguish the various ty
 - Passports use the value `vnd.ga4gh.passport+jwt`
 - Visas are recommended to use the value `vnd.ga4gh.visa+jwt` but allowed to use `JWT`
   for backward compatibility with version 1.0
+
+## Proposed Deprecations
+
+### Visa Access Tokens (also referred to as Embedded Access Tokens)
+
+It is proposed that the 1.x versions of this specification will be the last to support
+Visa Access Tokens. New implementations should issue Visas
+as Visa Document Tokens.
