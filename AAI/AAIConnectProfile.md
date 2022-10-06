@@ -389,68 +389,38 @@ and access_tokens (and potentially refresh tokens) for consumption within the GA
 1. A [Visa Issuer](#term-visa-issuer) MUST provide one or more of the following
     types of [Visas](#term-visa):
    
-    1. <a name="term-visa-document-token"></a> <a name="term-embedded-document-token"></a>
+    1. <a name="term-visa-document-token"></a> 
+       <a name="term-embedded-document-token"></a> 
+       <a name="visa-document-token-format"></a>
+       <a name="embedded-document-token-format"></a>
        **Visa Document Token** -- The Visa Issuer does not need to
        be an OIDC provider, and MAY provide tokens of this type without any
        revocation process.
 
-        1.  The JWS header contains `jku` as specified by [RFC7515 Section
+        1.  The token MUST conform with JWS format requirements
+        2.  The token MUST be signed by a [Visa Issuer](#term-visa-issuer).
+        3.  The JWS header MUST contain `jku` as specified by [RFC7515 Section
             4.1.2](https://tools.ietf.org/html/rfc7515#section-4.1.2), and
             provides the corresponding endpoint to fetch
             the public key used to sign the Visa Document Token.
-
-        2.  Follows the [Visa Document Token
-            Format](#visa-document-token-format).
-
-        3.  The token is not treated as an access token, but validity
+        4.  The token is not treated as an access token, but validity
             checks outlined elsewhere in this specification still apply.
-
-        4.  MUST conform to [token limited-life or revocation
+        5.  MUST conform to [token limited-life or revocation
             requirements](#token-revocation), even if no Visa token
             revocation process is provided.
+        6.  The `scope` [Claim](#term-claim), if included, MUST NOT contain "openid" as
+            a space-delimited substring of the `scope` JWT [Claim](#term-claim).
+        7.  Payload [Claims](#term-claim) are specified in 
+            [Visa Format](https://github.com/ga4gh-duri/ga4gh-duri.github.io/blob/master/researcher_ids/ga4gh_passport_v1.md#visa-format) in [[Passport]](#ref-passport).
 
-        5.  The `scope` [Claim](#term-claim), if included, MUST NOT contain "openid" as
-            a space-delimited substring.
-
-<a name="embedded-document-token-format"></a>
-#### Visa Document Token Format
-
-Conforms with JWS format requirements and is signed by a Visa Issuer.
-
-1. MUST be a JWS string.
-
-2. MUST contain a `jku` in the header.
-
-3. MUST NOT contain "openid" as a space-delimited substring of the `scope`
-   JWT [Claim](#term-claim), if the `scope` [Claim](#term-claim) is provided.
-
-4. Payload [Claims](#term-claim) are specified in [Visa Format](https://github.com/ga4gh-duri/ga4gh-duri.github.io/blob/master/researcher_ids/ga4gh_passport_v1.md#visa-format)
-
+    2. <a name="term-visa-access-token"></a> <a name="term-embedded-access-token"></a> <a name="embedded-access-token-format"></a>
+       **Visa Access Token** -- The Visa Issuer is providing an OIDC provider
+       service and issues OIDC-compliant access tokens in a specific format that can
+       be used as a Visa. Details are specified in the AAI Profile 1.0 specification.
 
     <p class="deprecation">The <b>Visa Access Token</b> is proposed for removal in a future
      version of the specification. New implementations should issue Visas
      as <b>Visa Document Token</b>s.</p> 
-
-    2. <a name="term-visa-access-token"></a> <a name="term-embedded-access-token"></a>
-       **Visa Access Token** -- The Visa Issuer is providing an OIDC provider
-       service and issues OIDC-compliant access tokens in a specific format that can
-       be used as a Visa. Details are shown in the AAI Profile 1.0 specification.
-
-<a name="embedded-access-token-format"></a>
-#### Visa Access Token Format
-
-Conforms with JWS format requirements and is signed by an OpenID Provider.
-
-1. MUST be a JWS string.
-
-2. The header MUST NOT contain a `jku`.
-
-3. `scope` is REQUIRED and MUST be a string containing a space-delimited set of
-    scope names. "openid" MUST be included as a scope name.
-
-4. Payload [Claims](#term-claim) are specified in [Visa Format](https://github.com/ga4gh-duri/ga4gh-duri.github.io/blob/master/researcher_ids/ga4gh_passport_v1.md#visa-format)
-
-5. The payload [Claims](#term-claim) MUST NOT include `aud`.
 
 2. By signing a Visa, a Visa Issuer asserts that
     the [Visa Assertions](#term-visa-assertion) made available by the Visa were legitimately derived
