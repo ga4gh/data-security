@@ -47,7 +47,7 @@ be interpreted as described in [[RFC2119]](#ref-rfc2119).
 
 This specification inherits terminology from the OpenID
 Connect [[OIDC-Core]](#ref-oidc-core) 
-and OAuth 2.0 Framework [[RFC6749]](#ref-rfc6749) specifications.
+and OAuth 2.0 Authorization Framework [[RFC6749]](#ref-rfc6749) specifications.
 
 <a name="term-broker"></a> **Broker** -- An OIDC Provider service that
 authenticates a user (potentially by relying on an [Identity Provider](#term-identity-provider)), 
@@ -59,6 +59,8 @@ Brokers may also be Passport Clearinghouses of other upstream Brokers.
 by the JWT specification [[RFC7519]](#ref-rfc7519) -- A piece of information asserted about a subject, 
 represented as a name/value pair consisting of
 a claim name (a string) and a claim value (any JSON value). 
+
+**Client**{: #term-client} -- as discussed in the OAuth 2.0 Authorization Framework [[RFC6749]](#term-rfc6749) specification
 
 <a name="term-data-holder"></a> **Data Holder** -- An organization that
 holds a specific set of data (or its copy) and respects
@@ -225,23 +227,25 @@ component "<b>Visa Assertion Source</b> (2)\norganisation" as VisaSource2
 component "<b>Visa Assertion Source</b> (...)\norganisation" as VisaSourceN
 
 database "<b>Visa Assertion Repository</b>\nabstract service" as VisaRepository
-component "<b>Visa Issuer</b>\nabstract service\n(optional)" as ETI
+component "<b>Visa Issuer</b>\nabstract service\n(optional)" as VisaIssuer
 }
 
 package "Specified GA4GH AAI clients, services, protocols" {
 component "<b>Broker</b>\nservice" as Broker #FAFAD2
-component "<b>Passport Clearinghouse</b>\nservice" as ClearingHouse #9E7BB5
+component "<b>Client</b>\napplication" as Client #FAFAD2
+component "<b>Passport Clearinghouse</b>\nservice" as ClearingHouse #FAFAD2
 }
 
-VisaSource1 --> VisaRepository : (unspecified)
-VisaSource2 --> VisaRepository : (unspecified)
-VisaSourceN --> VisaRepository : (unspecified)
-VisaRepository --> ETI : (unspecified)
+VisaSource1 ..> VisaRepository 
+VisaSource2 ..> VisaRepository 
+VisaSourceN ..> VisaRepository 
+VisaRepository ..> VisaIssuer 
 
 
-VisaRepository --> Broker : (unspecified)
-ETI --> Broker : (unspecified)
-Broker --> ClearingHouse : GA4GH AAI spec
+VisaRepository ..> Broker 
+VisaIssuer ..> Broker 
+Broker --> Client 
+Client --> ClearingHouse
 
 @enduml
 
