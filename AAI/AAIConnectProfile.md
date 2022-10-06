@@ -72,8 +72,7 @@ documented technical standard that is making use of this AAI specification. Typi
 this is the `ga4gh_passport_v1` or `ga4gh_visa_v1` [Claim](#term-claim) for [Passports v1.x](#term-passport).
 A GA4GH Claim is asserted by the entity that signed the token in which it is contained (not by GA4GH).
 
-<a name="term-identity-provider"></a> **Identity Provider (IdP)** -- defined as OpenID Provider 
-in [[OIDC-Core]](#ref-oidc-core) -- A
+<a name="term-identity-provider"></a> **Identity Provider (IdP)** -- A
 service that provides to users an identity, authenticates it; and provides
 assertions to a Broker using standard protocols, such as OpenID Connect, SAML or
 other federation protocols. Example: eduGAIN, Google Identity, Facebook, NIH
@@ -103,7 +102,7 @@ The access token MUST be a JWS-encoded JWT token containing `openid` and `ga4gh_
 entries in the value of its `scope` [Claim](#term-claim).
 It is RECOMMENDED that Passport-Scoped Access Tokens follow the JWT Profile for OAuth 2.0 Access Tokens specification [[RFC9068]](#ref-rfc9068).
 
-<a name="term-passport"></a> **Passport** -- as defined by [[Passport]](#ref-passport) -- A signed and verifiable JWT that contains [Visas](#term-visa).
+<a name="term-passport"></a> **Passport** -- A signed and verifiable JWT that contains [Visas](#term-visa).
 
 <a name="term-passport-issuer"></a> **Passport Issuer** --
 A service that creates and signs [Passports](#term-passport).
@@ -117,7 +116,7 @@ for exchanging access tokens for other tokens. A token exchange is performed by 
 <a name="term-userinfo-endpoint"></a> **UserInfo Endpoint** -- a [Broker](#term-broker)'s implementation of the [[OIDC-Core]](#ref-oidc-core) [UserInfo Endpoint](https://openid.net/specs/openid-connect-core-1_0.html#UserInfo).
 
 <a name="term-visa"></a> 
-**Visa** -- as defined in [[Passport]](#ref-passport); a 
+**Visa** -- A 
 Visa encodes a [Visa Assertion](#term-visa-assertion) in compact and digitally signed 
 format that can be passed as a URL-safe string value.
 
@@ -163,7 +162,7 @@ Internet Assigned Numbers Authority
 [[OIDC-Discovery]](https://openid.net/specs/openid-connect-discovery-1_0.html) -- OpenID Connect Discovery 1.0
 
 <a name="ref-passport"></a>
-[[Passport]](https://github.com/ga4gh-duri/ga4gh-duri.github.io/blob/master/researcher_ids/ga4gh_passport_v1.md) - GA4GH Passport Specification, Data Use and Researcher Identity (DURI) Work Stream
+[[Passport]](https://github.com/ga4gh-duri/ga4gh-duri.github.io/blob/master/researcher_ids/ga4gh_passport_v1.md) -- GA4GH Passport Specification, Data Use and Researcher Identity (DURI) Work Stream -- Defines Passport and Visa formats.
 
 <a name="ref-rfc2119"></a>
 [[RFC2119]](https://www.ietf.org/rfc/rfc2119.txt) - Key words for use in RFCs to Indicate Requirement Levels
@@ -327,8 +326,8 @@ and access_tokens (and potentially refresh tokens) for consumption within the GA
     issue id_tokens and access_tokens (and potentially refresh tokens) for
     consumption within the GA4GH compliant environment.
 
-    1.  A Broker MUST issue both [Passport-Scoped Access Tokens](#term-passport-scoped-access-token)
-        (access_tokens) and id_tokens.
+    1.  A Broker MUST issue [Passport-Scoped Access Tokens](#term-passport-scoped-access-token)
+        (access_tokens).
 
         1.  This document makes no specifications beyond those in [[OIDC-Core]](#ref-oidc-core).
 
@@ -470,13 +469,11 @@ and access_tokens (and potentially refresh tokens) for consumption within the GA
 Passport Issuers are used to package Visas into signed Passports. Passports are signed JWTs 
 that use [this format](#passport-format) to contain Visas.
 
-1.  Passport Issuers are used to package Visas into signed Passports.
+1.  Passport Issuers MUST be Brokers.
 
-2.  Passport Issuers MUST be Brokers.
-
-3.  Passports MUST be signed with a [conformant signing algorithm](#signing-algorithms).
+2.  Passports MUST be signed with a [conformant signing algorithm](#signing-algorithms).
     
-4.  Passports MAY be issued from a [Token Endpoint](#term-token-endpoint) using [Token Exchange](#term-token-exchange), with the following clarifications:
+3.  Passports MAY be issued from a [Token Endpoint](#term-token-endpoint) using [Token Exchange](#term-token-exchange), with the following clarifications:
 
     1. The Token Endpoint MAY also support other OAuth2 grant types.
 
