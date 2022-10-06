@@ -147,8 +147,7 @@ documented technical standard that is making use of this AAI specification. Typi
 this is the <code class="language-plaintext highlighter-rouge">ga4gh_passport_v1</code> or <code class="language-plaintext highlighter-rouge">ga4gh_visa_v1</code> <a href="#term-claim">Claim</a> for <a href="#term-passport">Passports v1.x</a>.
 A GA4GH Claim is asserted by the entity that signed the token in which it is contained (not by GA4GH).</p>
 
-<p><a name="term-identity-provider"></a> <strong>Identity Provider (IdP)</strong> – defined as OpenID Provider 
-in <a href="#ref-oidc-core">[OIDC-Core]</a> – A
+<p><a name="term-identity-provider"></a> <strong>Identity Provider (IdP)</strong> – A
 service that provides to users an identity, authenticates it; and provides
 assertions to a Broker using standard protocols, such as OpenID Connect, SAML or
 other federation protocols. Example: eduGAIN, Google Identity, Facebook, NIH
@@ -178,7 +177,7 @@ including the identifier <code class="language-plaintext highlighter-rouge">ga4g
 entries in the value of its <code class="language-plaintext highlighter-rouge">scope</code> <a href="#term-claim">Claim</a>.
 It is RECOMMENDED that Passport-Scoped Access Tokens follow the JWT Profile for OAuth 2.0 Access Tokens specification <a href="#ref-rfc9068">[RFC9068]</a>.</p>
 
-<p><a name="term-passport"></a> <strong>Passport</strong> – as defined by <a href="#ref-passport">[Passport]</a> – A signed and verifiable JWT that contains <a href="#term-visa">Visas</a>.</p>
+<p><a name="term-passport"></a> <strong>Passport</strong> – A signed and verifiable JWT that contains <a href="#term-visa">Visas</a>.</p>
 
 <p><a name="term-passport-issuer"></a> <strong>Passport Issuer</strong> –
 A service that creates and signs <a href="#term-passport">Passports</a>.</p>
@@ -192,7 +191,7 @@ for exchanging access tokens for other tokens. A token exchange is performed by 
 <p><a name="term-userinfo-endpoint"></a> <strong>UserInfo Endpoint</strong> – a <a href="#term-broker">Broker</a>’s implementation of the <a href="#ref-oidc-core">[OIDC-Core]</a> <a href="https://openid.net/specs/openid-connect-core-1_0.html#UserInfo">UserInfo Endpoint</a>.</p>
 
 <p><a name="term-visa"></a> 
-<strong>Visa</strong> – as defined in <a href="#ref-passport">[Passport]</a>; a 
+<strong>Visa</strong> – A 
 Visa encodes a <a href="#term-visa-assertion">Visa Assertion</a> in compact and digitally signed 
 format that can be passed as a URL-safe string value.</p>
 
@@ -242,7 +241,7 @@ Internet Assigned Numbers Authority</p>
 <a href="https://openid.net/specs/openid-connect-discovery-1_0.html">[OIDC-Discovery]</a> – OpenID Connect Discovery 1.0</p>
 
 <p><a name="ref-passport"></a>
-<a href="https://github.com/ga4gh-duri/ga4gh-duri.github.io/blob/master/researcher_ids/ga4gh_passport_v1.md">[Passport]</a> - GA4GH Passport Specification, Data Use and Researcher Identity (DURI) Work Stream</p>
+<a href="https://github.com/ga4gh-duri/ga4gh-duri.github.io/blob/master/researcher_ids/ga4gh_passport_v1.md">[Passport]</a> – GA4GH Passport Specification, Data Use and Researcher Identity (DURI) Work Stream – Defines Passport and Visa formats.</p>
 
 <p><a name="ref-rfc2119"></a>
 <a href="https://www.ietf.org/rfc/rfc2119.txt">[RFC2119]</a> - Key words for use in RFCs to Indicate Requirement Levels</p>
@@ -415,8 +414,8 @@ consumption within the GA4GH compliant environment.</p>
 
     <ol>
       <li>
-        <p>A Broker MUST issue both <a href="#term-passport-scoped-access-token">Passport-Scoped Access Tokens</a>
-(access_tokens) and id_tokens.</p>
+        <p>A Broker MUST issue <a href="#term-passport-scoped-access-token">Passport-Scoped Access Tokens</a>
+(access_tokens).</p>
 
         <ol>
           <li>This document makes no specifications beyond those in <a href="#ref-oidc-core">[OIDC-Core]</a>.</li>
@@ -611,9 +610,6 @@ to refresh the Visa.</p>
 that use <a href="#passport-format">this format</a> to contain Visas.</p>
 
 <ol>
-  <li>
-    <p>Passport Issuers are used to package Visas into signed Passports.</p>
-  </li>
   <li>
     <p>Passport Issuers MUST be Brokers.</p>
   </li>
