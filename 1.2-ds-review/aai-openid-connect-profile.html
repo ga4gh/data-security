@@ -498,10 +498,6 @@ assurances are made by the issuer of the Visa, i.e. the Visa Issuer).</p>
     <p>A <a href="#term-visa-issuer">Visa Issuer</a> MUST provide one or more of the following
  types of <a href="#term-visa">Visas</a>:</p>
 
-    <p class="deprecation">The <b>Visa Access Token</b> is proposed for removal in a future
-  version of the specification. New implementations should issue Visas
-  as <b>Visa Document Token</b>s.</p>
-
     <ol>
       <li>
         <p><a name="term-visa-document-token"></a> <a name="term-embedded-document-token"></a>
@@ -535,63 +531,18 @@ a space-delimited substring.</p>
           </li>
         </ol>
       </li>
+    </ol>
+
+    <p class="deprecation">The <b>Visa Access Token</b> is proposed for removal in a future
+  version of the specification. New implementations should issue Visas
+  as <b>Visa Document Token</b>s.</p>
+
+    <ol>
       <li>
-        <p><a name="term-visa-access-token"></a> <a name="term-embedded-access-token"></a>
+<a name="term-visa-access-token"></a> <a name="term-embedded-access-token"></a>
 <strong>Visa Access Token</strong> – The Visa Issuer is providing an OIDC provider
 service and issues OIDC-compliant access tokens in a specific format that can
-be used as a Visa.</p>
-
-        <ol>
-          <li>
-            <p>The Visa payload MUST contain the “openid” scope. That
-is, it has a <code class="language-plaintext highlighter-rouge">scope</code> <a href="#term-claim">Claim</a> that contains “openid” as a
-space-delimited substring.</p>
-          </li>
-          <li>
-            <p>Visa is a JWS string and follows the <a href="#visa-access-token-format">Visa Access Token
-Format</a>. This includes
-having <a href="#term-ga4gh-claim">GA4GH Claims</a> directly in the Visa.</p>
-          </li>
-          <li>
-            <p>Visa Issuers issuing Visa Access Tokens MUST support <a href="https://openid.net/specs/openid-connect-discovery-1_0.html">OIDC Discovery
-spec</a>,
-and provide <code class="language-plaintext highlighter-rouge">jwks_uri</code> as
-<a href="https://openid.net/specs/openid-connect-discovery-1_0.html#ProviderMetadata">Metadata</a>
-that may be reachable by a Passport Clearinghouse.</p>
-          </li>
-          <li>
-            <p>Visa Issuer MUST support public-facing UserInfo Endpoint. When presented with a valid 
-Visa Access Token, the UserInfo Endpoint MUST return a success status and MAY return 
-the current values for GA4GH Claims that were included within the Visa Access Token, 
-however returning GA4GH Claims from the UserInfo Endpoint for Visa Access Tokens is 
-OPTIONAL.</p>
-          </li>
-          <li>
-            <p>If the Visa Access Token’s <code class="language-plaintext highlighter-rouge">exp</code> exceeds the <code class="language-plaintext highlighter-rouge">iat</code> by
-more than 1 hour, the Visa Issuer SHOULD expect
-Passport Clearinghouses to use <a href="#at-polling">Access Token Polling</a> and
-MUST provide a means to revoke Visa Access Tokens. The
-Token or UserInfo Endpoint MUST return an HTTP status 401 as per
-<a href="https://tools.ietf.org/html/rfc6750#section-3.1">RFC6750 section 3.1</a>
-when provided an Visa Access Token that has completed the
-revocation process.</p>
-          </li>
-          <li>
-            <p>The JWS header MUST NOT have <code class="language-plaintext highlighter-rouge">jku</code> specified.</p>
-          </li>
-          <li>
-            <p>Visa Issuer MUST provide protection against
-attacks as outlined in <a href="https://tools.ietf.org/html/rfc6819">RFC
-6819</a>.</p>
-          </li>
-          <li>
-            <p>A Visa Issuer MAY generate the <code class="language-plaintext highlighter-rouge">exp</code> timestamp to enforce
-its policies and allow Passport Clearinghouses to understand the intent of
-how long the assertion may be used before needing to return to the Visa Issuer
-to refresh the Visa.</p>
-          </li>
-        </ol>
-      </li>
+be used as a Visa. Details are shown in the AAI Profile 1.0 specification.</li>
     </ol>
   </li>
   <li>
