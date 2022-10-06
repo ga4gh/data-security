@@ -89,12 +89,6 @@ called <a href="#term-passport-clearinghouse">Passport Clearinghouses</a>.</p>
       <li><a href="#passport-scoped-access-token" id="markdown-toc-passport-scoped-access-token">Passport-Scoped Access Token</a></li>
       <li><a href="#visas-provided-by-a-broker-via-userinfo-endpoint" id="markdown-toc-visas-provided-by-a-broker-via-userinfo-endpoint">Visas provided by a Broker via UserInfo Endpoint</a></li>
       <li><a href="#passport-format" id="markdown-toc-passport-format">Passport Format</a></li>
-      <li>
-<a href="#visa-issued-by-visa-issuer" id="markdown-toc-visa-issued-by-visa-issuer">Visa issued by Visa Issuer</a>        <ul>
-          <li><a href="#visa-document-token-format" id="markdown-toc-visa-document-token-format">Visa Document Token Format</a></li>
-          <li><a href="#visa-access-token-format" id="markdown-toc-visa-access-token-format">Visa Access Token Format</a></li>
-        </ul>
-      </li>
       <li><a href="#signing-algorithms" id="markdown-toc-signing-algorithms">Signing Algorithms</a></li>
     </ul>
   </li>
@@ -502,50 +496,43 @@ assurances are made by the issuer of the Visa, i.e. the Visa Issuer).</p>
 
     <ol>
       <li>
-        <p><a name="term-visa-document-token"></a> <a name="term-embedded-document-token"></a>
+        <p><a name="term-visa-document-token"></a> 
+<a name="term-embedded-document-token"></a> 
+<a name="visa-document-token-format"></a>
+<a name="embedded-document-token-format"></a>
 <strong>Visa Document Token</strong> – The Visa Issuer does not need to
 be an OIDC provider, and MAY provide tokens of this type without any
 revocation process.</p>
 
         <ol>
-          <li>
-            <p>The JWS header contains <code class="language-plaintext highlighter-rouge">jku</code> as specified by <a href="https://tools.ietf.org/html/rfc7515#section-4.1.2">RFC7515 Section
+          <li>The token MUST conform with JWS format requirements</li>
+          <li>The token MUST be signed by a <a href="#term-visa-issuer">Visa Issuer</a>.</li>
+          <li>The JWS header MUST contain <code class="language-plaintext highlighter-rouge">jku</code> as specified by <a href="https://tools.ietf.org/html/rfc7515#section-4.1.2">RFC7515 Section
 4.1.2</a>, and
 provides the corresponding endpoint to fetch
-the public key used to sign the Visa Document Token.</p>
-          </li>
-          <li>
-            <p>Follows the <a href="#visa-document-token-format">Visa Document Token
-Format</a>.</p>
-          </li>
-          <li>
-            <p>The token is not treated as an access token, but validity
-checks outlined elsewhere in this specification still apply.</p>
-          </li>
-          <li>
-            <p>MUST conform to <a href="#token-revocation">token limited-life or revocation
+the public key used to sign the Visa Document Token.</li>
+          <li>The token is not treated as an access token, but validity
+checks outlined elsewhere in this specification still apply.</li>
+          <li>MUST conform to <a href="#token-revocation">token limited-life or revocation
 requirements</a>, even if no Visa token
-revocation process is provided.</p>
-          </li>
-          <li>
-            <p>The <code class="language-plaintext highlighter-rouge">scope</code> <a href="#term-claim">Claim</a>, if included, MUST NOT contain “openid” as
-a space-delimited substring.</p>
-          </li>
+revocation process is provided.</li>
+          <li>The <code class="language-plaintext highlighter-rouge">scope</code> <a href="#term-claim">Claim</a>, if included, MUST NOT contain “openid” as
+a space-delimited substring of the <code class="language-plaintext highlighter-rouge">scope</code> JWT <a href="#term-claim">Claim</a>.</li>
+          <li>Payload <a href="#term-claim">Claims</a> are specified in 
+<a href="https://github.com/ga4gh-duri/ga4gh-duri.github.io/blob/master/researcher_ids/ga4gh_passport_v1.md#visa-format">Visa Format</a> in <a href="#ref-passport">[Passport]</a>.</li>
         </ol>
+      </li>
+      <li>
+        <p><a name="term-visa-access-token"></a> <a name="term-embedded-access-token"></a> <a name="embedded-access-token-format"></a>
+<strong>Visa Access Token</strong> – The Visa Issuer is providing an OIDC provider
+service and issues OIDC-compliant access tokens in a specific format that can
+be used as a Visa. Details are specified in the AAI Profile 1.0 specification.</p>
       </li>
     </ol>
 
     <p class="deprecation">The <b>Visa Access Token</b> is proposed for removal in a future
   version of the specification. New implementations should issue Visas
   as <b>Visa Document Token</b>s.</p>
-
-    <ol>
-      <li>
-<a name="term-visa-access-token"></a> <a name="term-embedded-access-token"></a>
-<strong>Visa Access Token</strong> – The Visa Issuer is providing an OIDC provider
-service and issues OIDC-compliant access tokens in a specific format that can
-be used as a Visa. Details are shown in the AAI Profile 1.0 specification.</li>
-    </ol>
   </li>
   <li>
     <p>By signing a Visa, a Visa Issuer asserts that
@@ -953,62 +940,6 @@ in addition to the guidelines established in <a href="https://datatracker.ietf.o
 <a href="https://github.com/ga4gh-duri/ga4gh-duri.github.io">Passport spec</a> for more details on types of visas.</p>
   </li>
 </ul>
-
-<hr style="width: 10em; margin: 2em auto;">
-
-<p><a name="visa-issued-by-visa-issuer"></a></p>
-<h3 id="visa-issued-by-visa-issuer">Visa issued by Visa Issuer</h3>
-
-<p>There are two supported formats for Visas.</p>
-
-<p style="text-align:center; font-size: small">—</p>
-
-<p><a name="embedded-document-token-format"></a></p>
-<h4 id="visa-document-token-format">Visa Document Token Format</h4>
-
-<p>Conforms with JWS format requirements and is signed by a Visa Issuer.</p>
-
-<ol>
-  <li>
-    <p>MUST be a JWS string.</p>
-  </li>
-  <li>
-    <p>MUST contain a <code class="language-plaintext highlighter-rouge">jku</code> in the header.</p>
-  </li>
-  <li>
-    <p>MUST NOT contain “openid” as a space-delimited substring of the <code class="language-plaintext highlighter-rouge">scope</code>
-JWT <a href="#term-claim">Claim</a>, if the <code class="language-plaintext highlighter-rouge">scope</code> <a href="#term-claim">Claim</a> is provided.</p>
-  </li>
-  <li>
-    <p>Payload <a href="#term-claim">Claims</a> are specified in <a href="https://github.com/ga4gh-duri/ga4gh-duri.github.io/blob/master/researcher_ids/ga4gh_passport_v1.md#visa-format">Visa Format</a></p>
-  </li>
-</ol>
-
-<p style="text-align:center; font-size: small">—</p>
-
-<p><a name="embedded-access-token-format"></a></p>
-<h4 id="visa-access-token-format">Visa Access Token Format</h4>
-
-<p>Conforms with JWS format requirements and is signed by an OpenID Provider.</p>
-
-<ol>
-  <li>
-    <p>MUST be a JWS string.</p>
-  </li>
-  <li>
-    <p>The header MUST NOT contain a <code class="language-plaintext highlighter-rouge">jku</code>.</p>
-  </li>
-  <li>
-    <p><code class="language-plaintext highlighter-rouge">scope</code> is REQUIRED and MUST be a string containing a space-delimited set of
- scope names. “openid” MUST be included as a scope name.</p>
-  </li>
-  <li>
-    <p>Payload <a href="#term-claim">Claims</a> are specified in <a href="https://github.com/ga4gh-duri/ga4gh-duri.github.io/blob/master/researcher_ids/ga4gh_passport_v1.md#visa-format">Visa Format</a></p>
-  </li>
-  <li>
-    <p>The payload <a href="#term-claim">Claims</a> MUST NOT include <code class="language-plaintext highlighter-rouge">aud</code>.</p>
-  </li>
-</ol>
 
 <hr style="width: 10em; margin: 2em auto;">
 
