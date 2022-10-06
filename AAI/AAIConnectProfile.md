@@ -412,6 +412,21 @@ and access_tokens (and potentially refresh tokens) for consumption within the GA
         5.  The `scope` [Claim](#term-claim), if included, MUST NOT contain "openid" as
             a space-delimited substring.
 
+<a name="embedded-document-token-format"></a>
+#### Visa Document Token Format
+
+Conforms with JWS format requirements and is signed by a Visa Issuer.
+
+1. MUST be a JWS string.
+
+2. MUST contain a `jku` in the header.
+
+3. MUST NOT contain "openid" as a space-delimited substring of the `scope`
+   JWT [Claim](#term-claim), if the `scope` [Claim](#term-claim) is provided.
+
+4. Payload [Claims](#term-claim) are specified in [Visa Format](https://github.com/ga4gh-duri/ga4gh-duri.github.io/blob/master/researcher_ids/ga4gh_passport_v1.md#visa-format)
+
+
     <p class="deprecation">The <b>Visa Access Token</b> is proposed for removal in a future
      version of the specification. New implementations should issue Visas
      as <b>Visa Document Token</b>s.</p> 
@@ -420,6 +435,22 @@ and access_tokens (and potentially refresh tokens) for consumption within the GA
        **Visa Access Token** -- The Visa Issuer is providing an OIDC provider
        service and issues OIDC-compliant access tokens in a specific format that can
        be used as a Visa. Details are shown in the AAI Profile 1.0 specification.
+
+<a name="embedded-access-token-format"></a>
+#### Visa Access Token Format
+
+Conforms with JWS format requirements and is signed by an OpenID Provider.
+
+1. MUST be a JWS string.
+
+2. The header MUST NOT contain a `jku`.
+
+3. `scope` is REQUIRED and MUST be a string containing a space-delimited set of
+    scope names. "openid" MUST be included as a scope name.
+
+4. Payload [Claims](#term-claim) are specified in [Visa Format](https://github.com/ga4gh-duri/ga4gh-duri.github.io/blob/master/researcher_ids/ga4gh_passport_v1.md#visa-format)
+
+5. The payload [Claims](#term-claim) MUST NOT include `aud`.
 
 2. By signing a Visa, a Visa Issuer asserts that
     the [Visa Assertions](#term-visa-assertion) made available by the Visa were legitimately derived
@@ -745,47 +776,6 @@ Only the [GA4GH claims](#term-ga4gh-claim) must be as prescribed here. See the
 
 - `ga4gh_passport_v1`: REQUIRED. An array of GA4GH Visas. May be empty if a user has no visas. See the
 [Passport spec](https://github.com/ga4gh-duri/ga4gh-duri.github.io) for more details on types of visas.
-
-{% hr3 %}
-
-<a name="visa-issued-by-visa-issuer"></a>
-### Visa issued by Visa Issuer
-
-There are two supported formats for Visas.
-
-{% hr4 %}
-
-<a name="embedded-document-token-format"></a>
-#### Visa Document Token Format
-
-Conforms with JWS format requirements and is signed by a Visa Issuer.
-
-1. MUST be a JWS string.
-
-2. MUST contain a `jku` in the header.
-
-3. MUST NOT contain "openid" as a space-delimited substring of the `scope`
-   JWT [Claim](#term-claim), if the `scope` [Claim](#term-claim) is provided.
-
-4. Payload [Claims](#term-claim) are specified in [Visa Format](https://github.com/ga4gh-duri/ga4gh-duri.github.io/blob/master/researcher_ids/ga4gh_passport_v1.md#visa-format)
-
-{% hr4 %}
-
-<a name="embedded-access-token-format"></a>
-#### Visa Access Token Format
-
-Conforms with JWS format requirements and is signed by an OpenID Provider.
-
-1. MUST be a JWS string.
-
-2. The header MUST NOT contain a `jku`.
-
-3. `scope` is REQUIRED and MUST be a string containing a space-delimited set of
-    scope names. "openid" MUST be included as a scope name.
-
-4. Payload [Claims](#term-claim) are specified in [Visa Format](https://github.com/ga4gh-duri/ga4gh-duri.github.io/blob/master/researcher_ids/ga4gh_passport_v1.md#visa-format)
-
-5. The payload [Claims](#term-claim) MUST NOT include `aud`.
 
 {% hr3 %}
 
