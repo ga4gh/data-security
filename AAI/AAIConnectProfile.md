@@ -385,10 +385,6 @@ and access_tokens (and potentially refresh tokens) for consumption within the GA
 1. A [Visa Issuer](#term-visa-issuer) MUST provide one or more of the following
     types of [Visas](#term-visa):
    
-    <p class="deprecation">The <b>Visa Access Token</b> is proposed for removal in a future
-     version of the specification. New implementations should issue Visas
-     as <b>Visa Document Token</b>s.</p> 
-
     1. <a name="term-visa-document-token"></a> <a name="term-embedded-document-token"></a>
        **Visa Document Token** -- The Visa Issuer does not need to
        be an OIDC provider, and MAY provide tokens of this type without any
@@ -412,50 +408,14 @@ and access_tokens (and potentially refresh tokens) for consumption within the GA
         5.  The `scope` [Claim](#term-claim), if included, MUST NOT contain "openid" as
             a space-delimited substring.
 
+    <p class="deprecation">The <b>Visa Access Token</b> is proposed for removal in a future
+     version of the specification. New implementations should issue Visas
+     as <b>Visa Document Token</b>s.</p> 
+
     2. <a name="term-visa-access-token"></a> <a name="term-embedded-access-token"></a>
        **Visa Access Token** -- The Visa Issuer is providing an OIDC provider
        service and issues OIDC-compliant access tokens in a specific format that can
-       be used as a Visa.
-
-        1.  The Visa payload MUST contain the "openid" scope. That
-            is, it has a `scope` [Claim](#term-claim) that contains "openid" as a
-            space-delimited substring.
-
-        2.  Visa is a JWS string and follows the [Visa Access Token
-            Format](#visa-access-token-format). This includes
-            having [GA4GH Claims](#term-ga4gh-claim) directly in the Visa.
-
-        3.  Visa Issuers issuing Visa Access Tokens MUST support [OIDC Discovery
-            spec](https://openid.net/specs/openid-connect-discovery-1_0.html),
-            and provide `jwks_uri` as
-            [Metadata](https://openid.net/specs/openid-connect-discovery-1_0.html#ProviderMetadata)
-            that may be reachable by a Passport Clearinghouse.
-
-        4.  Visa Issuer MUST support public-facing UserInfo Endpoint. When presented with a valid 
-            Visa Access Token, the UserInfo Endpoint MUST return a success status and MAY return 
-            the current values for GA4GH Claims that were included within the Visa Access Token, 
-            however returning GA4GH Claims from the UserInfo Endpoint for Visa Access Tokens is 
-            OPTIONAL.
-
-        5.  If the Visa Access Token's `exp` exceeds the `iat` by
-            more than 1 hour, the Visa Issuer SHOULD expect
-            Passport Clearinghouses to use [Access Token Polling](#at-polling) and
-            MUST provide a means to revoke Visa Access Tokens. The
-            Token or UserInfo Endpoint MUST return an HTTP status 401 as per
-            [RFC6750 section 3.1](https://tools.ietf.org/html/rfc6750#section-3.1)
-            when provided an Visa Access Token that has completed the
-            revocation process.
-
-        6.  The JWS header MUST NOT have `jku` specified.
-
-        7.  Visa Issuer MUST provide protection against
-            attacks as outlined in [RFC
-            6819](https://tools.ietf.org/html/rfc6819).
-
-        8. A Visa Issuer MAY generate the `exp` timestamp to enforce
-           its policies and allow Passport Clearinghouses to understand the intent of
-           how long the assertion may be used before needing to return to the Visa Issuer
-           to refresh the Visa.
+       be used as a Visa. Details are shown in the AAI Profile 1.0 specification.
 
 2. By signing a Visa, a Visa Issuer asserts that
     the [Visa Assertions](#term-visa-assertion) made available by the Visa were legitimately derived
