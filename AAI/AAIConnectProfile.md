@@ -194,6 +194,9 @@ Internet Assigned Numbers Authority
         members of this JSON object. The JWTs specified here follow the JWS
         specification [[RFC7515]](#ref-rfc7515).
 
+<a name="ref-rfc7636"></a>
+[[RFC7636]](https://datatracker.ietf.org/doc/html/rfc7636) -- Proof Key for Code Exchange by OAuth Public Clients (PKCE) 
+
 <a name="ref-rfc8693"></a>
 [[RFC8693]](https://www.rfc-editor.org/info/rfc8693) - Jones, M., Nadalin, A., Campbell, B., Ed., Bradley, J.,
         and C. Mortimore, "OAuth 2.0 Token Exchange", RFC 8693,
@@ -207,11 +210,6 @@ Internet Assigned Numbers Authority
 <a name="ref-rfc9068">
 [[RFC9068]](https://datatracker.ietf.org/doc/html/rfc9068) --  JWT Profile for OAuth 2.0 Access Tokens
 
-{% hr2 %}
-{% hr2 %}
-** TODO Fix remaining refs to Relevant Specifications **
-{% hr2 %}
-{% hr2 %}
 
 {% hr2 %}
 
@@ -278,13 +276,13 @@ the Broker.
 
 Clients are applications which want to access data on behalf of users, and are responsible for using the standard described here to do so securely. 
 
-1. OAuth defines two client types in [section 2.1 of RFC6749](https://datatracker.ietf.org/doc/html/rfc6749#section-2.1).
+1. OAuth defines two client types in [section 2.1](https://datatracker.ietf.org/doc/html/rfc6749#section-2.1) of [[RFC6749]](#ref-rfc6749).
    1. Confidential clients (which are able to keep the client secret secure, typically server-side web-applications) 
         MUST implement OAuth2 Authorization Code
         Flow (see OIDC Basic Client Implementer's Guide 1.0 [[OIDC-Client]](#ref-oidc-client)).
    
    2. Public clients (Single Pages Apps or Mobile Apps) SHOULD implement Authorization Code Flow 
-        with [PKCE](https://datatracker.ietf.org/doc/html/rfc7636).
+        with [[PKCE]](#ref-rfc7636).
 
 2.  Protection of Confidential Information
 
@@ -311,9 +309,9 @@ and access_tokens (and potentially refresh tokens) for consumption within the GA
 
 1. Broker MUST be an OpenID Provider
  
-    1. Broker MUST conform to the [OIDC Core Specification](http://openid.net/specs/openid-connect-core-1_0.html)
+    1. Broker MUST conform to the OIDC Core specification [[OIDC-Core]](#ref-oidc-core).
 
-    2. Broker MUST support [OIDC Discovery spec](https://openid.net/specs/openid-connect-discovery-1_0.html)
+    2. Broker MUST support the OIDC Discovery specification [[OIDC-Discovery]](#ref-oidc-discovery)
        and provide proper [metadata](https://openid.net/specs/openid-connect-discovery-1_0.html#ProviderMetadata)
        (i.e. must have a `jwks_uri` as required that’s reachable by a Passport Clearinghouse)
 
@@ -348,12 +346,13 @@ and access_tokens (and potentially refresh tokens) for consumption within the GA
     for passport issuance in [Conformance For Passport Issuers](#conformance-for-passport-issuers).
 
 5.  Broker MUST provide protection against attacks as outlined in
-    [RFC 6819](https://tools.ietf.org/html/rfc6819).
+    [[RFC6819]](#ref-rfc6819).
 
 6.  The user represented by the identity of the access token MUST have agreed to
     release claims related to the requested scopes as part of generating tokens.
     Brokers MUST adhere to
-    [section 3.1.2.4 of the OIDC specification](https://openid.net/specs/openid-connect-core-1_0.html#Consent).
+    [section 3.1.2.4](https://openid.net/specs/openid-connect-core-1_0.html#Consent) 
+    of [[OIDC-Core]](#ref-oidc-core).
 
     1.  The user represented by a Researcher Identity MUST approve the release
         of these claims to relying parties with sufficient granularity to
@@ -397,11 +396,11 @@ and access_tokens (and potentially refresh tokens) for consumption within the GA
        be an OIDC provider, and MAY provide tokens of this type without any
        revocation process.
 
-        1.  The token MUST conform with JWS format requirements
+        1.  The token MUST conform with JWS format [[RFC7515]](#term-rfc7515) requirements
         2.  The token MUST be signed by a [Visa Issuer](#term-visa-issuer).
-        3.  The JWS header MUST contain `jku` as specified by [RFC7515 Section
-            4.1.2](https://tools.ietf.org/html/rfc7515#section-4.1.2), and
-            provides the corresponding endpoint to fetch
+        3.  The JWS header MUST contain `jku` as specified by [section
+            4.1.2](https://tools.ietf.org/html/rfc7515#section-4.1.2) of [[RFC7515]](#term-rfc7515), and
+            MUST provide the corresponding endpoint to fetch
             the public key used to sign the Visa Document Token.
         4.  The token is not treated as an access token, but validity
             checks outlined elsewhere in this specification still apply.
@@ -442,7 +441,7 @@ that use [this format](#passport-format) to contain Visas.
 
     1. The Token Endpoint MAY also support other OAuth2 grant types.
 
-    2. Client authentication is REQUIRED (using [OAuth2 client authentication](https://datatracker.ietf.org/doc/html/rfc6749#section-2.3.1) is RECOMMENDED).
+    2. Client authentication is REQUIRED (using [OAuth2 client authentication](https://datatracker.ietf.org/doc/html/rfc6749#section-2.3.1) in [[RFC6749]](#ref-rfc6749) is RECOMMENDED).
 
     3. The `requested_token_type` parameter MUST be present with the value `urn:ga4gh:params:oauth:token-type:passport`.
 
@@ -450,7 +449,7 @@ that use [this format](#passport-format) to contain Visas.
 
     5. The `subject_token_type` parameter value MUST be `urn:ietf:params:oauth:token-type:access_token`.
 
-    6. The Token Endpoint MAY accept or require any other optional parameters defined in [RFC8693](https://datatracker.ietf.org/doc/html/rfc8693).
+    6. The Token Endpoint MAY accept or require any other optional parameters defined in [[RFC8693]](#ref-rfc8693).
 
 <br/>
 *Passport Issuing via [Token Exchange](#term-token-exchange) (non-normative)*
@@ -533,9 +532,9 @@ Client <-- TokenEndpoint  #text:red : (step 4) passport issued (passport contain
     [Conformance For Brokers](#conformance-for-brokers).
 
 4.  Passport Clearinghouses MUST provide protection against attacks as outlined in
-    [RFC 6819](https://tools.ietf.org/html/rfc6819).
+    [[RFC6819]](#ref-rfc6819).
 
-    1. Section 5.1.6 of RFC 6819 contains a SHOULD section that states `Ensure that client applications do not share tokens with 3rd parties.` This profile provides a mechanism for Clearinghouses to consume access tokens from multiple brokers in a manner that does not involve 3rd parties. Client applications SHOULD take care to not spread the tokens to any other services that would be considered 3rd parties.
+    1. [Section 5.1.6](https://www.rfc-editor.org/rfc/rfc6819.html#section-5.1.6) of [[RFC6819]](#ref-rfc6819) states `Ensure that client applications do not share tokens with 3rd parties.` This profile provides a mechanism for Clearinghouses to consume access tokens from multiple brokers in a manner that does not involve 3rd parties. Client applications SHOULD take care to not spread the tokens to any other services that would be considered 3rd parties.
         
 5.  If making use of [Visas](#term-visa):
 
@@ -603,7 +602,7 @@ Client <-- TokenEndpoint  #text:red : (step 4) passport issued (passport contain
 This specification builds on the JWT format defined in [[RFC7519]](#ref-rfc7519).
 A well-formed JWS-Encoded JSON Web Token (JWT) consists of three concatenated
 Base64url-encoded strings, separated by dots (.) The three sections are: header,
-payload and signature. These JWTs follow [RFC7515](https://tools.ietf.org/html/rfc7515) (JWS)
+payload and signature. These JWTs follow JWS [[RFC7515]](#ref-rfc7515)
 and utilize a number of standard JWT [Claim](#term-claim) names [[IANA-JWT]](#ref-iana-jwt)
 as per the registration process.
 This profile is agnostic to the format of the id_token.
@@ -626,13 +625,16 @@ the [[OIDC-Core]](#ref-oidc-core) access token.
 }
 ```
 - `typ`: REQUIRED. Media type of the JWT. Value should be either 
-   `JWT` as recommended in [RFC7519](https://datatracker.ietf.org/doc/html/rfc7519#section-5.1)
-   or `at+jwt` as required in [RFC9068](https://datatracker.ietf.org/doc/html/rfc9068#section-2.1)
-   if the token format follows RFC9068.
+   `JWT` as [recommended](https://datatracker.ietf.org/doc/html/rfc7519#section-5.1) 
+   in [[RFC7519]](#ref-rfc7519)
+   or `at+jwt` as [required](https://datatracker.ietf.org/doc/html/rfc9068#section-2.1) 
+   in [[RFC9068]](#ref-rfc9068)
+   if the token format follows [[RFC9068]](#ref-rfc9068).
 
 - `alg`: REQUIRED. See [Signing Algorithms](#signing-algorithms).
 
-- `kid`: REQUIRED. Key ID, see [RFC7515 section 4.1.4](https://tools.ietf.org/html/rfc7515#section-4.1.4)
+- `kid`: REQUIRED. Key ID, see [section 4.1.4](https://tools.ietf.org/html/rfc7515#section-4.1.4) 
+    of [[RFC7515]](#ref-7515).
 
 **Payload**
 
@@ -670,12 +672,13 @@ the [[OIDC-Core]](#ref-oidc-core) access token.
 -   `exp`: REQUIRED. Time expired.
 
 -   `jti`: RECOMMENDED. a unique identifier for the token as per
-    [RFC7519 Section 4.1.7](https://tools.ietf.org/html/rfc7519#section-4.1.7)
+    [section 4.1.7](https://tools.ietf.org/html/rfc7519#section-4.1.7) of [[RFC7519]](#ref-rfc7519)
 
 -   `scope`: REQUIRED. Includes verified scopes. MUST include `openid` and `ga4gh_passport_v1`.
-    The `scope` [Claim](#term-claim) is defined by [RFC8693 section 4.2](https://datatracker.ietf.org/doc/html/rfc8693#section-4.2).
+    The `scope` [Claim](#term-claim) is defined by [section 4.2](https://datatracker.ietf.org/doc/html/rfc8693#section-4.2)
+    of [[RFC8693]](#ref-rfc8693).
 
--   GA4GH Claims (`ga4gh_passport_v1` or `ga4gh_visa_v1`): MUST NOT be included.
+-   [GA4GH Claims](#term-ga4gh-claim) (`ga4gh_passport_v1` or `ga4gh_visa_v1`): MUST NOT be included.
 
 -   additional [Claims](#term-claim): OPTIONAL. Any other additional non-GA4GH [Claims](#term-claim) are allowed. This specification does not dictate the format of other [Claims](#term-claim).
 
@@ -683,10 +686,10 @@ the [[OIDC-Core]](#ref-oidc-core) access token.
 
 ### Visas provided by a Broker via UserInfo Endpoint
 
-The [UserInfo](https://openid.net/specs/openid-connect-core-1_0.html#UserInfo) endpoint MAY use `application/json`
+The [UserInfo Endpoint](#term-userinfo-endpoint) MAY use `application/json`
 or `application/jwt` response content type. It is RECOMMENDED that if desiring to return a JWT, a Token Endpoint supporting
 [Token Exchange](#term-token-exchange) exists to do that and that the UserInfo Endpoint returns an `application/json` response.
-Only the [GA4GH claims](#term-ga4gh-claim) must be as prescribed here. Refer to OIDC Spec for more information.
+Only the [GA4GH claims](#term-ga4gh-claim) must be as prescribed here. Refer to [[OIDC-Core]](#ref-oidc-core) for more information.
 
 The UserInfo response MUST include a `ga4gh_passport_v1` [Claim](#term-claim) with a list of [Visas](#term-visa)
 if a [Passport-Scoped Access Token](#term-passport-scoped-access-token) was used for accessing it.
@@ -699,22 +702,22 @@ Passport Issuers MUST issue a Passport conforming to the requirements in this se
 with the `requested_token_type=urn:ga4gh:params:oauth:token-type:passport` is successfully performed
 (as described in the [Conformance for Passport Issuers](#conformance-for-passport-issuers) section).
 
-Passports are defined as signed JWTs. [RFC7519 (JWT)](https://datatracker.ietf.org/doc/html/rfc7519)
+Passports are defined as signed JWTs. The JWT specification [[RFC7519]](#ref-rfc7519)
 states that JWTs can be either signed and encoded using JWS Compact Serialization, 
 or encrypted and encoded using JWE Compact Serialization. 
-Passports are signed JWTs, which implies that they must be encoded using JWS Compact Serialization.
+Passports are signed JWTs, which implies that they must be encoded using [JWS Compact Serialization](https://www.rfc-editor.org/rfc/rfc7515#section-3.1) [[RFC7515]](#ref-7515).
 
 **Header**
 
 This spec prescribes the following JWS headers for Passports 
-in addition to the guidelines established in [RFC7515](https://datatracker.ietf.org/doc/html/rfc7515):
+in addition to the guidelines established in [[RFC7515]](#ref-rfc7515):
 
 - `typ`: REQUIRED where the value must be `vnd.ga4gh.passport+jwt` for Passports.
 
 **Payload**
 
 Only the [GA4GH claims](#term-ga4gh-claim) must be as prescribed here. See the
-[JWT specification](https://datatracker.ietf.org/doc/html/rfc7519) for more details.
+JWT specification [[RFC7519]](#ref-rfc7519) for more details.
 
 ```
 {
@@ -744,8 +747,9 @@ Only the [GA4GH claims](#term-ga4gh-claim) must be as prescribed here. See the
 
 - `jti`: RECOMMENDED.
 
-- `ga4gh_passport_v1`: REQUIRED. An array of GA4GH Visas. May be empty if a user has no visas. See the
-[Passport spec](https://github.com/ga4gh-duri/ga4gh-duri.github.io) for more details on types of visas.
+- `ga4gh_passport_v1`: REQUIRED. An array of GA4GH Visas. May be empty if a 
+    user has no visas. See the [[Passport]](#ref-passport) specification 
+    for more details on types of visas.
 
 {% hr3 %}
 
@@ -758,7 +762,7 @@ JWTs MUST be issued with signatures using the `ES256` or `RS256` algorithm.
 ## Security Considerations
 
 The confidentiality and integrity of tokens must be secured, taking
-[RFC8725 JSON Web Token Best Current Practices](https://www.rfc-editor.org/rfc/rfc8725.html#name-best-practices)
+[JSON Web Token Best Current Practices](https://www.rfc-editor.org/rfc/rfc8725.html#name-best-practices) in [[RFC8725]](#term-rfc8725)
 into consideration. Of special concern are:
 * Revoking access tokens and Visa Assertions
 * Limiting damage of leaked tokens
