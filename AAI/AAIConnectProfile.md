@@ -4,10 +4,10 @@ title: AAI OIDC Profile
 permalink: aai-openid-connect-profile
 ---
 
-## Abstract
+### Abstract
 {:.no_toc}
 
-This specification defines a profile for using the OpenID Connect protocol 
+This specification defines a profile for using the OpenID Connect protocol
 [[OIDC-Core]](#ref-oidc-core)
 to provide federated multilateral authorization infrastructure for greater
 interoperability between biomedical institutions sharing restricted datasets.  (OpenID Connect is a simple identity layer, on top of the OAuth 2.0 protocol, that supports identity verification and the ability to obtain basic profile information about end users.)
@@ -19,13 +19,72 @@ called [Passport Clearinghouses](#term-passport-clearinghouse).
 
 [Passports](#term-passport) can then be used for authorization purposes by downstream systems.
 
-{% hr2 %}
-
-## Table of Contents
+### Table of Contents
 {:.no_toc}
 
 * toc
 {:toc}
+
+{% hr2 %}
+
+## Introduction
+
+The [GA4GH AAI profile specification]({% link AAI/AAIConnectProfile.md %})
+leverages OpenID Connect (OIDC) to authenticate researchers
+desiring to access clinical and genomic resources from [data
+holders]({% link AAI/AAIConnectProfile.md %}#term-data-holder)
+adhering to GA4GH standards. Beyond standard OIDC authentication, AAI enables
+data holders to obtain security-related attributes and authorizations of those
+researchers.
+
+The Data Use and Researcher Identity (DURI) Work Stream has developed standard
+[claims](https://github.com/ga4gh-duri/ga4gh-duri.github.io/tree/master/researcher_ids)
+for representing common researcher authorizations and attributes. This standard
+assumes that GA4GH Claims provided by Brokers described in this document
+MAY conform to the DURI researcher-identity policy and standard. This standard
+does NOT assume that DURI's GA4GH Claims will be the only ones used.
+
+### Technical Summary
+
+At its core, the AAI specification defines cryptographically secure tokens for exchanging
+researcher attributes called [Visas](#term-visa), and how various
+participants can interact to authenticate researchers, and obtain and validate visas.
+
+The main components identified in the specification are:
+* [Visa Issuers](#term-visa-issuer), that cryptographically sign researcher attributes in the
+  form of visas.
+* [Brokers](#term-broker), that authenticate researchers and broker access to visas associated
+  with researchers.
+* [Clients](#client), that perform actions that may require data access on behalf of researchers,
+  relying on tokens issued by Brokers and Visa Issuers.
+* [Passport Clearinghouses](#term-passport-clearinghouse), that accept tokens containing or
+  otherwise availing researcher visas for the purposes of enforcing access control.
+
+### Visa Tokens
+
+The recommended approach to using AAI involves signed-JWTs called Visas,
+for securely transmitting authorizations or attributes of a researcher.
+Visas are signed by the Visa Issuer, which may be a service other than
+the Broker. Using JWTs signed by private key, allows Clearinghouses to
+validate Visas from known issuers in situations where they may not have
+network connections to the issuers.
+
+### Separation of Data Holders and Data Controllers
+
+It is a fairly common situation that, for a single dataset, the
+[data controller](#term-data-controller)
+(the authority managing who has access to dataset) is not the same party as the
+[data holder](#term-data-holder) (the organization
+that hosts the data, while respecting the data controller's access policies).
+
+For these situations, AAI is a standard mechanism for data holders to obtain
+and validate authorizations from data controllers, by specifying the interactions
+between Visa Issuers, Brokers, and Clearinghouses.
+
+The AAI standard enables data holders' and data controllers' systems to recognize
+and accept identities from multiple Brokers --- allowing for an even more federated
+approach. An organization can still use this specification with a single Broker and Visa Issuer,
+though they may find in that case that there are few benefits beyond standard OIDC.
 
 {% hr2 %}
 
@@ -213,7 +272,73 @@ Internet Assigned Numbers Authority
 
 {% hr2 %}
 
-## Flow of Assertions
+## Overview of Interactions
+
+### Full Login and Token Exchange Interaction in AAI/Passport 1.2
+
+In the full token exchange flow recommended in this document, the client does not ever distribute the initial
+*Passport-Scoped Access Token* to other services. A token exchange operation is executed by the client, in
+exchange for a *Passport* JWT that may be used downstream to access resources. In this example flow, the
+*Passport* is included as authorization in the POST to a Clearinghouse that holds data.
+
+{% plantuml %}
+
+hide footbox
+skinparam BoxPadding 10
+skinparam ParticipantPadding 20
+
+box "Researcher"  #eee
+actor       "User Agent"                as user
+participant Client                      as client
+end box
+
+box "AAI"
+participant "Broker and Passport Issuer"                      as broker
+end box
+
+box "Data Controller"
+collections "Visa Issuer"            as issuer
+end box
+
+box "Data Holder"
+participant "Passport Clearinghouse"            as clearing
+end box
+
+==OIDC==
+
+user -> client : Initiates login
+client -> user : Send redirect to Broker
+user -> broker : Follow redirects
+ref over user, client, broker
+Broker authenticates user (potentially with external IdP)
+end ref
+broker -> user : Send redirect to client with authorization code
+user -> client : Follow redirect with code
+client -> broker : Request Passport-Scoped Access Token with code and client credentials
+broker -> client : Respond with Passport-Scoped Access Token
+
+==Exchange==
+
+client -> broker : Request to exchange Passport-Scoped Access Token for Passport
+client <- broker : Response with Passport
+
+==Use==
+
+user -> client : User initiates action requiring data
+client -> clearing : Client requests data with Passport
+clearing -> issuer : Request public keys
+issuer -> clearing : Respond with public keys
+client <- clearing : Clearinghouse responds with data
+
+{% endplantuml %}
+
+Notable differences between this diagram and interaction specified in AAI/Passport 1.0:
+* The Passport Clearinghouse is no longer required to be a Client of the Broker
+* The Passport-Scoped Access Token is only ever shared between the Client and the Broker
+* An additional Token Exchange request is used to exchange the Passport-Scoped Access Token for a Passport Token,
+  which can be sent to a Passport Clearinghouse.
+
+### Flow of Assertions
 
 @startuml
 skinparam componentStyle rectangle
@@ -384,6 +509,11 @@ and access_tokens (and potentially refresh tokens) for consumption within the GA
 
 <a name="conformance-for-visa-issuers"></a>
 ### Conformance for Visa Issuers
+
+Visa Issuers issue signed JWTs (Visas) asserting facts about researchers, which may be used by Passport Clearinghouses
+to justify granting access to data. This specification defines the format of the Visas and endpoints Visa Issuers
+should have in order for Passport Clearinghouses to validate those Visas. This document _does not_ specify how a Broker
+obtains Visas contained in a Passport or returned from the Userinfo Endpoint.
 
 1. A [Visa Issuer](#term-visa-issuer) MUST provide one or more of the following
     types of [Visas](#term-visa):
