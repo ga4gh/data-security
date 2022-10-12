@@ -16,7 +16,6 @@ kramdown:
 
 # Limit the header pages to those we want top at top level, this also controls ordering
 header_pages:
-  - AAI/README.md
   - AAI/AAIConnectProfile.md
   - AAI/FAQ.md
   - AAI/CHANGES_1.2.md

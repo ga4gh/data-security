@@ -7,6 +7,46 @@ permalink: aai-faq
 A collection of questions (and hopefully useful answers).
 
 {% hr2 %}
+## Background
+
+### Why Brokers?
+
+We have found that there are widely used Identity Providers (IdP) such as Google
+Authentication. These authentication mechanisms provide no authorization
+information (custom claims or scopes) but are ubiquitous for authentication at the institution level.
+The use of a Broker and Clearinghouse
+enables attaching information to the usual OIDC flow so that Google and other
+prominent identity providers can be used with customized claims and scopes.
+
+Here is a diagram of a single broker. This is one possible way to use this spec.
+
+@startuml
+skinparam componentStyle rectangle
+left to right direction
+
+component "<b>Visa Issuer 1</b>\nservice" as Issuer1
+component "<b>Visa Issuer 2</b>\nservice" as Issuer2
+component "<b>Visa Issuer N</b>\nservice" as IssuerN
+
+component "<b>Broker</b>\nservice" as Broker #FAFAD2
+component "<b>Passport Clearinghouse</b>\nservice" as ClearingHouse #9E7BB5
+
+Issuer1 --> Broker : Provide Visas
+Issuer2 --> Broker : Provide Visas
+IssuerN --> Broker : Provide Visas
+Broker --> ClearingHouse : Provide Passport and Visas
+
+@enduml
+
+In this diagram, the Broker relies on a separate service for fetching visas, which
+stores assertions from multiple sources. The visa assertions are obtained by the
+Clearinghouse after a successful login, and used to determine a researcher's
+access in the Clearinghouse system.
+
+The Broker, Clearinghouse, and Visa Issuer may be separate services (as shown
+in this diagram), but in other configurations they may be run as parts of a single
+service, or as separate services run by single organization. Data holders and data
+controllers should explore their options to decide what best fits their needs.
 
 ## Flows
 
