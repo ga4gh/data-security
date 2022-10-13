@@ -35,14 +35,8 @@ desiring to access clinical and genomic resources from [data
 holders]({% link AAI/AAIConnectProfile.md %}#term-data-holder)
 adhering to GA4GH standards. Beyond standard OIDC authentication, AAI enables
 data holders to obtain security-related attributes and authorizations of those
-researchers.
-
-The Data Use and Researcher Identity (DURI) Work Stream has developed standard
-[claims](https://github.com/ga4gh-duri/ga4gh-duri.github.io/tree/master/researcher_ids)
-for representing common researcher authorizations and attributes. This standard
-assumes that GA4GH Claims provided by Brokers described in this document
-MAY conform to the DURI researcher-identity policy and standard. This standard
-does NOT assume that DURI's GA4GH Claims will be the only ones used.
+researchers. The Data Use and Researcher Identity (DURI) Work Stream has developed a standard
+representation for [researcher authorizations and attributes](https://github.com/ga4gh-duri/ga4gh-duri.github.io/tree/master/researcher_ids).
 
 ### Technical Summary
 
@@ -320,6 +314,7 @@ broker -> client : Respond with Passport-Scoped Access Token
 ==Exchange==
 
 client -> broker : Request to exchange Passport-Scoped Access Token for Passport
+broker <-> issuer : Exchange of visas, if needed (protocol unspecified)
 client <- broker : Response with Passport
 
 ==Use==
