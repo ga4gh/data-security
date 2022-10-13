@@ -114,7 +114,7 @@ by the JWT specification [[RFC7519]](#ref-rfc7519) -- A piece of information ass
 represented as a name/value pair consisting of
 a claim name (a string) and a claim value (any JSON value). 
 
-**Client**{: #term-client} -- as discussed in the OAuth 2.0 Authorization Framework [[RFC6749]](#term-rfc6749) specification
+**Client**{: #term-client} -- as discussed in the OAuth 2.0 Authorization Framework [[RFC6749]](#ref-rfc6749) specification
 
 <a name="term-data-holder"></a> **Data Holder** -- An organization that
 holds a specific set of data (or its copy) and respects
