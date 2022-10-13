@@ -532,9 +532,7 @@ obtains Visas contained in a Passport or returned from the Userinfo Endpoint.
             the public key used to sign the Visa Document Token.
         4.  The token is not treated as an access token, but validity
             checks outlined elsewhere in this specification still apply.
-        5.  MUST conform to [token limited-life or revocation
-            requirements](#token-revocation), even if no Visa token
-            revocation process is provided.
+        5.  [Visas](#term-visa) MUST be signed with a [conformant signing algorithm](#signing-algorithms).
         6.  The `scope` [Claim](#term-claim), if included, MUST NOT contain "openid" as
             a space-delimited substring of the `scope` JWT [Claim](#term-claim).
         7.  Payload [Claims](#term-claim) are specified in 
