@@ -59,7 +59,7 @@ The main components identified in the specification are:
 The recommended approach to using AAI involves signed-JWTs called Visas,
 for securely transmitting authorizations or attributes of a researcher.
 Visas are signed by the Visa Issuer, which may be a service other than
-the Broker. Using JWTs signed by private key, allows Clearinghouses to
+the Broker. Using JWTs signed by private key, allows Passport Clearinghouses to
 validate Visas from known issuers in situations where they may not have
 network connections to the issuers.
 
@@ -73,7 +73,7 @@ that hosts the data, while respecting the data controller's access policies).
 
 For these situations, AAI is a standard mechanism for data holders to obtain
 and validate authorizations from data controllers, by specifying the interactions
-between Visa Issuers, Brokers, and Clearinghouses.
+between Visa Issuers, Brokers, and Passport Clearinghouses.
 
 The AAI standard enables data holders' and data controllers' systems to recognize
 and accept identities from multiple Brokers --- allowing for an even more federated
