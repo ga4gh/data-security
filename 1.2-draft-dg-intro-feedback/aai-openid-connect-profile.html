@@ -225,17 +225,16 @@ eRA Commons. IdPs MAY be <a href="#term-visa-assertion-source">Visa Assertion So
 A JWT contains a set of <a href="#term-claim">Claims</a>.</p>
 
 <p><a name="term-passport-clearinghouse"></a> <strong>Passport Clearinghouse</strong> – 
-An OIDC Relying Party service that consumes
-<a href="#term-visa">Visas</a> provided by a <a href="#term-broker">Broker</a>, uses them to make an
-authorization decision at least in part based on inspecting Visas and
+A service that consumes <a href="#term-visa">Visas</a> and uses them to make an
+authorization decision at least in part based on inspecting them and
 allows access to a specific set of underlying resources in the target
 environment or platform. This abstraction allows for a variety of models for
-how systems consume these Visas in order to provide access to resources.
+how systems consume these <a href="#term-visa">Visas</a> in order to provide access to resources.
 Access can be granted by either issuing new access tokens for downstream
 services (i.e. the Passport Clearinghouse may act like an authorization server)
 or by providing access to the underlying resources directly (i.e. the Passport
 Clearinghouse may act like a resource server). Some Passport Clearinghouses may
-issue Passports that contain a new set or subset of Visas for downstream consumption.</p>
+issue <a href="#term-passport">Passports</a> that contain a new set or subset of Visas for downstream consumption.</p>
 
 <p><a name="term-passport-scoped-access-token"></a> <strong>Passport-Scoped Access Token</strong> –
 An OIDC access token with <a href="https://datatracker.ietf.org/doc/html/rfc6749#section-3.3">scope</a>
