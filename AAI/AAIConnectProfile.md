@@ -29,7 +29,7 @@ called [Passport Clearinghouses](#term-passport-clearinghouse).
 
 ## Introduction
 
-The [GA4GH AAI profile specification]({% link AAI/AAIConnectProfile.md %})
+This specification
 leverages OpenID Connect (OIDC) to authenticate researchers
 desiring to access clinical and genomic resources from [data
 holders]({% link AAI/AAIConnectProfile.md %}#term-data-holder)
@@ -42,42 +42,43 @@ representation for researcher authorizations and attributes [[Researcher-ID]](#r
 
 At its core, the AAI specification defines cryptographically secure tokens for exchanging
 researcher attributes called [Visas](#term-visa), and how various
-participants can interact to authenticate researchers, and obtain and validate visas.
+participants can interact to authenticate researchers, and obtain and validate [Visas](#term-visa).
 
 The main components identified in the specification are:
 * [Visa Issuers](#term-visa-issuer), that cryptographically sign researcher attributes in the
-  form of visas.
-* [Brokers](#term-broker), that authenticate researchers and broker access to visas associated
+  form of [Visas](#term-visa).
+* [Brokers](#term-broker), that authenticate researchers and broker access to [Visas](#term-visa) associated
   with researchers.
-* [Clients](#client), that perform actions that may require data access on behalf of researchers,
-  relying on tokens issued by Brokers and Visa Issuers.
+* [Clients](#term-client), that perform actions that may require data access on behalf of researchers,
+  relying on tokens issued by [Brokers](#term-broker) and [Visa Issuers](#term-visa-issuer).
 * [Passport Clearinghouses](#term-passport-clearinghouse), that accept tokens containing or
   otherwise availing researcher visas for the purposes of enforcing access control.
 
 ### Visa Tokens
 
-The recommended approach to using AAI involves signed-JWTs called Visas,
+The recommended approach to using AAI involves signed JWTs called [Visas](#term-visa),
 for securely transmitting authorizations or attributes of a researcher.
-Visas are signed by the Visa Issuer, which may be a service other than
-the Broker. Using JWTs signed by private key, allows Passport Clearinghouses to
-validate Visas from known issuers in situations where they may not have
+[Visas](#term-visa) are signed by the [Visa Issuer](#term-visa-issuer), which may be a service other than
+the Broker. Using JWTs signed by private key allows Passport Clearinghouses to
+validate [Visas](#term-visa) from known issuers in situations where they may not have
 network connections to the issuers.
 
-### Separation of Data Holders and Data Controllers
+### Separation of Data Holders and Data Access Committees
 
-It is a fairly common situation that, for a single dataset, the
-[data controller](#term-data-controller)
-(the authority managing who has access to dataset) is not the same party as the
-[data holder](#term-data-holder) (the organization
-that hosts the data, while respecting the data controller's access policies).
+It is a fairly common situation that, for a single dataset, the Data Access Committee (DAC) (the authority managing 
+who has access to dataset) is not the same party as the
+[Data Holder](#term-data-holder) (the organization
+that hosts the data, while respecting the DAC's access policies).
 
 For these situations, AAI is a standard mechanism for data holders to obtain
-and validate authorizations from data controllers, by specifying the interactions
-between Visa Issuers, Brokers, and Passport Clearinghouses.
+and validate authorizations from DACs, by specifying the interactions
+between [Visa Issuers](#term-visa-issuer), [Brokers](#term-broker), and 
+[Passport Clearinghouses](#term-passport-clearinghouse).
 
-The AAI standard enables data holders' and data controllers' systems to recognize
-and accept identities from multiple Brokers --- allowing for an even more federated
-approach. An organization can still use this specification with a single Broker and Visa Issuer,
+The AAI standard enables [Data Holders](#term-data-holder) and [Visa Issuers](#term-visa-issuer) to recognize
+and accept identities from multiple [Brokers](#term-broker) --- allowing for an even more federated
+approach. An organization can still use this specification with a single 
+[Broker](#term-broker) and [Visa Issuer](#term-visa-issuer),
 though they may find in that case that there are few benefits beyond standard OIDC.
 
 {% hr2 %}
@@ -119,7 +120,7 @@ a claim name (a string) and a claim value (any JSON value).
 holds a specific set of data (or its copy) and respects
 and enforces the Data Access Committee's (DAC's) decisions on who can access it. A DAC
 can also be a [Data Holder](#term-data-holder). A [Data Holder](#term-data-holder) runs a
-[Passport Clearinghouse Server](#term-passport-clearinghouse) at a minimum.
+[Passport Clearinghouse](#term-passport-clearinghouse) server at a minimum.
 
 <a name="term-ga4gh-claim"></a>
 **GA4GH Claim** -- A [Claim](#term-claim) as defined by a GA4GH
@@ -293,7 +294,7 @@ box "AAI"
 participant "Broker and Passport Issuer"                      as broker
 end box
 
-box "Data Controller"
+box "Data Access Committee"
 collections "Visa Issuer"            as issuer
 end box
 
@@ -347,14 +348,14 @@ component "<b>Visa Assertion Source</b> (1)\norganisation" as VisaSource1
 component "<b>Visa Assertion Source</b> (2)\norganisation" as VisaSource2
 component "<b>Visa Assertion Source</b> (...)\norganisation" as VisaSourceN
 
-database "<b>Visa Assertion Repository</b>\nabstract service" as VisaRepository
+database "<b>Visa Assertion</b>\n<b>Repository</b>\nabstract service" as VisaRepository
 component "<b>Visa Issuer</b>\nabstract service\n(optional)" as VisaIssuer
 }
 
 package "Specified GA4GH AAI clients, services, protocols" {
 component "<b>Broker</b>\nservice" as Broker #FAFAD2
 component "<b>Client</b>\napplication" as Client #FAFAD2
-component "<b>Passport Clearinghouse</b>\nservice" as ClearingHouse #FAFAD2
+component "<b>Passport</b>\n<b>Clearinghouse</b>\nservice" as ClearingHouse #FAFAD2
 }
 
 VisaSource1 ..> VisaRepository 
@@ -789,8 +790,8 @@ the [[OIDC-Core]](#ref-oidc-core) access token.
 
 -   `idp`: OPTIONAL. SHOULD contain the IDP the user used to auth with.
     A non-normative example is "google". This does not have to be unique and
-    can be used just to help inform if that is what a data controller or data holder
-    needs.
+    can be used just to help inform if that is what a [Visa Issuer](#term-visa-issuer) 
+    or [Data Holder](#term-data-holder) needs.
 
 -   `aud`: OPTIONAL. If provided, it MUST contain the OAuth Client ID of the
     relying party.
