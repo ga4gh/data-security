@@ -771,9 +771,8 @@ MUST provide the corresponding endpoint to fetch
 the public key used to sign the Visa Document Token.</li>
           <li>The token is not treated as an access token, but validity
 checks outlined elsewhere in this specification still apply.</li>
-          <li>MUST conform to <a href="#token-revocation">token limited-life or revocation
-requirements</a>, even if no Visa token
-revocation process is provided.</li>
+          <li>
+<a href="#term-visa">Visas</a> MUST be signed with a <a href="#signing-algorithms">conformant signing algorithm</a>.</li>
           <li>The <code class="language-plaintext highlighter-rouge">scope</code> <a href="#term-claim">Claim</a>, if included, MUST NOT contain “openid” as
 a space-delimited substring of the <code class="language-plaintext highlighter-rouge">scope</code> JWT <a href="#term-claim">Claim</a>.</li>
           <li>Payload <a href="#term-claim">Claims</a> are specified in 
