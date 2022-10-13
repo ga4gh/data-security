@@ -36,7 +36,7 @@ holders]({% link AAI/AAIConnectProfile.md %}#term-data-holder)
 adhering to GA4GH standards. Beyond standard OIDC authentication, AAI enables
 data holders to obtain security-related attributes and authorizations of those
 researchers. The Data Use and Researcher Identity (DURI) Work Stream has developed a standard
-representation for [researcher authorizations and attributes](https://github.com/ga4gh-duri/ga4gh-duri.github.io/tree/master/researcher_ids).
+representation for researcher authorizations and attributes [[Researcher-ID]](#ref-researcher-ids).
 
 ### Technical Summary
 
@@ -218,6 +218,9 @@ Internet Assigned Numbers Authority
 
 <a name="ref-passport"></a>
 [[Passport]](https://github.com/ga4gh-duri/ga4gh-duri.github.io/blob/master/researcher_ids/ga4gh_passport_v1.md) -- GA4GH Passport Specification, Data Use and Researcher Identity (DURI) Work Stream -- Defines Passport and Visa formats.
+
+<a name="ref-researcher-ids"></a>
+[[Researcher-ID]](https://github.com/ga4gh-duri/ga4gh-duri.github.io/blob/master/researcher_ids) -- GA4GH Passport Specification, Data Use and Researcher Identity (DURI) Work Stream -- Defines researcher identities for GA4GH [Passports](#term-passport) and [Visas](#term-visa).
 
 <a name="ref-rfc2119"></a>
 [[RFC2119]](https://www.ietf.org/rfc/rfc2119.txt) - Key words for use in RFCs to Indicate Requirement Levels
