@@ -38,7 +38,7 @@
         </label>
 
         <div class="trigger">
-<a class="page-link" href="/data-security/1.2-draft-main/aai-introduction">AAI Introduction</a><a class="page-link" href="/data-security/1.2-draft-main/aai-openid-connect-profile">AAI OIDC Profile</a><a class="page-link" href="/data-security/1.2-draft-main/aai-faq">AAI FAQ</a><a class="page-link" href="/data-security/1.2-draft-main/changes-1_2">Changes Between Versions 1.0 and 1.2</a>
+<a class="page-link" href="/data-security/1.2-draft-main/aai-openid-connect-profile">AAI OIDC Profile</a><a class="page-link" href="/data-security/1.2-draft-main/aai-faq">AAI FAQ</a><a class="page-link" href="/data-security/1.2-draft-main/changes-1_2">Changes Between Versions 1.0 and 1.2</a>
 </div>
       </nav>
 </div>
@@ -52,9 +52,9 @@
   </header>
 
   <div class="post-content">
-    <h2 class="no_toc" id="abstract">Abstract</h2>
+    <h3 class="no_toc" id="abstract">Abstract</h3>
 
-<p>This specification defines a profile for using the OpenID Connect protocol 
+<p>This specification defines a profile for using the OpenID Connect protocol
 <a href="#ref-oidc-core">[OIDC-Core]</a>
 to provide federated multilateral authorization infrastructure for greater
 interoperability between biomedical institutions sharing restricted datasets.  (OpenID Connect is a simple identity layer, on top of the OAuth 2.0 protocol, that supports identity verification and the ability to obtain basic profile information about end users.)</p>
@@ -66,15 +66,25 @@ called <a href="#term-passport-clearinghouse">Passport Clearinghouses</a>.</p>
 
 <p><a href="#term-passport">Passports</a> can then be used for authorization purposes by downstream systems.</p>
 
-<hr style="border: 2px solid; margin: 2em auto;">
-
-<h2 class="no_toc" id="table-of-contents">Table of Contents</h2>
+<h3 class="no_toc" id="table-of-contents">Table of Contents</h3>
 
 <ul id="markdown-toc">
+  <li>
+<a href="#introduction" id="markdown-toc-introduction">Introduction</a>    <ul>
+      <li><a href="#technical-summary" id="markdown-toc-technical-summary">Technical Summary</a></li>
+      <li><a href="#visa-tokens" id="markdown-toc-visa-tokens">Visa Tokens</a></li>
+      <li><a href="#separation-of-data-holders-and-data-access-committees" id="markdown-toc-separation-of-data-holders-and-data-access-committees">Separation of Data Holders and Data Access Committees</a></li>
+    </ul>
+  </li>
   <li><a href="#notation-and-conventions" id="markdown-toc-notation-and-conventions">Notation and Conventions</a></li>
   <li><a href="#terminology" id="markdown-toc-terminology">Terminology</a></li>
   <li><a href="#relevant-specifications" id="markdown-toc-relevant-specifications">Relevant Specifications</a></li>
-  <li><a href="#flow-of-assertions" id="markdown-toc-flow-of-assertions">Flow of Assertions</a></li>
+  <li>
+<a href="#overview-of-interactions" id="markdown-toc-overview-of-interactions">Overview of Interactions</a>    <ul>
+      <li><a href="#full-login-and-token-exchange-interaction-in-aaipassport-12" id="markdown-toc-full-login-and-token-exchange-interaction-in-aaipassport-12">Full Login and Token Exchange Interaction in AAI/Passport 1.2</a></li>
+      <li><a href="#flow-of-assertions" id="markdown-toc-flow-of-assertions">Flow of Assertions</a></li>
+    </ul>
+  </li>
   <li>
 <a href="#profile-requirements" id="markdown-toc-profile-requirements">Profile Requirements</a>    <ul>
       <li><a href="#conformance-for-clientsapplications" id="markdown-toc-conformance-for-clientsapplications">Conformance for Clients/Applications</a></li>
@@ -95,6 +105,68 @@ called <a href="#term-passport-clearinghouse">Passport Clearinghouses</a>.</p>
   <li><a href="#security-considerations" id="markdown-toc-security-considerations">Security Considerations</a></li>
   <li><a href="#specification-revision-history" id="markdown-toc-specification-revision-history">Specification Revision History</a></li>
 </ul>
+
+<hr style="border: 2px solid; margin: 2em auto;">
+
+<h2 id="introduction">Introduction</h2>
+
+<p>This specification
+leverages OpenID Connect (OIDC) to authenticate researchers
+desiring to access clinical and genomic resources from <a href="/data-security/1.2-draft-main/aai-openid-connect-profile#term-data-holder">data
+holders</a>
+adhering to GA4GH standards. Beyond standard OIDC authentication, AAI enables
+data holders to obtain security-related attributes and authorizations of those
+researchers. The Data Use and Researcher Identity (DURI) Work Stream has developed a standard
+representation for researcher authorizations and attributes <a href="#ref-researcher-ids">[Researcher-ID]</a>.</p>
+
+<h3 id="technical-summary">Technical Summary</h3>
+
+<p>At its core, the AAI specification defines cryptographically secure tokens for exchanging
+researcher attributes called <a href="#term-visa">Visas</a>, and how various
+participants can interact to authenticate researchers, and obtain and validate <a href="#term-visa">Visas</a>.</p>
+
+<p>The main components identified in the specification are:</p>
+<ul>
+  <li>
+<a href="#term-visa-issuer">Visa Issuers</a>, that cryptographically sign researcher attributes in the
+form of <a href="#term-visa">Visas</a>.</li>
+  <li>
+<a href="#term-broker">Brokers</a>, that authenticate researchers and broker access to <a href="#term-visa">Visas</a> associated
+with researchers.</li>
+  <li>
+<a href="#term-client">Clients</a>, that perform actions that may require data access on behalf of researchers,
+relying on tokens issued by <a href="#term-broker">Brokers</a> and <a href="#term-visa-issuer">Visa Issuers</a>.</li>
+  <li>
+<a href="#term-passport-clearinghouse">Passport Clearinghouses</a>, that accept tokens containing or
+otherwise availing researcher visas for the purposes of enforcing access control.</li>
+</ul>
+
+<h3 id="visa-tokens">Visa Tokens</h3>
+
+<p>The recommended approach to using AAI involves signed JWTs called <a href="#term-visa">Visas</a>,
+for securely transmitting authorizations or attributes of a researcher.
+<a href="#term-visa">Visas</a> are signed by the <a href="#term-visa-issuer">Visa Issuer</a>, which may be a service other than
+the Broker. Using JWTs signed by private key allows Passport Clearinghouses to
+validate <a href="#term-visa">Visas</a> from known issuers in situations where they may not have
+network connections to the issuers.</p>
+
+<h3 id="separation-of-data-holders-and-data-access-committees">Separation of Data Holders and Data Access Committees</h3>
+
+<p>It is a fairly common situation that, for a single dataset, the Data Access Committee (DAC) (the authority managing 
+who has access to dataset) is not the same party as the
+<a href="#term-data-holder">Data Holder</a> (the organization
+that hosts the data, while respecting the DAC’s access policies).</p>
+
+<p>For these situations, AAI is a standard mechanism for data holders to obtain
+and validate authorizations from DACs, by specifying the interactions
+between <a href="#term-visa-issuer">Visa Issuers</a>, <a href="#term-broker">Brokers</a>, and 
+<a href="#term-passport-clearinghouse">Passport Clearinghouses</a>.</p>
+
+<p>The AAI standard enables <a href="#term-data-holder">Data Holders</a> and <a href="#term-visa-issuer">Visa Issuers</a> to recognize
+and accept identities from multiple <a href="#term-broker">Brokers</a> — allowing for an even more federated
+approach. An organization can still use this specification with a single 
+<a href="#term-broker">Broker</a> and <a href="#term-visa-issuer">Visa Issuer</a>,
+though they may find in that case that there are few benefits beyond standard OIDC.</p>
 
 <hr style="border: 2px solid; margin: 2em auto;">
 
@@ -129,13 +201,13 @@ by the JWT specification <a href="#ref-rfc7519">[RFC7519]</a> – A piece of inf
 represented as a name/value pair consisting of
 a claim name (a string) and a claim value (any JSON value).</p>
 
-<p><strong id="term-client">Client</strong> – as discussed in the OAuth 2.0 Authorization Framework <a href="#term-rfc6749">[RFC6749]</a> specification</p>
+<p><strong id="term-client">Client</strong> – as discussed in the OAuth 2.0 Authorization Framework <a href="#ref-rfc6749">[RFC6749]</a> specification</p>
 
 <p><a name="term-data-holder"></a> <strong>Data Holder</strong> – An organization that
 holds a specific set of data (or its copy) and respects
 and enforces the Data Access Committee’s (DAC’s) decisions on who can access it. A DAC
 can also be a <a href="#term-data-holder">Data Holder</a>. A <a href="#term-data-holder">Data Holder</a> runs a
-<a href="#term-passport-clearinghouse">Passport Clearinghouse Server</a> at a minimum.</p>
+<a href="#term-passport-clearinghouse">Passport Clearinghouse</a> server at a minimum.</p>
 
 <p><a name="term-ga4gh-claim"></a>
 <strong>GA4GH Claim</strong> – A <a href="#term-claim">Claim</a> as defined by a GA4GH
@@ -153,17 +225,16 @@ eRA Commons. IdPs MAY be <a href="#term-visa-assertion-source">Visa Assertion So
 A JWT contains a set of <a href="#term-claim">Claims</a>.</p>
 
 <p><a name="term-passport-clearinghouse"></a> <strong>Passport Clearinghouse</strong> – 
-An OIDC Relying Party service that consumes
-<a href="#term-visa">Visas</a> provided by a <a href="#term-broker">Broker</a>, uses them to make an
-authorization decision at least in part based on inspecting Visas and
+A service that consumes <a href="#term-visa">Visas</a> and uses them to make an
+authorization decision at least in part based on inspecting them and
 allows access to a specific set of underlying resources in the target
 environment or platform. This abstraction allows for a variety of models for
-how systems consume these Visas in order to provide access to resources.
+how systems consume these <a href="#term-visa">Visas</a> in order to provide access to resources.
 Access can be granted by either issuing new access tokens for downstream
 services (i.e. the Passport Clearinghouse may act like an authorization server)
 or by providing access to the underlying resources directly (i.e. the Passport
 Clearinghouse may act like a resource server). Some Passport Clearinghouses may
-issue Passports that contain a new set or subset of Visas for downstream consumption.</p>
+issue <a href="#term-passport">Passports</a> that contain a new set or subset of Visas for downstream consumption.</p>
 
 <p><a name="term-passport-scoped-access-token"></a> <strong>Passport-Scoped Access Token</strong> –
 An OIDC access token with <a href="https://datatracker.ietf.org/doc/html/rfc6749#section-3.3">scope</a>
@@ -239,6 +310,9 @@ Internet Assigned Numbers Authority</p>
 <p><a name="ref-passport"></a>
 <a href="https://github.com/ga4gh-duri/ga4gh-duri.github.io/blob/master/researcher_ids/ga4gh_passport_v1.md">[Passport]</a> – GA4GH Passport Specification, Data Use and Researcher Identity (DURI) Work Stream – Defines Passport and Visa formats.</p>
 
+<p><a name="ref-researcher-ids"></a>
+<a href="https://github.com/ga4gh-duri/ga4gh-duri.github.io/blob/master/researcher_ids">[Researcher-ID]</a> – GA4GH Passport Specification, Data Use and Researcher Identity (DURI) Work Stream – Defines researcher identities for GA4GH <a href="#term-passport">Passports</a> and <a href="#term-visa">Visas</a>.</p>
+
 <p><a name="ref-rfc2119"></a>
 <a href="https://www.ietf.org/rfc/rfc2119.txt">[RFC2119]</a> - Key words for use in RFCs to Indicate Requirement Levels</p>
 
@@ -285,9 +359,193 @@ Internet Assigned Numbers Authority</p>
 
 <hr style="border: 2px solid; margin: 2em auto;">
 
-<h2 id="flow-of-assertions">Flow of Assertions</h2>
+<h2 id="overview-of-interactions">Overview of Interactions</h2>
 
-<p><img class="plantuml" src="http://www.plantuml.com/plantuml/svg/~h407374617274756d6c0a736b696e706172616d20636f6d706f6e656e745374796c652072656374616e676c650a6c65667420746f20726967687420646972656374696f6e0a0a7061636b6167652022556e73706563696669656420636c69656e74732c206164646974696f6e616c2073657276696365732c2070726f746f636f6c7322207b0a636f6d706f6e656e7420223c623e5669736120417373657274696f6e20536f757263653c2f623e202831295c6e6f7267616e69736174696f6e222061732056697361536f75726365310a636f6d706f6e656e7420223c623e5669736120417373657274696f6e20536f757263653c2f623e202832295c6e6f7267616e69736174696f6e222061732056697361536f75726365320a636f6d706f6e656e7420223c623e5669736120417373657274696f6e20536f757263653c2f623e20282e2e2e295c6e6f7267616e69736174696f6e222061732056697361536f757263654e0a0a646174616261736520223c623e5669736120417373657274696f6e205265706f7369746f72793c2f623e5c6e616273747261637420736572766963652220617320566973615265706f7369746f72790a636f6d706f6e656e7420223c623e56697361204973737565723c2f623e5c6e616273747261637420736572766963655c6e286f7074696f6e616c292220617320566973614973737565720a7d0a0a7061636b61676520225370656369666965642047413447482041414920636c69656e74732c2073657276696365732c2070726f746f636f6c7322207b0a636f6d706f6e656e7420223c623e42726f6b65723c2f623e5c6e73657276696365222061732042726f6b657220234641464144320a636f6d706f6e656e7420223c623e436c69656e743c2f623e5c6e6170706c69636174696f6e2220617320436c69656e7420234641464144320a636f6d706f6e656e7420223c623e50617373706f727420436c656172696e67686f7573653c2f623e5c6e736572766963652220617320436c656172696e67486f75736520234641464144320a7d0a0a56697361536f7572636531202e2e3e20566973615265706f7369746f7279200a56697361536f7572636532202e2e3e20566973615265706f7369746f7279200a56697361536f757263654e202e2e3e20566973615265706f7369746f7279200a566973615265706f7369746f7279202e2e3e2056697361497373756572200a0a0a566973615265706f7369746f7279202e2e3e2042726f6b6572200a56697361497373756572202e2e3e2042726f6b6572200a42726f6b6572202d2d3e20436c69656e74200a436c69656e74202d2d3e20436c656172696e67486f7573650a0a40656e64756d6c"></p>
+<h3 id="full-login-and-token-exchange-interaction-in-aaipassport-12">Full Login and Token Exchange Interaction in AAI/Passport 1.2</h3>
+
+<p>In the full token exchange flow recommended in this document, the client does not ever distribute the initial
+<em>Passport-Scoped Access Token</em> to other services. A token exchange operation is executed by the client, in
+exchange for a <em>Passport</em> JWT that may be used downstream to access resources. In this example flow, the
+<em>Passport</em> is included as authorization in the POST to a Clearinghouse that holds data.</p>
+
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" contentscripttype="application/ecmascript" contentstyletype="text/css" preserveaspectratio="none" version="1.1" viewbox="0 0 1513 747" zoomandpan="magnify">
+  <defs>
+    <filter height="300%" id="fh74frljvovbt" width="300%" x="-1" y="-1">
+      <fegaussianblur result="blurOut" stddeviation="2.0"></fegaussianblur>
+      <fecolormatrix in="blurOut" result="blurOut2" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .4 0"></fecolormatrix>
+      <feoffset dx="4.0" dy="4.0" in="blurOut2" result="blurOut3"></feoffset>
+      <feblend in="SourceGraphic" in2="blurOut3" mode="normal"></feblend>
+    </filter>
+  </defs>
+  <g>
+    <rect fill="#EEEEEE" height="728.0859" style="stroke:#A80036;stroke-width:1.0;" width="342" x="11" y="6"></rect>
+    <text fill="#000000" font-family="sans-serif" font-size="13" font-weight="bold" lengthadjust="spacing" textlength="83" x="140.5" y="18.0669">Researcher</text>
+    <rect fill="#DDDDDD" height="728.0859" style="stroke:#A80036;stroke-width:1.0;" width="253" x="658" y="6"></rect>
+    <text fill="#000000" font-family="sans-serif" font-size="13" font-weight="bold" lengthadjust="spacing" textlength="24" x="772.5" y="18.0669">AAI</text>
+    <rect fill="#DDDDDD" height="728.0859" style="stroke:#A80036;stroke-width:1.0;" width="183" x="1059.5" y="6"></rect>
+    <text fill="#000000" font-family="sans-serif" font-size="13" font-weight="bold" lengthadjust="spacing" textlength="177" x="1062.5" y="18.0669">Data Access Committee</text>
+    <rect fill="#DDDDDD" height="728.0859" style="stroke:#A80036;stroke-width:1.0;" width="231" x="1264.5" y="6"></rect>
+    <text fill="#000000" font-family="sans-serif" font-size="13" font-weight="bold" lengthadjust="spacing" textlength="89" x="1335.5" y="18.0669">Data Holder</text>
+    <line style="stroke:#A80036;stroke-width:1.0;stroke-dasharray:5.0,5.0;" x1="56" x2="56" y1="108.4297" y2="740.0859"></line>
+    <line style="stroke:#A80036;stroke-width:1.0;stroke-dasharray:5.0,5.0;" x1="300" x2="300" y1="108.4297" y2="740.0859"></line>
+    <line style="stroke:#A80036;stroke-width:1.0;stroke-dasharray:5.0,5.0;" x1="784" x2="784" y1="108.4297" y2="740.0859"></line>
+    <line style="stroke:#A80036;stroke-width:1.0;stroke-dasharray:5.0,5.0;" x1="1151" x2="1151" y1="108.4297" y2="740.0859"></line>
+    <line style="stroke:#A80036;stroke-width:1.0;stroke-dasharray:5.0,5.0;" x1="1379.5" x2="1379.5" y1="108.4297" y2="740.0859"></line>
+    <text fill="#000000" font-family="sans-serif" font-size="14" lengthadjust="spacing" textlength="77" x="15" y="105.1279">User Agent</text>
+    <ellipse cx="56.5" cy="35.1328" fill="#FEFECE" filter="url(#fh74frljvovbt)" rx="8" ry="8" style="stroke:#A80036;stroke-width:2.0;"></ellipse>
+    <path d="M56.5,43.1328 L56.5,70.1328 M43.5,51.1328 L69.5,51.1328 M56.5,70.1328 L43.5,85.1328 M56.5,70.1328 L69.5,85.1328 " fill="none" filter="url(#fh74frljvovbt)" style="stroke:#A80036;stroke-width:2.0;"></path>
+    <rect fill="#FEFECE" filter="url(#fh74frljvovbt)" height="30.2969" style="stroke:#A80036;stroke-width:1.5;" width="53" x="272" y="73.1328"></rect>
+    <text fill="#000000" font-family="sans-serif" font-size="14" lengthadjust="spacing" textlength="39" x="279" y="93.1279">Client</text>
+    <rect fill="#FEFECE" filter="url(#fh74frljvovbt)" height="30.2969" style="stroke:#A80036;stroke-width:1.5;" width="201" x="682" y="73.1328"></rect>
+    <text fill="#000000" font-family="sans-serif" font-size="14" lengthadjust="spacing" textlength="187" x="689" y="93.1279">Broker and Passport Issuer</text>
+    <rect fill="#FEFECE" filter="url(#fh74frljvovbt)" height="30.2969" style="stroke:#A80036;stroke-width:1.5;" width="88" x="1107" y="69.1328"></rect>
+    <rect fill="#FEFECE" filter="url(#fh74frljvovbt)" height="30.2969" style="stroke:#A80036;stroke-width:1.5;" width="88" x="1103" y="73.1328"></rect>
+    <text fill="#000000" font-family="sans-serif" font-size="14" lengthadjust="spacing" textlength="74" x="1110" y="93.1279">Visa Issuer</text>
+    <rect fill="#FEFECE" filter="url(#fh74frljvovbt)" height="30.2969" style="stroke:#A80036;stroke-width:1.5;" width="179" x="1288.5" y="73.1328"></rect>
+    <text fill="#000000" font-family="sans-serif" font-size="14" lengthadjust="spacing" textlength="165" x="1295.5" y="93.1279">Passport Clearinghouse</text>
+    <rect fill="#EEEEEE" filter="url(#fh74frljvovbt)" height="3" style="stroke:#EEEEEE;stroke-width:1.0;" width="1506.5" x="0" y="138.9961"></rect>
+    <line style="stroke:#000000;stroke-width:1.0;" x1="0" x2="1506.5" y1="138.9961" y2="138.9961"></line>
+    <line style="stroke:#000000;stroke-width:1.0;" x1="0" x2="1506.5" y1="141.9961" y2="141.9961"></line>
+    <rect fill="#EEEEEE" filter="url(#fh74frljvovbt)" height="23.1328" style="stroke:#000000;stroke-width:2.0;" width="50" x="728.25" y="128.4297"></rect>
+    <text fill="#000000" font-family="sans-serif" font-size="13" font-weight="bold" lengthadjust="spacing" textlength="36" x="734.25" y="144.4966">OIDC</text>
+    <polygon fill="#A80036" points="288.5,178.6953,298.5,182.6953,288.5,186.6953,292.5,182.6953" style="stroke:#A80036;stroke-width:1.0;"></polygon>
+    <line style="stroke:#A80036;stroke-width:1.0;" x1="56.5" x2="294.5" y1="182.6953" y2="182.6953"></line>
+    <text fill="#000000" font-family="sans-serif" font-size="13" lengthadjust="spacing" textlength="84" x="63.5" y="177.6294">Initiates login</text>
+    <polygon fill="#A80036" points="67.5,207.8281,57.5,211.8281,67.5,215.8281,63.5,211.8281" style="stroke:#A80036;stroke-width:1.0;"></polygon>
+    <line style="stroke:#A80036;stroke-width:1.0;" x1="61.5" x2="299.5" y1="211.8281" y2="211.8281"></line>
+    <text fill="#000000" font-family="sans-serif" font-size="13" lengthadjust="spacing" textlength="149" x="73.5" y="206.7622">Send redirect to Broker</text>
+    <polygon fill="#A80036" points="772.5,236.9609,782.5,240.9609,772.5,244.9609,776.5,240.9609" style="stroke:#A80036;stroke-width:1.0;"></polygon>
+    <line style="stroke:#A80036;stroke-width:1.0;" x1="56.5" x2="778.5" y1="240.9609" y2="240.9609"></line>
+    <text fill="#000000" font-family="sans-serif" font-size="13" lengthadjust="spacing" textlength="98" x="63.5" y="235.895">Follow redirects</text>
+    <rect fill="#FFFFFF" filter="url(#fh74frljvovbt)" height="40.2656" style="stroke:#000000;stroke-width:2.0;" width="894" x="12" y="248.9609"></rect>
+    <path d="M12,248.9609 L78,248.9609 L78,255.9609 L68,265.9609 L12,265.9609 L12,248.9609 " fill="#EEEEEE" style="stroke:#000000;stroke-width:2.0;"></path>
+    <text fill="#000000" font-family="sans-serif" font-size="13" font-weight="bold" lengthadjust="spacing" textlength="21" x="25" y="263.0278">ref</text>
+    <text fill="#000000" font-family="sans-serif" font-size="13" lengthadjust="spacing" textlength="354" x="284" y="282.0278">Broker authenticates user (potentially with external IdP)</text>
+    <polygon fill="#A80036" points="67.5,311.3594,57.5,315.3594,67.5,319.3594,63.5,315.3594" style="stroke:#A80036;stroke-width:1.0;"></polygon>
+    <line style="stroke:#A80036;stroke-width:1.0;" x1="61.5" x2="783.5" y1="315.3594" y2="315.3594"></line>
+    <text fill="#000000" font-family="sans-serif" font-size="13" lengthadjust="spacing" textlength="293" x="73.5" y="310.2935">Send redirect to client with authorization code</text>
+    <polygon fill="#A80036" points="288.5,340.4922,298.5,344.4922,288.5,348.4922,292.5,344.4922" style="stroke:#A80036;stroke-width:1.0;"></polygon>
+    <line style="stroke:#A80036;stroke-width:1.0;" x1="56.5" x2="294.5" y1="344.4922" y2="344.4922"></line>
+    <text fill="#000000" font-family="sans-serif" font-size="13" lengthadjust="spacing" textlength="155" x="63.5" y="339.4263">Follow redirect with code</text>
+    <polygon fill="#A80036" points="772.5,369.625,782.5,373.625,772.5,377.625,776.5,373.625" style="stroke:#A80036;stroke-width:1.0;"></polygon>
+    <line style="stroke:#A80036;stroke-width:1.0;" x1="300.5" x2="778.5" y1="373.625" y2="373.625"></line>
+    <text fill="#000000" font-family="sans-serif" font-size="13" lengthadjust="spacing" textlength="460" x="307.5" y="368.5591">Request Passport-Scoped Access Token with code and client credentials</text>
+    <polygon fill="#A80036" points="311.5,398.7578,301.5,402.7578,311.5,406.7578,307.5,402.7578" style="stroke:#A80036;stroke-width:1.0;"></polygon>
+    <line style="stroke:#A80036;stroke-width:1.0;" x1="305.5" x2="783.5" y1="402.7578" y2="402.7578"></line>
+    <text fill="#000000" font-family="sans-serif" font-size="13" lengthadjust="spacing" textlength="288" x="317.5" y="397.6919">Respond with Passport-Scoped Access Token</text>
+    <rect fill="#EEEEEE" filter="url(#fh74frljvovbt)" height="3" style="stroke:#EEEEEE;stroke-width:1.0;" width="1506.5" x="0" y="431.3242"></rect>
+    <line style="stroke:#000000;stroke-width:1.0;" x1="0" x2="1506.5" y1="431.3242" y2="431.3242"></line>
+    <line style="stroke:#000000;stroke-width:1.0;" x1="0" x2="1506.5" y1="434.3242" y2="434.3242"></line>
+    <rect fill="#EEEEEE" filter="url(#fh74frljvovbt)" height="23.1328" style="stroke:#000000;stroke-width:2.0;" width="85" x="710.75" y="420.7578"></rect>
+    <text fill="#000000" font-family="sans-serif" font-size="13" font-weight="bold" lengthadjust="spacing" textlength="71" x="716.75" y="436.8247">Exchange</text>
+    <polygon fill="#A80036" points="772.5,471.0234,782.5,475.0234,772.5,479.0234,776.5,475.0234" style="stroke:#A80036;stroke-width:1.0;"></polygon>
+    <line style="stroke:#A80036;stroke-width:1.0;" x1="300.5" x2="778.5" y1="475.0234" y2="475.0234"></line>
+    <text fill="#000000" font-family="sans-serif" font-size="13" lengthadjust="spacing" textlength="420" x="307.5" y="469.9575">Request to exchange Passport-Scoped Access Token for Passport</text>
+    <polygon fill="#A80036" points="795.5,500.1563,785.5,504.1563,795.5,508.1563,791.5,504.1563" style="stroke:#A80036;stroke-width:1.0;"></polygon>
+    <polygon fill="#A80036" points="1139,500.1563,1149,504.1563,1139,508.1563,1143,504.1563" style="stroke:#A80036;stroke-width:1.0;"></polygon>
+    <line style="stroke:#A80036;stroke-width:1.0;" x1="789.5" x2="1145" y1="504.1563" y2="504.1563"></line>
+    <text fill="#000000" font-family="sans-serif" font-size="13" lengthadjust="spacing" textlength="323" x="801.5" y="499.0903">Exchange of visas, if needed (protocol unspecified)</text>
+    <polygon fill="#A80036" points="311.5,529.2891,301.5,533.2891,311.5,537.2891,307.5,533.2891" style="stroke:#A80036;stroke-width:1.0;"></polygon>
+    <line style="stroke:#A80036;stroke-width:1.0;" x1="305.5" x2="783.5" y1="533.2891" y2="533.2891"></line>
+    <text fill="#000000" font-family="sans-serif" font-size="13" lengthadjust="spacing" textlength="151" x="317.5" y="528.2231">Response with Passport</text>
+    <rect fill="#EEEEEE" filter="url(#fh74frljvovbt)" height="3" style="stroke:#EEEEEE;stroke-width:1.0;" width="1506.5" x="0" y="561.8555"></rect>
+    <line style="stroke:#000000;stroke-width:1.0;" x1="0" x2="1506.5" y1="561.8555" y2="561.8555"></line>
+    <line style="stroke:#000000;stroke-width:1.0;" x1="0" x2="1506.5" y1="564.8555" y2="564.8555"></line>
+    <rect fill="#EEEEEE" filter="url(#fh74frljvovbt)" height="23.1328" style="stroke:#000000;stroke-width:2.0;" width="41" x="732.75" y="551.2891"></rect>
+    <text fill="#000000" font-family="sans-serif" font-size="13" font-weight="bold" lengthadjust="spacing" textlength="27" x="738.75" y="567.356">Use</text>
+    <polygon fill="#A80036" points="288.5,601.5547,298.5,605.5547,288.5,609.5547,292.5,605.5547" style="stroke:#A80036;stroke-width:1.0;"></polygon>
+    <line style="stroke:#A80036;stroke-width:1.0;" x1="56.5" x2="294.5" y1="605.5547" y2="605.5547"></line>
+    <text fill="#000000" font-family="sans-serif" font-size="13" lengthadjust="spacing" textlength="220" x="63.5" y="600.4888">User initiates action requiring data</text>
+    <polygon fill="#A80036" points="1368,630.6875,1378,634.6875,1368,638.6875,1372,634.6875" style="stroke:#A80036;stroke-width:1.0;"></polygon>
+    <line style="stroke:#A80036;stroke-width:1.0;" x1="300.5" x2="1374" y1="634.6875" y2="634.6875"></line>
+    <text fill="#000000" font-family="sans-serif" font-size="13" lengthadjust="spacing" textlength="218" x="307.5" y="629.6216">Client requests data with Passport</text>
+    <polygon fill="#A80036" points="1162,659.8203,1152,663.8203,1162,667.8203,1158,663.8203" style="stroke:#A80036;stroke-width:1.0;"></polygon>
+    <line style="stroke:#A80036;stroke-width:1.0;" x1="1156" x2="1379" y1="663.8203" y2="663.8203"></line>
+    <text fill="#000000" font-family="sans-serif" font-size="13" lengthadjust="spacing" textlength="126" x="1168" y="658.7544">Request public keys</text>
+    <polygon fill="#A80036" points="1368,688.9531,1378,692.9531,1368,696.9531,1372,692.9531" style="stroke:#A80036;stroke-width:1.0;"></polygon>
+    <line style="stroke:#A80036;stroke-width:1.0;" x1="1151" x2="1374" y1="692.9531" y2="692.9531"></line>
+    <text fill="#000000" font-family="sans-serif" font-size="13" lengthadjust="spacing" textlength="158" x="1158" y="687.8872">Respond with public keys</text>
+    <polygon fill="#A80036" points="311.5,718.0859,301.5,722.0859,311.5,726.0859,307.5,722.0859" style="stroke:#A80036;stroke-width:1.0;"></polygon>
+    <line style="stroke:#A80036;stroke-width:1.0;" x1="305.5" x2="1379" y1="722.0859" y2="722.0859"></line>
+    <text fill="#000000" font-family="sans-serif" font-size="13" lengthadjust="spacing" textlength="216" x="317.5" y="717.02">Clearinghouse responds with data</text>
+    <!--MD5=[43d9f9a80c1cc9c15f0c58cb9fb0303c]
+@startuml
+skinparamlocked svgDimensionStyle false
+
+
+hide footbox
+skinparam BoxPadding 10
+skinparam ParticipantPadding 20
+
+box "Researcher"  #eee
+actor       "User Agent"                as user
+participant Client                      as client
+end box
+
+box "AAI"
+participant "Broker and Passport Issuer"                      as broker
+end box
+
+box "Data Access Committee"
+collections "Visa Issuer"            as issuer
+end box
+
+box "Data Holder"
+participant "Passport Clearinghouse"            as clearing
+end box
+
+==OIDC==
+
+user -> client : Initiates login
+client -> user : Send redirect to Broker
+user -> broker : Follow redirects
+ref over user, client, broker
+Broker authenticates user (potentially with external IdP)
+end ref
+broker -> user : Send redirect to client with authorization code
+user -> client : Follow redirect with code
+client -> broker : Request Passport-Scoped Access Token with code and client credentials
+broker -> client : Respond with Passport-Scoped Access Token
+
+==Exchange==
+
+client -> broker : Request to exchange Passport-Scoped Access Token for Passport
+broker <-> issuer : Exchange of visas, if needed (protocol unspecified)
+client <- broker : Response with Passport
+
+==Use==
+
+user -> client : User initiates action requiring data
+client -> clearing : Client requests data with Passport
+clearing -> issuer : Request public keys
+issuer -> clearing : Respond with public keys
+client <- clearing : Clearinghouse responds with data
+
+
+@enduml
+
+PlantUML version 1.2021.10(Mon Aug 30 13:43:48 GMT 2021)
+(GPL source distribution)
+Java Runtime: OpenJDK Runtime Environment
+JVM: OpenJDK 64-Bit Server VM
+Default Encoding: UTF-8
+Language: en
+Country: US
+-->
+  </g>
+</svg>
+
+<p>Notable differences between this diagram and interaction specified in AAI/Passport 1.0:</p>
+<ul>
+  <li>The Passport Clearinghouse is no longer required to be a Client of the Broker</li>
+  <li>The Passport-Scoped Access Token is only ever shared between the Client and the Broker</li>
+  <li>An additional Token Exchange request is used to exchange the Passport-Scoped Access Token for a Passport Token,
+which can be sent to a Passport Clearinghouse.</li>
+</ul>
+
+<h3 id="flow-of-assertions">Flow of Assertions</h3>
+
+<p><img class="plantuml" src="http://www.plantuml.com/plantuml/svg/~h407374617274756d6c0a736b696e706172616d20636f6d706f6e656e745374796c652072656374616e676c650a6c65667420746f20726967687420646972656374696f6e0a0a7061636b6167652022556e73706563696669656420636c69656e74732c206164646974696f6e616c2073657276696365732c2070726f746f636f6c7322207b0a636f6d706f6e656e7420223c623e5669736120417373657274696f6e20536f757263653c2f623e202831295c6e6f7267616e69736174696f6e222061732056697361536f75726365310a636f6d706f6e656e7420223c623e5669736120417373657274696f6e20536f757263653c2f623e202832295c6e6f7267616e69736174696f6e222061732056697361536f75726365320a636f6d706f6e656e7420223c623e5669736120417373657274696f6e20536f757263653c2f623e20282e2e2e295c6e6f7267616e69736174696f6e222061732056697361536f757263654e0a0a646174616261736520223c623e5669736120417373657274696f6e3c2f623e5c6e3c623e5265706f7369746f72793c2f623e5c6e616273747261637420736572766963652220617320566973615265706f7369746f72790a636f6d706f6e656e7420223c623e56697361204973737565723c2f623e5c6e616273747261637420736572766963655c6e286f7074696f6e616c292220617320566973614973737565720a7d0a0a7061636b61676520225370656369666965642047413447482041414920636c69656e74732c2073657276696365732c2070726f746f636f6c7322207b0a636f6d706f6e656e7420223c623e42726f6b65723c2f623e5c6e73657276696365222061732042726f6b657220234641464144320a636f6d706f6e656e7420223c623e436c69656e743c2f623e5c6e6170706c69636174696f6e2220617320436c69656e7420234641464144320a636f6d706f6e656e7420223c623e50617373706f72743c2f623e5c6e3c623e436c656172696e67686f7573653c2f623e5c6e736572766963652220617320436c656172696e67486f75736520234641464144320a7d0a0a56697361536f7572636531202e2e3e20566973615265706f7369746f7279200a56697361536f7572636532202e2e3e20566973615265706f7369746f7279200a56697361536f757263654e202e2e3e20566973615265706f7369746f7279200a566973615265706f7369746f7279202e2e3e2056697361497373756572200a0a0a566973615265706f7369746f7279202e2e3e2042726f6b6572200a56697361497373756572202e2e3e2042726f6b6572200a42726f6b6572202d2d3e20436c69656e74200a436c69656e74202d2d3e20436c656172696e67486f7573650a0a40656e64756d6c"></p>
 
 <p>The above diagram shows how <a href="#term-visa-assertion">Visa Assertions</a> flow from <a href="#term-visa-assertion-source">Visa Assertion Sources</a>
 to a <a href="#term-passport-clearinghouse">Passport Clearinghouse</a> that uses them. Only the
@@ -484,6 +742,11 @@ assurances are made by the issuer of the Visa, i.e. the Visa Issuer).</p>
 <p><a name="conformance-for-visa-issuers"></a></p>
 <h3 id="conformance-for-visa-issuers">Conformance for Visa Issuers</h3>
 
+<p>Visa Issuers issue signed JWTs (Visas) asserting facts about researchers, which may be used by Passport Clearinghouses
+to justify granting access to data. This specification defines the format of the Visas and endpoints Visa Issuers
+should have in order for Passport Clearinghouses to validate those Visas. This document <em>does not</em> specify how a Broker
+obtains Visas contained in a Passport or returned from the Userinfo Endpoint.</p>
+
 <ol>
   <li>
     <p>A <a href="#term-visa-issuer">Visa Issuer</a> MUST provide one or more of the following
@@ -508,9 +771,8 @@ MUST provide the corresponding endpoint to fetch
 the public key used to sign the Visa Document Token.</li>
           <li>The token is not treated as an access token, but validity
 checks outlined elsewhere in this specification still apply.</li>
-          <li>MUST conform to <a href="#token-revocation">token limited-life or revocation
-requirements</a>, even if no Visa token
-revocation process is provided.</li>
+          <li>
+<a href="#term-visa">Visas</a> MUST be signed with a <a href="#signing-algorithms">conformant signing algorithm</a>.</li>
           <li>The <code class="language-plaintext highlighter-rouge">scope</code> <a href="#term-claim">Claim</a>, if included, MUST NOT contain “openid” as
 a space-delimited substring of the <code class="language-plaintext highlighter-rouge">scope</code> JWT <a href="#term-claim">Claim</a>.</li>
           <li>Payload <a href="#term-claim">Claims</a> are specified in 
@@ -832,8 +1094,8 @@ the <a href="#ref-oidc-core">[OIDC-Core]</a> access token.</p>
   <li>
     <p><code class="language-plaintext highlighter-rouge">idp</code>: OPTIONAL. SHOULD contain the IDP the user used to auth with.
 A non-normative example is “google”. This does not have to be unique and
-can be used just to help inform if that is what a data controller or data holder
-needs.</p>
+can be used just to help inform if that is what a <a href="#term-visa-issuer">Visa Issuer</a> 
+or <a href="#term-data-holder">Data Holder</a> needs.</p>
   </li>
   <li>
     <p><code class="language-plaintext highlighter-rouge">aud</code>: OPTIONAL. If provided, it MUST contain the OAuth Client ID of the
