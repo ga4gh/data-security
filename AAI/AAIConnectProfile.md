@@ -55,7 +55,7 @@ The main components identified in the specification are:
 
 The recommended approach to using AAI is to share [Visas](#term-visa),
 for securely transmitting authorizations or attributes of a researcher.
-[Visas](#term-visa) are tokens [[JWT]](#term-jwt) signed by [Visa Issuers](#term-visa-issuer) and
+[Visas](#term-visa) are tokens [[JWT](#term-jwt)] signed by [Visa Issuers](#term-visa-issuer) and
 validated by [Passport Clearinghouses](#term-passport-clearinghouse).
 
 ### Separation of Data Holders and Data Access Committees
