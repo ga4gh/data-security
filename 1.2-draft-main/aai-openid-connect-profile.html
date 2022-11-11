@@ -1183,7 +1183,16 @@ JWT specification <a href="#ref-rfc7519">[RFC7519]</a> for more details.</p>
 
 <ul>
   <li>
-    <p><code class="language-plaintext highlighter-rouge">iss</code> and <code class="language-plaintext highlighter-rouge">sub</code>: REQUIRED.</p>
+    <p><code class="language-plaintext highlighter-rouge">iss</code>: REQUIRED.</p>
+  </li>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">sub</code>: REQUIRED. Please note that <a href="#ref-oidc-core">[OIDC-Core]</a> in its section
+ <a href="https://openid.net/specs/openid-connect-core-1_0.html#SubjectIDTypes">Subject Identifier Types</a>
+ allows the use of PPIDs (Pairwise Pseudonymous Identifiers) providing different <code class="language-plaintext highlighter-rouge">sub</code> value to each client
+ to preclude correlation of user’s activities at different clients. Even if a public identifier is used (same for all clients),
+ the value of the <code class="language-plaintext highlighter-rouge">sub</code> claim of a <a href="#term-passport">Passports</a> may be different from the values of <code class="language-plaintext highlighter-rouge">sub</code> claims of its <a href="#term-visa">Visas</a>,
+ and the values may need to be linked using <a href="https://github.com/ga4gh-duri/ga4gh-duri.github.io/blob/master/researcher_ids/ga4gh_passport_v1.md#linkedidentities">LinkedIdentities</a>
+ visas.</p>
   </li>
   <li>
     <p><code class="language-plaintext highlighter-rouge">aud</code>: OPTIONAL.</p>
