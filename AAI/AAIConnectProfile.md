@@ -863,7 +863,15 @@ JWT specification [[RFC7519]](#ref-rfc7519) for more details.
 }
 ```
 
-- `iss` and `sub`: REQUIRED.
+- `iss`: REQUIRED.
+
+- `sub`: REQUIRED. Please note that [[OIDC-Core]](#ref-oidc-core) in its section
+   [Subject Identifier Types](https://openid.net/specs/openid-connect-core-1_0.html#SubjectIDTypes)
+   allows the use of PPIDs (Pairwise Pseudonymous Identifiers) providing different `sub` value to each client
+   to preclude correlation of user's activities at different clients. Even if a public identifier is used (same for all clients),
+   the value of the `sub` claim of a [Passports](#term-passport) may be different from the values of `sub` claims of its [Visas](#term-visa),
+   and the values may need to be linked using [LinkedIdentities](https://github.com/ga4gh-duri/ga4gh-duri.github.io/blob/master/researcher_ids/ga4gh_passport_v1.md#linkedidentities)
+   visas.
 
 - `aud`: OPTIONAL.
 
