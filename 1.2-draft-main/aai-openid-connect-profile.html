@@ -55,16 +55,14 @@
     <h3 class="no_toc" id="abstract">Abstract</h3>
 
 <p>This specification defines a profile for using the OpenID Connect protocol
-<a href="#ref-oidc-core">[OIDC-Core]</a>
-to provide federated multilateral authorization infrastructure for greater
-interoperability between biomedical institutions sharing restricted datasets.  (OpenID Connect is a simple identity layer, on top of the OAuth 2.0 protocol, that supports identity verification and the ability to obtain basic profile information about end users.)</p>
-
-<p>In particular, this specification defines tokens, endpoints, and flows that
-enable an OIDC provider (called a <a href="#term-broker">Broker</a>) to
-provide <a href="#term-passport">Passports</a> and <a href="#term-visa">Visas</a> to downstream consumers
-called <a href="#term-passport-clearinghouse">Passport Clearinghouses</a>.</p>
-
-<p><a href="#term-passport">Passports</a> can then be used for authorization purposes by downstream systems.</p>
+<a href="#ref-oidc-core">[OIDC-Core]</a> to provide federated multilateral authorization infrastructure for greater
+interoperability between biomedical institutions sharing restricted datasets.  (OpenID Connect is a simple
+identity layer, on top of the OAuth 2.0 protocol, that supports identity verification and the ability to 
+obtain basic profile information about end users.) In particular, this specification defines tokens, 
+endpoints, and flows that enable an OIDC provider (called a <a href="#term-broker">Broker</a>) to
+provide <a href="#term-passport">Passports</a> and <a href="#term-visa">Visas</a> to downstream consumers called 
+<a href="#term-passport-clearinghouse">Passport Clearinghouses</a>. <a href="#term-passport">Passports</a> can then be used for
+authorization purposes by downstream systems.</p>
 
 <h3 class="no_toc" id="table-of-contents">Table of Contents</h3>
 
@@ -131,8 +129,7 @@ participants can interact to authenticate researchers, and obtain and validate <
 <a href="#term-visa-issuer">Visa Issuers</a>, that cryptographically sign researcher attributes in the
 form of <a href="#term-visa">Visas</a>.</li>
   <li>
-<a href="#term-broker">Brokers</a>, that authenticate researchers and broker access to <a href="#term-visa">Visas</a> associated
-with researchers.</li>
+<a href="#term-broker">Brokers</a>, that authenticate researchers and provide <a href="#term-visa">Visas</a>.</li>
   <li>
 <a href="#term-client">Clients</a>, that perform actions that may require data access on behalf of researchers,
 relying on tokens issued by <a href="#term-broker">Brokers</a> and <a href="#term-visa-issuer">Visa Issuers</a>.</li>
@@ -143,12 +140,10 @@ otherwise availing researcher visas for the purposes of enforcing access control
 
 <h3 id="visa-tokens">Visa Tokens</h3>
 
-<p>The recommended approach to using AAI involves signed JWTs called <a href="#term-visa">Visas</a>,
+<p>The recommended approach to using AAI is to share <a href="#term-visa">Visas</a>,
 for securely transmitting authorizations or attributes of a researcher.
-<a href="#term-visa">Visas</a> are signed by the <a href="#term-visa-issuer">Visa Issuer</a>, which may be a service other than
-the Broker. Using JWTs signed by private key allows Passport Clearinghouses to
-validate <a href="#term-visa">Visas</a> from known issuers in situations where they may not have
-network connections to the issuers.</p>
+<a href="#term-visa">Visas</a> are tokens [<a href="#term-jwt">JWT</a>] signed by <a href="#term-visa-issuer">Visa Issuers</a> and
+validated by <a href="#term-passport-clearinghouse">Passport Clearinghouses</a>.</p>
 
 <h3 id="separation-of-data-holders-and-data-access-committees">Separation of Data Holders and Data Access Committees</h3>
 
@@ -163,7 +158,7 @@ between <a href="#term-visa-issuer">Visa Issuers</a>, <a href="#term-broker">Bro
 <a href="#term-passport-clearinghouse">Passport Clearinghouses</a>.</p>
 
 <p>The AAI standard enables <a href="#term-data-holder">Data Holders</a> and <a href="#term-visa-issuer">Visa Issuers</a> to recognize
-and accept identities from multiple <a href="#term-broker">Brokers</a> — allowing for an even more federated
+and accept identities from multiple <a href="#term-broker">Brokers</a> — allowing for a more federated
 approach. An organization can still use this specification with a single 
 <a href="#term-broker">Broker</a> and <a href="#term-visa-issuer">Visa Issuer</a>,
 though they may find in that case that there are few benefits beyond standard OIDC.</p>
@@ -193,8 +188,7 @@ and OAuth 2.0 Authorization Framework <a href="#ref-rfc6749">[RFC6749]</a> speci
 <p><a name="term-broker"></a> <strong>Broker</strong> – An OIDC Provider service that
 authenticates a user (potentially by relying on an <a href="#term-identity-provider">Identity Provider</a>), 
 collects user’s <a href="#term-visa">Visas</a> from internal and/or external <a href="#term-visa-issuer">Visa Issuers</a>, 
-and provides them to <a href="#term-passport-clearinghouse">Passport Clearinghouses</a>.
-Brokers may also be Passport Clearinghouses of other upstream Brokers.</p>
+and provides them to <a href="#term-passport-clearinghouse">Passport Clearinghouses</a>.</p>
 
 <p><strong id="term-claim">Claim</strong> – as <a href="https://datatracker.ietf.org/doc/html/rfc7519#section-2">defined</a> 
 by the JWT specification <a href="#ref-rfc7519">[RFC7519]</a> – A piece of information asserted about a subject, 
@@ -205,9 +199,7 @@ a claim name (a string) and a claim value (any JSON value).</p>
 
 <p><a name="term-data-holder"></a> <strong>Data Holder</strong> – An organization that
 holds a specific set of data (or its copy) and respects
-and enforces the Data Access Committee’s (DAC’s) decisions on who can access it. A DAC
-can also be a <a href="#term-data-holder">Data Holder</a>. A <a href="#term-data-holder">Data Holder</a> runs a
-<a href="#term-passport-clearinghouse">Passport Clearinghouse</a> server at a minimum.</p>
+and enforces the Data Access Committee’s (DAC’s) decisions on who can access it.</p>
 
 <p><a name="term-ga4gh-claim"></a>
 <strong>GA4GH Claim</strong> – A <a href="#term-claim">Claim</a> as defined by a GA4GH
