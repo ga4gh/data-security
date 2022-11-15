@@ -8,16 +8,14 @@ permalink: aai-openid-connect-profile
 {:.no_toc}
 
 This specification defines a profile for using the OpenID Connect protocol
-[[OIDC-Core]](#ref-oidc-core)
-to provide federated multilateral authorization infrastructure for greater
-interoperability between biomedical institutions sharing restricted datasets.  (OpenID Connect is a simple identity layer, on top of the OAuth 2.0 protocol, that supports identity verification and the ability to obtain basic profile information about end users.)
-
-In particular, this specification defines tokens, endpoints, and flows that
-enable an OIDC provider (called a [Broker](#term-broker)) to
-provide [Passports](#term-passport) and [Visas](#term-visa) to downstream consumers
-called [Passport Clearinghouses](#term-passport-clearinghouse).
-
-[Passports](#term-passport) can then be used for authorization purposes by downstream systems.
+[[OIDC-Core]](#ref-oidc-core) to provide federated multilateral authorization infrastructure for greater
+interoperability between biomedical institutions sharing restricted datasets.  (OpenID Connect is a simple
+identity layer, on top of the OAuth 2.0 protocol, that supports identity verification and the ability to 
+obtain basic profile information about end users.) In particular, this specification defines tokens, 
+endpoints, and flows that enable an OIDC provider (called a [Broker](#term-broker)) to
+provide [Passports](#term-passport) and [Visas](#term-visa) to downstream consumers called 
+[Passport Clearinghouses](#term-passport-clearinghouse). [Passports](#term-passport) can then be used for
+authorization purposes by downstream systems.
 
 ### Table of Contents
 {:.no_toc}
@@ -47,8 +45,7 @@ participants can interact to authenticate researchers, and obtain and validate [
 The main components identified in the specification are:
 * [Visa Issuers](#term-visa-issuer), that cryptographically sign researcher attributes in the
   form of [Visas](#term-visa).
-* [Brokers](#term-broker), that authenticate researchers and broker access to [Visas](#term-visa) associated
-  with researchers.
+* [Brokers](#term-broker), that authenticate researchers and provide [Visas](#term-visa).
 * [Clients](#term-client), that perform actions that may require data access on behalf of researchers,
   relying on tokens issued by [Brokers](#term-broker) and [Visa Issuers](#term-visa-issuer).
 * [Passport Clearinghouses](#term-passport-clearinghouse), that accept tokens containing or
@@ -56,12 +53,10 @@ The main components identified in the specification are:
 
 ### Visa Tokens
 
-The recommended approach to using AAI involves signed JWTs called [Visas](#term-visa),
+The recommended approach to using AAI is to share [Visas](#term-visa),
 for securely transmitting authorizations or attributes of a researcher.
-[Visas](#term-visa) are signed by the [Visa Issuer](#term-visa-issuer), which may be a service other than
-the Broker. Using JWTs signed by private key allows Passport Clearinghouses to
-validate [Visas](#term-visa) from known issuers in situations where they may not have
-network connections to the issuers.
+[Visas](#term-visa) are tokens [[JWT](#term-jwt)] signed by [Visa Issuers](#term-visa-issuer) and
+validated by [Passport Clearinghouses](#term-passport-clearinghouse).
 
 ### Separation of Data Holders and Data Access Committees
 
@@ -76,7 +71,7 @@ between [Visa Issuers](#term-visa-issuer), [Brokers](#term-broker), and
 [Passport Clearinghouses](#term-passport-clearinghouse).
 
 The AAI standard enables [Data Holders](#term-data-holder) and [Visa Issuers](#term-visa-issuer) to recognize
-and accept identities from multiple [Brokers](#term-broker) --- allowing for an even more federated
+and accept identities from multiple [Brokers](#term-broker) --- allowing for a more federated
 approach. An organization can still use this specification with a single 
 [Broker](#term-broker) and [Visa Issuer](#term-visa-issuer),
 though they may find in that case that there are few benefits beyond standard OIDC.
@@ -107,7 +102,6 @@ and OAuth 2.0 Authorization Framework [[RFC6749]](#ref-rfc6749) specifications.
 authenticates a user (potentially by relying on an [Identity Provider](#term-identity-provider)), 
 collects user's [Visas](#term-visa) from internal and/or external [Visa Issuers](#term-visa-issuer), 
 and provides them to [Passport Clearinghouses](#term-passport-clearinghouse).
-Brokers may also be Passport Clearinghouses of other upstream Brokers.
 
 **Claim**{: #term-claim} -- as [defined](https://datatracker.ietf.org/doc/html/rfc7519#section-2) 
 by the JWT specification [[RFC7519]](#ref-rfc7519) -- A piece of information asserted about a subject, 
@@ -118,9 +112,7 @@ a claim name (a string) and a claim value (any JSON value).
 
 <a name="term-data-holder"></a> **Data Holder** -- An organization that
 holds a specific set of data (or its copy) and respects
-and enforces the Data Access Committee's (DAC's) decisions on who can access it. A DAC
-can also be a [Data Holder](#term-data-holder). A [Data Holder](#term-data-holder) runs a
-[Passport Clearinghouse](#term-passport-clearinghouse) server at a minimum.
+and enforces the Data Access Committee's (DAC's) decisions on who can access it.
 
 <a name="term-ga4gh-claim"></a>
 **GA4GH Claim** -- A [Claim](#term-claim) as defined by a GA4GH
