@@ -121,7 +121,7 @@ this is the `ga4gh_passport_v1` or `ga4gh_visa_v1` [Claim](#term-claim) for [Pas
 A GA4GH Claim is asserted by the entity that signed the token in which it is contained (not by GA4GH).
 
 <a name="term-identity-provider"></a> **Identity Provider (IdP)** -- A
-service that provides to users an identity, authenticates it; and provides
+service that provides to users an identity, authenticates it, and provides
 assertions to a Broker using standard protocols, such as OpenID Connect, SAML or
 other federation protocols. Example: eduGAIN, Google Identity, Facebook, NIH
 eRA Commons. IdPs MAY be [Visa Assertion Sources](#term-visa-assertion-source).
@@ -131,7 +131,7 @@ A JWT contains a set of [Claims](#term-claim).
 
 <a name="term-passport-clearinghouse"></a> **Passport Clearinghouse** -- 
 A service that consumes [Visas](#term-visa) and uses them to make an
-authorization decision at least in part based on inspecting them and
+authorization decision based on inspecting them and
 allows access to a specific set of underlying resources in the target
 environment or platform. This abstraction allows for a variety of models for
 how systems consume these [Visas](#term-visa) in order to provide access to resources.
@@ -244,6 +244,9 @@ Internet Assigned Numbers Authority
 
 <a name="ref-rfc7636"></a>
 [[RFC7636]](https://datatracker.ietf.org/doc/html/rfc7636) -- Proof Key for Code Exchange by OAuth Public Clients (PKCE) 
+
+<a name="ref-rfc7662"></a>
+[[RFC7662]](https://www.rfc-editor.org/rfc/rfc7662) -- J. Richer, Ed., "OAuth 2.0 Token Introspection", October 2015
 
 <a name="ref-rfc8693"></a>
 [[RFC8693]](https://www.rfc-editor.org/info/rfc8693) - Jones, M., Nadalin, A., Campbell, B., Ed., Bradley, J.,
@@ -619,7 +622,7 @@ Client <-- TokenEndpoint  #text:red : (step 4) passport issued (passport contain
             1. Even though access tokens are expected to be submitted against a Broker's Token or UserInfo Endpoint, a Passport Clearinghouse SHOULD check the access token’s signature via JWKS or having stored the
             public key.
 
-                1.  A metadata URL (.well-known URL) SHOULD be used here to use the
+                1.  A metadata URL (`.well-known` URL) SHOULD be used here to use the
                 jwks_uri parameter.
                 
             2.  MUST check `iss` attribute to ensure a trusted Broker has generated
@@ -641,12 +644,13 @@ Client <-- TokenEndpoint  #text:red : (step 4) passport issued (passport contain
             (client_id).
 
         2.  If treating the token as opaque a Passport Clearinghouse MUST know in
-        advance where to find a corresponding Introspection Endpoint. This may limit the
+        advance where to find a corresponding Introspection Endpoint 
+        [[RFC7662]](#ref-rfc7662). This may limit the
         functionality of accepting tokens from some Brokers. 
 
     2. For Passport flows, Passport Clearinghouses MUST check the validity of the Passport.
 
-3.  Passport Clearinghouses service can be a Broker itself and would follow the
+3.  A Passport Clearinghouse service can be a Broker itself and would follow the
     [Conformance For Brokers](#conformance-for-brokers).
 
 4.  Passport Clearinghouses MUST provide protection against attacks as outlined in

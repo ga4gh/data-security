@@ -292,7 +292,7 @@ relationships between the participating entities (see
 [OpenID Connect Federation](https://openid.net/specs/openid-connect-federation-1_0.html)
 for an interesting discussion of the properties of multilateral federations).
 
-Any entity that is asked to make a decision about sharing data needs to have apriori
+Any entity that is asked to make a decision about sharing data needs to have *a priori*
 made the decision "which other entities do I trust?". In genomics, a single decision
 to allow data sharing might involve simultaneous trusting of
 multiple entities - human genomics is complex!
@@ -334,9 +334,9 @@ and then discuss some extra wrinkles for Visas.
 For this discussion we assume there is a concrete JWT from issuer `https://issuer.example.org`
 (possibly a Broker *or* a Visa Issuer).
 
-My clearing house service 'trusts' the above issuer to help make data
+My clearinghouse service 'trusts' the above issuer to help make data
 access decisions - and that trust is stated probably through some sort of explicit
-configuration. For our example lets imagine it has a hypothetical YAML configuration file
+configuration. For our example, let's imagine it has a hypothetical YAML configuration file
 
 ```yaml
 trusted_brokers:
@@ -370,7 +370,7 @@ at `https://issuer.example.org/public-keys.json` (see
 
 **IMPORTANTLY**, for the secure use of this key management technique - the JKU 
 **MUST** also be whitelisted as part of the configuration of **OUR** service.
-For example, maybe we expand out of service configuration file to include the JKU.
+For example:
 
 ```yaml
 trusted_brokers:
@@ -391,8 +391,8 @@ looked up in key set. The signature is validated using the public key found.
 Although this configuration requires explicit registration of JKUs, the content
 of the key sets can allow the best practice of key rotation.
 
-The content of the JKU file is designed to be cached aggressively - but as long as
-the files is fetched every few days/weeks the set of keys
+The content of the JKU file is designed to be cached aggressively, but as long as
+the file is fetched every few days/weeks, the set of keys
 can evolve/rotate.
 
 ---
@@ -462,7 +462,7 @@ of the AAI standard regarding the presence of JKUs.
 
 ## Threat Analysis
 
-### What is the danger of using a fully scoped (or audience-less) token in a multi node workflow
+### What is the danger of using a fully scoped (or audience-less) token in a multi-node workflow
 
 The *Passport Scoped Access Token* is
 a token that can unlock **all** data that the user is entitled to, and not just
@@ -535,7 +535,7 @@ it makes weak guarantees regarding the client identity.
 However, when it comes to token exchange - there is no equivalent of a registered
 callback URL - that can even weakly assert client identity.
 
-It is impossible for the SPA to prove that is correct/desired piece of code
+It is impossible for the SPA to prove that it is the correct/desired piece of code
 executing the exchange - and not some other system that has somehow captured a
 *Passport-Scoped Access Token* from the browser and is making an exchange.
 
@@ -543,7 +543,7 @@ For these reasons, it is recommended at this point that SPAs are not used for
 applications where the SPA is solely responsible for the dissemination of
 genomic data.
 
-It is possible for a SPA to predominantly execute in browser - but to still use
+It is possible for a SPA to predominantly execute in-browser - but to still use
 a (small) backend set of services to execute any OIDC flows and token exchanges. These
 backend service *can* retain a secret and hence can prove client identity. These
 techniques are recommended for any genomic application that is predominantly deployed
