@@ -208,7 +208,7 @@ this is the <code class="language-plaintext highlighter-rouge">ga4gh_passport_v1
 A GA4GH Claim is asserted by the entity that signed the token in which it is contained (not by GA4GH).</p>
 
 <p><a name="term-identity-provider"></a> <strong>Identity Provider (IdP)</strong> – A
-service that provides to users an identity, authenticates it; and provides
+service that provides to users an identity, authenticates it, and provides
 assertions to a Broker using standard protocols, such as OpenID Connect, SAML or
 other federation protocols. Example: eduGAIN, Google Identity, Facebook, NIH
 eRA Commons. IdPs MAY be <a href="#term-visa-assertion-source">Visa Assertion Sources</a>.</p>
@@ -218,7 +218,7 @@ A JWT contains a set of <a href="#term-claim">Claims</a>.</p>
 
 <p><a name="term-passport-clearinghouse"></a> <strong>Passport Clearinghouse</strong> – 
 A service that consumes <a href="#term-visa">Visas</a> and uses them to make an
-authorization decision at least in part based on inspecting them and
+authorization decision based on inspecting them and
 allows access to a specific set of underlying resources in the target
 environment or platform. This abstraction allows for a variety of models for
 how systems consume these <a href="#term-visa">Visas</a> in order to provide access to resources.
@@ -335,6 +335,9 @@ Internet Assigned Numbers Authority</p>
 
 <p><a name="ref-rfc7636"></a>
 <a href="https://datatracker.ietf.org/doc/html/rfc7636">[RFC7636]</a> – Proof Key for Code Exchange by OAuth Public Clients (PKCE)</p>
+
+<p><a name="ref-rfc7662"></a>
+<a href="https://www.rfc-editor.org/rfc/rfc7662">[RFC7662]</a> – J. Richer, Ed., “OAuth 2.0 Token Introspection”, October 2015</p>
 
 <p><a name="ref-rfc8693"></a>
 <a href="https://www.rfc-editor.org/info/rfc8693">[RFC8693]</a> - Jones, M., Nadalin, A., Campbell, B., Ed., Bradley, J.,
@@ -871,7 +874,7 @@ token as opaque.</p>
 public key.</p>
 
                 <ol>
-                  <li>A metadata URL (.well-known URL) SHOULD be used here to use the
+                  <li>A metadata URL (<code class="language-plaintext highlighter-rouge">.well-known</code> URL) SHOULD be used here to use the
  jwks_uri parameter.</li>
                 </ol>
               </li>
@@ -902,7 +905,8 @@ trust model).</li>
           </li>
           <li>
             <p>If treating the token as opaque a Passport Clearinghouse MUST know in
-advance where to find a corresponding Introspection Endpoint. This may limit the
+advance where to find a corresponding Introspection Endpoint 
+<a href="#ref-rfc7662">[RFC7662]</a>. This may limit the
 functionality of accepting tokens from some Brokers.</p>
           </li>
         </ol>
@@ -913,7 +917,7 @@ functionality of accepting tokens from some Brokers.</p>
     </ol>
   </li>
   <li>
-    <p>Passport Clearinghouses service can be a Broker itself and would follow the
+    <p>A Passport Clearinghouse service can be a Broker itself and would follow the
 <a href="#conformance-for-brokers">Conformance For Brokers</a>.</p>
   </li>
   <li>
