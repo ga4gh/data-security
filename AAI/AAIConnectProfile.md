@@ -53,7 +53,7 @@ The main components identified in the specification are:
 
 ### Visa Tokens
 
-The recommended approach to using AAI is to share [Visas](#term-visa),
+[Visas](#term-visa) are used
 for securely transmitting authorizations or attributes of a researcher.
 [Visas](#term-visa) are tokens [[JWT](#term-jwt)] signed by [Visa Issuers](#term-visa-issuer) and
 validated by [Passport Clearinghouses](#term-passport-clearinghouse).
@@ -338,12 +338,16 @@ skinparam componentStyle rectangle
 left to right direction
 
 package "Unspecified clients, additional services, protocols" {
-component "<b>Visa Assertion Source</b> (1)\norganisation" as VisaSource1
-component "<b>Visa Assertion Source</b> (2)\norganisation" as VisaSource2
-component "<b>Visa Assertion Source</b> (...)\norganisation" as VisaSourceN
+component "<b>Visa Assertion Source</b> (1)\norganization" as VisaSource11
+component "<b>Visa Assertion Source</b> (2)\norganization" as VisaSource12
+component "<b>Visa Assertion Source</b> (1)\norganization" as VisaSource21
+component "<b>Visa Assertion Source</b> (2)\norganization" as VisaSource22
 
-database "<b>Visa Assertion</b>\n<b>Repository</b>\nabstract service" as VisaRepository
-component "<b>Visa Issuer</b>\nabstract service\n(optional)" as VisaIssuer
+database "<b>Visa Assertion</b>\n<b>Repository (1)</b>\nabstract service" as VisaRepository1
+component "<b>Visa Issuer (1)</b>\nabstract service\n(optional)" as VisaIssuer1
+
+database "<b>Visa Assertion</b>\n<b>Repository (2)</b>\nabstract service" as VisaRepository2
+component "<b>Visa Issuer (2)</b>\nabstract service\n(optional)" as VisaIssuer2
 }
 
 package "Specified GA4GH AAI clients, services, protocols" {
@@ -352,30 +356,83 @@ component "<b>Client</b>\napplication" as Client #FAFAD2
 component "<b>Passport</b>\n<b>Clearinghouse</b>\nservice" as ClearingHouse #FAFAD2
 }
 
-VisaSource1 ..> VisaRepository 
-VisaSource2 ..> VisaRepository 
-VisaSourceN ..> VisaRepository 
-VisaRepository ..> VisaIssuer 
+VisaSource11 ..> VisaRepository1
+VisaSource12 ..> VisaRepository1
+VisaRepository1 ..> VisaIssuer1
+
+VisaSource21 ..> VisaRepository2
+VisaSource22 ..> VisaRepository2
+VisaRepository2 ..> VisaIssuer2
 
 
-VisaRepository ..> Broker 
-VisaIssuer ..> Broker 
+VisaRepository1 ..> Broker 
+VisaIssuer1 ..> Broker 
+VisaRepository2 ..> Broker 
+VisaIssuer2 ..> Broker 
 Broker --> Client 
 Client --> ClearingHouse
 
 @enduml
+# OR, MORE SEPARATED:
+@startuml
+skinparam componentStyle rectangle
+left to right direction
+
+package "Unspecified clients, additional services, protocols (1)" {
+component "<b>Visa Assertion Source</b>\norganization" as VisaSource11
+component "<b>Visa Assertion Source</b>\norganization" as VisaSource12
+
+database "<b>Visa Assertion</b>\n<b>Repository</b>\nabstract service" as VisaRepository1
+component "<b>Visa Issuer</b>\nabstract service\n(optional)" as VisaIssuer1
+}
+
+package "Unspecified clients, additional services, protocols (2)" {
+component "<b>Visa Assertion Source</b>\norganization" as VisaSource21
+component "<b>Visa Assertion Source</b>\norganization" as VisaSource22
+
+database "<b>Visa Assertion</b>\n<b>Repository</b>\nabstract service" as VisaRepository2
+component "<b>Visa Issuer</b>\nabstract service\n(optional)" as VisaIssuer2
+}
+
+package "Specified GA4GH AAI clients, services, protocols" {
+component "<b>Broker</b>\nservice" as Broker #FAFAD2
+component "<b>Client</b>\napplication" as Client #FAFAD2
+component "<b>Passport</b>\n<b>Clearinghouse</b>\nservice" as ClearingHouse #FAFAD2
+}
+
+VisaSource11 ..> VisaRepository1
+VisaSource12 ..> VisaRepository1
+VisaRepository1 ..> VisaIssuer1
+
+VisaSource21 ..> VisaRepository2
+VisaSource22 ..> VisaRepository2
+VisaRepository2 ..> VisaIssuer2
+
+
+VisaRepository1 ..> Broker 
+VisaIssuer1 ..> Broker 
+VisaRepository2 ..> Broker 
+VisaIssuer2 ..> Broker 
+Broker --> Client 
+Client --> ClearingHouse
+
+@enduml
+
+# OR, COULD ALSO HAVE MULTIPLE BROKER CHAINS instead of converging on one as seen above:
+
 
 The above diagram shows how [Visa Assertions](#term-visa-assertion) flow from [Visa Assertion Sources](#term-visa-assertion-source)
 to a [Passport Clearinghouse](#term-passport-clearinghouse) that uses them. Only the
 right hand portion of the flow is normative in that it is fully documented in this
 specification.
 
+The roles of Visa Issuer and Broker may be played by separate organizations or the same.
+
 Implementations may introduce clients, additional services, and protocols
 to provide the mechanisms to move the data between the
 [Visa Assertion Sources](#term-visa-assertion-source) and the [Broker](#term-broker). This diagram
 shows *one possible mechanism* involving a repository service that persists assertions from a variety of
-organisations, and optionally then involving a separate visa issuer which
-signs some visas.
+organizations.
 
 These mechanisms are unspecified by the scope of this specification except that
 they MUST adhere to security and privacy best practices, such as those outlined
@@ -539,7 +596,7 @@ obtains Visas contained in a Passport or returned from the Userinfo Endpoint.
        be used as a Visa. Details are specified in the AAI Profile 1.0 specification.
 
     <p class="deprecation">The <b>Visa Access Token</b> is proposed for removal in a future
-     version of the specification. New implementations should issue Visas
+     version of the specification. Current and future specifications emphasize use of Visas embedded in a Passport, which are not access tokens. New implementations should issue Visas
      as <b>Visa Document Token</b>s.</p> 
 
 2. By signing a Visa, a Visa Issuer asserts that
@@ -575,6 +632,8 @@ that use [this format](#passport-format) to contain Visas.
 <br/>
 *Passport Issuing via [Token Exchange](#term-token-exchange) (non-normative)*
 
+TODO make bidirectional arrows from Visa Issuer go to the broker (with note alongside)
+
 @startuml
 skinparam componentStyle rectangle
 left to right direction
@@ -592,10 +651,10 @@ component "<b>Visa Issuer</b> (2)" as VisaIssuer2
 
 note "Signed visas can be sourced from\nmultiple visa issuers - either on\ndemand or via batch transfer/cached" as VisaNote
 
-VisaIssuer1 --> VisaNote : Visa A, B
-VisaIssuer2 --> VisaNote : Visa C
+VisaIssuer1 --> Broker : Visa A, B
+VisaIssuer2 --> Broker : Visa C
 
-Client <-- Broker #text:red : (step 1) login flow results in\nan AAI passport-scoped access token
+Client <--> Broker #text:red : (step 1) login flow results in\nan AAI passport-scoped access token
 Client ---> TokenEndpoint #text:red : (step 2) request for token exchange
 VisaNote ---right---> PassportIssuer #text:red : (step 3) visas obtained
 Client <-- TokenEndpoint  #text:red : (step 4) passport issued (passport contains visa A,B,C)
@@ -617,37 +676,7 @@ Client <-- TokenEndpoint  #text:red : (step 4) passport issued (passport contain
     1.  For access token flows, Passport Clearinghouses MUST either check the validity of the access token or treat the access
     token as opaque.
 
-        1.  If treating the access token as a JWT, a Passport Clearinghouse:
-
-            1. Even though access tokens are expected to be submitted against a Broker's Token or UserInfo Endpoint, a Passport Clearinghouse SHOULD check the access token’s signature via JWKS or having stored the
-            public key.
-
-                1.  A metadata URL (`.well-known` URL) SHOULD be used here to use the
-                jwks_uri parameter.
-                
-            2.  MUST check `iss` attribute to ensure a trusted Broker has generated
-            the token.
-            
-                1.  If evaluating Visa, trust MUST be established based
-                on the signer of the Visa itself. In Passport
-                Clearinghouses participating in open federation, the Passport
-                Clearinghouse does not necessarily have to trust the Broker that
-                includes Visas within another token in order to use
-                the Visa (although the Passport Clearinghouse MAY require
-                any other Broker involved in the propagation of the Visas to
-                also be trusted if the Passport Clearinghouse needs to restrict its
-                trust model).
-
-            3.  MUST check `exp` to ensure the token has not expired.
-
-            4.  MAY additionally check `aud` to make sure Relying Party is trusted
-            (client_id).
-
-        2.  If treating the token as opaque a Passport Clearinghouse MUST know in
-        advance where to find a corresponding Introspection Endpoint 
-        [[RFC7662]](#ref-rfc7662). This may limit the
-        functionality of accepting tokens from some Brokers. 
-
+ 
     2. For Passport flows, Passport Clearinghouses MUST check the validity of the Passport.
 
 3.  A Passport Clearinghouse service can be a Broker itself and would follow the
@@ -777,7 +806,7 @@ the [[OIDC-Core]](#ref-oidc-core) access token.
 }
 ```
 -   `iss`: REQUIRED. MUST be able to be appended with
-    .well-known/openid-configuration to get spec of Broker.
+    `.well-known/openid-configuration` to get spec of Broker.
 
 -   `sub`: REQUIRED. Authenticated user unique identifier.
 
