@@ -632,7 +632,8 @@ that use [this format](#passport-format) to contain Visas.
 <br/>
 *Passport Issuing via [Token Exchange](#term-token-exchange) (non-normative)*
 
-TODO make bidirectional arrows from Visa Issuer go to the broker (with note alongside)
+TODO fix placement of note; fix routing of arrows
+
 
 @startuml
 skinparam componentStyle rectangle
@@ -651,12 +652,12 @@ component "<b>Visa Issuer</b> (2)" as VisaIssuer2
 
 note "Signed visas can be sourced from\nmultiple visa issuers - either on\ndemand or via batch transfer/cached" as VisaNote
 
-VisaIssuer1 --> Broker : Visa A, B
-VisaIssuer2 --> Broker : Visa C
+VisaIssuer1 --> Broker  #text:red : (step 3) visas obtained
+VisaIssuer2 --> Broker 
 
 Client <--> Broker #text:red : (step 1) login flow results in\nan AAI passport-scoped access token
 Client ---> TokenEndpoint #text:red : (step 2) request for token exchange
-VisaNote ---right---> PassportIssuer #text:red : (step 3) visas obtained
+Client ---> PassportIssuer #text:red : (step 3) visas obtained
 Client <-- TokenEndpoint  #text:red : (step 4) passport issued (passport contains visa A,B,C)
 
 @enduml    
