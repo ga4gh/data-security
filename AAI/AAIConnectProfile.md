@@ -333,21 +333,16 @@ Notable differences between this diagram and interaction specified in AAI/Passpo
 
 ### Flow of Assertions
 
+
+TODO simplifying this diagram even further per 2022-12-08 meeting discussion
+
 @startuml
 skinparam componentStyle rectangle
 left to right direction
 
 package "Unspecified clients, additional services, protocols" {
-component "<b>Visa Assertion Source</b> (1)\norganization" as VisaSource11
-component "<b>Visa Assertion Source</b> (2)\norganization" as VisaSource12
-component "<b>Visa Assertion Source</b> (1)\norganization" as VisaSource21
-component "<b>Visa Assertion Source</b> (2)\norganization" as VisaSource22
-
-database "<b>Visa Assertion</b>\n<b>Repository (1)</b>\nabstract service" as VisaRepository1
-component "<b>Visa Issuer (1)</b>\nabstract service\n(optional)" as VisaIssuer1
-
-database "<b>Visa Assertion</b>\n<b>Repository (2)</b>\nabstract service" as VisaRepository2
-component "<b>Visa Issuer (2)</b>\nabstract service\n(optional)" as VisaIssuer2
+component "<b>Visa Assertion Source</b> (1)\norganization" as VisaSource
+component "<b>Visa Issuer</b>\nabstract service\n(optional)" as VisaIssuer
 }
 
 package "Specified GA4GH AAI clients, services, protocols" {
@@ -356,69 +351,14 @@ component "<b>Client</b>\napplication" as Client #FAFAD2
 component "<b>Passport</b>\n<b>Clearinghouse</b>\nservice" as ClearingHouse #FAFAD2
 }
 
-VisaSource11 ..> VisaRepository1
-VisaSource12 ..> VisaRepository1
-VisaRepository1 ..> VisaIssuer1
-
-VisaSource21 ..> VisaRepository2
-VisaSource22 ..> VisaRepository2
-VisaRepository2 ..> VisaIssuer2
+VisaSource ..> VisaIssuer
 
 
-VisaRepository1 ..> Broker 
-VisaIssuer1 ..> Broker 
-VisaRepository2 ..> Broker 
-VisaIssuer2 ..> Broker 
+VisaIssuer ..> Broker 
 Broker --> Client 
 Client --> ClearingHouse
 
 @enduml
-# OR, MORE SEPARATED:
-@startuml
-skinparam componentStyle rectangle
-left to right direction
-
-package "Unspecified clients, additional services, protocols (1)" {
-component "<b>Visa Assertion Source</b>\norganization" as VisaSource11
-component "<b>Visa Assertion Source</b>\norganization" as VisaSource12
-
-database "<b>Visa Assertion</b>\n<b>Repository</b>\nabstract service" as VisaRepository1
-component "<b>Visa Issuer</b>\nabstract service\n(optional)" as VisaIssuer1
-}
-
-package "Unspecified clients, additional services, protocols (2)" {
-component "<b>Visa Assertion Source</b>\norganization" as VisaSource21
-component "<b>Visa Assertion Source</b>\norganization" as VisaSource22
-
-database "<b>Visa Assertion</b>\n<b>Repository</b>\nabstract service" as VisaRepository2
-component "<b>Visa Issuer</b>\nabstract service\n(optional)" as VisaIssuer2
-}
-
-package "Specified GA4GH AAI clients, services, protocols" {
-component "<b>Broker</b>\nservice" as Broker #FAFAD2
-component "<b>Client</b>\napplication" as Client #FAFAD2
-component "<b>Passport</b>\n<b>Clearinghouse</b>\nservice" as ClearingHouse #FAFAD2
-}
-
-VisaSource11 ..> VisaRepository1
-VisaSource12 ..> VisaRepository1
-VisaRepository1 ..> VisaIssuer1
-
-VisaSource21 ..> VisaRepository2
-VisaSource22 ..> VisaRepository2
-VisaRepository2 ..> VisaIssuer2
-
-
-VisaRepository1 ..> Broker 
-VisaIssuer1 ..> Broker 
-VisaRepository2 ..> Broker 
-VisaIssuer2 ..> Broker 
-Broker --> Client 
-Client --> ClearingHouse
-
-@enduml
-
-# OR, COULD ALSO HAVE MULTIPLE BROKER CHAINS instead of converging on one as seen above:
 
 
 The above diagram shows how [Visa Assertions](#term-visa-assertion) flow from [Visa Assertion Sources](#term-visa-assertion-source)
@@ -632,7 +572,7 @@ that use [this format](#passport-format) to contain Visas.
 <br/>
 *Passport Issuing via [Token Exchange](#term-token-exchange) (non-normative)*
 
-TODO fix placement of note; fix routing of arrows
+TODO convert to sequence diagram consistent with other sequence diagram, per 2022-12-08 meeting discussion
 
 
 @startuml
