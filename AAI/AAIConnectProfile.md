@@ -397,7 +397,7 @@ Clients are applications which want to access data on behalf of users, and are r
         MUST implement OAuth2 Authorization Code
         Flow (see OIDC Basic Client Implementer's Guide 1.0 [[OIDC-Client]](#ref-oidc-client)).
    
-   2. Public clients (Single Pages Apps or Mobile Apps) SHOULD implement Authorization Code Flow 
+   2. Public clients (single pages apps or mobile apps) SHOULD implement Authorization Code Flow 
         with [[PKCE]](#ref-rfc7636).
 
 2.  Protection of Confidential Information
@@ -470,7 +470,7 @@ and access_tokens (and potentially refresh tokens) for consumption within the GA
     [section 3.1.2.4](https://openid.net/specs/openid-connect-core-1_0.html#Consent) 
     of [[OIDC-Core]](#ref-oidc-core).
 
-    1.  The user represented by a Researcher Identity MUST approve the release
+    1.  The user represented by a researcher identity MUST approve the release
         of these claims to relying parties with sufficient granularity to
         allow for responsible disclosure of information best practices as well
         as to meet privacy regulations that may be applicable within or between
