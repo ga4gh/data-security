@@ -11,12 +11,12 @@ A collection of questions (and hopefully useful answers).
 
 ### Why Brokers?
 
-We have found that there are widely used Identity Providers (IdP) such as Google
-Authentication. These authentication mechanisms provide no authorization
+We have found that there are widely used Identity Providers (IdP).
+These authentication mechanisms provide no authorization
 information (custom claims or scopes) but are ubiquitous for authentication at the institution level.
 The use of a Broker and Clearinghouse
-enables attaching information to the usual OIDC flow so that Google and other
-prominent identity providers can be used with customized claims and scopes.
+enables attaching information to the usual OIDC flow so that IdPs
+can be used with customized claims and scopes.
 
 Here is a diagram of a single broker. This is one possible way to use this spec.
 

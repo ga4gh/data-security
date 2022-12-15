@@ -123,7 +123,7 @@ A GA4GH Claim is asserted by the entity that signed the token in which it is con
 <a name="term-identity-provider"></a> **Identity Provider (IdP)** -- A
 service that provides to users an identity, authenticates it, and provides
 assertions to a Broker using standard protocols, such as OpenID Connect, SAML or
-other federation protocols. Example: eduGAIN, Google Identity, Facebook, NIH
+other federation protocols. Examples: eduGAIN, Facebook, NIH
 eRA Commons. IdPs MAY be [Visa Assertion Sources](#term-visa-assertion-source).
 
 **JWT**{: #term-jwt} -- JSON Web Token as defined in [[RFC7519]](#ref-rfc7519).
@@ -809,7 +809,7 @@ the [[OIDC-Core]](#ref-oidc-core) access token.
 -   `sub`: REQUIRED. Authenticated user unique identifier.
 
 -   `idp`: OPTIONAL. SHOULD contain the IDP the user used to auth with.
-    A non-normative example is "google". This does not have to be unique and
+    This does not have to be unique and
     can be used just to help inform if that is what a [Visa Issuer](#term-visa-issuer) 
     or [Data Holder](#term-data-holder) needs.
 
