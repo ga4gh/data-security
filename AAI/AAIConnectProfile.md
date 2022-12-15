@@ -174,6 +174,8 @@ signature of the original [Visa Issuer](#term-visa-issuer).
 <a name="term-visa-assertion"></a>
 **Visa Assertion** -- a piece of information about a user that is asserted by a [Visa Assertion Source](#term-visa-assertion-source). It is then encoded by a [Visa Issuer](#term-visa-issuer) into a [Visa](#Visa).
 
+## TODO simplify per 22-12-15
+
 <a name="term-visa-assertion-source"></a> **Visa Assertion Source** -- the source organization of
 a [Visa Assertion](#term-visa-assertion) which at a minimum includes the organization associated with
 making the assertion, although can optionally identify a sub-organization or a
