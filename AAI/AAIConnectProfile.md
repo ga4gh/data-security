@@ -602,6 +602,63 @@ Client <-- TokenEndpoint  #text:red : (step 4) passport issued (passport contain
 
 @enduml    
 
+ABOVE TO BE REPLACED BY SEQ DIAG BELOW
+
+{% plantuml %}
+
+hide footbox
+skinparam BoxPadding 10
+skinparam ParticipantPadding 20
+
+box "Researcher"  #eee
+actor       "User Agent"                as user
+participant Client                      as client
+end box
+
+box "AAI"
+participant "Broker and Passport Issuer"                      as broker
+end box
+
+box "Data Access Committee (1)"
+collections "Visa Issuer (1)"            as issuer1
+end box
+
+box "Data Access Committee (2)"
+collections "Visa Issuer (2)"            as issuer2
+end box
+
+==OIDC==
+
+user -> client : Initiates login
+client -> user : Send redirect to Broker
+user -> broker : Follow redirects
+ref over broker
+Broker authenticates user 
+(potentially with external IdP)
+end ref
+broker -> user : Send redirect to client with authorization code
+user -> client : Follow redirect with code
+
+client -> broker : Request Passport-Scoped Access Token
+broker -> client : Respond with Passport-Scoped Access Token
+
+==Token Exchange==
+
+client -> broker : Request to exchange Passport-Scoped \nAccess Token for Passport
+
+ref over broker, issuer1, issuer2
+Signed visas can be sourced from multiple visa issuers - either on demand or via batch transfer/cached
+end ref
+
+broker <-> issuer1 : Obtain Visa A
+broker <-> issuer2 : Obtain Visa B
+broker <-> issuer2 : Obtain Visa C
+client <- broker : Response with Passport containing Visas A, B, C
+
+
+{% endplantuml %}
+
+
 {% hr3 %}
 
 ### Conformance for Passport Clearinghouses (consuming Passports or Visas to give access to data)
