@@ -369,7 +369,7 @@ at `https://issuer.example.org/public-keys.json` (see
 [RFC 7517 "JSON Web Key"](https://datatracker.ietf.org/doc/html/rfc7517)).
 
 **IMPORTANTLY**, for the secure use of this key management technique - the JKU 
-**MUST** also be whitelisted as part of the configuration of **OUR** service.
+**MUST** also be allow-listed as part of the configuration of **OUR** service.
 For example:
 
 ```yaml
@@ -406,9 +406,9 @@ of a `/.well-known/openid-configuration` - to look up the location of the public
 and the `jwks_uri` entry.
 
 As with JKU - it is important that OIDC discovery is limited only to JWT issuer URLs that are
-in some way whitelisted. It is **NEVER** valid to perform discovery on an arbitrary issuer
-encountered in a JWT. Luckily, the concept of whitelisting issuers is already in some way
-inherent to the way trust relationships are established, and hence this whitelist should
+in some way allow-listed. It is **NEVER** valid to perform discovery on an arbitrary issuer
+encountered in a JWT. Luckily, the concept of allow-listing issuers is already in some way
+inherent to the way trust relationships are established, and hence this allow list should
 already be present in the system.
 
 Also as with JKU, the content of the discovery protocol and key sets can be cached
