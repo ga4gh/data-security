@@ -329,7 +329,8 @@ Notable differences between this diagram and interaction specified in AAI/Passpo
 * The Passport Clearinghouse is no longer required to be a Client of the Broker
 * The Passport-Scoped Access Token is only ever shared between the Client and the Broker
 * An additional Token Exchange request is used to exchange the Passport-Scoped Access Token for a Passport Token,
-  which can be sent to a Passport Clearinghouse.
+  which can be sent to a Passport Clearinghouse. The Passport Token does not carry excess authorization, 
+  unlike the Passport-Scoped Access Token.
 
 ### Flow of Assertions
 
@@ -570,39 +571,7 @@ that use [this format](#passport-format) to contain Visas.
     6. The Token Endpoint MAY accept or require any other optional parameters defined in [[RFC8693]](#ref-rfc8693).
 
 <br/>
-*Passport Issuing via [Token Exchange](#term-token-exchange) (non-normative)*
-
-TODO convert to sequence diagram consistent with other sequence diagram, per 2022-12-08 meeting discussion
-
-
-@startuml
-skinparam componentStyle rectangle
-left to right direction
-
-component "<b>Client</b>" as Client
-
-component "<b>Broker</b>" as Broker {
-component "<b>Passport Issuer</b>\n(role)" as PassportIssuer {
-interface "Token\nEndpoint" as TokenEndpoint
-}
-}
-
-component "<b>Visa Issuer</b> (1)" as VisaIssuer1
-component "<b>Visa Issuer</b> (2)" as VisaIssuer2
-
-note "Signed visas can be sourced from\nmultiple visa issuers - either on\ndemand or via batch transfer/cached" as VisaNote
-
-VisaIssuer1 --> Broker  #text:red : (step 3) visas obtained
-VisaIssuer2 --> Broker 
-
-Client <--> Broker #text:red : (step 1) login flow results in\nan AAI passport-scoped access token
-Client ---> TokenEndpoint #text:red : (step 2) request for token exchange
-Client ---> PassportIssuer #text:red : (step 3) visas obtained
-Client <-- TokenEndpoint  #text:red : (step 4) passport issued (passport contains visa A,B,C)
-
-@enduml    
-
-ABOVE TO BE REPLACED BY SEQ DIAG BELOW
+*Passport Issuing via [Token Exchange](#term-token-exchange) (non-normative example)*
 
 {% plantuml %}
 
