@@ -334,52 +334,204 @@ Notable differences between this diagram and interaction specified in AAI/Passpo
   which can be sent to a Passport Clearinghouse. The Passport Token carries only the authorization in a user's 
   Visas, whereas the Passport-Scoped Access Token contains authorizations above and beyond the Visas.
 
-### Flow of Assertions
+<a name="flow-of-assertions-discussion">
+```
+<discussion>  (to be deleted)
+```
 
-
-TODO show multiplicity
+> Hello Team: This is Tom interrupting the spec with some temporary inline
+> discussion about the edits to this diagram. You'll want to go to the [this
+> discussion with diagram drafts
+> rendered](https://ga4gh.github.io/data-security/review-2022-12-01/aai-openid-connect-profile#flow-of-assertions).
+> 
+> We must simplify this diagram in response to reviewer feedback:
 
 @startuml
 skinparam componentStyle rectangle
 left to right direction
 
-component "<b>Visa Assertion Source</b> (1)\norganization" as VisaSource
+package "Unspecified clients, additional services, protocols" {
+component "<b>Visa Assertion Source</b> (1)\norganization" as VisaSource1
+component "<b>Visa Assertion Source</b> (2)\norganization" as VisaSource2
+component "<b>Visa Assertion Source</b> (...)\norganization" as VisaSourceN
+
+database "<b>Visa Assertion</b>\n<b>Repository</b>\nabstract service" as VisaRepository
 component "<b>Visa Issuer</b>\nabstract service\n(optional)" as VisaIssuer
+}
+
+package "Specified GA4GH AAI clients, services, protocols" {
 component "<b>Broker</b>\nservice" as Broker #FAFAD2
 component "<b>Client</b>\napplication" as Client #FAFAD2
 component "<b>Passport</b>\n<b>Clearinghouse</b>\nservice" as ClearingHouse #FAFAD2
+}
 
-VisaSource ..> VisaIssuer
+VisaSource1 ..> VisaRepository 
+VisaSource2 ..> VisaRepository 
+VisaSourceN ..> VisaRepository 
+VisaRepository ..> VisaIssuer 
 
 
+VisaRepository ..> Broker 
 VisaIssuer ..> Broker 
 Broker --> Client 
 Client --> ClearingHouse
 
 @enduml
 
+> We discussed showing multiplicity on solid arrows in this diagram in lieu of multiple boxes...
 
-The above diagram shows how [Visa Assertions](#term-visa-assertion) flow from [Visa Assertion Sources](#term-visa-assertion-source)
-to a [Passport Clearinghouse](#term-passport-clearinghouse) that uses them. Only the
-right hand portion of the flow is normative in that it is fully documented in this
-specification.
 
-The roles of Visa Issuer and Broker may be played by separate organizations or the same.
+@startuml
+skinparam componentStyle rectangle
+left to right direction
 
-Implementations may introduce clients, additional services, and protocols
+package "Unspecified clients, additional services, protocols" {
+component "<b>Visa Assertion Source</b>\norganization" as VisaSource
+database "<b>Visa Assertion</b>\n<b>Repository</b>\nabstract service" as VisaRepository
+component "<b>Visa Issuer</b>\nabstract service\n(optional)" as VisaIssuer
+}
+
+package "Specified GA4GH AAI clients, services, protocols" {
+component "<b>Broker</b>\nservice" as Broker #FAFAD2
+component "<b>Client</b>\napplication" as Client #FAFAD2
+component "<b>Passport</b>\n<b>Clearinghouse</b>\nservice" as ClearingHouse #FAFAD2
+}
+
+VisaSource "n" --> "1" VisaRepository 
+VisaRepository "1" --> "0..1" VisaIssuer 
+VisaIssuer "0..1" --> "1" Broker 
+Broker "1" --> "1" Client 
+Client "1" --> "1" ClearingHouse
+
+@enduml
+
+> ... but I don't love it now that I've done it this way. (BTW, it's easy to do
+> in PlantUML; feel free to try to choose better labels than mine here.)
+>
+> We also talked about omitting the "unspecified" and "specified" boxes...
+
+@startuml
+skinparam componentStyle rectangle
+left to right direction
+
+component "<b>Visa Assertion Source</b>\norganization" as VisaSource
+database "<b>Visa Assertion</b>\n<b>Repository</b>\nabstract service" as VisaRepository
+component "<b>Visa Issuer</b>\nabstract service\n(optional)" as VisaIssuer
+component "<b>Broker</b>\nservice" as Broker
+component "<b>Client</b>\napplication" as Client
+component "<b>Passport</b>\n<b>Clearinghouse</b>\nservice" as ClearingHouse
+
+VisaSource "n" --> "1" VisaRepository 
+VisaRepository "1" --> "0..1" VisaIssuer 
+VisaIssuer "0..1" --> "1" Broker 
+Broker "1" --> "1" Client 
+Client "1" --> "1" ClearingHouse
+
+@enduml
+
+> ... but it still leaves a lot to explain.
+>
+> Here's a solution: Explode the one complex, overloaded diagram into multiple
+> simpler ones. Focus purely on the **roles** in the first diagram. Then explain
+> about flexibility of mechanisms. Then show two concrete non-normative
+> example diagrams. See below...
+>
+> And now we return you to your regularly scheduled spec draft...
+
+```
+</discussion>
+```
+
+### Flow of Assertions
+
+
+@startuml
+package "Flow of assertions" {
+
+skinparam componentStyle rectangle
+left to right direction
+
+component "<b>Broker</b>" as bro
+component "<b>Passport</b>\n<b>Clearinghouse</b>" as ch
+component "<b>Visa Assertion Source</b>" as vas
+component "<b>Visa Issuer</b>" as vi
+
+vas --> vi
+vi --> bro 
+bro --> ch
+
+}
+@enduml
+
+
+The above diagram shows how [Visa Assertions](#term-visa-assertion) flow from a [Visa Assertion Source](#term-visa-assertion-source)
+to a [Passport Clearinghouse](#term-passport-clearinghouse) that uses them. 
+
+Implementations may introduce clients, services, and protocols
 to provide the mechanisms to move the data between the
-[Visa Assertion Sources](#term-visa-assertion-source) and the [Broker](#term-broker). This diagram
-shows *one possible mechanism* involving a repository service that persists assertions from a variety of
-organizations.
-
-These mechanisms are unspecified by the scope of this specification except that
+[Visa Assertion Sources](#term-visa-assertion-source) and the [Broker](#term-broker).  These mechanisms are unspecified by the scope of this specification except that
 they MUST adhere to security and privacy best practices, such as those outlined
 in this specification, in their handling of protocols, claims, tokens and
-related data. The flow between these components (represented by black arrows)
+related data. The flow between these components
 MAY not be direct or conversely services shown as being separate MAY be
 combined into one service. For example, some implementations MAY deploy one
 service that handles the responsibilities of both the Visa Issuer and
 the Broker.
+
+Here are two non-normative examples illustrating two *of many possible mechanisms*:
+
+@startuml
+skinparam componentStyle rectangle
+left to right direction
+
+package "Non-normative Example 1: Separate Issuer and Broker" {
+component "<b>Visa Assertion Source</b> (1)\norganization" as VisaSource1
+component "<b>Visa Assertion Source</b> (2)\norganization" as VisaSource2
+
+component "<b>Visa Issuer</b>\nservice" as VisaIssuer
+
+component "<b>Broker</b>\nservice" as Broker
+component "<b>Client</b>\napplication" as Client
+component "<b>Passport</b>\n<b>Clearinghouse</b>\nservice" as ClearingHouse
+}
+
+VisaSource1 --> VisaIssuer 
+VisaSource2 --> VisaIssuer 
+
+
+VisaIssuer --> Broker 
+Broker --> Client 
+Client --> ClearingHouse
+
+@enduml
+
+
+@startuml
+skinparam componentStyle rectangle
+left to right direction
+
+package "Non-normative Example 2: Combined Issuer and Broker; Visa Persistence" {
+
+component "<b>Visa Assertion Source</b> (1)\norganization" as VisaSource1
+component "<b>Visa Assertion Source</b> (2)\norganization" as VisaSource2
+component "<b>Visa Assertion Source</b> (...)\norganization" as VisaSourceN
+
+database "<b>Visa Assertion</b>\n<b>Repository</b>\nservice" as VisaRepository
+
+component "<b>Visa Issuer</b>\n<b>Broker</b>\nservice" as Broker
+component "<b>Client</b>\napplication" as Client
+component "<b>Passport</b>\n<b>Clearinghouse</b>\nservice" as ClearingHouse
+}
+
+VisaSource1 --> VisaRepository 
+VisaSource2 --> VisaRepository 
+VisaSourceN --> VisaRepository 
+VisaRepository --> Broker 
+Broker --> Client 
+Client --> ClearingHouse
+
+@enduml
+
 
 {% hr2 %}
 
