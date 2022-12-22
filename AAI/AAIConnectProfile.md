@@ -174,15 +174,12 @@ signature of the original [Visa Issuer](#term-visa-issuer).
 <a name="term-visa-assertion"></a>
 **Visa Assertion** -- a piece of information about a user that is asserted by a [Visa Assertion Source](#term-visa-assertion-source). It is then encoded by a [Visa Issuer](#term-visa-issuer) into a [Visa](#Visa).
 
-## TODO simplify per 22-12-15
-
 <a name="term-visa-assertion-source"></a> **Visa Assertion Source** -- the source organization of
 a [Visa Assertion](#term-visa-assertion) which at a minimum includes the organization associated with
 making the assertion, although can optionally identify a sub-organization or a
 specific assignment within the organization that made the assertion.
 
--   This is NOT necessarily the organization that stores the assertion, nor the
-    [Visa Issuer](#term-visa-issuer)’s organization that signs the Visa; it is the
+-   This is NOT necessarily the organization that signs the Visa; it is the
     organization that has the authority to make the assertion on behalf of the
     user and is responsible for making and maintaining the assertion.
 
@@ -334,114 +331,6 @@ Notable differences between this diagram and interaction specified in AAI/Passpo
   which can be sent to a Passport Clearinghouse. The Passport Token carries only the authorization in a user's 
   Visas, whereas the Passport-Scoped Access Token contains authorizations above and beyond the Visas.
 
-<a name="flow-of-assertions-discussion">
-```
-<discussion>  (to be deleted)
-```
-
-> Hello Team: This is Tom interrupting the spec with some temporary inline
-> discussion about the edits to this diagram. You'll want to go to the [this
-> discussion with diagram drafts
-> rendered](https://ga4gh.github.io/data-security/review-2022-12-01/aai-openid-connect-profile#flow-of-assertions).
-> 
-> We must simplify this diagram in response to reviewer feedback:
-
-@startuml
-skinparam componentStyle rectangle
-left to right direction
-
-package "Unspecified clients, additional services, protocols" {
-component "<b>Visa Assertion Source</b> (1)\norganization" as VisaSource1
-component "<b>Visa Assertion Source</b> (2)\norganization" as VisaSource2
-component "<b>Visa Assertion Source</b> (...)\norganization" as VisaSourceN
-
-database "<b>Visa Assertion</b>\n<b>Repository</b>\nabstract service" as VisaRepository
-component "<b>Visa Issuer</b>\nabstract service\n(optional)" as VisaIssuer
-}
-
-package "Specified GA4GH AAI clients, services, protocols" {
-component "<b>Broker</b>\nservice" as Broker #FAFAD2
-component "<b>Client</b>\napplication" as Client #FAFAD2
-component "<b>Passport</b>\n<b>Clearinghouse</b>\nservice" as ClearingHouse #FAFAD2
-}
-
-VisaSource1 ..> VisaRepository 
-VisaSource2 ..> VisaRepository 
-VisaSourceN ..> VisaRepository 
-VisaRepository ..> VisaIssuer 
-
-
-VisaRepository ..> Broker 
-VisaIssuer ..> Broker 
-Broker --> Client 
-Client --> ClearingHouse
-
-@enduml
-
-> We discussed showing multiplicity on solid arrows in this diagram in lieu of multiple boxes...
-
-
-@startuml
-skinparam componentStyle rectangle
-left to right direction
-
-package "Unspecified clients, additional services, protocols" {
-component "<b>Visa Assertion Source</b>\norganization" as VisaSource
-database "<b>Visa Assertion</b>\n<b>Repository</b>\nabstract service" as VisaRepository
-component "<b>Visa Issuer</b>\nabstract service\n(optional)" as VisaIssuer
-}
-
-package "Specified GA4GH AAI clients, services, protocols" {
-component "<b>Broker</b>\nservice" as Broker #FAFAD2
-component "<b>Client</b>\napplication" as Client #FAFAD2
-component "<b>Passport</b>\n<b>Clearinghouse</b>\nservice" as ClearingHouse #FAFAD2
-}
-
-VisaSource "n" --> "1" VisaRepository 
-VisaRepository "1" --> "0..1" VisaIssuer 
-VisaIssuer "0..1" --> "1" Broker 
-Broker "1" --> "1" Client 
-Client "1" --> "1" ClearingHouse
-
-@enduml
-
-> ... but I don't love it now that I've done it this way. (BTW, it's easy to do
-> in PlantUML; feel free to try to choose better labels than mine here.)
->
-> We also talked about omitting the "unspecified" and "specified" boxes...
-
-@startuml
-skinparam componentStyle rectangle
-left to right direction
-
-component "<b>Visa Assertion Source</b>\norganization" as VisaSource
-database "<b>Visa Assertion</b>\n<b>Repository</b>\nabstract service" as VisaRepository
-component "<b>Visa Issuer</b>\nabstract service\n(optional)" as VisaIssuer
-component "<b>Broker</b>\nservice" as Broker
-component "<b>Client</b>\napplication" as Client
-component "<b>Passport</b>\n<b>Clearinghouse</b>\nservice" as ClearingHouse
-
-VisaSource "n" --> "1" VisaRepository 
-VisaRepository "1" --> "0..1" VisaIssuer 
-VisaIssuer "0..1" --> "1" Broker 
-Broker "1" --> "1" Client 
-Client "1" --> "1" ClearingHouse
-
-@enduml
-
-> ... but it still leaves a lot to explain.
->
-> Here's a solution: Explode the one complex, overloaded diagram into multiple
-> simpler ones. Focus purely on the **roles** in the first diagram. Then explain
-> about flexibility of mechanisms. Then show two concrete non-normative
-> example diagrams. See below...
->
-> And now we return you to your regularly scheduled spec draft...
-
-```
-</discussion>
-```
-
 ### Flow of Assertions
 
 
@@ -488,18 +377,20 @@ package "Non-normative Example 1: Separate Issuer and Broker" {
 component "<b>Visa Assertion Source</b> (1)\norganization" as VisaSource1
 component "<b>Visa Assertion Source</b> (2)\norganization" as VisaSource2
 
-component "<b>Visa Issuer</b>\nservice" as VisaIssuer
+component "<b>Visa Issuer (1)</b>\nservice" as VisaIssuer1
+component "<b>Visa Issuer (2)</b>\nservice" as VisaIssuer2
 
 component "<b>Broker</b>\nservice" as Broker
 component "<b>Client</b>\napplication" as Client
 component "<b>Passport</b>\n<b>Clearinghouse</b>\nservice" as ClearingHouse
 }
 
-VisaSource1 --> VisaIssuer 
-VisaSource2 --> VisaIssuer 
+VisaSource1 --> VisaIssuer1
+VisaSource2 --> VisaIssuer2
 
 
-VisaIssuer --> Broker 
+VisaIssuer1 --> Broker 
+VisaIssuer2 --> Broker 
 Broker --> Client 
 Client --> ClearingHouse
 
@@ -510,23 +401,20 @@ Client --> ClearingHouse
 skinparam componentStyle rectangle
 left to right direction
 
-package "Non-normative Example 2: Combined Issuer and Broker; Visa Persistence" {
+package "Non-normative Example 2: Combined Issuer and Broker" {
 
 component "<b>Visa Assertion Source</b> (1)\norganization" as VisaSource1
 component "<b>Visa Assertion Source</b> (2)\norganization" as VisaSource2
 component "<b>Visa Assertion Source</b> (...)\norganization" as VisaSourceN
 
-database "<b>Visa Assertion</b>\n<b>Repository</b>\nservice" as VisaRepository
-
-component "<b>Visa Issuer</b>\n<b>Broker</b>\nservice" as Broker
+component "<b>Visa Issuer</b> and <b>Broker</b>\nservice" as Broker
 component "<b>Client</b>\napplication" as Client
 component "<b>Passport</b>\n<b>Clearinghouse</b>\nservice" as ClearingHouse
 }
 
-VisaSource1 --> VisaRepository 
-VisaSource2 --> VisaRepository 
-VisaSourceN --> VisaRepository 
-VisaRepository --> Broker 
+VisaSource1 --> Broker 
+VisaSource2 --> Broker 
+VisaSourceN --> Broker
 Broker --> Client 
 Client --> ClearingHouse
 
