@@ -76,6 +76,7 @@ authorization purposes by downstream systems.</p>
   </li>
   <li><a href="#notation-and-conventions" id="markdown-toc-notation-and-conventions">Notation and Conventions</a></li>
   <li><a href="#terminology" id="markdown-toc-terminology">Terminology</a></li>
+  <li><a href="#todo-simplify-per-22-12-15" id="markdown-toc-todo-simplify-per-22-12-15">TODO simplify per 22-12-15</a></li>
   <li><a href="#relevant-specifications" id="markdown-toc-relevant-specifications">Relevant Specifications</a></li>
   <li>
 <a href="#overview-of-interactions" id="markdown-toc-overview-of-interactions">Overview of Interactions</a>    <ul>
@@ -140,7 +141,7 @@ otherwise availing researcher visas for the purposes of enforcing access control
 
 <h3 id="visa-tokens">Visa Tokens</h3>
 
-<p>The recommended approach to using AAI is to share <a href="#term-visa">Visas</a>,
+<p><a href="#term-visa">Visas</a> are used
 for securely transmitting authorizations or attributes of a researcher.
 <a href="#term-visa">Visas</a> are tokens [<a href="#term-jwt">JWT</a>] signed by <a href="#term-visa-issuer">Visa Issuers</a> and
 validated by <a href="#term-passport-clearinghouse">Passport Clearinghouses</a>.</p>
@@ -210,7 +211,7 @@ A GA4GH Claim is asserted by the entity that signed the token in which it is con
 <p><a name="term-identity-provider"></a> <strong>Identity Provider (IdP)</strong> – A
 service that provides to users an identity, authenticates it, and provides
 assertions to a Broker using standard protocols, such as OpenID Connect, SAML or
-other federation protocols. Example: eduGAIN, Google Identity, Facebook, NIH
+other federation protocols. Examples: eduGAIN, Facebook, NIH
 eRA Commons. IdPs MAY be <a href="#term-visa-assertion-source">Visa Assertion Sources</a>.</p>
 
 <p><strong id="term-jwt">JWT</strong> – JSON Web Token as defined in <a href="#ref-rfc7519">[RFC7519]</a>.
@@ -260,6 +261,8 @@ signature of the original <a href="#term-visa-issuer">Visa Issuer</a>.</p>
 
 <p><a name="term-visa-assertion"></a>
 <strong>Visa Assertion</strong> – a piece of information about a user that is asserted by a <a href="#term-visa-assertion-source">Visa Assertion Source</a>. It is then encoded by a <a href="#term-visa-issuer">Visa Issuer</a> into a <a href="#Visa">Visa</a>.</p>
+
+<h2 id="todo-simplify-per-22-12-15">TODO simplify per 22-12-15</h2>
 
 <p><a name="term-visa-assertion-source"></a> <strong>Visa Assertion Source</strong> – the source organization of
 a <a href="#term-visa-assertion">Visa Assertion</a> which at a minimum includes the organization associated with
@@ -535,33 +538,77 @@ Country: US
   <li>The Passport Clearinghouse is no longer required to be a Client of the Broker</li>
   <li>The Passport-Scoped Access Token is only ever shared between the Client and the Broker</li>
   <li>An additional Token Exchange request is used to exchange the Passport-Scoped Access Token for a Passport Token,
-which can be sent to a Passport Clearinghouse.</li>
+which can be sent to a Passport Clearinghouse. The Passport Token carries only the authorization in a user’s 
+Visas, whereas the Passport-Scoped Access Token contains authorizations above and beyond the Visas.</li>
 </ul>
+
+<p><a name="flow-of-assertions-discussion"></a></p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;discussion&gt;  (to be deleted)
+</code></pre></div></div>
+
+<blockquote>
+  <p>Hello Team: This is Tom interrupting the spec with some temporary inline
+discussion about the edits to this diagram. You’ll want to go to the <a href="https://ga4gh.github.io/data-security/review-2022-12-01/aai-openid-connect-profile#flow-of-assertions">this
+discussion with diagram drafts
+rendered</a>.</p>
+
+  <p>We must simplify this diagram in response to reviewer feedback:</p>
+</blockquote>
+
+<p><img class="plantuml" src="http://www.plantuml.com/plantuml/svg/~h407374617274756d6c0a736b696e706172616d20636f6d706f6e656e745374796c652072656374616e676c650a6c65667420746f20726967687420646972656374696f6e0a0a7061636b6167652022556e73706563696669656420636c69656e74732c206164646974696f6e616c2073657276696365732c2070726f746f636f6c7322207b0a636f6d706f6e656e7420223c623e5669736120417373657274696f6e20536f757263653c2f623e202831295c6e6f7267616e697a6174696f6e222061732056697361536f75726365310a636f6d706f6e656e7420223c623e5669736120417373657274696f6e20536f757263653c2f623e202832295c6e6f7267616e697a6174696f6e222061732056697361536f75726365320a636f6d706f6e656e7420223c623e5669736120417373657274696f6e20536f757263653c2f623e20282e2e2e295c6e6f7267616e697a6174696f6e222061732056697361536f757263654e0a0a646174616261736520223c623e5669736120417373657274696f6e3c2f623e5c6e3c623e5265706f7369746f72793c2f623e5c6e616273747261637420736572766963652220617320566973615265706f7369746f72790a636f6d706f6e656e7420223c623e56697361204973737565723c2f623e5c6e616273747261637420736572766963655c6e286f7074696f6e616c292220617320566973614973737565720a7d0a0a7061636b61676520225370656369666965642047413447482041414920636c69656e74732c2073657276696365732c2070726f746f636f6c7322207b0a636f6d706f6e656e7420223c623e42726f6b65723c2f623e5c6e73657276696365222061732042726f6b657220234641464144320a636f6d706f6e656e7420223c623e436c69656e743c2f623e5c6e6170706c69636174696f6e2220617320436c69656e7420234641464144320a636f6d706f6e656e7420223c623e50617373706f72743c2f623e5c6e3c623e436c656172696e67686f7573653c2f623e5c6e736572766963652220617320436c656172696e67486f75736520234641464144320a7d0a0a56697361536f7572636531202e2e3e20566973615265706f7369746f7279200a56697361536f7572636532202e2e3e20566973615265706f7369746f7279200a56697361536f757263654e202e2e3e20566973615265706f7369746f7279200a566973615265706f7369746f7279202e2e3e2056697361497373756572200a0a0a566973615265706f7369746f7279202e2e3e2042726f6b6572200a56697361497373756572202e2e3e2042726f6b6572200a42726f6b6572202d2d3e20436c69656e74200a436c69656e74202d2d3e20436c656172696e67486f7573650a0a40656e64756d6c"></p>
+
+<blockquote>
+  <p>We discussed showing multiplicity on solid arrows in this diagram in lieu of multiple boxes…</p>
+</blockquote>
+
+<p><img class="plantuml" src="http://www.plantuml.com/plantuml/svg/~h407374617274756d6c0a736b696e706172616d20636f6d706f6e656e745374796c652072656374616e676c650a6c65667420746f20726967687420646972656374696f6e0a0a7061636b6167652022556e73706563696669656420636c69656e74732c206164646974696f6e616c2073657276696365732c2070726f746f636f6c7322207b0a636f6d706f6e656e7420223c623e5669736120417373657274696f6e20536f757263653c2f623e5c6e6f7267616e697a6174696f6e222061732056697361536f757263650a646174616261736520223c623e5669736120417373657274696f6e3c2f623e5c6e3c623e5265706f7369746f72793c2f623e5c6e616273747261637420736572766963652220617320566973615265706f7369746f72790a636f6d706f6e656e7420223c623e56697361204973737565723c2f623e5c6e616273747261637420736572766963655c6e286f7074696f6e616c292220617320566973614973737565720a7d0a0a7061636b61676520225370656369666965642047413447482041414920636c69656e74732c2073657276696365732c2070726f746f636f6c7322207b0a636f6d706f6e656e7420223c623e42726f6b65723c2f623e5c6e73657276696365222061732042726f6b657220234641464144320a636f6d706f6e656e7420223c623e436c69656e743c2f623e5c6e6170706c69636174696f6e2220617320436c69656e7420234641464144320a636f6d706f6e656e7420223c623e50617373706f72743c2f623e5c6e3c623e436c656172696e67686f7573653c2f623e5c6e736572766963652220617320436c656172696e67486f75736520234641464144320a7d0a0a56697361536f7572636520226e22202d2d3e2022312220566973615265706f7369746f7279200a566973615265706f7369746f727920223122202d2d3e2022302e2e31222056697361497373756572200a566973614973737565722022302e2e3122202d2d3e202231222042726f6b6572200a42726f6b657220223122202d2d3e2022312220436c69656e74200a436c69656e7420223122202d2d3e2022312220436c656172696e67486f7573650a0a40656e64756d6c"></p>
+
+<blockquote>
+  <p>… but I don’t love it now that I’ve done it this way. (BTW, it’s easy to do
+in PlantUML; feel free to try to choose better labels than mine here.)</p>
+
+  <p>We also talked about omitting the “unspecified” and “specified” boxes…</p>
+</blockquote>
+
+<p><img class="plantuml" src="http://www.plantuml.com/plantuml/svg/~h407374617274756d6c0a736b696e706172616d20636f6d706f6e656e745374796c652072656374616e676c650a6c65667420746f20726967687420646972656374696f6e0a0a636f6d706f6e656e7420223c623e5669736120417373657274696f6e20536f757263653c2f623e5c6e6f7267616e697a6174696f6e222061732056697361536f757263650a646174616261736520223c623e5669736120417373657274696f6e3c2f623e5c6e3c623e5265706f7369746f72793c2f623e5c6e616273747261637420736572766963652220617320566973615265706f7369746f72790a636f6d706f6e656e7420223c623e56697361204973737565723c2f623e5c6e616273747261637420736572766963655c6e286f7074696f6e616c292220617320566973614973737565720a636f6d706f6e656e7420223c623e42726f6b65723c2f623e5c6e73657276696365222061732042726f6b65720a636f6d706f6e656e7420223c623e436c69656e743c2f623e5c6e6170706c69636174696f6e2220617320436c69656e740a636f6d706f6e656e7420223c623e50617373706f72743c2f623e5c6e3c623e436c656172696e67686f7573653c2f623e5c6e736572766963652220617320436c656172696e67486f7573650a0a56697361536f7572636520226e22202d2d3e2022312220566973615265706f7369746f7279200a566973615265706f7369746f727920223122202d2d3e2022302e2e31222056697361497373756572200a566973614973737565722022302e2e3122202d2d3e202231222042726f6b6572200a42726f6b657220223122202d2d3e2022312220436c69656e74200a436c69656e7420223122202d2d3e2022312220436c656172696e67486f7573650a0a40656e64756d6c"></p>
+
+<blockquote>
+  <p>… but it still leaves a lot to explain.</p>
+
+  <p>Here’s a solution: Explode the one complex, overloaded diagram into multiple
+simpler ones. Focus purely on the <strong>roles</strong> in the first diagram. Then explain
+about flexibility of mechanisms. Then show two concrete non-normative
+example diagrams. See below…</p>
+
+  <p>And now we return you to your regularly scheduled spec draft…</p>
+</blockquote>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;/discussion&gt;
+</code></pre></div></div>
 
 <h3 id="flow-of-assertions">Flow of Assertions</h3>
 
-<p><img class="plantuml" src="http://www.plantuml.com/plantuml/svg/~h407374617274756d6c0a736b696e706172616d20636f6d706f6e656e745374796c652072656374616e676c650a6c65667420746f20726967687420646972656374696f6e0a0a7061636b6167652022556e73706563696669656420636c69656e74732c206164646974696f6e616c2073657276696365732c2070726f746f636f6c7322207b0a636f6d706f6e656e7420223c623e5669736120417373657274696f6e20536f757263653c2f623e202831295c6e6f7267616e69736174696f6e222061732056697361536f75726365310a636f6d706f6e656e7420223c623e5669736120417373657274696f6e20536f757263653c2f623e202832295c6e6f7267616e69736174696f6e222061732056697361536f75726365320a636f6d706f6e656e7420223c623e5669736120417373657274696f6e20536f757263653c2f623e20282e2e2e295c6e6f7267616e69736174696f6e222061732056697361536f757263654e0a0a646174616261736520223c623e5669736120417373657274696f6e3c2f623e5c6e3c623e5265706f7369746f72793c2f623e5c6e616273747261637420736572766963652220617320566973615265706f7369746f72790a636f6d706f6e656e7420223c623e56697361204973737565723c2f623e5c6e616273747261637420736572766963655c6e286f7074696f6e616c292220617320566973614973737565720a7d0a0a7061636b61676520225370656369666965642047413447482041414920636c69656e74732c2073657276696365732c2070726f746f636f6c7322207b0a636f6d706f6e656e7420223c623e42726f6b65723c2f623e5c6e73657276696365222061732042726f6b657220234641464144320a636f6d706f6e656e7420223c623e436c69656e743c2f623e5c6e6170706c69636174696f6e2220617320436c69656e7420234641464144320a636f6d706f6e656e7420223c623e50617373706f72743c2f623e5c6e3c623e436c656172696e67686f7573653c2f623e5c6e736572766963652220617320436c656172696e67486f75736520234641464144320a7d0a0a56697361536f7572636531202e2e3e20566973615265706f7369746f7279200a56697361536f7572636532202e2e3e20566973615265706f7369746f7279200a56697361536f757263654e202e2e3e20566973615265706f7369746f7279200a566973615265706f7369746f7279202e2e3e2056697361497373756572200a0a0a566973615265706f7369746f7279202e2e3e2042726f6b6572200a56697361497373756572202e2e3e2042726f6b6572200a42726f6b6572202d2d3e20436c69656e74200a436c69656e74202d2d3e20436c656172696e67486f7573650a0a40656e64756d6c"></p>
+<p><img class="plantuml" src="http://www.plantuml.com/plantuml/svg/~h407374617274756d6c0a7061636b6167652022466c6f77206f6620617373657274696f6e7322207b0a0a736b696e706172616d20636f6d706f6e656e745374796c652072656374616e676c650a6c65667420746f20726967687420646972656374696f6e0a0a636f6d706f6e656e7420223c623e42726f6b65723c2f623e222061732062726f0a636f6d706f6e656e7420223c623e50617373706f72743c2f623e5c6e3c623e436c656172696e67686f7573653c2f623e222061732063680a636f6d706f6e656e7420223c623e5669736120417373657274696f6e20536f757263653c2f623e22206173207661730a636f6d706f6e656e7420223c623e56697361204973737565723c2f623e222061732076690a0a766173202d2d3e2076690a7669202d2d3e2062726f200a62726f202d2d3e2063680a0a7d0a40656e64756d6c"></p>
 
-<p>The above diagram shows how <a href="#term-visa-assertion">Visa Assertions</a> flow from <a href="#term-visa-assertion-source">Visa Assertion Sources</a>
-to a <a href="#term-passport-clearinghouse">Passport Clearinghouse</a> that uses them. Only the
-right hand portion of the flow is normative in that it is fully documented in this
-specification.</p>
+<p>The above diagram shows how <a href="#term-visa-assertion">Visa Assertions</a> flow from a <a href="#term-visa-assertion-source">Visa Assertion Source</a>
+to a <a href="#term-passport-clearinghouse">Passport Clearinghouse</a> that uses them.</p>
 
-<p>Implementations may introduce clients, additional services, and protocols
+<p>Implementations may introduce clients, services, and protocols
 to provide the mechanisms to move the data between the
-<a href="#term-visa-assertion-source">Visa Assertion Sources</a> and the <a href="#term-broker">Broker</a>. This diagram
-shows <em>one possible mechanism</em> involving a repository service that persists assertions from a variety of
-organisations, and optionally then involving a separate visa issuer which
-signs some visas.</p>
-
-<p>These mechanisms are unspecified by the scope of this specification except that
+<a href="#term-visa-assertion-source">Visa Assertion Sources</a> and the <a href="#term-broker">Broker</a>.  These mechanisms are unspecified by the scope of this specification except that
 they MUST adhere to security and privacy best practices, such as those outlined
 in this specification, in their handling of protocols, claims, tokens and
-related data. The flow between these components (represented by black arrows)
-MAY not be direct or conversely services shown as being separate MAY be
+related data. The flow between these components
+MAY be indirect or conversely services shown as being separate MAY be
 combined into one service. For example, some implementations MAY deploy one
 service that handles the responsibilities of both the Visa Issuer and
 the Broker.</p>
+
+<p>Here are two non-normative examples illustrating two <em>of many possible mechanisms</em>:</p>
+
+<p><img class="plantuml" src="http://www.plantuml.com/plantuml/svg/~h407374617274756d6c0a736b696e706172616d20636f6d706f6e656e745374796c652072656374616e676c650a6c65667420746f20726967687420646972656374696f6e0a0a7061636b61676520224e6f6e2d6e6f726d6174697665204578616d706c6520313a2053657061726174652049737375657220616e642042726f6b657222207b0a636f6d706f6e656e7420223c623e5669736120417373657274696f6e20536f757263653c2f623e202831295c6e6f7267616e697a6174696f6e222061732056697361536f75726365310a636f6d706f6e656e7420223c623e5669736120417373657274696f6e20536f757263653c2f623e202832295c6e6f7267616e697a6174696f6e222061732056697361536f75726365320a0a636f6d706f6e656e7420223c623e56697361204973737565723c2f623e5c6e736572766963652220617320566973614973737565720a0a636f6d706f6e656e7420223c623e42726f6b65723c2f623e5c6e73657276696365222061732042726f6b65720a636f6d706f6e656e7420223c623e436c69656e743c2f623e5c6e6170706c69636174696f6e2220617320436c69656e740a636f6d706f6e656e7420223c623e50617373706f72743c2f623e5c6e3c623e436c656172696e67686f7573653c2f623e5c6e736572766963652220617320436c656172696e67486f7573650a7d0a0a56697361536f7572636531202d2d3e2056697361497373756572200a56697361536f7572636532202d2d3e2056697361497373756572200a0a0a56697361497373756572202d2d3e2042726f6b6572200a42726f6b6572202d2d3e20436c69656e74200a436c69656e74202d2d3e20436c656172696e67486f7573650a0a40656e64756d6c"></p>
+
+<p><img class="plantuml" src="http://www.plantuml.com/plantuml/svg/~h407374617274756d6c0a736b696e706172616d20636f6d706f6e656e745374796c652072656374616e676c650a6c65667420746f20726967687420646972656374696f6e0a0a7061636b61676520224e6f6e2d6e6f726d6174697665204578616d706c6520323a20436f6d62696e65642049737375657220616e642042726f6b65723b20566973612050657273697374656e636522207b0a0a636f6d706f6e656e7420223c623e5669736120417373657274696f6e20536f757263653c2f623e202831295c6e6f7267616e697a6174696f6e222061732056697361536f75726365310a636f6d706f6e656e7420223c623e5669736120417373657274696f6e20536f757263653c2f623e202832295c6e6f7267616e697a6174696f6e222061732056697361536f75726365320a636f6d706f6e656e7420223c623e5669736120417373657274696f6e20536f757263653c2f623e20282e2e2e295c6e6f7267616e697a6174696f6e222061732056697361536f757263654e0a0a646174616261736520223c623e5669736120417373657274696f6e3c2f623e5c6e3c623e5265706f7369746f72793c2f623e5c6e736572766963652220617320566973615265706f7369746f72790a0a636f6d706f6e656e7420223c623e56697361204973737565723c2f623e5c6e3c623e42726f6b65723c2f623e5c6e73657276696365222061732042726f6b65720a636f6d706f6e656e7420223c623e436c69656e743c2f623e5c6e6170706c69636174696f6e2220617320436c69656e740a636f6d706f6e656e7420223c623e50617373706f72743c2f623e5c6e3c623e436c656172696e67686f7573653c2f623e5c6e736572766963652220617320436c656172696e67486f7573650a7d0a0a56697361536f7572636531202d2d3e20566973615265706f7369746f7279200a56697361536f7572636532202d2d3e20566973615265706f7369746f7279200a56697361536f757263654e202d2d3e20566973615265706f7369746f7279200a566973615265706f7369746f7279202d2d3e2042726f6b6572200a42726f6b6572202d2d3e20436c69656e74200a436c69656e74202d2d3e20436c656172696e67486f7573650a0a40656e64756d6c"></p>
 
 <hr style="border: 2px solid; margin: 2em auto;">
 
@@ -580,7 +627,7 @@ the Broker.</p>
   Flow (see OIDC Basic Client Implementer’s Guide 1.0 <a href="#ref-oidc-client">[OIDC-Client]</a>).</p>
       </li>
       <li>
-        <p>Public clients (Single Pages Apps or Mobile Apps) SHOULD implement Authorization Code Flow 
+        <p>Public clients (single pages apps or mobile apps) SHOULD implement Authorization Code Flow 
   with <a href="#ref-rfc7636">[PKCE]</a>.</p>
       </li>
     </ol>
@@ -699,7 +746,7 @@ of <a href="#ref-oidc-core">[OIDC-Core]</a>.</p>
 
     <ol>
       <li>
-        <p>The user represented by a Researcher Identity MUST approve the release
+        <p>The user represented by a researcher identity MUST approve the release
 of these claims to relying parties with sufficient granularity to
 allow for responsible disclosure of information best practices as well
 as to meet privacy regulations that may be applicable within or between
@@ -783,7 +830,7 @@ be used as a Visa. Details are specified in the AAI Profile 1.0 specification.</
     </ol>
 
     <p class="deprecation">The <b>Visa Access Token</b> is proposed for removal in a future
-  version of the specification. New implementations should issue Visas
+  version of the specification. Current and future specifications emphasize use of Visas embedded in a Passport, which are not access tokens. New implementations should issue Visas
   as <b>Visa Document Token</b>s.</p>
   </li>
   <li>
@@ -835,9 +882,171 @@ that use <a href="#passport-format">this format</a> to contain Visas.</p>
 </ol>
 
 <p><br>
-<em>Passport Issuing via <a href="#term-token-exchange">Token Exchange</a> (non-normative)</em></p>
+<em>Passport Issuing via <a href="#term-token-exchange">Token Exchange</a> (non-normative example)</em></p>
 
-<p><img class="plantuml" src="http://www.plantuml.com/plantuml/svg/~h407374617274756d6c0a736b696e706172616d20636f6d706f6e656e745374796c652072656374616e676c650a6c65667420746f20726967687420646972656374696f6e0a0a636f6d706f6e656e7420223c623e436c69656e743c2f623e2220617320436c69656e740a0a636f6d706f6e656e7420223c623e42726f6b65723c2f623e222061732042726f6b6572207b0a636f6d706f6e656e7420223c623e50617373706f7274204973737565723c2f623e5c6e28726f6c6529222061732050617373706f7274497373756572207b0a696e746572666163652022546f6b656e5c6e456e64706f696e742220617320546f6b656e456e64706f696e740a7d0a7d0a0a636f6d706f6e656e7420223c623e56697361204973737565723c2f623e20283129222061732056697361497373756572310a636f6d706f6e656e7420223c623e56697361204973737565723c2f623e20283229222061732056697361497373756572320a0a6e6f746520225369676e65642076697361732063616e20626520736f75726365642066726f6d5c6e6d756c7469706c6520766973612069737375657273202d20656974686572206f6e5c6e64656d616e64206f7220766961206261746368207472616e736665722f6361636865642220617320566973614e6f74650a0a5669736149737375657231202d2d3e20566973614e6f7465203a205669736120412c20420a5669736149737375657232202d2d3e20566973614e6f7465203a205669736120430a0a436c69656e74203c2d2d2042726f6b65722023746578743a726564203a202873746570203129206c6f67696e20666c6f7720726573756c747320696e5c6e616e204141492070617373706f72742d73636f7065642061636365737320746f6b656e0a436c69656e74202d2d2d3e20546f6b656e456e64706f696e742023746578743a726564203a202873746570203229207265717565737420666f7220746f6b656e2065786368616e67650a566973614e6f7465202d2d2d72696768742d2d2d3e2050617373706f72744973737565722023746578743a726564203a202873746570203329207669736173206f627461696e65640a436c69656e74203c2d2d20546f6b656e456e64706f696e74202023746578743a726564203a2028737465702034292070617373706f727420697373756564202870617373706f727420636f6e7461696e73207669736120412c422c43290a0a40656e64756d6c"></p>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" contentscripttype="application/ecmascript" contentstyletype="text/css" preserveaspectratio="none" version="1.1" viewbox="0 0 1224 692" zoomandpan="magnify">
+  <defs>
+    <filter height="300%" id="f1jrzhjmagxvrh" width="300%" x="-1" y="-1">
+      <fegaussianblur result="blurOut" stddeviation="2.0"></fegaussianblur>
+      <fecolormatrix in="blurOut" result="blurOut2" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .4 0"></fecolormatrix>
+      <feoffset dx="4.0" dy="4.0" in="blurOut2" result="blurOut3"></feoffset>
+      <feblend in="SourceGraphic" in2="blurOut3" mode="normal"></feblend>
+    </filter>
+  </defs>
+  <g>
+    <rect fill="#EEEEEE" height="673.0859" style="stroke:#A80036;stroke-width:1.0;" width="277" x="11" y="6"></rect>
+    <text fill="#000000" font-family="sans-serif" font-size="13" font-weight="bold" lengthadjust="spacing" textlength="83" x="108" y="18.0669">Researcher</text>
+    <rect fill="#DDDDDD" height="673.0859" style="stroke:#A80036;stroke-width:1.0;" width="253" x="439" y="6"></rect>
+    <text fill="#000000" font-family="sans-serif" font-size="13" font-weight="bold" lengthadjust="spacing" textlength="24" x="553.5" y="18.0669">AAI</text>
+    <rect fill="#DDDDDD" height="673.0859" style="stroke:#A80036;stroke-width:1.0;" width="209" x="714" y="6"></rect>
+    <text fill="#000000" font-family="sans-serif" font-size="13" font-weight="bold" lengthadjust="spacing" textlength="203" x="717" y="18.0669">Data Access Committee (1)</text>
+    <rect fill="#DDDDDD" height="673.0859" style="stroke:#A80036;stroke-width:1.0;" width="209" x="997" y="6"></rect>
+    <text fill="#000000" font-family="sans-serif" font-size="13" font-weight="bold" lengthadjust="spacing" textlength="203" x="1000" y="18.0669">Data Access Committee (2)</text>
+    <line style="stroke:#A80036;stroke-width:1.0;stroke-dasharray:5.0,5.0;" x1="56" x2="56" y1="108.4297" y2="685.0859"></line>
+    <line style="stroke:#A80036;stroke-width:1.0;stroke-dasharray:5.0,5.0;" x1="235" x2="235" y1="108.4297" y2="685.0859"></line>
+    <line style="stroke:#A80036;stroke-width:1.0;stroke-dasharray:5.0,5.0;" x1="565" x2="565" y1="108.4297" y2="685.0859"></line>
+    <line style="stroke:#A80036;stroke-width:1.0;stroke-dasharray:5.0,5.0;" x1="818" x2="818" y1="108.4297" y2="685.0859"></line>
+    <line style="stroke:#A80036;stroke-width:1.0;stroke-dasharray:5.0,5.0;" x1="1101" x2="1101" y1="108.4297" y2="685.0859"></line>
+    <text fill="#000000" font-family="sans-serif" font-size="14" lengthadjust="spacing" textlength="77" x="15" y="105.1279">User Agent</text>
+    <ellipse cx="56.5" cy="35.1328" fill="#FEFECE" filter="url(#f1jrzhjmagxvrh)" rx="8" ry="8" style="stroke:#A80036;stroke-width:2.0;"></ellipse>
+    <path d="M56.5,43.1328 L56.5,70.1328 M43.5,51.1328 L69.5,51.1328 M56.5,70.1328 L43.5,85.1328 M56.5,70.1328 L69.5,85.1328 " fill="none" filter="url(#f1jrzhjmagxvrh)" style="stroke:#A80036;stroke-width:2.0;"></path>
+    <rect fill="#FEFECE" filter="url(#f1jrzhjmagxvrh)" height="30.2969" style="stroke:#A80036;stroke-width:1.5;" width="53" x="207" y="73.1328"></rect>
+    <text fill="#000000" font-family="sans-serif" font-size="14" lengthadjust="spacing" textlength="39" x="214" y="93.1279">Client</text>
+    <rect fill="#FEFECE" filter="url(#f1jrzhjmagxvrh)" height="30.2969" style="stroke:#A80036;stroke-width:1.5;" width="201" x="463" y="73.1328"></rect>
+    <text fill="#000000" font-family="sans-serif" font-size="14" lengthadjust="spacing" textlength="187" x="470" y="93.1279">Broker and Passport Issuer</text>
+    <rect fill="#FEFECE" filter="url(#f1jrzhjmagxvrh)" height="30.2969" style="stroke:#A80036;stroke-width:1.5;" width="111" x="763" y="69.1328"></rect>
+    <rect fill="#FEFECE" filter="url(#f1jrzhjmagxvrh)" height="30.2969" style="stroke:#A80036;stroke-width:1.5;" width="111" x="759" y="73.1328"></rect>
+    <text fill="#000000" font-family="sans-serif" font-size="14" lengthadjust="spacing" textlength="97" x="766" y="93.1279">Visa Issuer (1)</text>
+    <rect fill="#FEFECE" filter="url(#f1jrzhjmagxvrh)" height="30.2969" style="stroke:#A80036;stroke-width:1.5;" width="111" x="1046" y="69.1328"></rect>
+    <rect fill="#FEFECE" filter="url(#f1jrzhjmagxvrh)" height="30.2969" style="stroke:#A80036;stroke-width:1.5;" width="111" x="1042" y="73.1328"></rect>
+    <text fill="#000000" font-family="sans-serif" font-size="14" lengthadjust="spacing" textlength="97" x="1049" y="93.1279">Visa Issuer (2)</text>
+    <rect fill="#EEEEEE" filter="url(#f1jrzhjmagxvrh)" height="3" style="stroke:#EEEEEE;stroke-width:1.0;" width="1217" x="0" y="138.9961"></rect>
+    <line style="stroke:#000000;stroke-width:1.0;" x1="0" x2="1217" y1="138.9961" y2="138.9961"></line>
+    <line style="stroke:#000000;stroke-width:1.0;" x1="0" x2="1217" y1="141.9961" y2="141.9961"></line>
+    <rect fill="#EEEEEE" filter="url(#f1jrzhjmagxvrh)" height="23.1328" style="stroke:#000000;stroke-width:2.0;" width="50" x="583.5" y="128.4297"></rect>
+    <text fill="#000000" font-family="sans-serif" font-size="13" font-weight="bold" lengthadjust="spacing" textlength="36" x="589.5" y="144.4966">OIDC</text>
+    <polygon fill="#A80036" points="223.5,178.6953,233.5,182.6953,223.5,186.6953,227.5,182.6953" style="stroke:#A80036;stroke-width:1.0;"></polygon>
+    <line style="stroke:#A80036;stroke-width:1.0;" x1="56.5" x2="229.5" y1="182.6953" y2="182.6953"></line>
+    <text fill="#000000" font-family="sans-serif" font-size="13" lengthadjust="spacing" textlength="84" x="63.5" y="177.6294">Initiates login</text>
+    <polygon fill="#A80036" points="67.5,207.8281,57.5,211.8281,67.5,215.8281,63.5,211.8281" style="stroke:#A80036;stroke-width:1.0;"></polygon>
+    <line style="stroke:#A80036;stroke-width:1.0;" x1="61.5" x2="234.5" y1="211.8281" y2="211.8281"></line>
+    <text fill="#000000" font-family="sans-serif" font-size="13" lengthadjust="spacing" textlength="149" x="73.5" y="206.7622">Send redirect to Broker</text>
+    <polygon fill="#A80036" points="553.5,236.9609,563.5,240.9609,553.5,244.9609,557.5,240.9609" style="stroke:#A80036;stroke-width:1.0;"></polygon>
+    <line style="stroke:#A80036;stroke-width:1.0;" x1="56.5" x2="559.5" y1="240.9609" y2="240.9609"></line>
+    <text fill="#000000" font-family="sans-serif" font-size="13" lengthadjust="spacing" textlength="98" x="63.5" y="235.895">Follow redirects</text>
+    <rect fill="#FFFFFF" filter="url(#f1jrzhjmagxvrh)" height="55.3984" style="stroke:#000000;stroke-width:2.0;" width="247" x="440" y="248.9609"></rect>
+    <path d="M440,248.9609 L506,248.9609 L506,255.9609 L496,265.9609 L440,265.9609 L440,248.9609 " fill="#EEEEEE" style="stroke:#000000;stroke-width:2.0;"></path>
+    <text fill="#000000" font-family="sans-serif" font-size="13" font-weight="bold" lengthadjust="spacing" textlength="21" x="453" y="263.0278">ref</text>
+    <text fill="#000000" font-family="sans-serif" font-size="13" lengthadjust="spacing" textlength="166" x="473.5" y="282.0278">Broker authenticates user</text>
+    <text fill="#000000" font-family="sans-serif" font-size="13" lengthadjust="spacing" textlength="184" x="473.5" y="297.1606">(potentially with external IdP)</text>
+    <polygon fill="#A80036" points="67.5,326.4922,57.5,330.4922,67.5,334.4922,63.5,330.4922" style="stroke:#A80036;stroke-width:1.0;"></polygon>
+    <line style="stroke:#A80036;stroke-width:1.0;" x1="61.5" x2="564.5" y1="330.4922" y2="330.4922"></line>
+    <text fill="#000000" font-family="sans-serif" font-size="13" lengthadjust="spacing" textlength="293" x="73.5" y="325.4263">Send redirect to client with authorization code</text>
+    <polygon fill="#A80036" points="223.5,355.625,233.5,359.625,223.5,363.625,227.5,359.625" style="stroke:#A80036;stroke-width:1.0;"></polygon>
+    <line style="stroke:#A80036;stroke-width:1.0;" x1="56.5" x2="229.5" y1="359.625" y2="359.625"></line>
+    <text fill="#000000" font-family="sans-serif" font-size="13" lengthadjust="spacing" textlength="155" x="63.5" y="354.5591">Follow redirect with code</text>
+    <polygon fill="#A80036" points="553.5,384.7578,563.5,388.7578,553.5,392.7578,557.5,388.7578" style="stroke:#A80036;stroke-width:1.0;"></polygon>
+    <line style="stroke:#A80036;stroke-width:1.0;" x1="235.5" x2="559.5" y1="388.7578" y2="388.7578"></line>
+    <text fill="#000000" font-family="sans-serif" font-size="13" lengthadjust="spacing" textlength="256" x="242.5" y="383.6919">Request Passport-Scoped Access Token</text>
+    <polygon fill="#A80036" points="246.5,413.8906,236.5,417.8906,246.5,421.8906,242.5,417.8906" style="stroke:#A80036;stroke-width:1.0;"></polygon>
+    <line style="stroke:#A80036;stroke-width:1.0;" x1="240.5" x2="564.5" y1="417.8906" y2="417.8906"></line>
+    <text fill="#000000" font-family="sans-serif" font-size="13" lengthadjust="spacing" textlength="288" x="252.5" y="412.8247">Respond with Passport-Scoped Access Token</text>
+    <rect fill="#EEEEEE" filter="url(#f1jrzhjmagxvrh)" height="3" style="stroke:#EEEEEE;stroke-width:1.0;" width="1217" x="0" y="446.457"></rect>
+    <line style="stroke:#000000;stroke-width:1.0;" x1="0" x2="1217" y1="446.457" y2="446.457"></line>
+    <line style="stroke:#000000;stroke-width:1.0;" x1="0" x2="1217" y1="449.457" y2="449.457"></line>
+    <rect fill="#EEEEEE" filter="url(#f1jrzhjmagxvrh)" height="23.1328" style="stroke:#000000;stroke-width:2.0;" width="134" x="541.5" y="435.8906"></rect>
+    <text fill="#000000" font-family="sans-serif" font-size="13" font-weight="bold" lengthadjust="spacing" textlength="120" x="547.5" y="451.9575">Token Exchange</text>
+    <polygon fill="#A80036" points="553.5,501.2891,563.5,505.2891,553.5,509.2891,557.5,505.2891" style="stroke:#A80036;stroke-width:1.0;"></polygon>
+    <line style="stroke:#A80036;stroke-width:1.0;" x1="235.5" x2="559.5" y1="505.2891" y2="505.2891"></line>
+    <text fill="#000000" font-family="sans-serif" font-size="13" lengthadjust="spacing" textlength="248" x="242.5" y="485.0903">Request to exchange Passport-Scoped</text>
+    <text fill="#000000" font-family="sans-serif" font-size="13" lengthadjust="spacing" textlength="168" x="242.5" y="500.2231">Access Token for Passport</text>
+    <rect fill="#FFFFFF" filter="url(#f1jrzhjmagxvrh)" height="40.2656" style="stroke:#000000;stroke-width:2.0;" width="740" x="440" y="513.2891"></rect>
+    <path d="M440,513.2891 L506,513.2891 L506,520.2891 L496,530.2891 L440,530.2891 L440,513.2891 " fill="#EEEEEE" style="stroke:#000000;stroke-width:2.0;"></path>
+    <text fill="#000000" font-family="sans-serif" font-size="13" font-weight="bold" lengthadjust="spacing" textlength="21" x="453" y="527.356">ref</text>
+    <text fill="#000000" font-family="sans-serif" font-size="13" lengthadjust="spacing" textlength="659" x="482.5" y="546.356">Signed visas can be sourced from multiple visa issuers - either on demand or via batch transfer/cached</text>
+    <polygon fill="#A80036" points="576.5,575.6875,566.5,579.6875,576.5,583.6875,572.5,579.6875" style="stroke:#A80036;stroke-width:1.0;"></polygon>
+    <polygon fill="#A80036" points="806.5,575.6875,816.5,579.6875,806.5,583.6875,810.5,579.6875" style="stroke:#A80036;stroke-width:1.0;"></polygon>
+    <line style="stroke:#A80036;stroke-width:1.0;" x1="570.5" x2="812.5" y1="579.6875" y2="579.6875"></line>
+    <text fill="#000000" font-family="sans-serif" font-size="13" lengthadjust="spacing" textlength="86" x="582.5" y="574.6216">Obtain Visa A</text>
+    <polygon fill="#A80036" points="576.5,604.8203,566.5,608.8203,576.5,612.8203,572.5,608.8203" style="stroke:#A80036;stroke-width:1.0;"></polygon>
+    <polygon fill="#A80036" points="1089.5,604.8203,1099.5,608.8203,1089.5,612.8203,1093.5,608.8203" style="stroke:#A80036;stroke-width:1.0;"></polygon>
+    <line style="stroke:#A80036;stroke-width:1.0;" x1="570.5" x2="1095.5" y1="608.8203" y2="608.8203"></line>
+    <text fill="#000000" font-family="sans-serif" font-size="13" lengthadjust="spacing" textlength="86" x="582.5" y="603.7544">Obtain Visa B</text>
+    <polygon fill="#A80036" points="576.5,633.9531,566.5,637.9531,576.5,641.9531,572.5,637.9531" style="stroke:#A80036;stroke-width:1.0;"></polygon>
+    <polygon fill="#A80036" points="1089.5,633.9531,1099.5,637.9531,1089.5,641.9531,1093.5,637.9531" style="stroke:#A80036;stroke-width:1.0;"></polygon>
+    <line style="stroke:#A80036;stroke-width:1.0;" x1="570.5" x2="1095.5" y1="637.9531" y2="637.9531"></line>
+    <text fill="#000000" font-family="sans-serif" font-size="13" lengthadjust="spacing" textlength="86" x="582.5" y="632.8872">Obtain Visa C</text>
+    <polygon fill="#A80036" points="246.5,663.0859,236.5,667.0859,246.5,671.0859,242.5,667.0859" style="stroke:#A80036;stroke-width:1.0;"></polygon>
+    <line style="stroke:#A80036;stroke-width:1.0;" x1="240.5" x2="564.5" y1="667.0859" y2="667.0859"></line>
+    <text fill="#000000" font-family="sans-serif" font-size="13" lengthadjust="spacing" textlength="306" x="252.5" y="662.02">Response with Passport containing Visas A, B, C</text>
+    <!--MD5=[4be2e7eac98638d63e9ba148873791be]
+@startuml
+skinparamlocked svgDimensionStyle false
+
+
+hide footbox
+skinparam BoxPadding 10
+skinparam ParticipantPadding 20
+
+box "Researcher"  #eee
+actor       "User Agent"                as user
+participant Client                      as client
+end box
+
+box "AAI"
+participant "Broker and Passport Issuer"                      as broker
+end box
+
+box "Data Access Committee (1)"
+collections "Visa Issuer (1)"            as issuer1
+end box
+
+box "Data Access Committee (2)"
+collections "Visa Issuer (2)"            as issuer2
+end box
+
+==OIDC==
+
+user -> client : Initiates login
+client -> user : Send redirect to Broker
+user -> broker : Follow redirects
+ref over broker
+Broker authenticates user 
+(potentially with external IdP)
+end ref
+broker -> user : Send redirect to client with authorization code
+user -> client : Follow redirect with code
+
+client -> broker : Request Passport-Scoped Access Token
+broker -> client : Respond with Passport-Scoped Access Token
+
+==Token Exchange==
+
+client -> broker : Request to exchange Passport-Scoped \nAccess Token for Passport
+
+ref over broker, issuer1, issuer2
+Signed visas can be sourced from multiple visa issuers - either on demand or via batch transfer/cached
+end ref
+
+broker <-> issuer1 : Obtain Visa A
+broker <-> issuer2 : Obtain Visa B
+broker <-> issuer2 : Obtain Visa C
+client <- broker : Response with Passport containing Visas A, B, C
+
+
+
+@enduml
+
+PlantUML version 1.2021.10(Mon Aug 30 13:43:48 GMT 2021)
+(GPL source distribution)
+Java Runtime: OpenJDK Runtime Environment
+JVM: OpenJDK 64-Bit Server VM
+Default Encoding: UTF-8
+Language: en
+Country: US
+-->
+  </g>
+</svg>
 
 <hr style="width: 10em; margin: 2em auto;">
 
@@ -863,53 +1072,6 @@ that use <a href="#passport-format">this format</a> to contain Visas.</p>
       <li>
         <p>For access token flows, Passport Clearinghouses MUST either check the validity of the access token or treat the access
 token as opaque.</p>
-
-        <ol>
-          <li>
-            <p>If treating the access token as a JWT, a Passport Clearinghouse:</p>
-
-            <ol>
-              <li>
-                <p>Even though access tokens are expected to be submitted against a Broker’s Token or UserInfo Endpoint, a Passport Clearinghouse SHOULD check the access token’s signature via JWKS or having stored the
-public key.</p>
-
-                <ol>
-                  <li>A metadata URL (<code class="language-plaintext highlighter-rouge">.well-known</code> URL) SHOULD be used here to use the
- jwks_uri parameter.</li>
-                </ol>
-              </li>
-              <li>
-                <p>MUST check <code class="language-plaintext highlighter-rouge">iss</code> attribute to ensure a trusted Broker has generated
-the token.</p>
-
-                <ol>
-                  <li>If evaluating Visa, trust MUST be established based
-on the signer of the Visa itself. In Passport
-Clearinghouses participating in open federation, the Passport
-Clearinghouse does not necessarily have to trust the Broker that
-includes Visas within another token in order to use
-the Visa (although the Passport Clearinghouse MAY require
-any other Broker involved in the propagation of the Visas to
-also be trusted if the Passport Clearinghouse needs to restrict its
-trust model).</li>
-                </ol>
-              </li>
-              <li>
-                <p>MUST check <code class="language-plaintext highlighter-rouge">exp</code> to ensure the token has not expired.</p>
-              </li>
-              <li>
-                <p>MAY additionally check <code class="language-plaintext highlighter-rouge">aud</code> to make sure Relying Party is trusted
-(client_id).</p>
-              </li>
-            </ol>
-          </li>
-          <li>
-            <p>If treating the token as opaque a Passport Clearinghouse MUST know in
-advance where to find a corresponding Introspection Endpoint 
-<a href="#ref-rfc7662">[RFC7662]</a>. This may limit the
-functionality of accepting tokens from some Brokers.</p>
-          </li>
-        </ol>
       </li>
       <li>
         <p>For Passport flows, Passport Clearinghouses MUST check the validity of the Passport.</p>
@@ -1082,14 +1244,14 @@ the <a href="#ref-oidc-core">[OIDC-Core]</a> access token.</p>
 <ul>
   <li>
     <p><code class="language-plaintext highlighter-rouge">iss</code>: REQUIRED. MUST be able to be appended with
-.well-known/openid-configuration to get spec of Broker.</p>
+<code class="language-plaintext highlighter-rouge">.well-known/openid-configuration</code> to get spec of Broker.</p>
   </li>
   <li>
     <p><code class="language-plaintext highlighter-rouge">sub</code>: REQUIRED. Authenticated user unique identifier.</p>
   </li>
   <li>
     <p><code class="language-plaintext highlighter-rouge">idp</code>: OPTIONAL. SHOULD contain the IDP the user used to auth with.
-A non-normative example is “google”. This does not have to be unique and
+This does not have to be unique and
 can be used just to help inform if that is what a <a href="#term-visa-issuer">Visa Issuer</a> 
 or <a href="#term-data-holder">Data Holder</a> needs.</p>
   </li>
