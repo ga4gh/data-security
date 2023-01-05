@@ -351,7 +351,6 @@ bro --> ch
 }
 @enduml
 
-
 The above diagram shows how [Visa Assertions](#term-visa-assertion) flow from a [Visa Assertion Source](#term-visa-assertion-source)
 to a [Passport Clearinghouse](#term-passport-clearinghouse) that uses them. 
 
