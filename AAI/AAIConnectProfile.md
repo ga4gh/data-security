@@ -172,7 +172,7 @@ through various [Brokers](#term-broker) as needed while retaining the
 signature of the original [Visa Issuer](#term-visa-issuer).
 
 <a name="term-visa-assertion"></a>
-**Visa Assertion** -- a piece of information about a user that is asserted by a [Visa Assertion Source](#term-visa-assertion-source). It is then encoded by a [Visa Issuer](#term-visa-issuer) into a [Visa](#Visa).
+**Visa Assertion** -- a piece of information about a user that is asserted by a [Visa Assertion Source](#term-visa-assertion-source). It is then encoded by a [Visa Issuer](#term-visa-issuer) into a [Visa](#term-visa).
 
 ## TODO simplify per 22-12-15
 
@@ -335,115 +335,8 @@ Notable differences between this diagram and interaction specified in AAI/Passpo
   Visas, whereas the Passport-Scoped Access Token contains authorizations above and beyond the Visas.
 
 <a name="flow-of-assertions-discussion">
-```
-<discussion>  (to be deleted)
-```
-
-> Hello Team: This is Tom interrupting the spec with some temporary inline
-> discussion about the edits to this diagram. You'll want to go to the [this
-> discussion with diagram drafts
-> rendered](https://ga4gh.github.io/data-security/review-2022-12-01/aai-openid-connect-profile#flow-of-assertions).
-> 
-> We must simplify this diagram in response to reviewer feedback:
-
-@startuml
-skinparam componentStyle rectangle
-left to right direction
-
-package "Unspecified clients, additional services, protocols" {
-component "<b>Visa Assertion Source</b> (1)\norganization" as VisaSource1
-component "<b>Visa Assertion Source</b> (2)\norganization" as VisaSource2
-component "<b>Visa Assertion Source</b> (...)\norganization" as VisaSourceN
-
-database "<b>Visa Assertion</b>\n<b>Repository</b>\nabstract service" as VisaRepository
-component "<b>Visa Issuer</b>\nabstract service\n(optional)" as VisaIssuer
-}
-
-package "Specified GA4GH AAI clients, services, protocols" {
-component "<b>Broker</b>\nservice" as Broker #FAFAD2
-component "<b>Client</b>\napplication" as Client #FAFAD2
-component "<b>Passport</b>\n<b>Clearinghouse</b>\nservice" as ClearingHouse #FAFAD2
-}
-
-VisaSource1 ..> VisaRepository 
-VisaSource2 ..> VisaRepository 
-VisaSourceN ..> VisaRepository 
-VisaRepository ..> VisaIssuer 
-
-
-VisaRepository ..> Broker 
-VisaIssuer ..> Broker 
-Broker --> Client 
-Client --> ClearingHouse
-
-@enduml
-
-> We discussed showing multiplicity on solid arrows in this diagram in lieu of multiple boxes...
-
-
-@startuml
-skinparam componentStyle rectangle
-left to right direction
-
-package "Unspecified clients, additional services, protocols" {
-component "<b>Visa Assertion Source</b>\norganization" as VisaSource
-database "<b>Visa Assertion</b>\n<b>Repository</b>\nabstract service" as VisaRepository
-component "<b>Visa Issuer</b>\nabstract service\n(optional)" as VisaIssuer
-}
-
-package "Specified GA4GH AAI clients, services, protocols" {
-component "<b>Broker</b>\nservice" as Broker #FAFAD2
-component "<b>Client</b>\napplication" as Client #FAFAD2
-component "<b>Passport</b>\n<b>Clearinghouse</b>\nservice" as ClearingHouse #FAFAD2
-}
-
-VisaSource "n" --> "1" VisaRepository 
-VisaRepository "1" --> "0..1" VisaIssuer 
-VisaIssuer "0..1" --> "1" Broker 
-Broker "1" --> "1" Client 
-Client "1" --> "1" ClearingHouse
-
-@enduml
-
-> ... but I don't love it now that I've done it this way. (BTW, it's easy to do
-> in PlantUML; feel free to try to choose better labels than mine here.)
->
-> We also talked about omitting the "unspecified" and "specified" boxes...
-
-@startuml
-skinparam componentStyle rectangle
-left to right direction
-
-component "<b>Visa Assertion Source</b>\norganization" as VisaSource
-database "<b>Visa Assertion</b>\n<b>Repository</b>\nabstract service" as VisaRepository
-component "<b>Visa Issuer</b>\nabstract service\n(optional)" as VisaIssuer
-component "<b>Broker</b>\nservice" as Broker
-component "<b>Client</b>\napplication" as Client
-component "<b>Passport</b>\n<b>Clearinghouse</b>\nservice" as ClearingHouse
-
-VisaSource "n" --> "1" VisaRepository 
-VisaRepository "1" --> "0..1" VisaIssuer 
-VisaIssuer "0..1" --> "1" Broker 
-Broker "1" --> "1" Client 
-Client "1" --> "1" ClearingHouse
-
-@enduml
-
-> ... but it still leaves a lot to explain.
->
-> Here's a solution: Explode the one complex, overloaded diagram into multiple
-> simpler ones. Focus purely on the **roles** in the first diagram. Then explain
-> about flexibility of mechanisms. Then show two concrete non-normative
-> example diagrams. See below...
->
-> And now we return you to your regularly scheduled spec draft...
-
-```
-</discussion>
-```
 
 ### Flow of Assertions
-
 
 @startuml
 package "Flow of assertions" {
@@ -600,10 +493,10 @@ and access_tokens (and potentially refresh tokens) for consumption within the GA
 
     2.  Access tokens MUST be in JWS format
 
-        1.  Access tokens for GA4GH use MUST be a [GA4GH JWT](#ga4gh-jwt-format) using
-            [Passport-Scoped Access Token format](#passport-scoped-access-token-issued-by-broker).
+        1.  Access tokens for GA4GH use MUST be a [GA4GH JWT](#ga4gh-jwt-formats) using
+            [Passport-Scoped Access Token format](#passport-scoped-access-token).
 
-        2.  Access tokens MUST NOT contain [GA4GH Claims](#term-ga4gh-claims) directly in the access token.
+        2.  Access tokens MUST NOT contain [GA4GH Claims](#term-ga4gh-claim) directly in the access token.
 
         3.  Access tokens MAY contain additional non-GA4GH Claims directly in the access token.
 
@@ -647,7 +540,8 @@ and access_tokens (and potentially refresh tokens) for consumption within the GA
 
 {% hr3 %}
 
-<a name="conformance-for-visa-issuers"></a>
+
+<a name="visa-issued-by-visa-issuer"><!-- for links from older versions of specs --></a>
 ### Conformance for Visa Issuers
 
 Visa Issuers issue signed JWTs (Visas) asserting facts about researchers, which may be used by Passport Clearinghouses
@@ -666,10 +560,10 @@ obtains Visas contained in a Passport or returned from the Userinfo Endpoint.
        be an OIDC provider, and MAY provide tokens of this type without any
        revocation process.
 
-        1.  The token MUST conform with JWS format [[RFC7515]](#term-rfc7515) requirements
+        1.  The token MUST conform with JWS format [[RFC7515]](#ref-rfc7515) requirements
         2.  The token MUST be signed by a [Visa Issuer](#term-visa-issuer).
         3.  The JWS header MUST contain `jku` as specified by [section
-            4.1.2](https://tools.ietf.org/html/rfc7515#section-4.1.2) of [[RFC7515]](#term-rfc7515), and
+            4.1.2](https://tools.ietf.org/html/rfc7515#section-4.1.2) of [[RFC7515]](#ref-rfc7515), and
             MUST provide the corresponding endpoint to fetch
             the public key used to sign the Visa Document Token.
         4.  The token is not treated as an access token, but validity
@@ -680,7 +574,7 @@ obtains Visas contained in a Passport or returned from the Userinfo Endpoint.
         7.  Payload [Claims](#term-claim) are specified in 
             [Visa Format](https://github.com/ga4gh-duri/ga4gh-duri.github.io/blob/master/researcher_ids/ga4gh_passport_v1.md#visa-format) in [[Passport]](#ref-passport).
 
-    2. <a name="term-visa-access-token"></a> <a name="term-embedded-access-token"></a> <a name="embedded-access-token-format"></a>
+    2. <a name="term-visa-access-token"></a> <a name="visa-access-token-format"></a> <a name="term-visa-access-token-format"></a> <a name="term-embedded-access-token"></a> <a name="embedded-access-token-format"></a>
        **Visa Access Token** -- The Visa Issuer is providing an OIDC provider
        service and issues OIDC-compliant access tokens in a specific format that can
        be used as a Visa. Details are specified in the AAI Profile 1.0 specification.
@@ -864,6 +758,7 @@ client <- broker : Response with Passport containing Visas A, B, C
 
 {% hr2 %}
 
+<a name="#ga4gh-jwt-format"><!-- for old links --></a>
 ## GA4GH JWT Formats
 
 This specification builds on the JWT format defined in [[RFC7519]](#ref-rfc7519).
@@ -876,6 +771,7 @@ This profile is agnostic to the format of the id_token.
 
 {% hr3 %}
 
+<a name="passport-scoped-access-token-issued-by-broker"></a>
 <a name="access_token-issued-by-broker"></a>
 ### Passport-Scoped Access Token
 
@@ -901,7 +797,7 @@ the [[OIDC-Core]](#ref-oidc-core) access token.
 - `alg`: REQUIRED. See [Signing Algorithms](#signing-algorithms).
 
 - `kid`: REQUIRED. Key ID, see [section 4.1.4](https://tools.ietf.org/html/rfc7515#section-4.1.4) 
-    of [[RFC7515]](#ref-7515).
+    of [[RFC7515]](#ref-rfc7515).
 
 **Payload**
 
@@ -972,7 +868,7 @@ with the `requested_token_type=urn:ga4gh:params:oauth:token-type:passport` is su
 Passports are defined as signed JWTs. The JWT specification [[RFC7519]](#ref-rfc7519)
 states that JWTs can be either signed and encoded using JWS Compact Serialization, 
 or encrypted and encoded using JWE Compact Serialization. 
-Passports are signed JWTs, which implies that they must be encoded using [JWS Compact Serialization](https://www.rfc-editor.org/rfc/rfc7515#section-3.1) [[RFC7515]](#ref-7515).
+Passports are signed JWTs, which implies that they must be encoded using [JWS Compact Serialization](https://www.rfc-editor.org/rfc/rfc7515#section-3.1) [[RFC7515]](#ref-rfc7515).
 
 **Header**
 
@@ -1037,7 +933,7 @@ JWTs MUST be issued with signatures using the `ES256` or `RS256` algorithm.
 ## Security Considerations
 
 The confidentiality and integrity of tokens must be secured, taking
-[JSON Web Token Best Current Practices](https://www.rfc-editor.org/rfc/rfc8725.html#name-best-practices) in [[RFC8725]](#term-rfc8725)
+[JSON Web Token Best Current Practices](https://www.rfc-editor.org/rfc/rfc8725.html#name-best-practices) in [[RFC8725]](#ref-rfc8725)
 into consideration. Of special concern are:
 * Revoking access tokens and Visa Assertions
 * Limiting damage of leaked tokens
