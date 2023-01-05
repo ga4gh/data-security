@@ -288,7 +288,7 @@ participant "Broker and Passport Issuer"                      as broker
 end box
 
 box "Data Access Committee"
-collections "Visa Issuer"            as issuer
+participant "Visa Issuer"            as issuer
 end box
 
 box "Data Holder"
@@ -625,11 +625,11 @@ participant "Broker and Passport Issuer"                      as broker
 end box
 
 box "Data Access Committee (1)"
-collections "Visa Issuer (1)"            as issuer1
+participant "Visa Issuer (1)"            as issuer1
 end box
 
 box "Data Access Committee (2)"
-collections "Visa Issuer (2)"            as issuer2
+participant "Visa Issuer (2)"            as issuer2
 end box
 
 ==OIDC==
