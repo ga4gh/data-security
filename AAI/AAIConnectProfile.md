@@ -174,15 +174,12 @@ signature of the original [Visa Issuer](#term-visa-issuer).
 <a name="term-visa-assertion"></a>
 **Visa Assertion** -- a piece of information about a user that is asserted by a [Visa Assertion Source](#term-visa-assertion-source). It is then encoded by a [Visa Issuer](#term-visa-issuer) into a [Visa](#term-visa).
 
-## TODO simplify per 22-12-15
-
 <a name="term-visa-assertion-source"></a> **Visa Assertion Source** -- the source organization of
 a [Visa Assertion](#term-visa-assertion) which at a minimum includes the organization associated with
 making the assertion, although can optionally identify a sub-organization or a
 specific assignment within the organization that made the assertion.
 
--   This is NOT necessarily the organization that stores the assertion, nor the
-    [Visa Issuer](#term-visa-issuer)’s organization that signs the Visa; it is the
+-   This is NOT necessarily the organization that signs the Visa; it is the
     organization that has the authority to make the assertion on behalf of the
     user and is responsible for making and maintaining the assertion.
 
@@ -334,8 +331,6 @@ Notable differences between this diagram and interaction specified in AAI/Passpo
   which can be sent to a Passport Clearinghouse. The Passport Token carries only the authorization in a user's 
   Visas, whereas the Passport-Scoped Access Token contains authorizations above and beyond the Visas.
 
-<a name="flow-of-assertions-discussion">
-
 ### Flow of Assertions
 
 @startuml
@@ -381,18 +376,20 @@ package "Non-normative Example 1: Separate Issuer and Broker" {
 component "<b>Visa Assertion Source</b> (1)\norganization" as VisaSource1
 component "<b>Visa Assertion Source</b> (2)\norganization" as VisaSource2
 
-component "<b>Visa Issuer</b>\nservice" as VisaIssuer
+component "<b>Visa Issuer (1)</b>\nservice" as VisaIssuer1
+component "<b>Visa Issuer (2)</b>\nservice" as VisaIssuer2
 
 component "<b>Broker</b>\nservice" as Broker
 component "<b>Client</b>\napplication" as Client
 component "<b>Passport</b>\n<b>Clearinghouse</b>\nservice" as ClearingHouse
 }
 
-VisaSource1 --> VisaIssuer 
-VisaSource2 --> VisaIssuer 
+VisaSource1 --> VisaIssuer1
+VisaSource2 --> VisaIssuer2
 
 
-VisaIssuer --> Broker 
+VisaIssuer1 --> Broker 
+VisaIssuer2 --> Broker 
 Broker --> Client 
 Client --> ClearingHouse
 
@@ -403,23 +400,20 @@ Client --> ClearingHouse
 skinparam componentStyle rectangle
 left to right direction
 
-package "Non-normative Example 2: Combined Issuer and Broker; Visa Persistence" {
+package "Non-normative Example 2: Combined Issuer and Broker" {
 
 component "<b>Visa Assertion Source</b> (1)\norganization" as VisaSource1
 component "<b>Visa Assertion Source</b> (2)\norganization" as VisaSource2
 component "<b>Visa Assertion Source</b> (...)\norganization" as VisaSourceN
 
-database "<b>Visa Assertion</b>\n<b>Repository</b>\nservice" as VisaRepository
-
-component "<b>Visa Issuer</b>\n<b>Broker</b>\nservice" as Broker
+component "<b>Visa Issuer</b> and <b>Broker</b>\nservice" as Broker
 component "<b>Client</b>\napplication" as Client
 component "<b>Passport</b>\n<b>Clearinghouse</b>\nservice" as ClearingHouse
 }
 
-VisaSource1 --> VisaRepository 
-VisaSource2 --> VisaRepository 
-VisaSourceN --> VisaRepository 
-VisaRepository --> Broker 
+VisaSource1 --> Broker 
+VisaSource2 --> Broker 
+VisaSourceN --> Broker
 Broker --> Client 
 Client --> ClearingHouse
 
