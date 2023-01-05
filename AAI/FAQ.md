@@ -136,7 +136,7 @@ note right
 
 {
   "typ": "vnd.ga4gh.passport+jwt",
-  "alg": "RS256",
+  "alg": "<algorithm-identifier>",
   "kid": "<key-identifier>"
 } .
 {
