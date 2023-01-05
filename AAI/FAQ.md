@@ -459,9 +459,7 @@ of the AAI standard regarding the presence of JKUs.
 
 {% hr2 %}
 
-## Threat Analysis
-
-### What is the danger of using a fully scoped (or audience-less) token in a multi-node workflow
+### What is the limitation of using a fully scoped (or audience-less) token in a multi-node workflow?
 
 The *Passport Scoped Access Token* is
 a token that can unlock **all** data that the user is entitled to, and not just
@@ -480,11 +478,6 @@ that has no restrictions on use) - the bad actor
 can also move sideways in the system to access Dataset #2 and #3 via Resource
 Server #B - and not just Dataset #1
 that has already been compromised.
-
-The safer alternative is a system where passports can be down-scoped before use -
-the Passport that is maliciously being passed from Resource Server #A
-to Resource Server #B would then be rejected - because
-it would be scoped only for Resource Server #A / Dataset #1. 
 
 {% plantuml %}
 left to right direction
@@ -511,9 +504,6 @@ database "Dataset #3\n(now possibly compromised)" as DS3 #gold;line:red;line.bol
 [RSA] -[#red,plain,thickness=16]-> [RSB] : attack
 
 {% endplantuml %}
-
-The addition of audiences to the token, or down-scoping of permissions - possible via token exchange - limits
-the scope of damage if the token ends up with a bad actor.
 
 {% hr2 %}
 
