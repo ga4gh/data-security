@@ -128,8 +128,7 @@ note right
 {
   "access_token": "<Passport>",
   "issued_token_type": "urn:ga4gh:params:oauth:token-type:passport",
-  "token_type": "Bearer",
-  "expires_in": 60
+  "token_type": "Bearer"
 }
 
 ▼ Passport content as example (decoded from the base64 of the JWT Passport) ▼
