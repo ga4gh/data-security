@@ -770,9 +770,7 @@ of the AAI standard regarding the presence of JKUs.</p>
 
 <hr style="border: 2px solid; margin: 2em auto;">
 
-<h2 id="threat-analysis">Threat Analysis</h2>
-
-<h3 id="what-is-the-danger-of-using-a-fully-scoped-or-audience-less-token-in-a-multi-node-workflow">What is the danger of using a fully scoped (or audience-less) token in a multi-node workflow</h3>
+<h3 id="what-is-the-limitation-of-using-a-fully-scoped-or-audience-less-token-in-a-multi-node-workflow">What is the limitation of using a fully scoped (or audience-less) token in a multi-node workflow?</h3>
 
 <p>The <em>Passport Scoped Access Token</em> is
 a token that can unlock <strong>all</strong> data that the user is entitled to, and not just
@@ -791,11 +789,6 @@ that has no restrictions on use) - the bad actor
 can also move sideways in the system to access Dataset #2 and #3 via Resource
 Server #B - and not just Dataset #1
 that has already been compromised.</p>
-
-<p>The safer alternative is a system where passports can be down-scoped before use -
-the Passport that is maliciously being passed from Resource Server #A
-to Resource Server #B would then be rejected - because
-it would be scoped only for Resource Server #A / Dataset #1.</p>
 
 <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" contentscripttype="application/ecmascript" contentstyletype="text/css" preserveaspectratio="none" version="1.1" viewbox="0 0 1358 244" zoomandpan="magnify">
   <defs>
@@ -927,9 +920,6 @@ Country: US
 -->
   </g>
 </svg>
-
-<p>The addition of audiences to the token, or down-scoping of permissions - possible via token exchange - limits
-the scope of damage if the token ends up with a bad actor.</p>
 
 <hr style="border: 2px solid; margin: 2em auto;">
 
