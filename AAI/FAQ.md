@@ -459,7 +459,9 @@ of the AAI standard regarding the presence of JKUs.
 
 {% hr2 %}
 
-### What is the limitation of using a fully scoped (or audience-less) token in a multi-node workflow?
+## Known Limitations
+
+### What are the pros and cons of using a fully scoped (or audience-less) token in a multi-node workflow?
 
 The *Passport Scoped Access Token* is
 a token that can unlock **all** data that the user is entitled to, and not just
