@@ -172,7 +172,7 @@ through various [Brokers](#term-broker) as needed while retaining the
 signature of the original [Visa Issuer](#term-visa-issuer).
 
 <a name="term-visa-assertion"></a>
-**Visa Assertion** -- a piece of information about a user that is asserted by a [Visa Assertion Source](#term-visa-assertion-source). It is then encoded by a [Visa Issuer](#term-visa-issuer) into a [Visa](#Visa).
+**Visa Assertion** -- a piece of information about a user that is asserted by a [Visa Assertion Source](#term-visa-assertion-source). It is then encoded by a [Visa Issuer](#term-visa-issuer) into a [Visa](#term-visa).
 
 <a name="term-visa-assertion-source"></a> **Visa Assertion Source** -- the source organization of
 a [Visa Assertion](#term-visa-assertion) which at a minimum includes the organization associated with
@@ -288,7 +288,7 @@ participant "Broker and Passport Issuer"                      as broker
 end box
 
 box "Data Access Committee"
-collections "Visa Issuer"            as issuer
+participant "Visa Issuer"            as issuer
 end box
 
 box "Data Holder"
@@ -333,7 +333,6 @@ Notable differences between this diagram and interaction specified in AAI/Passpo
 
 ### Flow of Assertions
 
-
 @startuml
 package "Flow of assertions" {
 
@@ -351,7 +350,6 @@ bro --> ch
 
 }
 @enduml
-
 
 The above diagram shows how [Visa Assertions](#term-visa-assertion) flow from a [Visa Assertion Source](#term-visa-assertion-source)
 to a [Passport Clearinghouse](#term-passport-clearinghouse) that uses them. 
@@ -488,10 +486,10 @@ and access_tokens (and potentially refresh tokens) for consumption within the GA
 
     2.  Access tokens MUST be in JWS format
 
-        1.  Access tokens for GA4GH use MUST be a [GA4GH JWT](#ga4gh-jwt-format) using
-            [Passport-Scoped Access Token format](#passport-scoped-access-token-issued-by-broker).
+        1.  Access tokens for GA4GH use MUST be a [GA4GH JWT](#ga4gh-jwt-formats) using
+            [Passport-Scoped Access Token format](#passport-scoped-access-token).
 
-        2.  Access tokens MUST NOT contain [GA4GH Claims](#term-ga4gh-claims) directly in the access token.
+        2.  Access tokens MUST NOT contain [GA4GH Claims](#term-ga4gh-claim) directly in the access token.
 
         3.  Access tokens MAY contain additional non-GA4GH Claims directly in the access token.
 
@@ -535,7 +533,8 @@ and access_tokens (and potentially refresh tokens) for consumption within the GA
 
 {% hr3 %}
 
-<a name="conformance-for-visa-issuers"></a>
+
+<a name="visa-issued-by-visa-issuer"><!-- for links from older versions of specs --></a>
 ### Conformance for Visa Issuers
 
 Visa Issuers issue signed JWTs (Visas) asserting facts about researchers, which may be used by Passport Clearinghouses
@@ -554,10 +553,10 @@ obtains Visas contained in a Passport or returned from the Userinfo Endpoint.
        be an OIDC provider, and MAY provide tokens of this type without any
        revocation process.
 
-        1.  The token MUST conform with JWS format [[RFC7515]](#term-rfc7515) requirements
+        1.  The token MUST conform with JWS format [[RFC7515]](#ref-rfc7515) requirements
         2.  The token MUST be signed by a [Visa Issuer](#term-visa-issuer).
         3.  The JWS header MUST contain `jku` as specified by [section
-            4.1.2](https://tools.ietf.org/html/rfc7515#section-4.1.2) of [[RFC7515]](#term-rfc7515), and
+            4.1.2](https://tools.ietf.org/html/rfc7515#section-4.1.2) of [[RFC7515]](#ref-rfc7515), and
             MUST provide the corresponding endpoint to fetch
             the public key used to sign the Visa Document Token.
         4.  The token is not treated as an access token, but validity
@@ -568,7 +567,7 @@ obtains Visas contained in a Passport or returned from the Userinfo Endpoint.
         7.  Payload [Claims](#term-claim) are specified in 
             [Visa Format](https://github.com/ga4gh-duri/ga4gh-duri.github.io/blob/master/researcher_ids/ga4gh_passport_v1.md#visa-format) in [[Passport]](#ref-passport).
 
-    2. <a name="term-visa-access-token"></a> <a name="term-embedded-access-token"></a> <a name="embedded-access-token-format"></a>
+    2. <a name="term-visa-access-token"></a> <a name="visa-access-token-format"></a> <a name="term-visa-access-token-format"></a> <a name="term-embedded-access-token"></a> <a name="embedded-access-token-format"></a>
        **Visa Access Token** -- The Visa Issuer is providing an OIDC provider
        service and issues OIDC-compliant access tokens in a specific format that can
        be used as a Visa. Details are specified in the AAI Profile 1.0 specification.
@@ -626,11 +625,11 @@ participant "Broker and Passport Issuer"                      as broker
 end box
 
 box "Data Access Committee (1)"
-collections "Visa Issuer (1)"            as issuer1
+participant "Visa Issuer (1)"            as issuer1
 end box
 
 box "Data Access Committee (2)"
-collections "Visa Issuer (2)"            as issuer2
+participant "Visa Issuer (2)"            as issuer2
 end box
 
 ==OIDC==
@@ -752,6 +751,7 @@ client <- broker : Response with Passport containing Visas A, B, C
 
 {% hr2 %}
 
+<a name="#ga4gh-jwt-format"><!-- for old links --></a>
 ## GA4GH JWT Formats
 
 This specification builds on the JWT format defined in [[RFC7519]](#ref-rfc7519).
@@ -764,6 +764,7 @@ This profile is agnostic to the format of the id_token.
 
 {% hr3 %}
 
+<a name="passport-scoped-access-token-issued-by-broker"></a>
 <a name="access_token-issued-by-broker"></a>
 ### Passport-Scoped Access Token
 
@@ -789,7 +790,7 @@ the [[OIDC-Core]](#ref-oidc-core) access token.
 - `alg`: REQUIRED. See [Signing Algorithms](#signing-algorithms).
 
 - `kid`: REQUIRED. Key ID, see [section 4.1.4](https://tools.ietf.org/html/rfc7515#section-4.1.4) 
-    of [[RFC7515]](#ref-7515).
+    of [[RFC7515]](#ref-rfc7515).
 
 **Payload**
 
@@ -860,7 +861,7 @@ with the `requested_token_type=urn:ga4gh:params:oauth:token-type:passport` is su
 Passports are defined as signed JWTs. The JWT specification [[RFC7519]](#ref-rfc7519)
 states that JWTs can be either signed and encoded using JWS Compact Serialization, 
 or encrypted and encoded using JWE Compact Serialization. 
-Passports are signed JWTs, which implies that they must be encoded using [JWS Compact Serialization](https://www.rfc-editor.org/rfc/rfc7515#section-3.1) [[RFC7515]](#ref-7515).
+Passports are signed JWTs, which implies that they must be encoded using [JWS Compact Serialization](https://www.rfc-editor.org/rfc/rfc7515#section-3.1) [[RFC7515]](#ref-rfc7515).
 
 **Header**
 
@@ -925,7 +926,7 @@ JWTs MUST be issued with signatures using the `ES256` or `RS256` algorithm.
 ## Security Considerations
 
 The confidentiality and integrity of tokens must be secured, taking
-[JSON Web Token Best Current Practices](https://www.rfc-editor.org/rfc/rfc8725.html#name-best-practices) in [[RFC8725]](#term-rfc8725)
+[JSON Web Token Best Current Practices](https://www.rfc-editor.org/rfc/rfc8725.html#name-best-practices) in [[RFC8725]](#ref-rfc8725)
 into consideration. Of special concern are:
 * Revoking access tokens and Visa Assertions
 * Limiting damage of leaked tokens
