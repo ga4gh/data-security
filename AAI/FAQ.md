@@ -456,57 +456,6 @@ even a locatable reference
 Therefore the OIDC Discovery technique is not appropriate and hence the requirements
 of the AAI standard regarding the presence of JKUs.
 
-
-{% hr2 %}
-
-## Known Limitations
-
-### What are the pros and cons of using a fully scoped (or audience-less) token in a multi-node workflow?
-
-The *Passport Scoped Access Token* is
-a token that can unlock **all** data that the user is entitled to, and not just
-a subset of data needed for any particular analysis. 
-
-The result of this is that if passed to a bad actor (some service that has been
-compromised for example) - the bad actor can use the token
-for sideways movement amongst the other nodes.
-
-In the below example - a passport has been passed via a compute service to a resource server that
-is compromised. The assumption now is that data controlled by that resource
-server may be lost. This is bad - but at least the scope of the loss is limited.
-
-However, if the token in use is the *Passport Scoped Access Token* (or any other token
-that has no restrictions on use) - the bad actor
-can also move sideways in the system to access Dataset #2 and #3 via Resource
-Server #B - and not just Dataset #1
-that has already been compromised.
-
-{% plantuml %}
-left to right direction
-
-rectangle Client 
-rectangle "Compute Server #1\ne.g. WES" as Compute
-rectangle "Resource Server #A\ne.g. DRS\n (compromised)" as RSA #pink;line:red;line.bold
-rectangle "Resource Server #B\ne.g. DRS" as RSB
-rectangle "Authorization Server\n(GA4GH Broker)" as Auth
-database "Dataset #1\n(assumed\ncompromised)" as DS1 #orange;line:red;line.bold
-database "Dataset #2\n(now possibly compromised)" as DS2 #gold;line:red;line.bold
-database "Dataset #3\n(now possibly compromised)" as DS3 #gold;line:red;line.bold
-
-[Client] <---right---> [Auth]
-
-[RSA] --> [DS1]
-[RSB] --> [DS2]
-[RSB] --> [DS3]
-
-[Client] --> [Compute] : asked to run job\n(sending passport downstream)
-[Compute] --> [RSA]
-[Compute] --> [RSB]
-
-[RSA] -[#red,plain,thickness=16]-> [RSB] : attack
-
-{% endplantuml %}
-
 {% hr2 %}
 
 ## Client Software
