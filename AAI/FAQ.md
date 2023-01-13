@@ -462,36 +462,29 @@ of the AAI standard regarding the presence of JKUs.
 
 ### Use of GA4GH passport/visas in Single Page Apps (SPAs)
 
-A Single Page App (SPA) such as a React/VueJs website
-contains all the source of the application in public - and hence cannot
-possess a 'secret' in an OIDC flow (the 'secret' is used to prove the identity of the
+It is currently recommended that single page apps (SPA) such as a React/VueJS websites
+are NOT used for scenarios where the single page app code is *solely* responsible for the handling of
+genomic passports and tokens.
+
+A SPA contains all the source of the application in public - and hence cannot
+possess a 'client secret' in an OIDC flow (the 'client secret' is used to prove the identity of the
 client software and is an important risk mitigation that prevents unconstrained
 use of an accidentally leaked/stolen token).
 
-The registration of a callback URL - in conjunction with the cryptographic techniques
-of PKCE - does allow a SPA to safely participate in an OIDC authorization flow - though
-it makes weak guarantees regarding the client identity.
+Techniques such as PKCE can be used to allow a SPA to participate in an OIDC flow - and this is not
+forbidden by the specification - but there
+are still unresolved questions about how SPAs can prove client identity in things like the token
+exchange that retrieves passports or other tokens.
 
-However, when it comes to token exchange - there is no equivalent of a registered
-callback URL - that can even weakly assert client identity.
+Therefore if writing SPA websites for genomic data handling, it is recommended to use
+a backend set of services to execute OIDC flows and token exchanges (even if the rest of the SPA
+can operate purely on the front end). These
+backend service can hold secrets and hence can prove client identity - and the backend
+service can then securely participate in token exchange and retain tokens/passports.
 
-It is impossible for the SPA to prove that it is the correct/desired piece of code
-executing the exchange - and not some other system that has somehow captured a
-*Passport-Scoped Access Token* from the browser and is making an exchange.
-
-For these reasons, it is recommended at this point that SPAs are not used for
-applications where the SPA is solely responsible for the dissemination of
-genomic data.
-
-It is possible for a SPA to predominantly execute in-browser - but to still use
-a (small) backend set of services to execute any OIDC flows and token exchanges. These
-backend service *can* retain a secret and hence can prove client identity. These
-techniques are recommended for any genomic application that is predominantly deployed
-as a SPA.
-
-There is also an emerging standard DPoP
+There is an emerging standard DPoP that may remove some of these limitations -
 ([OAuth 2.0 Demonstrating Proof-of-Possession at the Application Layer](https://datatracker.ietf.org/doc/html/draft-ietf-oauth-dpop-09))
-which will be considered for future versions of the AAI specification.
+- and it will be considered for future versions of the AAI specification.
 
 {% hr2 %}
 
