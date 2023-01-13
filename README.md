@@ -1,7 +1,19 @@
-# data-security
+# GA4GH Data Security Workstream
 
 This is the repository for the source of any specifications/documentation
-of the GA4GH Data Security working group.
+of the GA4GH Data Security workstream.
+
+In particular, it publishes the
+
+* Passports/visas/AAI specification
+
+The published specification lives at
+
+https://ga4gh.github.io/data-security/
+
+(this is probably what you are looking for - unless you are editing the specification)
+
+## Source
 
 The source is written in Markdown and processed via Jekyll.
 
