@@ -1,23 +1,19 @@
-# GA4GH Data Security Workstream
+# GA4GH Data Security Work Stream
 
 This is the repository for the source of any specifications/documentation
-of the GA4GH Data Security workstream.
+of the Data Security Work Stream of the Global Alliance for Genomics and Health ([GA4GH](https://www.ga4gh.org/)).
 
-In particular, it publishes the
+## Resources
 
-* Passports/visas/AAI specification
+- [Data Security and Infrastructure Policy](DSIP/DSIP_v4.0.md)
+- [Authentication and Authorization Infrastructure](AAI/README.md)
 
-The published specification lives at
 
-https://ga4gh.github.io/data-security/
+## Rendering documentation
 
-(this is probably what you are looking for - unless you are editing the specification)
+The source is written in Markdown and processed via Jekyll. Diagrams make use of PlantUML.
 
-## Source
-
-The source is written in Markdown and processed via Jekyll.
-
-To produce a local copy, you can
+To produce a local copy, clone the repository and run
 
 ```shell
 make
@@ -31,12 +27,14 @@ The local copy can then be browsed at
 http://localhost:4000/local/
 ```
 
-## Use of Jekyll
+### Use of Jekyll
 
 The following Liquid tags are used to separate
 
 Second level headers - {% hr2 %} 
+
 Third level headers - {% hr3 %}
+
 Fourth level headers - {% hr4 %}
 
 Note that level 5 and 6 headers render smaller than paragraph text and are not
