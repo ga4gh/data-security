@@ -1,17 +1,15 @@
-name: Publish Drafts
+name: Publish Main
 
 on:
-  # Triggers the workflow on push or pull request events but only for the draft+branches we are on
+  # Triggers the workflow on push to the main branch
   push:
-    branches: [ "*draft*" ]
-  pull_request:
-    branches: [ "*draft*" ]
+    branches: [ main, master ]
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
 jobs:
-  cumulative-publish:
+  replace-publish:
     runs-on: ubuntu-latest
 
     steps:
@@ -24,14 +22,10 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-gems-
 
-      - name: Get Branch Name for Publish Folder
-        id: branch-name
-        uses: tj-actions/branch-names@v5
-
       - name: Set Jekyll baseurl to Publish Folder
         uses: mikefarah/yq@master
         env:
-          PUBLISH_BASEURL: data-security/${{ steps.branch-name.outputs.current_branch }}
+          PUBLISH_BASEURL: data-security
         with:
           cmd: yq eval -i '.baseurl = strenv(PUBLISH_BASEURL)' '_config.yml'
 
@@ -51,7 +45,7 @@ jobs:
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
+          # note that because this a publish of the main branch - it completely replaces the content of the gh-pages
+          # (see publish-drafts for how drafts are published in a cumulative mode)
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: build
-          destination_dir: ${{ steps.branch-name.outputs.current_branch }}
-          keep_files: true
