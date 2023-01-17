@@ -89,7 +89,7 @@ authorization purposes by downstream systems.</p>
       <li><a href="#conformance-for-brokers" id="markdown-toc-conformance-for-brokers">Conformance for Brokers</a></li>
       <li><a href="#conformance-for-visa-issuers" id="markdown-toc-conformance-for-visa-issuers">Conformance for Visa Issuers</a></li>
       <li><a href="#conformance-for-passport-issuers" id="markdown-toc-conformance-for-passport-issuers">Conformance for Passport Issuers</a></li>
-      <li><a href="#conformance-for-passport-clearinghouses-consuming-passports-or-visas-to-give-access-to-data" id="markdown-toc-conformance-for-passport-clearinghouses-consuming-passports-or-visas-to-give-access-to-data">Conformance for Passport Clearinghouses (consuming Passports or Visas to give access to data)</a></li>
+      <li><a href="#conformance-for-passport-clearinghouses" id="markdown-toc-conformance-for-passport-clearinghouses">Conformance for Passport Clearinghouses</a></li>
     </ul>
   </li>
   <li>
@@ -148,12 +148,12 @@ validated by <a href="#term-passport-clearinghouse">Passport Clearinghouses</a>.
 <h3 id="separation-of-data-holders-and-data-access-committees">Separation of Data Holders and Data Access Committees</h3>
 
 <p>It is a fairly common situation that, for a single dataset, the Data Access Committee (DAC) (the authority managing 
-who has access to dataset) is not the same party as the
+who has access to a dataset) is not the same party as the
 <a href="#term-data-holder">Data Holder</a> (the organization
 that hosts the data, while respecting the DAC’s access policies).</p>
 
 <p>For these situations, AAI is a standard mechanism for data holders to obtain
-and validate authorizations from DACs, by specifying the interactions
+and validate existing authorizations from DACs, by specifying the interactions
 between <a href="#term-visa-issuer">Visa Issuers</a>, <a href="#term-broker">Brokers</a>, and 
 <a href="#term-passport-clearinghouse">Passport Clearinghouses</a>.</p>
 
@@ -262,8 +262,7 @@ signature of the original <a href="#term-visa-issuer">Visa Issuer</a>.</p>
 <strong>Visa Assertion</strong> – a piece of information about a user that is asserted by a <a href="#term-visa-assertion-source">Visa Assertion Source</a>. It is then encoded by a <a href="#term-visa-issuer">Visa Issuer</a> into a <a href="#term-visa">Visa</a>.</p>
 
 <p><a name="term-visa-assertion-source"></a> <strong>Visa Assertion Source</strong> – the source organization of
-a <a href="#term-visa-assertion">Visa Assertion</a> which at a minimum includes the organization associated with
-making the assertion, although can optionally identify a sub-organization or a
+a <a href="#term-visa-assertion">Visa Assertion</a>, which SHOULD include the organization associated with making the assertion, although it MAY optionally identify a sub-organization or a
 specific assignment within the organization that made the assertion.</p>
 
 <ul>
@@ -528,7 +527,7 @@ Country: US
   </g>
 </svg>
 
-<p>Notable differences between this diagram and interaction specified in AAI/Passport 1.0:</p>
+<p>Notable differences between this diagram and interaction specified in AAI/Passport v1.0:</p>
 <ul>
   <li>The Passport Clearinghouse is no longer required to be a Client of the Broker</li>
   <li>The Passport-Scoped Access Token is only ever shared between the Client and the Broker</li>
@@ -631,29 +630,6 @@ and access_tokens (and potentially refresh tokens) for consumption within the GA
 and provide proper <a href="https://openid.net/specs/openid-connect-discovery-1_0.html#ProviderMetadata">metadata</a>
 (i.e. must have a <code class="language-plaintext highlighter-rouge">jwks_uri</code> as required that’s reachable by a Passport Clearinghouse)</p>
       </li>
-    </ol>
-  </li>
-  <li>
-    <p>Broker MUST support a <a href="#term-token-endpoint">Token Endpoint</a> and <a href="#term-userinfo-endpoint">UserInfo Endpoint</a>.</p>
-
-    <ol>
-      <li>
-        <p><a href="#term-token-exchange">Token Exchange</a> at the Token Endpoint SHOULD be used for <a href="#term-visa">Visas</a> in 
-preference to the UserInfo Endpoint.</p>
-      </li>
-      <li>
-        <p>When presented with a valid <a href="#term-passport-scoped-access-token">Passport-scoped Access Token</a>,
-the UserInfo endpoint MUST provide <a href="#term-visa">Visas</a> as described in the section
-<a href="#visas-provided-by-a-broker-via-userinfo-endpoint">Visas provided by a Broker via UserInfo Endpoint</a>.</p>
-      </li>
-    </ol>
-  </li>
-  <li>
-    <p>Brokers operate downstream from IdPs or provide their own IdP service. They
-issue id_tokens and access_tokens (and potentially refresh tokens) for
-consumption within the GA4GH compliant environment.</p>
-
-    <ol>
       <li>
         <p>A Broker MUST issue <a href="#term-passport-scoped-access-token">Passport-Scoped Access Tokens</a>
 (access_tokens).</p>
@@ -679,6 +655,26 @@ consumption within the GA4GH compliant environment.</p>
         </ol>
       </li>
     </ol>
+  </li>
+  <li>
+    <p>Broker MUST support a <a href="#term-token-endpoint">Token Endpoint</a> and <a href="#term-userinfo-endpoint">UserInfo Endpoint</a>.</p>
+
+    <ol>
+      <li>
+        <p><a href="#term-token-exchange">Token Exchange</a> at the Token Endpoint SHOULD be used for <a href="#term-visa">Visas</a> in 
+preference to the UserInfo Endpoint.</p>
+      </li>
+      <li>
+        <p>When presented with a valid <a href="#term-passport-scoped-access-token">Passport-scoped Access Token</a>,
+the UserInfo endpoint MUST provide <a href="#term-visa">Visas</a> as described in the section
+<a href="#visas-provided-by-a-broker-via-userinfo-endpoint">Visas provided by a Broker via UserInfo Endpoint</a>.</p>
+      </li>
+    </ol>
+  </li>
+  <li>
+    <p>Brokers operate downstream from IdPs or provide their own IdP service. They
+issue id_tokens and access_tokens (and potentially refresh tokens) for
+consumption within the GA4GH compliant environment.</p>
   </li>
   <li>
     <p>Broker MAY support <a href="#term-token-exchange">Token Exchange</a>. If implemented, it MUST behave as described 
@@ -999,7 +995,9 @@ Country: US
 
 <hr style="width: 10em; margin: 2em auto;">
 
-<h3 id="conformance-for-passport-clearinghouses-consuming-passports-or-visas-to-give-access-to-data">Conformance for Passport Clearinghouses (consuming Passports or Visas to give access to data)</h3>
+<h3 id="conformance-for-passport-clearinghouses">Conformance for Passport Clearinghouses</h3>
+
+<p>Passport Clearinghouses consume Passports containing Visas in order to grant access to data.</p>
 
 <ol>
   <li>
@@ -1010,7 +1008,7 @@ Country: US
         <p>Passport Clearinghouses MAY trust more than one Broker</p>
       </li>
       <li>
-        <p>The responsibility of risk assessment of a Broker is on the Passport Clearinghouse to trust a token.</p>
+        <p>The Passport Clearinghouse is responsible for assessing the risk in choosing to trust a token from a Broker.</p>
       </li>
     </ol>
   </li>
@@ -1355,8 +1353,8 @@ into consideration. Of special concern are:</p>
   </thead>
   <tbody>
     <tr>
-      <td>1.2.0 (draft)</td>
-      <td>2022-08</td>
+      <td>1.2.0</td>
+      <td>2023-01</td>
       <td>Andrew Patterson, Martin Kuba, Kurt Rodarmer, Tom Conner, Max Barkley</td>
       <td>Introduce token exchange and Passport format, incorporate Visas, update diagrams</td>
     </tr>
