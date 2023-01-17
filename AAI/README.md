@@ -1,6 +1,6 @@
 # Authentication and Authorization Infrastructure
 
-## [Link to Specification](https://ga4gh.github.io/data-security/1.2-draft-main/)
+## [Link to Specification](https://ga4gh.github.io/data-security/)
 
 ## Introduction
 
