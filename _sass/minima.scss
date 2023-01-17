@@ -21,7 +21,7 @@ $grey-color-dark:  darken($grey-color, 25%) !default;
 $table-text-align: left !default;
 
 // Width of the content area
-// Patto - changed from minima default
+// changed from minima default (GA4GH)
 $content-width:    1200px !default;
 
 $on-palm:          600px !default;
@@ -51,11 +51,28 @@ $on-laptop:        800px !default;
 "minima/syntax-highlighting"
 ;
 
-// Patto - added custom CSS for callouts
+// due to estensive nested lists we set styling (GA4GH added)
+
+ol ol { list-style-type: lower-alpha; }
+ol ol ol { list-style-type: lower-roman; }
+ol ol ol ol { list-style-type: circle; }
+ol ol ol ol ol { list-style-type: disc; }
+
+// a fix for Kramdowns markup/css that doesn't leave enough space at the end of single item lists  (GA4GH added)
+
+li:only-child {
+  margin-bottom: 1em;
+}
+
+// custom CSS for callouts (GA4GH added)
+
 $border-radius: 5px;
 
 $callouts: (
-        rationale: (#008, rgba(#aaa, .2), 'RATIONALE'),
+  // rationale example callout
+  rationale: (#008, rgba(#aaa, .2), 'RATIONALE'),
+  // deprecation warning callout
+  deprecation: (#FFA500, rgba(#ddd, .2), 'DEPRECATION WARNING'),
 );
 
 @each $class, $props in $callouts {

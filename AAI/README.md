@@ -1,162 +1,81 @@
----
-layout: page
-permalink: aai-introduction
----
+# Authentication and Authorization Infrastructure
 
-# Introduction to the GA4GH Authentication and Authorization Infrastructure (AAI)
-
-## Quick Links
-
-- Specification: [GA4GH Authentication and Authorization Infrastructure (AAI) OpenID Connect Profile]({% link AAI/AAIConnectProfile.md %})
-- Other specifications that use the AAI profile: [GA4GH Passport](https://bit.ly/ga4gh-passport-v1)
-
-### Table of Contents
-
-- [**Introduction**](#introduction)
-- [**Background**](#background)\
-       - [Examples of broker technologies](#examples-of-broker-technologies)\
-       - [Why Brokers?](#why-brokers)\
-       - [Embedded Tokens example and explanation](#embedded-tokens)\
-       - [Services parties are responsible for providing](#services-parties-are-responsible-for-providing)
-- [**Future topics to explore**](#future-topics-to-explore)
-- [**FAQ**](FAQ.md)
+## [Link to Specification](https://ga4gh.github.io/data-security/)
 
 ## Introduction
 
-The [GA4GH AAI profile
-specification]({% link AAI/AAIConnectProfile.md %})
-leverages OpenID Connect (OIDC) Servers for use in authenticating the identity of
-researchers desiring to access clinical and genomic resources from [data
-holders]({% link AAI/AAIConnectProfile.md %}#term-data-holder)
-adhering to GA4GH standards, and to enable data holders to obtain security-related
-attributes of those researchers. This is intended to be endorsed as a GA4GH standard,
-implemented by GA4GH Driver Projects, and shared broadly.
+The Authentication and Authorizations Infrastructure (AAI) specification
+leverages OpenID Connect (OIDC) to authenticate researchers
+desiring to access clinical and genomic resources from data
+holders adhering to GA4GH standards. Beyond standard OIDC authentication, AAI enables
+data holders to obtain security-related attributes and authorizations of those
+researchers. In parallel, the Data Use and Researcher Identity (DURI) Work Stream has developed a standard
+representation for researcher authorizations and attributes known as Researcher-ID.
+At its core, the AAI specification defines cryptographically secure tokens for exchanging
+these researcher attributes called Visas and how various
+participants can interact to authenticate researchers, and obtain and validate Visas.
 
-To help assure the authenticity of identities used to access data from GA4GH
-Driver Projects, and other projects that adopt GA4GH standards, the Data Use and
-Researcher Identity (DURI) Work Stream has developed a standard around [claims](https://github.com/ga4gh-duri/ga4gh-duri.github.io/tree/master/researcher_ids). This standard assumes that some GA4GH Claims provided
-by Brokers described in this document will conform to the DURI researcher-identity
-policy and standard. This standard does NOT assume that DURI's GA4GH Claims will be
-the only ones used.
+This specification also provides for federated multilateral authorization infrastructure for greater
+interoperability between biomedical institutions sharing restricted datasets.  
 
-This AAI standard aims at developing an approach that enables data holders’ and data owners 
-systems to have systems that recognize and accept identities from multiple Brokers -- allowing for
-a federated approach. An organization can still use this specification and not
-support multiple Brokers, though they may find in that case that it’s just using
-a prescriptive version of OIDC.
+### What is OpenID Connect?
 
-## Background
+OpenID Connect is a simple identity layer, on top of the OAuth 2.0 protocol, that supports identity verification and the ability to 
+obtain basic profile information about end users. The AAI specification extends this to define tokens, 
+endpoints, and flows that enable an OIDC provider (called a Broker) to
+provide Passports and Visas to downstream consumers called Passport Clearinghouses. Passports can then be used for
+authorization purposes by downstream systems.
 
-#### Examples of broker technologies
+## Passports specification
+The AAI and Passports specifications rely on each other for full functionality and will likely be merged in a future version. The Passports specification from the Data Use and Researcher Identities Work Stream can be found [here](https://ga4gh-duri.github.io/researcher_ids/ga4gh_passport_v1.html).
 
-Examples of suites that provide both functionalities in a single package are :
-[Auth0.com](https://auth0.com/), [Keycloak](https://www.keycloak.org) (open
-source), [Hydra](https://github.com/ory/hydra) (open source), OpenAM,
-[Okta](https://www.okta.com/), Globus Auth, [Gen3
-Fence](https://github.com/uc-cdis/fence),
-[ELIXIR](https://elixir-europe.org/services/compute/aai), NIH/VDS, [AWS
-Cognito](https://aws.amazon.com/cognito/).
+## Version history 
 
-#### Why Brokers?
+[Changelog](https://ga4gh.github.io/data-security/changes-1_2) for v1.2
 
-We have found that there are widely used Identity Providers (IdP) such as Google
-Authentication. These authentication mechanisms provide no authorization
-information (custom claims or scopes) but are so pervasive at the institution
-level that they cannot be ignored. The use of a "brokers" and "clearinghouses"
-enables "inserting" information into the usual OIDC flow so that Google
-identities can be used but claims and scopes can be customized.
+Full version history available [here](https://ga4gh.github.io/data-security/aai-openid-connect-profile#specification-revision-history)
 
-We have also found that some brokers, such as ELIXIR for example, provide some useful "extra" claims on top of an IdP like Google, but an institution receiving ELIXIR claims might want to add even more claims. Brokers then had to have a mechanism for trusting claims from other Brokers while providing provenance and proof of where they came from. This lead to the Embedded Token structure.  
 
-Here is a diagram:
-<https://www.lucidchart.com/invitations/accept/68f3089b-0c9b-4e64-acd2-abffae3c0c43>
-of a full-broker. This is one possible way to use this spec.
+## Contributors
 
-![flow diagram]({% link AAI/flow.png %})
+GA4GH is an open community and contribution is not limited to those named below.
+Names listed alphabetically by surname. Repository maintainers listed [here](./MAINTAINER.md).
 
-In this diagram, the Data Owner Claim Clearinghouse, the Data Holder Claim
-Clearinghouse and the Broker are all different entities. However, some cases, the Broker and Data Owner might be the same entity and
-even be operated with the same OIDC Provider Software.
+### Core Developers for v1.2
 
-Examples of implementations that provide both Identity Brokering and Data Owner
-Claim Clearinghouse services are:
-[ELIXIR](https://docs.google.com/document/d/1hD0lsxotLvPaML_CSydVX6rJ-zogAH2nRVl4ax4gW1o/edit#heading=h.eilp6df62hbd),
-[Auth0](http://auth0.com), [Keycloak](http://keycloak.org), [Globus
-auth](https://www.globus.org/tags/globus-auth), [Okta](https://www.okta.com/),
-[Hydra](https://github.com/ory/hydra), [AWS
-Cognito](https://aws.amazon.com/cognito/). These can be Brokers and/or
-Claim Clearinghouses. They’re not usually only used for Claim consumption (akin
-to a OAuth2 Resource Server in many ways). NGINX and Apache both offer reverse
-proxies for "Claim Consumption Only" functionality --
-<https://github.com/zmartzone/lua-resty-openidc> (with
-<https://github.com/cdbattags/lua-resty-jwt>) and
-<https://github.com/zmartzone/mod_auth_openidc> respectively.
+- Max Barkley - DNAstack
+- Tom Conner - Broad Institute
+- Martin Kuba - ELIXIR Czech Republic
+- Andrew Patterson - The University of Melbourne Centre for Cancer Research
+- Kurt Rodarmer - National Center for Biotechnology Information - NIH
 
-Data holders and data owners should explore their options to decide what best
-fits their needs.
+### Reviewers for v1.2
 
-#### Embedded Tokens example and explanation
+- Francis Jeanson - Peter Munk Cardiac Centre and Ted Rogers Centre for Heart Research
+- David Glazer - Verily Life Sciences
+- Timothy Slade - RTI International
+- Dylan Spalding - ELIXIR Finland
 
-![embedded claims flow diagram]({% link AAI/embedded_Claims_flow.png %})
+### Technical Programme Manager
 
-Consider two parties: Google and ELIXIR.  
+- Fabio Liberante - Global Alliance for Genomics and Health
 
-In this example, Google Passport Clearinghouse makes access decisions based on ELIXIR Assertion Repository information via a chain of brokers that have passed along the Passport Visas in standard GA4GH Passport format where the Passports are signed by different Brokers but the Passport Visas retain the signature from the Passport Visa Issuer. 
+## Work Stream Leadership
 
-The way this chain of brokers and trust is maintained is through "embedded tokens". There are two types of embedded tokens: Embedded Access Tokens and Embedded Document Tokens. 
+### Data Security
 
-Embedded Access Tokens are claims in a Broker's token that can then be sent to OTHER brokers' `/userinfo` endpoints for further user claims. In GA4GH Passports, embedded access tokens will usually carry full claims so as not to interrogate /userinfo each time.
+- David Bernick - Broad Institute
+- Lucila Ohno-Machado - Yale University School of Medicine 
+- Previously - Jean-Pierre Hubaux - Swiss Federal Institute of Technology Lausanne
 
-Embedded Document Tokens cannot be revoked and no `/userinfo` endpoint is provided for them, however they stilll offer a signature that can be used to verify their provenance and always contain the necessary claims in them already.
+### Data Use and Researcher Identities
 
-#### Services parties are responsible for providing 
+- Jaime Guidry-Auvil - National Cancer Institute - NIH
+- Tommi Nyrönen - ELIXIR Finland
 
-**Data Holders:**
 
-Data holders are expected to protect their resources within a Claim
-Clearinghouse Server. These Servers should be able to get claims from one or
-more Brokers, with researcher authentication provided by one or more Identity
-Providers. *Note: Most Claim Clearinghouses can provide access to resources
-based on information in Claims -- if not the Claim Clearinghouses themselves
-then in some downstream application that protects data.*
+## Demonstration Implementation
 
-**Data Owners:**
-
-Data owners are not required to implement or operate an Identity Provider
-(though they may choose to do so) or an Broker.
-
-Data Owners may choose to operate a Claim Clearinghouse server configured
-to consume access_tokens from an upstream Broker and then hand out JWT
-claims to relying parties and other Claim Clearinghouses.
-
-Some data owners will own the whole "chain" providing all of the different kinds
-of brokers and will also operate Claim Clearinghouses. For instance, NIH is a
-data owner and might provide Cloud Buckets and operate an IDP and Broker to
-utilize ERACommons and other identity resources.
-
-A Data Owner should be able to, based on an Identity from an Identity Provider,
-express some sort of [permissions](#ga4gh-jwt-format) via the Claim Clearinghouse
-GA4GH claims. It is the responsibility of the Data Owner to provide these
-permissions to their Claim Clearinghouse to be expressed claims within a standard
-/userinfo process for downstream use.
-
-It is possible that the IdPs might have special claims. The Claim Clearinghouse
-being operated by the Data Owner should be "looking" for those claims and
-incorporating them, if desired, into the claims that it eventually sends to the
-user.
-
-A data owner is expected to maintain the [operational
-security](https://github.com/ga4gh/data-security) of their Claim Clearinghouse
-server and hold it to the GA4GH spec for [operational
-security](https://github.com/ga4gh/data-security). It is also acceptable to
-align the security to a known and accepted framework such as NIST-800-53,
-ISO-27001/ISO-27002.
-
-## Future topics to explore
-
-<https://openid.net/specs/openid-connect-federation-1_0.html> - OIDC federation
-
-Register the Claim - According to RFC 7519 (JSON Web Token) section 4.2
-<https://tools.ietf.org/html/rfc7519#section-4.2> claim names should be
-registered by IANA in its "JSON Web Token Claims" registry at
-<https://www.iana.org/assignments/jwt/jwt.xml> . Register GA4GH.
+[Life Science RI](https://lifescience-ri.eu/) have implemented this v1.2 specification from the finalised draft for use across the Life Science RI platforms. 
+Information on creating an account is available [here](https://lifescience-ri.eu/ls-login/users/how-to-get-and-use-life-science-id.html).
+With an account, the test service [here](https://echo.aai.elixir-czech.org/) will return a technical view of the various tokens created and shared in an example flow using Passport/AAI 1.2. 
