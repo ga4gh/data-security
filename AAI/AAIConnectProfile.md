@@ -61,12 +61,12 @@ validated by [Passport Clearinghouses](#term-passport-clearinghouse).
 ### Separation of Data Holders and Data Access Committees
 
 It is a fairly common situation that, for a single dataset, the Data Access Committee (DAC) (the authority managing 
-who has access to dataset) is not the same party as the
+who has access to a dataset) is not the same party as the
 [Data Holder](#term-data-holder) (the organization
 that hosts the data, while respecting the DAC's access policies).
 
 For these situations, AAI is a standard mechanism for data holders to obtain
-and validate authorizations from DACs, by specifying the interactions
+and validate existing authorizations from DACs, by specifying the interactions
 between [Visa Issuers](#term-visa-issuer), [Brokers](#term-broker), and 
 [Passport Clearinghouses](#term-passport-clearinghouse).
 
@@ -175,8 +175,7 @@ signature of the original [Visa Issuer](#term-visa-issuer).
 **Visa Assertion** -- a piece of information about a user that is asserted by a [Visa Assertion Source](#term-visa-assertion-source). It is then encoded by a [Visa Issuer](#term-visa-issuer) into a [Visa](#term-visa).
 
 <a name="term-visa-assertion-source"></a> **Visa Assertion Source** -- the source organization of
-a [Visa Assertion](#term-visa-assertion) which at a minimum includes the organization associated with
-making the assertion, although can optionally identify a sub-organization or a
+a [Visa Assertion](#term-visa-assertion), which SHOULD include the organization associated with making the assertion, although it MAY optionally identify a sub-organization or a
 specific assignment within the organization that made the assertion.
 
 -   This is NOT necessarily the organization that signs the Visa; it is the
@@ -324,7 +323,7 @@ client <- clearing : Clearinghouse responds with data
 
 {% endplantuml %}
 
-Notable differences between this diagram and interaction specified in AAI/Passport 1.0:
+Notable differences between this diagram and interaction specified in AAI/Passport v1.0:
 * The Passport Clearinghouse is no longer required to be a Client of the Broker
 * The Passport-Scoped Access Token is only ever shared between the Client and the Broker
 * An additional Token Exchange request is used to exchange the Passport-Scoped Access Token for a Passport Token,
@@ -466,6 +465,20 @@ and access_tokens (and potentially refresh tokens) for consumption within the GA
        and provide proper [metadata](https://openid.net/specs/openid-connect-discovery-1_0.html#ProviderMetadata)
        (i.e. must have a `jwks_uri` as required that’s reachable by a Passport Clearinghouse)
 
+    3.  A Broker MUST issue [Passport-Scoped Access Tokens](#term-passport-scoped-access-token)
+        (access_tokens).
+
+        1.  This document makes no specifications beyond those in [[OIDC-Core]](#ref-oidc-core).
+
+    4.  Access tokens MUST be in JWS format
+
+        1.  Access tokens for GA4GH use MUST be a [GA4GH JWT](#ga4gh-jwt-formats) using
+            [Passport-Scoped Access Token format](#passport-scoped-access-token).
+
+        2.  Access tokens MUST NOT contain [GA4GH Claims](#term-ga4gh-claim) directly in the access token.
+
+        3.  Access tokens MAY contain additional non-GA4GH Claims directly in the access token.
+
 2.  Broker MUST support a [Token Endpoint](#term-token-endpoint) and [UserInfo Endpoint](#term-userinfo-endpoint).
 
     1. [Token Exchange](#term-token-exchange) at the Token Endpoint SHOULD be used for [Visas](#term-visa) in 
@@ -478,20 +491,6 @@ and access_tokens (and potentially refresh tokens) for consumption within the GA
 3.  Brokers operate downstream from IdPs or provide their own IdP service. They
     issue id_tokens and access_tokens (and potentially refresh tokens) for
     consumption within the GA4GH compliant environment.
-
-    1.  A Broker MUST issue [Passport-Scoped Access Tokens](#term-passport-scoped-access-token)
-        (access_tokens).
-
-        1.  This document makes no specifications beyond those in [[OIDC-Core]](#ref-oidc-core).
-
-    2.  Access tokens MUST be in JWS format
-
-        1.  Access tokens for GA4GH use MUST be a [GA4GH JWT](#ga4gh-jwt-formats) using
-            [Passport-Scoped Access Token format](#passport-scoped-access-token).
-
-        2.  Access tokens MUST NOT contain [GA4GH Claims](#term-ga4gh-claim) directly in the access token.
-
-        3.  Access tokens MAY contain additional non-GA4GH Claims directly in the access token.
 
 4.  Broker MAY support [Token Exchange](#term-token-exchange). If implemented, it MUST behave as described 
     for passport issuance in [Conformance For Passport Issuers](#conformance-for-passport-issuers).
@@ -666,13 +665,15 @@ client <- broker : Response with Passport containing Visas A, B, C
 
 {% hr3 %}
 
-### Conformance for Passport Clearinghouses (consuming Passports or Visas to give access to data)
+### Conformance for Passport Clearinghouses
+
+Passport Clearinghouses consume Passports containing Visas in order to grant access to data.
 
 1.  Passport Clearinghouses MUST trust at least one Broker.
 
     1.  Passport Clearinghouses MAY trust more than one Broker
     
-    2.  The responsibility of risk assessment of a Broker is on the Passport Clearinghouse to trust a token. 
+    2.  The Passport Clearinghouse is responsible for assessing the risk in choosing to trust a token from a Broker. 
     
 2.  Passport Clearinghouses MUST process access tokens to access a Broker's Token or UserInfo Endpoint to get access to Visas OR MUST process Passports directly.
 
@@ -937,7 +938,7 @@ into consideration. Of special concern are:
 
 | Version       | Date    | Editor                                                                | Notes                                                                            |
 |---------------|---------|-----------------------------------------------------------------------|----------------------------------------------------------------------------------|
-| 1.2.0 (draft) | 2022-08 | Andrew Patterson, Martin Kuba, Kurt Rodarmer, Tom Conner, Max Barkley | Introduce token exchange and Passport format, incorporate Visas, update diagrams |
+| 1.2.0 | 2023-01 | Andrew Patterson, Martin Kuba, Kurt Rodarmer, Tom Conner, Max Barkley | Introduce token exchange and Passport format, incorporate Visas, update diagrams |
 | 1.1.0         | 2021-07 | Craig Voisin                                                          | *abandoned* version now reserved, new concepts moved to v1.2                     |
 | 1.0.4         | 2021-07 | Craig Voisin                                                          | Improve existing terminology and define Passport and Visa JWTs                   |
 | 1.0.3         | 2021-06 | Craig Voisin                                                          | Links for "scope" claim                                                          |

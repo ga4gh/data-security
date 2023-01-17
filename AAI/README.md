@@ -1,6 +1,6 @@
 # Authentication and Authorization Infrastructure
 
-## [Specification](https://ga4gh.github.io/data-security/1.2-draft-main/)
+## [Link to Specification](https://ga4gh.github.io/data-security/1.2-draft-main/)
 
 ## Introduction
 
@@ -31,7 +31,9 @@ The AAI and Passports specifications rely on each other for full functionality a
 
 ## Version history 
 
-[Changelog](https://ga4gh.github.io/data-security/1.2-draft-main/changes-1_2) for v1.2 
+[Changelog](https://ga4gh.github.io/data-security/1.2-draft-main/changes-1_2) for v1.2
+
+Full version history available [here](https://ga4gh.github.io/data-security/1.2-draft-main/aai-openid-connect-profile#specification-revision-history)
 
 
 ## Contributors
@@ -58,13 +60,15 @@ Names listed alphabetically by surname. Repository maintainers listed [here](./M
 
 - Fabio Liberante - Global Alliance for Genomics and Health
 
-### Data Security Work Stream Leadership
+## Work Stream Leadership
+
+### Data Security
 
 - David Bernick - Broad Institute
 - Lucila Ohno-Machado - Yale University School of Medicine 
 - Previously - Jean-Pierre Hubaux - Swiss Federal Institute of Technology Lausanne
 
-### Data Use and Researcher Identities Work Stream Leadership
+### Data Use and Researcher Identities
 
 - Jaime Guidry-Auvil - National Cancer Institute - NIH
 - Tommi Nyrönen - ELIXIR Finland

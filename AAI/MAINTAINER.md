@@ -4,8 +4,9 @@ The current maintainers for this repository are listed below.
 
 ### AAI
 
-* David Bernick (@davidbernick)
-* Craig Voisin (https://www.linkedin.com/in/craigvoisin/)
+* David Bernick - Broad Institute (@davidbernick)
+* Martin Kuba - ELIXIR Czech Republic
+* Craig Voisin - Google (https://www.linkedin.com/in/craigvoisin/)
 
 ## Updating the specifications
 
