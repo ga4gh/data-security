@@ -72,3 +72,10 @@ Names listed alphabetically by surname. Repository maintainers listed [here](./M
 
 - Jaime Guidry-Auvil - National Cancer Institute - NIH
 - Tommi Nyrönen - ELIXIR Finland
+
+
+## Demonstration Implementation
+
+[Life Science RI](https://lifescience-ri.eu/) have implemented this v1.2 specification from the finalised draft for use across the Life Science RI platforms. 
+Information on creating an account is available [here](https://lifescience-ri.eu/ls-login/users/how-to-get-and-use-life-science-id.html)
+With an account, the test service [here](https://echo.aai.elixir-czech.org/) will return a technical view of the various tokens created and shared in an example flow using Passport/AAI 1.2. 
