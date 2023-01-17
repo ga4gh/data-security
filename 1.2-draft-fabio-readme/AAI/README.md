@@ -1,6 +1,6 @@
 # Authentication and Authorization Infrastructure
 
-## [Specification](https://ga4gh.github.io/data-security/1.2-draft-main/)
+## [Link to Specification](https://ga4gh.github.io/data-security/1.2-draft-main/)
 
 ## Introduction
 
@@ -31,7 +31,9 @@ The AAI and Passports specifications rely on each other for full functionality a
 
 ## Version history 
 
-[Changelog](https://ga4gh.github.io/data-security/1.2-draft-main/changes-1_2) for v1.2 
+[Changelog](https://ga4gh.github.io/data-security/1.2-draft-main/changes-1_2) for v1.2
+
+Full version history available [here](https://ga4gh.github.io/data-security/1.2-draft-main/aai-openid-connect-profile#specification-revision-history)
 
 
 ## Contributors
@@ -58,13 +60,22 @@ Names listed alphabetically by surname. Repository maintainers listed [here](./M
 
 - Fabio Liberante - Global Alliance for Genomics and Health
 
-### Data Security Work Stream Leadership
+## Work Stream Leadership
+
+### Data Security
 
 - David Bernick - Broad Institute
 - Lucila Ohno-Machado - Yale University School of Medicine 
 - Previously - Jean-Pierre Hubaux - Swiss Federal Institute of Technology Lausanne
 
-### Data Use and Researcher Identities Work Stream Leadership
+### Data Use and Researcher Identities
 
 - Jaime Guidry-Auvil - National Cancer Institute - NIH
 - Tommi Nyrönen - ELIXIR Finland
+
+
+## Demonstration Implementation
+
+[Life Science RI](https://lifescience-ri.eu/) have implemented this v1.2 specification from the finalised draft for use across the Life Science RI platforms. 
+Information on creating an account is available [here](https://lifescience-ri.eu/ls-login/users/how-to-get-and-use-life-science-id.html)
+With an account, the test service [here](https://echo.aai.elixir-czech.org/) will return a technical view of the various tokens created and shared in an example flow using Passport/AAI 1.2. 
