@@ -31,9 +31,9 @@ The AAI and Passports specifications rely on each other for full functionality a
 
 ## Version history 
 
-[Changelog](https://ga4gh.github.io/data-security/1.2-draft-main/changes-1_2) for v1.2
+[Changelog](https://ga4gh.github.io/data-security/changes-1_2) for v1.2
 
-Full version history available [here](https://ga4gh.github.io/data-security/1.2-draft-main/aai-openid-connect-profile#specification-revision-history)
+Full version history available [here](https://ga4gh.github.io/data-security/aai-openid-connect-profile#specification-revision-history)
 
 
 ## Contributors
