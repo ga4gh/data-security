@@ -55,3 +55,7 @@ jobs:
           publish_dir: build
           destination_dir: ${{ steps.branch-name.outputs.current_branch }}
           keep_files: true
+
+      - name: Create PR Comment
+        run: |
+          echo "Your comment message here" | gh pr comment ${{ github.event.pull_request.number }} --repo ${{ github.repository }}
