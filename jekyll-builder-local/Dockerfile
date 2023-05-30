@@ -1,4 +1,4 @@
-FROM jekyll/builder:4.2.0
+FROM jekyll/builder:4.2.2
 
 ENV PLANTUML_VERSION=1.2021.10
 ENV LANG en_US.UTF-8
@@ -8,6 +8,7 @@ RUN \
   apk add --no-cache graphviz wget ca-certificates && \
   apk add --no-cache graphviz wget ca-certificates ttf-dejavu fontconfig && \
   wget "http://downloads.sourceforge.net/project/plantuml/${PLANTUML_VERSION}/plantuml.${PLANTUML_VERSION}.jar" -O /usr/bin/plantuml.jar && \
-  apk del wget ca-certificates
+  apk del wget ca-certificates && \
+  gem update --system 3.4.13
 
 COPY plantuml /usr/bin
