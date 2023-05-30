@@ -60,4 +60,4 @@ jobs:
         run: |
           echo "Your comment message here" | gh pr comment ${{ github.event.pull_request.number }} --repo ${{ github.repository }}
         env:
-            GH_TOKEN: ${{ github.token }}
+          GH_TOKEN: ${{ github.token }}
