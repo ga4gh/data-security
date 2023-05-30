@@ -10,10 +10,10 @@ permalink: aai-openid-connect-profile
 This specification defines a profile for using the OpenID Connect protocol
 [[OIDC-Core]](#ref-oidc-core) to provide federated multilateral authorization infrastructure for greater
 interoperability between biomedical institutions sharing restricted datasets.  (OpenID Connect is a simple
-identity layer, on top of the OAuth 2.0 protocol, that supports identity verification and the ability to 
-obtain basic profile information about end users.) In particular, this specification defines tokens, 
+identity layer, on top of the OAuth 2.0 protocol, that supports identity verification and the ability to
+obtain basic profile information about end users.) In particular, this specification defines tokens,
 endpoints, and flows that enable an OIDC provider (called a [Broker](#term-broker)) to
-provide [Passports](#term-passport) and [Visas](#term-visa) to downstream consumers called 
+provide [Passports](#term-passport) and [Visas](#term-visa) to downstream consumers called
 [Passport Clearinghouses](#term-passport-clearinghouse). [Passports](#term-passport) can then be used for
 authorization purposes by downstream systems.
 
@@ -60,19 +60,19 @@ validated by [Passport Clearinghouses](#term-passport-clearinghouse).
 
 ### Separation of Data Holders and Data Access Committees
 
-It is a fairly common situation that, for a single dataset, the Data Access Committee (DAC) (the authority managing 
+It is a fairly common situation that, for a single dataset, the Data Access Committee (DAC) (the authority managing
 who has access to a dataset) is not the same party as the
 [Data Holder](#term-data-holder) (the organization
 that hosts the data, while respecting the DAC's access policies).
 
 For these situations, AAI is a standard mechanism for data holders to obtain
 and validate existing authorizations from DACs, by specifying the interactions
-between [Visa Issuers](#term-visa-issuer), [Brokers](#term-broker), and 
+between [Visa Issuers](#term-visa-issuer), [Brokers](#term-broker), and
 [Passport Clearinghouses](#term-passport-clearinghouse).
 
 The AAI standard enables [Data Holders](#term-data-holder) and [Visa Issuers](#term-visa-issuer) to recognize
 and accept identities from multiple [Brokers](#term-broker) --- allowing for a more federated
-approach. An organization can still use this specification with a single 
+approach. An organization can still use this specification with a single
 [Broker](#term-broker) and [Visa Issuer](#term-visa-issuer),
 though they may find in that case that there are few benefits beyond standard OIDC.
 
@@ -80,10 +80,10 @@ though they may find in that case that there are few benefits beyond standard OI
 
 ## Notation and Conventions
 
-Terms defined in [Terminology](#terminology) appear as capitalized 
+Terms defined in [Terminology](#terminology) appear as capitalized
 links, e.g. [Passport](#term-passport).
 
-References to [Relevant Specifications](#relevant-specifications) appear 
+References to [Relevant Specifications](#relevant-specifications) appear
 as bracket-enclosed links, e.g. [[OIDC-Core]](#ref-oidc-core).
 
 The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD",
@@ -95,18 +95,18 @@ be interpreted as described in [[RFC2119]](#ref-rfc2119).
 ## Terminology
 
 This specification inherits terminology from the OpenID
-Connect [[OIDC-Core]](#ref-oidc-core) 
+Connect [[OIDC-Core]](#ref-oidc-core)
 and OAuth 2.0 Authorization Framework [[RFC6749]](#ref-rfc6749) specifications.
 
 <a name="term-broker"></a> **Broker** -- An OIDC Provider service that
-authenticates a user (potentially by relying on an [Identity Provider](#term-identity-provider)), 
-collects user's [Visas](#term-visa) from internal and/or external [Visa Issuers](#term-visa-issuer), 
+authenticates a user (potentially by relying on an [Identity Provider](#term-identity-provider)),
+collects user's [Visas](#term-visa) from internal and/or external [Visa Issuers](#term-visa-issuer),
 and provides them to [Passport Clearinghouses](#term-passport-clearinghouse).
 
-**Claim**{: #term-claim} -- as [defined](https://datatracker.ietf.org/doc/html/rfc7519#section-2) 
-by the JWT specification [[RFC7519]](#ref-rfc7519) -- A piece of information asserted about a subject, 
+**Claim**{: #term-claim} -- as [defined](https://datatracker.ietf.org/doc/html/rfc7519#section-2)
+by the JWT specification [[RFC7519]](#ref-rfc7519) -- A piece of information asserted about a subject,
 represented as a name/value pair consisting of
-a claim name (a string) and a claim value (any JSON value). 
+a claim name (a string) and a claim value (any JSON value).
 
 **Client**{: #term-client} -- as discussed in the OAuth 2.0 Authorization Framework [[RFC6749]](#ref-rfc6749) specification
 
@@ -129,7 +129,7 @@ eRA Commons. IdPs MAY be [Visa Assertion Sources](#term-visa-assertion-source).
 **JWT**{: #term-jwt} -- JSON Web Token as defined in [[RFC7519]](#ref-rfc7519).
 A JWT contains a set of [Claims](#term-claim).
 
-<a name="term-passport-clearinghouse"></a> **Passport Clearinghouse** -- 
+<a name="term-passport-clearinghouse"></a> **Passport Clearinghouse** --
 A service that consumes [Visas](#term-visa) and uses them to make an
 authorization decision based on inspecting them and
 allows access to a specific set of underlying resources in the target
@@ -162,9 +162,9 @@ for exchanging access tokens for other tokens. A token exchange is performed by 
 
 <a name="term-userinfo-endpoint"></a> **UserInfo Endpoint** -- a [Broker](#term-broker)'s implementation of the [[OIDC-Core]](#ref-oidc-core) [UserInfo Endpoint](https://openid.net/specs/openid-connect-core-1_0.html#UserInfo).
 
-<a name="term-visa"></a> 
-**Visa** -- A 
-Visa encodes a [Visa Assertion](#term-visa-assertion) in compact and digitally signed 
+<a name="term-visa"></a>
+**Visa** -- A
+Visa encodes a [Visa Assertion](#term-visa-assertion) in compact and digitally signed
 format that can be passed as a URL-safe string value.
 
 A Visa MUST be signed by a [Visa Issuer](#term-visa-issuer). A Visa MAY be passed
@@ -192,16 +192,16 @@ specific assignment within the organization that made the assertion.
 ## Relevant Specifications
 
 <a name="ref-iana-jwt"></a>
-[[IANA-JWT]](https://www.iana.org/assignments/jwt/jwt.xhtml) -- Standard JWT [Claim](#term-claim) name assignments, 
+[[IANA-JWT]](https://www.iana.org/assignments/jwt/jwt.xhtml) -- Standard JWT [Claim](#term-claim) name assignments,
 Internet Assigned Numbers Authority
 
 <a name="ref-oidc-core"></a>
-[[OIDC-Core]](http://openid.net/specs/openid-connect-core-1_0.html) -- OpenID Connect Core 1.0 (OIDC) -- 
-        [Authorization Code Flow](http://openid.net/specs/openid-connect-core-1_0.html#rfc.section.3.1) 
+[[OIDC-Core]](http://openid.net/specs/openid-connect-core-1_0.html) -- OpenID Connect Core 1.0 (OIDC) --
+        [Authorization Code Flow](http://openid.net/specs/openid-connect-core-1_0.html#rfc.section.3.1)
         will generate id_tokens and access_tokens from the [Broker](#term-broker).
 
 <a name="ref-oidc-client"></a>
-[[OIDC-Client]](https://openid.net/specs/openid-connect-basic-1_0.html) -- OpenID Connect Basic Client Implementer's Guide 1.0 
+[[OIDC-Client]](https://openid.net/specs/openid-connect-basic-1_0.html) -- OpenID Connect Basic Client Implementer's Guide 1.0
 
 <a name="ref-oidc-discovery"></a>
 [[OIDC-Discovery]](https://openid.net/specs/openid-connect-discovery-1_0.html) -- OpenID Connect Discovery 1.0
@@ -218,7 +218,7 @@ Internet Assigned Numbers Authority
 <a name="ref-rfc5246"></a>
 [[RFC5246]](https://tools.ietf.org/html/rfc5246) - Transport Layer Security (TLS).
         Information passed among clients, applications, resource servers,
-        [Brokers](#term-broker), and [Passport Clearinghouses](#term-passport-clearinghouse) 
+        [Brokers](#term-broker), and [Passport Clearinghouses](#term-passport-clearinghouse)
         MUST be protected using TLS.
 
 <a name="ref-rfc6749"></a>
@@ -226,8 +226,8 @@ Internet Assigned Numbers Authority
 
 <a name="ref-rfc6819"></a>
 [[RFC6819]](https://www.rfc-editor.org/info/rfc6819) -
-        Lodderstedt, T, McGloin, M., and P. Hunt, 
-        "OAuth 2.0 Threat Model and Security Considerations", 
+        Lodderstedt, T, McGloin, M., and P. Hunt,
+        "OAuth 2.0 Threat Model and Security Considerations",
         RFC 6819, January 2013.
 
 <a name="ref-rfc7515"></a>
@@ -241,7 +241,7 @@ Internet Assigned Numbers Authority
         specification [[RFC7515]](#ref-rfc7515).
 
 <a name="ref-rfc7636"></a>
-[[RFC7636]](https://datatracker.ietf.org/doc/html/rfc7636) -- Proof Key for Code Exchange by OAuth Public Clients (PKCE) 
+[[RFC7636]](https://datatracker.ietf.org/doc/html/rfc7636) -- Proof Key for Code Exchange by OAuth Public Clients (PKCE)
 
 <a name="ref-rfc7662"></a>
 [[RFC7662]](https://www.rfc-editor.org/rfc/rfc7662) -- J. Richer, Ed., "OAuth 2.0 Token Introspection", October 2015
@@ -264,7 +264,7 @@ Internet Assigned Numbers Authority
 
 ## Overview of Interactions
 
-### Full Login and Token Exchange Interaction in AAI/Passport 1.2
+### Full Login and Token Exchange Interaction
 
 In the full token exchange flow recommended in this document, the client does not ever distribute the initial
 *Passport-Scoped Access Token* to other services. A token exchange operation is executed by the client, in
@@ -327,7 +327,7 @@ Notable differences between this diagram and interaction specified in AAI/Passpo
 * The Passport Clearinghouse is no longer required to be a Client of the Broker
 * The Passport-Scoped Access Token is only ever shared between the Client and the Broker
 * An additional Token Exchange request is used to exchange the Passport-Scoped Access Token for a Passport Token,
-  which can be sent to a Passport Clearinghouse. The Passport Token carries only the authorization in a user's 
+  which can be sent to a Passport Clearinghouse. The Passport Token carries only the authorization in a user's
   Visas, whereas the Passport-Scoped Access Token contains authorizations above and beyond the Visas.
 
 ### Flow of Assertions
@@ -344,14 +344,14 @@ component "<b>Visa Assertion Source</b>" as vas
 component "<b>Visa Issuer</b>" as vi
 
 vas --> vi
-vi --> bro 
+vi --> bro
 bro --> ch
 
 }
 @enduml
 
 The above diagram shows how [Visa Assertions](#term-visa-assertion) flow from a [Visa Assertion Source](#term-visa-assertion-source)
-to a [Passport Clearinghouse](#term-passport-clearinghouse) that uses them. 
+to a [Passport Clearinghouse](#term-passport-clearinghouse) that uses them.
 
 Implementations may introduce clients, services, and protocols
 to provide the mechanisms to move the data between the
@@ -386,9 +386,9 @@ VisaSource1 --> VisaIssuer1
 VisaSource2 --> VisaIssuer2
 
 
-VisaIssuer1 --> Broker 
-VisaIssuer2 --> Broker 
-Broker --> Client 
+VisaIssuer1 --> Broker
+VisaIssuer2 --> Broker
+Broker --> Client
 Client --> ClearingHouse
 
 @enduml
@@ -409,10 +409,10 @@ component "<b>Client</b>\napplication" as Client
 component "<b>Passport</b>\n<b>Clearinghouse</b>\nservice" as ClearingHouse
 }
 
-VisaSource1 --> Broker 
-VisaSource2 --> Broker 
+VisaSource1 --> Broker
+VisaSource2 --> Broker
 VisaSourceN --> Broker
-Broker --> Client 
+Broker --> Client
 Client --> ClearingHouse
 
 @enduml
@@ -424,14 +424,14 @@ Client --> ClearingHouse
 
 ### Conformance for Clients/Applications
 
-Clients are applications which want to access data on behalf of users, and are responsible for using the standard described here to do so securely. 
+Clients are applications which want to access data on behalf of users, and are responsible for using the standard described here to do so securely.
 
 1. OAuth defines two client types in [section 2.1](https://datatracker.ietf.org/doc/html/rfc6749#section-2.1) of [[RFC6749]](#ref-rfc6749).
-   1. Confidential clients (which are able to keep the client secret secure, typically server-side web-applications) 
+   1. Confidential clients (which are able to keep the client secret secure, typically server-side web-applications)
         MUST implement OAuth2 Authorization Code
         Flow (see OIDC Basic Client Implementer's Guide 1.0 [[OIDC-Client]](#ref-oidc-client)).
-   
-   2. Public clients (single pages apps or mobile apps) SHOULD implement Authorization Code Flow 
+
+   2. Public clients (single pages apps or mobile apps) SHOULD implement Authorization Code Flow
         with [[PKCE]](#ref-rfc7636).
 
 2.  Protection of Confidential Information
@@ -454,11 +454,11 @@ Clients are applications which want to access data on behalf of users, and are r
 {% hr3 %}
 
 ### Conformance for Brokers
-Brokers operate downstream from IdPs or provide their own IdP service. They issue id_tokens 
+Brokers operate downstream from IdPs or provide their own IdP service. They issue id_tokens
 and access_tokens (and potentially refresh tokens) for consumption within the GA4GH compliant environment.
 
 1. Broker MUST be an OpenID Provider
- 
+
     1. Broker MUST conform to the OIDC Core specification [[OIDC-Core]](#ref-oidc-core).
 
     2. Broker MUST support the OIDC Discovery specification [[OIDC-Discovery]](#ref-oidc-discovery)
@@ -481,7 +481,7 @@ and access_tokens (and potentially refresh tokens) for consumption within the GA
 
 2.  Broker MUST support a [Token Endpoint](#term-token-endpoint) and [UserInfo Endpoint](#term-userinfo-endpoint).
 
-    1. [Token Exchange](#term-token-exchange) at the Token Endpoint SHOULD be used for [Visas](#term-visa) in 
+    1. [Token Exchange](#term-token-exchange) at the Token Endpoint SHOULD be used for [Visas](#term-visa) in
        preference to the UserInfo Endpoint.
 
     2. When presented with a valid [Passport-scoped Access Token](#term-passport-scoped-access-token),
@@ -492,7 +492,7 @@ and access_tokens (and potentially refresh tokens) for consumption within the GA
     issue id_tokens and access_tokens (and potentially refresh tokens) for
     consumption within the GA4GH compliant environment.
 
-4.  Broker MAY support [Token Exchange](#term-token-exchange). If implemented, it MUST behave as described 
+4.  Broker MAY support [Token Exchange](#term-token-exchange). If implemented, it MUST behave as described
     for passport issuance in [Conformance For Passport Issuers](#conformance-for-passport-issuers).
 
 5.  Broker MUST provide protection against attacks as outlined in
@@ -501,7 +501,7 @@ and access_tokens (and potentially refresh tokens) for consumption within the GA
 6.  The user represented by the identity of the access token MUST have agreed to
     release claims related to the requested scopes as part of generating tokens.
     Brokers MUST adhere to
-    [section 3.1.2.4](https://openid.net/specs/openid-connect-core-1_0.html#Consent) 
+    [section 3.1.2.4](https://openid.net/specs/openid-connect-core-1_0.html#Consent)
     of [[OIDC-Core]](#ref-oidc-core).
 
     1.  The user represented by a researcher identity MUST approve the release
@@ -543,9 +543,9 @@ obtains Visas contained in a Passport or returned from the Userinfo Endpoint.
 
 1. A [Visa Issuer](#term-visa-issuer) MUST provide one or more of the following
     types of [Visas](#term-visa):
-   
-    1. <a name="term-visa-document-token"></a> 
-       <a name="term-embedded-document-token"></a> 
+
+    1. <a name="term-visa-document-token"></a>
+       <a name="term-embedded-document-token"></a>
        <a name="visa-document-token-format"></a>
        <a name="embedded-document-token-format"></a>
        **Visa Document Token** -- The Visa Issuer does not need to
@@ -563,7 +563,7 @@ obtains Visas contained in a Passport or returned from the Userinfo Endpoint.
         5.  [Visas](#term-visa) MUST be signed with a [conformant signing algorithm](#signing-algorithms).
         6.  The `scope` [Claim](#term-claim), if included, MUST NOT contain "openid" as
             a space-delimited substring of the `scope` JWT [Claim](#term-claim).
-        7.  Payload [Claims](#term-claim) are specified in 
+        7.  Payload [Claims](#term-claim) are specified in
             [Visa Format](https://github.com/ga4gh-duri/ga4gh-duri.github.io/blob/master/researcher_ids/ga4gh_passport_v1.md#visa-format) in [[Passport]](#ref-passport).
 
     2. <a name="term-visa-access-token"></a> <a name="visa-access-token-format"></a> <a name="term-visa-access-token-format"></a> <a name="term-embedded-access-token"></a> <a name="embedded-access-token-format"></a>
@@ -573,7 +573,7 @@ obtains Visas contained in a Passport or returned from the Userinfo Endpoint.
 
     <p class="deprecation">The <b>Visa Access Token</b> is proposed for removal in a future
      version of the specification. Current and future specifications emphasize use of Visas embedded in a Passport, which are not access tokens. New implementations should issue Visas
-     as <b>Visa Document Token</b>s.</p> 
+     as <b>Visa Document Token</b>s.</p>
 
 2. By signing a Visa, a Visa Issuer asserts that
     the [Visa Assertions](#term-visa-assertion) made available by the Visa were legitimately derived
@@ -584,13 +584,13 @@ obtains Visas contained in a Passport or returned from the Userinfo Endpoint.
 
 ### Conformance for Passport Issuers
 
-Passport Issuers are used to package Visas into signed Passports. Passports are signed JWTs 
+Passport Issuers are used to package Visas into signed Passports. Passports are signed JWTs
 that use [this format](#passport-format) to contain Visas.
 
 1.  Passport Issuers MUST be Brokers.
 
 2.  Passports MUST be signed with a [conformant signing algorithm](#signing-algorithms).
-    
+
 3.  Passports MAY be issued from a [Token Endpoint](#term-token-endpoint) using [Token Exchange](#term-token-exchange), with the following clarifications:
 
     1. The Token Endpoint MAY also support other OAuth2 grant types.
@@ -637,7 +637,7 @@ user -> client : Initiates login
 client -> user : Send redirect to Broker
 user -> broker : Follow redirects
 ref over broker
-Broker authenticates user 
+Broker authenticates user
 (potentially with external IdP)
 end ref
 broker -> user : Send redirect to client with authorization code
@@ -672,15 +672,15 @@ Passport Clearinghouses consume Passports containing Visas in order to grant acc
 1.  Passport Clearinghouses MUST trust at least one Broker.
 
     1.  Passport Clearinghouses MAY trust more than one Broker
-    
-    2.  The Passport Clearinghouse is responsible for assessing the risk in choosing to trust a token from a Broker. 
-    
+
+    2.  The Passport Clearinghouse is responsible for assessing the risk in choosing to trust a token from a Broker.
+
 2.  Passport Clearinghouses MUST process access tokens to access a Broker's Token or UserInfo Endpoint to get access to Visas OR MUST process Passports directly.
 
     1.  For access token flows, Passport Clearinghouses MUST either check the validity of the access token or treat the access
     token as opaque.
 
- 
+
     2. For Passport flows, Passport Clearinghouses MUST check the validity of the Passport.
 
 3.  A Passport Clearinghouse service can be a Broker itself and would follow the
@@ -690,7 +690,7 @@ Passport Clearinghouses consume Passports containing Visas in order to grant acc
     [[RFC6819]](#ref-rfc6819).
 
     1. [Section 5.1.6](https://www.rfc-editor.org/rfc/rfc6819.html#section-5.1.6) of [[RFC6819]](#ref-rfc6819) states `Ensure that client applications do not share tokens with 3rd parties.` This profile provides a mechanism for Clearinghouses to consume access tokens from multiple brokers in a manner that does not involve 3rd parties. Client applications SHOULD take care to not spread the tokens to any other services that would be considered 3rd parties.
-        
+
 5.  If making use of [Visas](#term-visa):
 
     1.  The Passport Clearinghouse MUST validate that all JWT checks pass (such as
@@ -721,7 +721,7 @@ Passport Clearinghouses consume Passports containing Visas in order to grant acc
 
 6.  <a name="at-polling"></a> **Access Token Polling**: Clients MAY use access tokens,
     including Visas, to occasionally check which Visas are still valid
-    at the associated Token or UserInfo Endpoint in order to establish 
+    at the associated Token or UserInfo Endpoint in order to establish
     whether the user still meets the access requirements.
 
     This MUST NOT be done more than once per hour (excluding any optional retries)
@@ -769,7 +769,7 @@ This profile is agnostic to the format of the id_token.
 <a name="access_token-issued-by-broker"></a>
 ### Passport-Scoped Access Token
 
-This is the format for the token that is issued by [Brokers](#term-broker), extending the definition of 
+This is the format for the token that is issued by [Brokers](#term-broker), extending the definition of
 the [[OIDC-Core]](#ref-oidc-core) access token.
 
 **Header**
@@ -781,16 +781,16 @@ the [[OIDC-Core]](#ref-oidc-core) access token.
  "kid": "<key-identifier>"
 }
 ```
-- `typ`: REQUIRED. Media type of the JWT. Value should be either 
-   `JWT` as [recommended](https://datatracker.ietf.org/doc/html/rfc7519#section-5.1) 
+- `typ`: REQUIRED. Media type of the JWT. Value should be either
+   `JWT` as [recommended](https://datatracker.ietf.org/doc/html/rfc7519#section-5.1)
    in [[RFC7519]](#ref-rfc7519)
-   or `at+jwt` as [required](https://datatracker.ietf.org/doc/html/rfc9068#section-2.1) 
+   or `at+jwt` as [required](https://datatracker.ietf.org/doc/html/rfc9068#section-2.1)
    in [[RFC9068]](#ref-rfc9068)
    if the token format follows [[RFC9068]](#ref-rfc9068).
 
 - `alg`: REQUIRED. See [Signing Algorithms](#signing-algorithms).
 
-- `kid`: REQUIRED. Key ID, see [section 4.1.4](https://tools.ietf.org/html/rfc7515#section-4.1.4) 
+- `kid`: REQUIRED. Key ID, see [section 4.1.4](https://tools.ietf.org/html/rfc7515#section-4.1.4)
     of [[RFC7515]](#ref-rfc7515).
 
 **Payload**
@@ -818,7 +818,7 @@ the [[OIDC-Core]](#ref-oidc-core) access token.
 
 -   `idp`: OPTIONAL. SHOULD contain the IDP the user used to auth with.
     This does not have to be unique and
-    can be used just to help inform if that is what a [Visa Issuer](#term-visa-issuer) 
+    can be used just to help inform if that is what a [Visa Issuer](#term-visa-issuer)
     or [Data Holder](#term-data-holder) needs.
 
 -   `aud`: OPTIONAL. If provided, it MUST contain the OAuth Client ID of the
@@ -860,13 +860,13 @@ with the `requested_token_type=urn:ga4gh:params:oauth:token-type:passport` is su
 (as described in the [Conformance for Passport Issuers](#conformance-for-passport-issuers) section).
 
 Passports are defined as signed JWTs. The JWT specification [[RFC7519]](#ref-rfc7519)
-states that JWTs can be either signed and encoded using JWS Compact Serialization, 
-or encrypted and encoded using JWE Compact Serialization. 
+states that JWTs can be either signed and encoded using JWS Compact Serialization,
+or encrypted and encoded using JWE Compact Serialization.
 Passports are signed JWTs, which implies that they must be encoded using [JWS Compact Serialization](https://www.rfc-editor.org/rfc/rfc7515#section-3.1) [[RFC7515]](#ref-rfc7515).
 
 **Header**
 
-This spec prescribes the following JWS headers for Passports 
+This spec prescribes the following JWS headers for Passports
 in addition to the guidelines established in [[RFC7515]](#ref-rfc7515):
 
 - `typ`: REQUIRED where the value must be `vnd.ga4gh.passport+jwt` for Passports.
@@ -912,8 +912,8 @@ JWT specification [[RFC7519]](#ref-rfc7519) for more details.
 
 - `jti`: RECOMMENDED.
 
-- `ga4gh_passport_v1`: REQUIRED. An array of GA4GH Visas. May be empty if a 
-    user has no visas. See the [[Passport]](#ref-passport) specification 
+- `ga4gh_passport_v1`: REQUIRED. An array of GA4GH Visas. May be empty if a
+    user has no visas. See the [[Passport]](#ref-passport) specification
     for more details on types of visas.
 
 {% hr3 %}
