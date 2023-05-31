@@ -60,6 +60,6 @@ jobs:
         run: |
           pages_url=$(gh api repos/${{ github.repository }}/pages | jq -r '.html_url')
           gh pr comment ${{ github.event.pull_request.number }} \
-            --body "This branch will be online at ${pages_url}/${{ steps.branch-name.outputs.current_branch }}/"
+            --body "Branch URL: ${pages_url}${{ steps.branch-name.outputs.current_branch }}/"
         env:
           GH_TOKEN: ${{ github.token }}
