@@ -1,6 +1,8 @@
+# Latest builder image at this time is 4.2.2
+# Site version is 4.3.2 (see Gemfile.lock)
 FROM jekyll/builder:4.2.2
 
-ENV PLANTUML_VERSION=1.2021.10
+ENV PLANTUML_VERSION=1.2023.6
 ENV LANG en_US.UTF-8
 
 # construct a Jekyll builder that comes pre-installed with plantuml runnable as a binary
