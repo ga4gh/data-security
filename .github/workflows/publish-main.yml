@@ -33,7 +33,7 @@ jobs:
       - name: Build Jekyll Site
         uses: helaili/jekyll-action@master
         env:
-          PLANTUML_VERSION: "1.2021.10"
+          PLANTUML_VERSION: "1.2023.6"
         with:
           # this is dodgy.. the jekyll action wants to build things outside our workspace so setting it to
           # this brings it back into the workspace where files will be kept for the deploy
