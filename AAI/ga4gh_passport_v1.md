@@ -6,7 +6,7 @@ permalink: ga4gh-passport
 
 # GA4GH Passport
 
-**Version**: 1.3
+**Version**: 1.2.1
 
 **Work Stream Name**: Data Use and Researcher Identity (DURI)
 
