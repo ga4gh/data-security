@@ -50,7 +50,7 @@ module Jekyll
       FileUtils.mkdir_p(File.dirname(uml))
 
       # if we don't have both files cached then lets regenerate
-      if !File.exists?(uml) or !File.exists?(svg)
+      if !File.exist?(uml) or !File.exist?(svg)
         File.open(uml, 'w') { |f|
           f.write("@startuml\n")
           f.write(super)
