@@ -1,4 +1,4 @@
-# Authentication and Authorization Infrastructure
+# Authentication and Authorization Infrastructure - Version 1.2
 
 ## [Link to Specification](https://ga4gh.github.io/data-security/)
 
@@ -16,12 +16,12 @@ these researcher attributes called Visas and how various
 participants can interact to authenticate researchers, and obtain and validate Visas.
 
 This specification also provides for federated multilateral authorization infrastructure for greater
-interoperability between biomedical institutions sharing restricted datasets.  
+interoperability between biomedical institutions sharing restricted datasets.
 
 ### What is OpenID Connect?
 
-OpenID Connect is a simple identity layer, on top of the OAuth 2.0 protocol, that supports identity verification and the ability to 
-obtain basic profile information about end users. The AAI specification extends this to define tokens, 
+OpenID Connect is a simple identity layer, on top of the OAuth 2.0 protocol, that supports identity verification and the ability to
+obtain basic profile information about end users. The AAI specification extends this to define tokens,
 endpoints, and flows that enable an OIDC provider (called a Broker) to
 provide Passports and Visas to downstream consumers called Passport Clearinghouses. Passports can then be used for
 authorization purposes by downstream systems.
@@ -29,7 +29,7 @@ authorization purposes by downstream systems.
 ## Passports specification
 The AAI and Passports specifications rely on each other for full functionality and will likely be merged in a future version. The Passports specification from the Data Use and Researcher Identities Work Stream can be found [here](https://ga4gh-duri.github.io/researcher_ids/ga4gh_passport_v1.html).
 
-## Version history 
+## Version history
 
 [Changelog](https://ga4gh.github.io/data-security/changes-1_2) for v1.2
 
@@ -65,7 +65,7 @@ Names listed alphabetically by surname. Repository maintainers listed [here](./M
 ### Data Security
 
 - David Bernick - Broad Institute
-- Lucila Ohno-Machado - Yale University School of Medicine 
+- Lucila Ohno-Machado - Yale University School of Medicine
 - Previously - Jean-Pierre Hubaux - Swiss Federal Institute of Technology Lausanne
 
 ### Data Use and Researcher Identities
@@ -76,6 +76,6 @@ Names listed alphabetically by surname. Repository maintainers listed [here](./M
 
 ## Demonstration Implementation
 
-[Life Science RI](https://lifescience-ri.eu/) have implemented this v1.2 specification from the finalised draft for use across the Life Science RI platforms. 
+[Life Science RI](https://lifescience-ri.eu/) have implemented this v1.2 specification from the finalised draft for use across the Life Science RI platforms.
 Information on creating an account is available [here](https://lifescience-ri.eu/ls-login/users/how-to-get-and-use-life-science-id.html).
-With an account, the test service [here](https://echo.aai.elixir-czech.org/) will return a technical view of the various tokens created and shared in an example flow using Passport/AAI 1.2. 
+With an account, the test service [here](https://echo.aai.elixir-czech.org/) will return a technical view of the various tokens created and shared in an example flow using Passport/AAI 1.2.
