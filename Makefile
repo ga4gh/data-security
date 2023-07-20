@@ -7,13 +7,12 @@ BUILDER=jekyll-builder-local
 # a folder to handle dependency building of docker images (kind of)
 STAMP_DIR=$(BUILDER)/stamps
 
-.PHONY: clean serve
-
+.PHONY: clean serve$
 serve: $(BUILDER)
-	docker run --rm --volume="$(ROOT_DIR):/srv/jekyll" \
-               --volume="$(ROOT_DIR)/vendor/bundle:/usr/local/bundle" \
+	docker run --rm -it \
+               --volume="$(ROOT_DIR):/srv/jekyll" \
                --env JEKYLL_ENV=development -p 4000:4000 \
-               $(BUILDER) jekyll serve
+               $(BUILDER) ./install-and-serve
 
 $(BUILDER): $(STAMP_DIR)/$(BUILDER)
 
