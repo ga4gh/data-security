@@ -39,7 +39,7 @@
         </label>
 
         <div class="trigger">
-<a class="page-link" href="/data-security/aai-openid-connect-profile">AAI OIDC Profile</a><a class="page-link" href="/data-security/aai-faq">AAI FAQ</a><a class="page-link" href="/data-security/changes-1_2">Changes Between Versions 1.0 and 1.2</a>
+<a class="page-link" href="/data-security/aai-openid-connect-profile">AAI OIDC Profile</a><a class="page-link" href="/data-security/ga4gh-passport">GA4GH Passport</a><a class="page-link" href="/data-security/ga4gh-custom-visas">GA4GH Passport Custom Visa Registry</a><a class="page-link" href="/data-security/aai-faq">AAI FAQ</a><a class="page-link" href="/data-security/versions">Version History</a>
 </div>
       </nav>
 </div>
@@ -58,10 +58,10 @@
 <p>This specification defines a profile for using the OpenID Connect protocol
 <a href="#ref-oidc-core">[OIDC-Core]</a> to provide federated multilateral authorization infrastructure for greater
 interoperability between biomedical institutions sharing restricted datasets.  (OpenID Connect is a simple
-identity layer, on top of the OAuth 2.0 protocol, that supports identity verification and the ability to 
-obtain basic profile information about end users.) In particular, this specification defines tokens, 
+identity layer, on top of the OAuth 2.0 protocol, that supports identity verification and the ability to
+obtain basic profile information about end users.) In particular, this specification defines tokens,
 endpoints, and flows that enable an OIDC provider (called a <a href="#term-broker">Broker</a>) to
-provide <a href="#term-passport">Passports</a> and <a href="#term-visa">Visas</a> to downstream consumers called 
+provide <a href="#term-passport">Passports</a> and <a href="#term-visa">Visas</a> to downstream consumers called
 <a href="#term-passport-clearinghouse">Passport Clearinghouses</a>. <a href="#term-passport">Passports</a> can then be used for
 authorization purposes by downstream systems.</p>
 
@@ -80,7 +80,7 @@ authorization purposes by downstream systems.</p>
   <li><a href="#relevant-specifications" id="markdown-toc-relevant-specifications">Relevant Specifications</a></li>
   <li>
 <a href="#overview-of-interactions" id="markdown-toc-overview-of-interactions">Overview of Interactions</a>    <ul>
-      <li><a href="#full-login-and-token-exchange-interaction-in-aaipassport-12" id="markdown-toc-full-login-and-token-exchange-interaction-in-aaipassport-12">Full Login and Token Exchange Interaction in AAI/Passport 1.2</a></li>
+      <li><a href="#full-login-and-token-exchange-interaction" id="markdown-toc-full-login-and-token-exchange-interaction">Full Login and Token Exchange Interaction</a></li>
       <li><a href="#flow-of-assertions" id="markdown-toc-flow-of-assertions">Flow of Assertions</a></li>
     </ul>
   </li>
@@ -148,19 +148,19 @@ validated by <a href="#term-passport-clearinghouse">Passport Clearinghouses</a>.
 
 <h3 id="separation-of-data-holders-and-data-access-committees">Separation of Data Holders and Data Access Committees</h3>
 
-<p>It is a fairly common situation that, for a single dataset, the Data Access Committee (DAC) (the authority managing 
+<p>It is a fairly common situation that, for a single dataset, the Data Access Committee (DAC) (the authority managing
 who has access to a dataset) is not the same party as the
 <a href="#term-data-holder">Data Holder</a> (the organization
 that hosts the data, while respecting the DAC’s access policies).</p>
 
 <p>For these situations, AAI is a standard mechanism for data holders to obtain
 and validate existing authorizations from DACs, by specifying the interactions
-between <a href="#term-visa-issuer">Visa Issuers</a>, <a href="#term-broker">Brokers</a>, and 
+between <a href="#term-visa-issuer">Visa Issuers</a>, <a href="#term-broker">Brokers</a>, and
 <a href="#term-passport-clearinghouse">Passport Clearinghouses</a>.</p>
 
 <p>The AAI standard enables <a href="#term-data-holder">Data Holders</a> and <a href="#term-visa-issuer">Visa Issuers</a> to recognize
 and accept identities from multiple <a href="#term-broker">Brokers</a> — allowing for a more federated
-approach. An organization can still use this specification with a single 
+approach. An organization can still use this specification with a single
 <a href="#term-broker">Broker</a> and <a href="#term-visa-issuer">Visa Issuer</a>,
 though they may find in that case that there are few benefits beyond standard OIDC.</p>
 
@@ -168,10 +168,10 @@ though they may find in that case that there are few benefits beyond standard OI
 
 <h2 id="notation-and-conventions">Notation and Conventions</h2>
 
-<p>Terms defined in <a href="#terminology">Terminology</a> appear as capitalized 
+<p>Terms defined in <a href="#terminology">Terminology</a> appear as capitalized
 links, e.g. <a href="#term-passport">Passport</a>.</p>
 
-<p>References to <a href="#relevant-specifications">Relevant Specifications</a> appear 
+<p>References to <a href="#relevant-specifications">Relevant Specifications</a> appear
 as bracket-enclosed links, e.g. <a href="#ref-oidc-core">[OIDC-Core]</a>.</p>
 
 <p>The key words “MUST”, “MUST NOT”, “REQUIRED”, “SHALL”, “SHALL NOT”, “SHOULD”,
@@ -183,16 +183,16 @@ be interpreted as described in <a href="#ref-rfc2119">[RFC2119]</a>.</p>
 <h2 id="terminology">Terminology</h2>
 
 <p>This specification inherits terminology from the OpenID
-Connect <a href="#ref-oidc-core">[OIDC-Core]</a> 
+Connect <a href="#ref-oidc-core">[OIDC-Core]</a>
 and OAuth 2.0 Authorization Framework <a href="#ref-rfc6749">[RFC6749]</a> specifications.</p>
 
 <p><a name="term-broker"></a> <strong>Broker</strong> – An OIDC Provider service that
-authenticates a user (potentially by relying on an <a href="#term-identity-provider">Identity Provider</a>), 
-collects user’s <a href="#term-visa">Visas</a> from internal and/or external <a href="#term-visa-issuer">Visa Issuers</a>, 
+authenticates a user (potentially by relying on an <a href="#term-identity-provider">Identity Provider</a>),
+collects user’s <a href="#term-visa">Visas</a> from internal and/or external <a href="#term-visa-issuer">Visa Issuers</a>,
 and provides them to <a href="#term-passport-clearinghouse">Passport Clearinghouses</a>.</p>
 
-<p><strong id="term-claim">Claim</strong> – as <a href="https://datatracker.ietf.org/doc/html/rfc7519#section-2">defined</a> 
-by the JWT specification <a href="#ref-rfc7519">[RFC7519]</a> – A piece of information asserted about a subject, 
+<p><strong id="term-claim">Claim</strong> – as <a href="https://datatracker.ietf.org/doc/html/rfc7519#section-2">defined</a>
+by the JWT specification <a href="#ref-rfc7519">[RFC7519]</a> – A piece of information asserted about a subject,
 represented as a name/value pair consisting of
 a claim name (a string) and a claim value (any JSON value).</p>
 
@@ -217,7 +217,7 @@ eRA Commons. IdPs MAY be <a href="#term-visa-assertion-source">Visa Assertion So
 <p><strong id="term-jwt">JWT</strong> – JSON Web Token as defined in <a href="#ref-rfc7519">[RFC7519]</a>.
 A JWT contains a set of <a href="#term-claim">Claims</a>.</p>
 
-<p><a name="term-passport-clearinghouse"></a> <strong>Passport Clearinghouse</strong> – 
+<p><a name="term-passport-clearinghouse"></a> <strong>Passport Clearinghouse</strong> –
 A service that consumes <a href="#term-visa">Visas</a> and uses them to make an
 authorization decision based on inspecting them and
 allows access to a specific set of underlying resources in the target
@@ -250,9 +250,9 @@ for exchanging access tokens for other tokens. A token exchange is performed by 
 
 <p><a name="term-userinfo-endpoint"></a> <strong>UserInfo Endpoint</strong> – a <a href="#term-broker">Broker</a>’s implementation of the <a href="#ref-oidc-core">[OIDC-Core]</a> <a href="https://openid.net/specs/openid-connect-core-1_0.html#UserInfo">UserInfo Endpoint</a>.</p>
 
-<p><a name="term-visa"></a> 
-<strong>Visa</strong> – A 
-Visa encodes a <a href="#term-visa-assertion">Visa Assertion</a> in compact and digitally signed 
+<p><a name="term-visa"></a>
+<strong>Visa</strong> – A
+Visa encodes a <a href="#term-visa-assertion">Visa Assertion</a> in compact and digitally signed
 format that can be passed as a URL-safe string value.</p>
 
 <p>A Visa MUST be signed by a <a href="#term-visa-issuer">Visa Issuer</a>. A Visa MAY be passed
@@ -284,12 +284,12 @@ user and is responsible for making and maintaining the assertion.</li>
 <h2 id="relevant-specifications">Relevant Specifications</h2>
 
 <p><a name="ref-iana-jwt"></a>
-<a href="https://www.iana.org/assignments/jwt/jwt.xhtml">[IANA-JWT]</a> – Standard JWT <a href="#term-claim">Claim</a> name assignments, 
+<a href="https://www.iana.org/assignments/jwt/jwt.xhtml">[IANA-JWT]</a> – Standard JWT <a href="#term-claim">Claim</a> name assignments,
 Internet Assigned Numbers Authority</p>
 
 <p><a name="ref-oidc-core"></a>
-<a href="http://openid.net/specs/openid-connect-core-1_0.html">[OIDC-Core]</a> – OpenID Connect Core 1.0 (OIDC) – 
-        <a href="http://openid.net/specs/openid-connect-core-1_0.html#rfc.section.3.1">Authorization Code Flow</a> 
+<a href="http://openid.net/specs/openid-connect-core-1_0.html">[OIDC-Core]</a> – OpenID Connect Core 1.0 (OIDC) –
+        <a href="http://openid.net/specs/openid-connect-core-1_0.html#rfc.section.3.1">Authorization Code Flow</a>
         will generate id_tokens and access_tokens from the <a href="#term-broker">Broker</a>.</p>
 
 <p><a name="ref-oidc-client"></a>
@@ -310,7 +310,7 @@ Internet Assigned Numbers Authority</p>
 <p><a name="ref-rfc5246"></a>
 <a href="https://tools.ietf.org/html/rfc5246">[RFC5246]</a> - Transport Layer Security (TLS).
         Information passed among clients, applications, resource servers,
-        <a href="#term-broker">Brokers</a>, and <a href="#term-passport-clearinghouse">Passport Clearinghouses</a> 
+        <a href="#term-broker">Brokers</a>, and <a href="#term-passport-clearinghouse">Passport Clearinghouses</a>
         MUST be protected using TLS.</p>
 
 <p><a name="ref-rfc6749"></a>
@@ -318,8 +318,8 @@ Internet Assigned Numbers Authority</p>
 
 <p><a name="ref-rfc6819"></a>
 <a href="https://www.rfc-editor.org/info/rfc6819">[RFC6819]</a> -
-        Lodderstedt, T, McGloin, M., and P. Hunt, 
-        “OAuth 2.0 Threat Model and Security Considerations”, 
+        Lodderstedt, T, McGloin, M., and P. Hunt,
+        “OAuth 2.0 Threat Model and Security Considerations”,
         RFC 6819, January 2013.</p>
 
 <p><a name="ref-rfc7515"></a>
@@ -355,7 +355,7 @@ Internet Assigned Numbers Authority</p>
 
 <h2 id="overview-of-interactions">Overview of Interactions</h2>
 
-<h3 id="full-login-and-token-exchange-interaction-in-aaipassport-12">Full Login and Token Exchange Interaction in AAI/Passport 1.2</h3>
+<h3 id="full-login-and-token-exchange-interaction">Full Login and Token Exchange Interaction</h3>
 
 <p>In the full token exchange flow recommended in this document, the client does not ever distribute the initial
 <em>Passport-Scoped Access Token</em> to other services. A token exchange operation is executed by the client, in
@@ -463,13 +463,13 @@ exchange for a <em>Passport</em> JWT that may be used downstream to access resou
   <li>The Passport Clearinghouse is no longer required to be a Client of the Broker</li>
   <li>The Passport-Scoped Access Token is only ever shared between the Client and the Broker</li>
   <li>An additional Token Exchange request is used to exchange the Passport-Scoped Access Token for a Passport Token,
-which can be sent to a Passport Clearinghouse. The Passport Token carries only the authorization in a user’s 
+which can be sent to a Passport Clearinghouse. The Passport Token carries only the authorization in a user’s
 Visas, whereas the Passport-Scoped Access Token contains authorizations above and beyond the Visas.</li>
 </ul>
 
 <h3 id="flow-of-assertions">Flow of Assertions</h3>
 
-<p><img class="plantuml" src="http://www.plantuml.com/plantuml/svg/~h407374617274756d6c0a7061636b6167652022466c6f77206f6620617373657274696f6e7322207b0a0a736b696e706172616d20636f6d706f6e656e745374796c652072656374616e676c650a6c65667420746f20726967687420646972656374696f6e0a0a636f6d706f6e656e7420223c623e42726f6b65723c2f623e222061732062726f0a636f6d706f6e656e7420223c623e50617373706f72743c2f623e5c6e3c623e436c656172696e67686f7573653c2f623e222061732063680a636f6d706f6e656e7420223c623e5669736120417373657274696f6e20536f757263653c2f623e22206173207661730a636f6d706f6e656e7420223c623e56697361204973737565723c2f623e222061732076690a0a766173202d2d3e2076690a7669202d2d3e2062726f200a62726f202d2d3e2063680a0a7d0a40656e64756d6c"></p>
+<p><img class="plantuml" src="http://www.plantuml.com/plantuml/svg/~h407374617274756d6c0a7061636b6167652022466c6f77206f6620617373657274696f6e7322207b0a0a736b696e706172616d20636f6d706f6e656e745374796c652072656374616e676c650a6c65667420746f20726967687420646972656374696f6e0a0a636f6d706f6e656e7420223c623e42726f6b65723c2f623e222061732062726f0a636f6d706f6e656e7420223c623e50617373706f72743c2f623e5c6e3c623e436c656172696e67686f7573653c2f623e222061732063680a636f6d706f6e656e7420223c623e5669736120417373657274696f6e20536f757263653c2f623e22206173207661730a636f6d706f6e656e7420223c623e56697361204973737565723c2f623e222061732076690a0a766173202d2d3e2076690a7669202d2d3e2062726f0a62726f202d2d3e2063680a0a7d0a40656e64756d6c"></p>
 
 <p>The above diagram shows how <a href="#term-visa-assertion">Visa Assertions</a> flow from a <a href="#term-visa-assertion-source">Visa Assertion Source</a>
 to a <a href="#term-passport-clearinghouse">Passport Clearinghouse</a> that uses them.</p>
@@ -487,9 +487,9 @@ the Broker.</p>
 
 <p>Here are two non-normative examples illustrating two <em>of many possible mechanisms</em>:</p>
 
-<p><img class="plantuml" src="http://www.plantuml.com/plantuml/svg/~h407374617274756d6c0a736b696e706172616d20636f6d706f6e656e745374796c652072656374616e676c650a6c65667420746f20726967687420646972656374696f6e0a0a7061636b61676520224e6f6e2d6e6f726d6174697665204578616d706c6520313a2053657061726174652049737375657220616e642042726f6b657222207b0a636f6d706f6e656e7420223c623e5669736120417373657274696f6e20536f757263653c2f623e202831295c6e6f7267616e697a6174696f6e222061732056697361536f75726365310a636f6d706f6e656e7420223c623e5669736120417373657274696f6e20536f757263653c2f623e202832295c6e6f7267616e697a6174696f6e222061732056697361536f75726365320a0a636f6d706f6e656e7420223c623e5669736120497373756572202831293c2f623e5c6e73657276696365222061732056697361497373756572310a636f6d706f6e656e7420223c623e5669736120497373756572202832293c2f623e5c6e73657276696365222061732056697361497373756572320a0a636f6d706f6e656e7420223c623e42726f6b65723c2f623e5c6e73657276696365222061732042726f6b65720a636f6d706f6e656e7420223c623e436c69656e743c2f623e5c6e6170706c69636174696f6e2220617320436c69656e740a636f6d706f6e656e7420223c623e50617373706f72743c2f623e5c6e3c623e436c656172696e67686f7573653c2f623e5c6e736572766963652220617320436c656172696e67486f7573650a7d0a0a56697361536f7572636531202d2d3e2056697361497373756572310a56697361536f7572636532202d2d3e2056697361497373756572320a0a0a5669736149737375657231202d2d3e2042726f6b6572200a5669736149737375657232202d2d3e2042726f6b6572200a42726f6b6572202d2d3e20436c69656e74200a436c69656e74202d2d3e20436c656172696e67486f7573650a0a40656e64756d6c"></p>
+<p><img class="plantuml" src="http://www.plantuml.com/plantuml/svg/~h407374617274756d6c0a736b696e706172616d20636f6d706f6e656e745374796c652072656374616e676c650a6c65667420746f20726967687420646972656374696f6e0a0a7061636b61676520224e6f6e2d6e6f726d6174697665204578616d706c6520313a2053657061726174652049737375657220616e642042726f6b657222207b0a636f6d706f6e656e7420223c623e5669736120417373657274696f6e20536f757263653c2f623e202831295c6e6f7267616e697a6174696f6e222061732056697361536f75726365310a636f6d706f6e656e7420223c623e5669736120417373657274696f6e20536f757263653c2f623e202832295c6e6f7267616e697a6174696f6e222061732056697361536f75726365320a0a636f6d706f6e656e7420223c623e5669736120497373756572202831293c2f623e5c6e73657276696365222061732056697361497373756572310a636f6d706f6e656e7420223c623e5669736120497373756572202832293c2f623e5c6e73657276696365222061732056697361497373756572320a0a636f6d706f6e656e7420223c623e42726f6b65723c2f623e5c6e73657276696365222061732042726f6b65720a636f6d706f6e656e7420223c623e436c69656e743c2f623e5c6e6170706c69636174696f6e2220617320436c69656e740a636f6d706f6e656e7420223c623e50617373706f72743c2f623e5c6e3c623e436c656172696e67686f7573653c2f623e5c6e736572766963652220617320436c656172696e67486f7573650a7d0a0a56697361536f7572636531202d2d3e2056697361497373756572310a56697361536f7572636532202d2d3e2056697361497373756572320a0a0a5669736149737375657231202d2d3e2042726f6b65720a5669736149737375657232202d2d3e2042726f6b65720a42726f6b6572202d2d3e20436c69656e740a436c69656e74202d2d3e20436c656172696e67486f7573650a0a40656e64756d6c"></p>
 
-<p><img class="plantuml" src="http://www.plantuml.com/plantuml/svg/~h407374617274756d6c0a736b696e706172616d20636f6d706f6e656e745374796c652072656374616e676c650a6c65667420746f20726967687420646972656374696f6e0a0a7061636b61676520224e6f6e2d6e6f726d6174697665204578616d706c6520323a20436f6d62696e65642049737375657220616e642042726f6b657222207b0a0a636f6d706f6e656e7420223c623e5669736120417373657274696f6e20536f757263653c2f623e202831295c6e6f7267616e697a6174696f6e222061732056697361536f75726365310a636f6d706f6e656e7420223c623e5669736120417373657274696f6e20536f757263653c2f623e202832295c6e6f7267616e697a6174696f6e222061732056697361536f75726365320a636f6d706f6e656e7420223c623e5669736120417373657274696f6e20536f757263653c2f623e20282e2e2e295c6e6f7267616e697a6174696f6e222061732056697361536f757263654e0a0a636f6d706f6e656e7420223c623e56697361204973737565723c2f623e20616e64203c623e42726f6b65723c2f623e5c6e73657276696365222061732042726f6b65720a636f6d706f6e656e7420223c623e436c69656e743c2f623e5c6e6170706c69636174696f6e2220617320436c69656e740a636f6d706f6e656e7420223c623e50617373706f72743c2f623e5c6e3c623e436c656172696e67686f7573653c2f623e5c6e736572766963652220617320436c656172696e67486f7573650a7d0a0a56697361536f7572636531202d2d3e2042726f6b6572200a56697361536f7572636532202d2d3e2042726f6b6572200a56697361536f757263654e202d2d3e2042726f6b65720a42726f6b6572202d2d3e20436c69656e74200a436c69656e74202d2d3e20436c656172696e67486f7573650a0a40656e64756d6c"></p>
+<p><img class="plantuml" src="http://www.plantuml.com/plantuml/svg/~h407374617274756d6c0a736b696e706172616d20636f6d706f6e656e745374796c652072656374616e676c650a6c65667420746f20726967687420646972656374696f6e0a0a7061636b61676520224e6f6e2d6e6f726d6174697665204578616d706c6520323a20436f6d62696e65642049737375657220616e642042726f6b657222207b0a0a636f6d706f6e656e7420223c623e5669736120417373657274696f6e20536f757263653c2f623e202831295c6e6f7267616e697a6174696f6e222061732056697361536f75726365310a636f6d706f6e656e7420223c623e5669736120417373657274696f6e20536f757263653c2f623e202832295c6e6f7267616e697a6174696f6e222061732056697361536f75726365320a636f6d706f6e656e7420223c623e5669736120417373657274696f6e20536f757263653c2f623e20282e2e2e295c6e6f7267616e697a6174696f6e222061732056697361536f757263654e0a0a636f6d706f6e656e7420223c623e56697361204973737565723c2f623e20616e64203c623e42726f6b65723c2f623e5c6e73657276696365222061732042726f6b65720a636f6d706f6e656e7420223c623e436c69656e743c2f623e5c6e6170706c69636174696f6e2220617320436c69656e740a636f6d706f6e656e7420223c623e50617373706f72743c2f623e5c6e3c623e436c656172696e67686f7573653c2f623e5c6e736572766963652220617320436c656172696e67486f7573650a7d0a0a56697361536f7572636531202d2d3e2042726f6b65720a56697361536f7572636532202d2d3e2042726f6b65720a56697361536f757263654e202d2d3e2042726f6b65720a42726f6b6572202d2d3e20436c69656e740a436c69656e74202d2d3e20436c656172696e67486f7573650a0a40656e64756d6c"></p>
 
 <hr style="border: 2px solid; margin: 2em auto;">
 
@@ -503,12 +503,12 @@ the Broker.</p>
   <li>OAuth defines two client types in <a href="https://datatracker.ietf.org/doc/html/rfc6749#section-2.1">section 2.1</a> of <a href="#ref-rfc6749">[RFC6749]</a>.
     <ol>
       <li>
-        <p>Confidential clients (which are able to keep the client secret secure, typically server-side web-applications) 
+        <p>Confidential clients (which are able to keep the client secret secure, typically server-side web-applications)
   MUST implement OAuth2 Authorization Code
   Flow (see OIDC Basic Client Implementer’s Guide 1.0 <a href="#ref-oidc-client">[OIDC-Client]</a>).</p>
       </li>
       <li>
-        <p>Public clients (single pages apps or mobile apps) SHOULD implement Authorization Code Flow 
+        <p>Public clients (single pages apps or mobile apps) SHOULD implement Authorization Code Flow
   with <a href="#ref-rfc7636">[PKCE]</a>.</p>
       </li>
     </ol>
@@ -545,7 +545,7 @@ values as per <a href="#ref-oidc-client">[OIDC-Client]</a>.</p>
 <hr style="width: 10em; margin: 2em auto;">
 
 <h3 id="conformance-for-brokers">Conformance for Brokers</h3>
-<p>Brokers operate downstream from IdPs or provide their own IdP service. They issue id_tokens 
+<p>Brokers operate downstream from IdPs or provide their own IdP service. They issue id_tokens
 and access_tokens (and potentially refresh tokens) for consumption within the GA4GH compliant environment.</p>
 
 <ol>
@@ -592,7 +592,7 @@ and provide proper <a href="https://openid.net/specs/openid-connect-discovery-1_
 
     <ol>
       <li>
-        <p><a href="#term-token-exchange">Token Exchange</a> at the Token Endpoint SHOULD be used for <a href="#term-visa">Visas</a> in 
+        <p><a href="#term-token-exchange">Token Exchange</a> at the Token Endpoint SHOULD be used for <a href="#term-visa">Visas</a> in
 preference to the UserInfo Endpoint.</p>
       </li>
       <li>
@@ -608,7 +608,7 @@ issue id_tokens and access_tokens (and potentially refresh tokens) for
 consumption within the GA4GH compliant environment.</p>
   </li>
   <li>
-    <p>Broker MAY support <a href="#term-token-exchange">Token Exchange</a>. If implemented, it MUST behave as described 
+    <p>Broker MAY support <a href="#term-token-exchange">Token Exchange</a>. If implemented, it MUST behave as described
 for passport issuance in <a href="#conformance-for-passport-issuers">Conformance For Passport Issuers</a>.</p>
   </li>
   <li>
@@ -619,7 +619,7 @@ for passport issuance in <a href="#conformance-for-passport-issuers">Conformance
     <p>The user represented by the identity of the access token MUST have agreed to
 release claims related to the requested scopes as part of generating tokens.
 Brokers MUST adhere to
-<a href="https://openid.net/specs/openid-connect-core-1_0.html#Consent">section 3.1.2.4</a> 
+<a href="https://openid.net/specs/openid-connect-core-1_0.html#Consent">section 3.1.2.4</a>
 of <a href="#ref-oidc-core">[OIDC-Core]</a>.</p>
 
     <ol>
@@ -674,8 +674,8 @@ obtains Visas contained in a Passport or returned from the Userinfo Endpoint.</p
 
     <ol>
       <li>
-        <p><a name="term-visa-document-token"></a> 
-<a name="term-embedded-document-token"></a> 
+        <p><a name="term-visa-document-token"></a>
+<a name="term-embedded-document-token"></a>
 <a name="visa-document-token-format"></a>
 <a name="embedded-document-token-format"></a>
 <strong>Visa Document Token</strong> – The Visa Issuer does not need to
@@ -695,7 +695,7 @@ checks outlined elsewhere in this specification still apply.</li>
 <a href="#term-visa">Visas</a> MUST be signed with a <a href="#signing-algorithms">conformant signing algorithm</a>.</li>
           <li>The <code class="language-plaintext highlighter-rouge">scope</code> <a href="#term-claim">Claim</a>, if included, MUST NOT contain “openid” as
 a space-delimited substring of the <code class="language-plaintext highlighter-rouge">scope</code> JWT <a href="#term-claim">Claim</a>.</li>
-          <li>Payload <a href="#term-claim">Claims</a> are specified in 
+          <li>Payload <a href="#term-claim">Claims</a> are specified in
 <a href="https://github.com/ga4gh-duri/ga4gh-duri.github.io/blob/master/researcher_ids/ga4gh_passport_v1.md#visa-format">Visa Format</a> in <a href="#ref-passport">[Passport]</a>.</li>
         </ol>
       </li>
@@ -723,7 +723,7 @@ be used as a Visa. Details are specified in the AAI Profile 1.0 specification.</
 
 <h3 id="conformance-for-passport-issuers">Conformance for Passport Issuers</h3>
 
-<p>Passport Issuers are used to package Visas into signed Passports. Passports are signed JWTs 
+<p>Passport Issuers are used to package Visas into signed Passports. Passports are signed JWTs
 that use <a href="#passport-format">this format</a> to contain Visas.</p>
 
 <ol>
@@ -806,7 +806,7 @@ that use <a href="#passport-format">this format</a> to contain Visas.</p>
     <rect fill="none" height="53.0703" style="stroke:#000000;stroke-width:1.5;" width="247" x="442" y="241.9609"></rect>
     <path d="M442,241.9609 L508,241.9609 L508,248.9609 L498,258.9609 L442,258.9609 L442,241.9609 " fill="#EEEEEE" style="stroke:#000000;stroke-width:2.0;"></path>
     <text fill="#000000" font-family="sans-serif" font-size="13" font-weight="bold" lengthadjust="spacing" textlength="21" x="455" y="256.0278">ref</text>
-    <text fill="#000000" font-family="sans-serif" font-size="12" lengthadjust="spacing" textlength="165" x="481" y="274.0996">Broker authenticates user</text>
+    <text fill="#000000" font-family="sans-serif" font-size="12" lengthadjust="spacing" textlength="165" x="483" y="274.0996">Broker authenticates user</text>
     <text fill="#000000" font-family="sans-serif" font-size="12" lengthadjust="spacing" textlength="182" x="474.5" y="288.0684">(potentially with external IdP)</text>
     <polygon fill="#181818" points="67.5,317.1641,57.5,321.1641,67.5,325.1641,63.5,321.1641" style="stroke:#181818;stroke-width:1.0;"></polygon>
     <line style="stroke:#181818;stroke-width:1.0;" x1="61.5" x2="564.5" y1="321.1641" y2="321.1641"></line>
@@ -848,7 +848,7 @@ that use <a href="#passport-format">this format</a> to contain Visas.</p>
     <polygon fill="#181818" points="246.5,652.5938,236.5,656.5938,246.5,660.5938,242.5,656.5938" style="stroke:#181818;stroke-width:1.0;"></polygon>
     <line style="stroke:#181818;stroke-width:1.0;" x1="240.5" x2="564.5" y1="656.5938" y2="656.5938"></line>
     <text fill="#000000" font-family="sans-serif" font-size="13" lengthadjust="spacing" textlength="306" x="252.5" y="651.5278">Response with Passport containing Visas A, B, C</text>
-    <!--SRC=[ZLHDRzim3BthLn3UfGKIhCcnQ0RaOmDoQj1iFUt2o4min9OyYKxJ_VhHikEcpfhDfqHyV7nyf1JsnfReiSYTtbCAuR1Rc89iCCwk-JKds68UI2cLcLJ-ECSRTrJXb0OpTrnXcXgxWz7TsVaAFHjjIhHyYe_lb99aI9ue47gTaKy0FX6HGitEG_CbFm9vcEx8SWAz3mDK4bNb6plCSoDG-EidU1t3YcmAjV96mNIwJDwH93Flzb8M1RR244hd6POXL57Z1zIRcDEZNY0ZJBMc463kYi8m4y7DwBPNyDa4R2l4Q8_RnCZe_yZ7Lyd77v2FtyWdayVbOZwPA5NR2yClhMrm3qjhs21JWDpjZ5LjG20HUW_hciLJQZnf1dRGMDanDIu9y9lBS_VIGOFoj0Lta5Xhv6a65MTImkXODTAecz9nVOPv_WelXZEW8vEtcCCoNTsgHiDMjSMkg6lrHuwwalFcDxAiEsYNqcN_FTLDOeIUMT7r-4I_AWhSxT1mhLqfzwgTsNU1sJEHNHMv4gKJfP7zQhBCAlw0hqUTeTrHFRKhIgHbQf4Nn3_jERNSRjz1L7ywWzDA3hhrMPkT5PQ3B9lSCxIm8GYkybeEjzuLK5Gvcr8UaHhIfWKO0acNGYoUfrJKLquA7mp21bbdm1vjs9B_h57UYBIRxSct1scprI9zFcuOZOMuyTDBoBW7cVqRCZ_P-J0yjxCUKA3t4v95i7LY_RmzHnkc0vWDX4AfFm00]-->
+    <!--SRC=[ZLHDRzim3BthLn3UfGKIhCcnQ0RaOmDoQj1iFUt2o4min9OyYKxJ_VhHikEcpfhDfqHyV7nyf1JsnfReiSYTtbCAuR1Rc89iCCwk-JKds68UI2cLcLJ-ECSRTrJXb0OpTrnXcXgxWz7TsVaAFHjjIhHyYe_lb99aI9ue47gTaKy0FX6HGitEG_CbFm9vcEx8SWAz3mDK4bNb6plCSoDG-EidU1t3YcmAjV96mNIwJDwH93Flzb8M1RR244hd6POXL57Z1zIRcDEZNY0ZJBMc463kYi8m4y7DwBPNyDa4R2l4Q8_RnCZe_yZ7Lyd77v2FtyWdayVbOZwPA5NR2yClhMrm3qjhs21JWDpjZ5LjG20HUW_hciLJQZnf1dRGMDanDIu9y9lBS_VIGOFoj0Lta5Xhv6a65MTImkXODSxxfdHS7s6UlyABuGpeoEGjvh1CLxUgaR1LRQqhubhvaQCkvBpvZIpR3jgbTDb-JtIJ6A5dJdGjFj6lYW9tApHSQrVAjMf7zbrWzanaLqLkHEb4QMI_cYoZYZ_Wwr5dQ7TK3-sA4ccPMkG5yKzxJYsNstSGrH_EuBIHWsvxrcPdXUKWkoRN32ri28Ahl9R3hNS555NEffGtf8QqQG66GDAb48ldAHNrZPF21uEmGTOPi4SRjkG_QvGd8krcU_BjGTfijKYVZnj6Oo4k_FGICkv1Pl-6p4zsFWpFxQm75EZzX6GHR9rOlsxFqORf06O3eL3g3m00]-->
   </g>
 </svg>
 
@@ -945,7 +945,7 @@ calling the <code class="language-plaintext highlighter-rouge">jku</code> endpoi
   <li>
     <p><a name="at-polling"></a> <strong>Access Token Polling</strong>: Clients MAY use access tokens,
 including Visas, to occasionally check which Visas are still valid
-at the associated Token or UserInfo Endpoint in order to establish 
+at the associated Token or UserInfo Endpoint in order to establish
 whether the user still meets the access requirements.</p>
 
     <p>This MUST NOT be done more than once per hour (excluding any optional retries)
@@ -1003,7 +1003,7 @@ This profile is agnostic to the format of the id_token.</p>
 <a name="access_token-issued-by-broker"></a></p>
 <h3 id="passport-scoped-access-token">Passport-Scoped Access Token</h3>
 
-<p>This is the format for the token that is issued by <a href="#term-broker">Brokers</a>, extending the definition of 
+<p>This is the format for the token that is issued by <a href="#term-broker">Brokers</a>, extending the definition of
 the <a href="#ref-oidc-core">[OIDC-Core]</a> access token.</p>
 
 <p><strong>Header</strong></p>
@@ -1016,10 +1016,10 @@ the <a href="#ref-oidc-core">[OIDC-Core]</a> access token.</p>
 </code></pre></div></div>
 <ul>
   <li>
-    <p><code class="language-plaintext highlighter-rouge">typ</code>: REQUIRED. Media type of the JWT. Value should be either 
- <code class="language-plaintext highlighter-rouge">JWT</code> as <a href="https://datatracker.ietf.org/doc/html/rfc7519#section-5.1">recommended</a> 
+    <p><code class="language-plaintext highlighter-rouge">typ</code>: REQUIRED. Media type of the JWT. Value should be either
+ <code class="language-plaintext highlighter-rouge">JWT</code> as <a href="https://datatracker.ietf.org/doc/html/rfc7519#section-5.1">recommended</a>
  in <a href="#ref-rfc7519">[RFC7519]</a>
- or <code class="language-plaintext highlighter-rouge">at+jwt</code> as <a href="https://datatracker.ietf.org/doc/html/rfc9068#section-2.1">required</a> 
+ or <code class="language-plaintext highlighter-rouge">at+jwt</code> as <a href="https://datatracker.ietf.org/doc/html/rfc9068#section-2.1">required</a>
  in <a href="#ref-rfc9068">[RFC9068]</a>
  if the token format follows <a href="#ref-rfc9068">[RFC9068]</a>.</p>
   </li>
@@ -1027,7 +1027,7 @@ the <a href="#ref-oidc-core">[OIDC-Core]</a> access token.</p>
     <p><code class="language-plaintext highlighter-rouge">alg</code>: REQUIRED. See <a href="#signing-algorithms">Signing Algorithms</a>.</p>
   </li>
   <li>
-    <p><code class="language-plaintext highlighter-rouge">kid</code>: REQUIRED. Key ID, see <a href="https://tools.ietf.org/html/rfc7515#section-4.1.4">section 4.1.4</a> 
+    <p><code class="language-plaintext highlighter-rouge">kid</code>: REQUIRED. Key ID, see <a href="https://tools.ietf.org/html/rfc7515#section-4.1.4">section 4.1.4</a>
   of <a href="#ref-rfc7515">[RFC7515]</a>.</p>
   </li>
 </ul>
@@ -1060,7 +1060,7 @@ the <a href="#ref-oidc-core">[OIDC-Core]</a> access token.</p>
   <li>
     <p><code class="language-plaintext highlighter-rouge">idp</code>: OPTIONAL. SHOULD contain the IDP the user used to auth with.
 This does not have to be unique and
-can be used just to help inform if that is what a <a href="#term-visa-issuer">Visa Issuer</a> 
+can be used just to help inform if that is what a <a href="#term-visa-issuer">Visa Issuer</a>
 or <a href="#term-data-holder">Data Holder</a> needs.</p>
   </li>
   <li>
@@ -1111,13 +1111,13 @@ with the <code class="language-plaintext highlighter-rouge">requested_token_type
 (as described in the <a href="#conformance-for-passport-issuers">Conformance for Passport Issuers</a> section).</p>
 
 <p>Passports are defined as signed JWTs. The JWT specification <a href="#ref-rfc7519">[RFC7519]</a>
-states that JWTs can be either signed and encoded using JWS Compact Serialization, 
-or encrypted and encoded using JWE Compact Serialization. 
+states that JWTs can be either signed and encoded using JWS Compact Serialization,
+or encrypted and encoded using JWE Compact Serialization.
 Passports are signed JWTs, which implies that they must be encoded using <a href="https://www.rfc-editor.org/rfc/rfc7515#section-3.1">JWS Compact Serialization</a> <a href="#ref-rfc7515">[RFC7515]</a>.</p>
 
 <p><strong>Header</strong></p>
 
-<p>This spec prescribes the following JWS headers for Passports 
+<p>This spec prescribes the following JWS headers for Passports
 in addition to the guidelines established in <a href="#ref-rfc7515">[RFC7515]</a>:</p>
 
 <ul>
@@ -1173,8 +1173,8 @@ JWT specification <a href="#ref-rfc7519">[RFC7519]</a> for more details.</p>
     <p><code class="language-plaintext highlighter-rouge">jti</code>: RECOMMENDED.</p>
   </li>
   <li>
-    <p><code class="language-plaintext highlighter-rouge">ga4gh_passport_v1</code>: REQUIRED. An array of GA4GH Visas. May be empty if a 
-  user has no visas. See the <a href="#ref-passport">[Passport]</a> specification 
+    <p><code class="language-plaintext highlighter-rouge">ga4gh_passport_v1</code>: REQUIRED. An array of GA4GH Visas. May be empty if a
+  user has no visas. See the <a href="#ref-passport">[Passport]</a> specification
   for more details on types of visas.</p>
   </li>
 </ul>
