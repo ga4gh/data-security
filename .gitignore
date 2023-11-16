@@ -6,3 +6,4 @@ vendor
 build
 .idea
 .vscode
+*.svg.bkp

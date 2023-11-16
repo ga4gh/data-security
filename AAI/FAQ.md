@@ -486,35 +486,6 @@ There is an emerging standard DPoP that may remove some of these limitations -
 ([OAuth 2.0 Demonstrating Proof-of-Possession at the Application Layer](https://datatracker.ietf.org/doc/html/draft-ietf-oauth-dpop-09))
 - and it will be considered for future versions of the AAI specification.
 
-{% hr2 %}
-
-## Implementation
-
-### Which GA4GH driver projects implement AAI and Passports?
-
-As of November 2023, the following driver projects implement AAI / Passports:
-
-- Biomedical Research Hub
-- EJP RD
-- ELIXIR
-- Human Cell Atlas
-
-These driver projects are planning or developing an implementation of AAI / Passports:
-
-- All of Us
-- Australian Genomics
-- Autism Sharing Initiative
-- GDI
-- Genomics England
-- H3Africa
-- ICGC ARGO
-- IPCHiP
-- Monarch Initiative
-- NCI CRDC
-- NCPI
-- NHLBI BioData Catalyst
-
-[Source](https://docs.google.com/spreadsheets/d/11pPTKVW3j3_WHigWw4UOvlkQbPkM_z-ICgksE5L1vEY)
 
 {% hr2 %}
 
