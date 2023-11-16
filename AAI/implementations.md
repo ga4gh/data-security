@@ -1,12 +1,18 @@
+---
+layout: page
+title: AAI Implementations
+permalink: aai-implementations
+---
+
 # Implementations
 
 ## What would a 300,000 foot view of AAI look like?
 
-![this](AbstractAAI.drawio.svg)
+![this](AAI/AbstractAAI.drawio.svg)
 
 ## How bout ELIXIR / Life Sciences AAI?
 
-![this](LifeScienceAAI.drawio.svg)
+![this](AAI/LifeScienceAAI.drawio.svg)
 
 ## Which GA4GH driver projects implement AAI and Passports?
 

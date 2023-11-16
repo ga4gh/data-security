@@ -20,6 +20,7 @@ header_pages:
   - AAI/ga4gh_passport_v1.md
   - AAI/ga4gh_custom_visas.md
   - AAI/FAQ.md
+  - AAI/implementations.md
   - AAI/VERSIONS.md
 
 # Due to the way we publish to github pages - it is useful that Jekyll keeps any .git in the destination around
