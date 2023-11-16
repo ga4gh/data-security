@@ -2,11 +2,11 @@
 
 ## What would a 300,000 foot view of AAI look like?
 
-![this](abstract-aai.drawio.svg)
+![this](AbstractAAI.drawio.svg)
 
 ## How bout ELIXIR / Life Sciences AAI?
 
-![this](elixir-lsaai.drawio.svg)
+![this](LifeScienceAAI.drawio.svg)
 
 ## Which GA4GH driver projects implement AAI and Passports?
 
