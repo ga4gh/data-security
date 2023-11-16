@@ -51,7 +51,7 @@ controllers should explore their options to decide what best fits their needs.
 ## Flows
 
 The following sequence diagrams are included to help explain the intended flows
-documented in the accompanying specification. 
+documented in the accompanying specification.
 
 ### What is the complete end to end flow using token exchange?
 
@@ -158,7 +158,7 @@ end note
 ==Use==
 
 client -> clearing : Client requests data
-note right 
+note right
 POST /ga4gh/drs/v1/objects/dataset1/access/s3 HTTP/1.1
 Host: drs.example.com
 Content-Type: application/json
@@ -180,7 +180,7 @@ client <- clearing : Client is given data
 
 {% endplantuml %}
 
-<hr style="width: 10em; margin: 2em auto;"/>   
+<hr style="width: 10em; margin: 2em auto;"/>
 
 ### What is the complete end to end flow using `/userinfo`?
 
@@ -307,7 +307,7 @@ these trust relationships?
 
 GA4GH Passports and Visas leverage the mechanisms
 present in [JWT](https://datatracker.ietf.org/doc/html/rfc7519) as used
-by the [OIDC standards](https://openid.net/specs/openid-connect-core-1_0.html) 
+by the [OIDC standards](https://openid.net/specs/openid-connect-core-1_0.html)
 to cryptographically "sign" tokens containing claims. Signed tokens can be
 "verified" using public/private keys.
 
@@ -344,8 +344,8 @@ trusted_brokers:
 
 trusted_visa_issuers:
   - https://dac.gov.world
-``` 
- 
+```
+
 The service now wants to verify a Passport or Visa
 JWT purporting to be from that issuer.
 
@@ -367,7 +367,7 @@ For our concrete example we say that it is a JSON file residing
 at `https://issuer.example.org/public-keys.json` (see
 [RFC 7517 "JSON Web Key"](https://datatracker.ietf.org/doc/html/rfc7517)).
 
-**IMPORTANTLY**, for the secure use of this key management technique - the JKU 
+**IMPORTANTLY**, for the secure use of this key management technique - the JKU
 **MUST** also be allow-listed as part of the configuration of **OUR** service.
 For example:
 
@@ -485,6 +485,36 @@ service can then securely participate in token exchange and retain tokens/passpo
 There is an emerging standard DPoP that may remove some of these limitations -
 ([OAuth 2.0 Demonstrating Proof-of-Possession at the Application Layer](https://datatracker.ietf.org/doc/html/draft-ietf-oauth-dpop-09))
 - and it will be considered for future versions of the AAI specification.
+
+{% hr2 %}
+
+## Implementation
+
+### Which GA4GH driver projects implement AAI and Passports?
+
+As of November 2023, the following driver projects implement AAI / Passports:
+
+Biomedical Research Hub
+EJP RD
+ELIXIR
+Human Cell Atlas
+
+These driver projects are planning or developing an implementation of AAI / Passports:
+
+All of Us
+Australian Genomics
+Autism Sharing Initiative
+GDI
+Genomics England
+H3Africa
+ICGC ARGO
+IPCHiP
+Monarch Initiative
+NCI CRDC
+NCPI
+NHLBI BioData Catalyst
+
+[Source](https://docs.google.com/spreadsheets/d/11pPTKVW3j3_WHigWw4UOvlkQbPkM_z-ICgksE5L1vEY)
 
 {% hr2 %}
 
