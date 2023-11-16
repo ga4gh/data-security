@@ -4,8 +4,6 @@ title: AAI Implementations
 permalink: aai-implementations
 ---
 
-# Implementations
-
 ## What would a 300,000 foot view of AAI look like?
 
 ![this](AAI/AbstractAAI.drawio.svg)
