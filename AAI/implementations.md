@@ -17,8 +17,9 @@ permalink: aai-implementations
 As of November 2023, the following driver projects implement AAI / Passports:
 
 - Biomedical Research Hub
-- EJP RD
-- ELIXIR
+- EJP RD (using LifeScience AAI)
+- ELIXIR (using LifeScience AAI)
+- GDI (using LifeScience AAI)
 - Human Cell Atlas
 
 These driver projects are planning or developing an implementation of AAI / Passports:
@@ -26,7 +27,6 @@ These driver projects are planning or developing an implementation of AAI / Pass
 - All of Us
 - Australian Genomics
 - Autism Sharing Initiative
-- GDI
 - Genomics England
 - H3Africa
 - ICGC ARGO
