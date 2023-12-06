@@ -4,15 +4,15 @@ title: AAI Implementations
 permalink: aai-implementations
 ---
 
-## What would a 300,000 foot view of AAI look like?
-
-![this](AAI/AbstractAAI.drawio.svg)
-
-## How bout ELIXIR / Life Sciences AAI?
+## ELIXIR / Life Sciences AAI
 
 ![this](AAI/LifeScienceAAI.drawio.svg)
 
-## Which GA4GH driver projects implement AAI and Passports?
+## NIH RAS
+
+![this](AAI/nih-ras.drawio.svg)
+
+## GA4GH driver projects implementing AAI and Passports
 
 As of November 2023, the following driver projects implement AAI / Passports:
 
