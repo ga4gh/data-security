@@ -7,3 +7,5 @@ build
 .idea
 .vscode
 *.svg.bkp
+*.svg.dtmp
+.*.drawio.bkp
