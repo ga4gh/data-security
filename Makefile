@@ -2,17 +2,28 @@
 ROOT_DIR:=$(shell dirname $(realpath $(firstword $(MAKEFILE_LIST))))
 
 # we use the builder variable here both as a folder path and docker image name.. split if needed
-BUILDER=jekyll-builder-local
+BUILDER=jekyll-builder
 
 # a folder to handle dependency building of docker images (kind of)
 STAMP_DIR=$(BUILDER)/stamps
 
-.PHONY: clean serve$
+.PHONY: serve
 serve: $(BUILDER)
-	docker run --rm -it \
-               --volume="$(ROOT_DIR):/srv/jekyll" \
+	docker run --platform linux/amd64 --rm -it \
+               --volume="$(ROOT_DIR):/source" \
+               --volume="$(ROOT_DIR)/_config.yml:/work/_config.yml" \
                --env JEKYLL_ENV=development -p 4000:4000 \
-               $(BUILDER) ./install-and-serve
+               $(BUILDER) serve
+
+.PHONY: builder-debug
+builder-debug: $(BUILDER)
+	docker run --platform linux/amd64 --rm -it \
+               --volume="$(ROOT_DIR)/_config.yml:/work/_config.yml" \
+               --env JEKYLL_ENV=development \
+               --entrypoint /bin/bash \
+               $(BUILDER)
+
+
 
 $(BUILDER): $(STAMP_DIR)/$(BUILDER)
 

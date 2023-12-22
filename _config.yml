@@ -3,12 +3,14 @@ description: AAI
 # set to /local for local builds.. will be overridden in Github Action builds
 baseurl: "/local"
 url: "" # the base hostname & protocol for your site, e.g. http://example.com
-destination: ./build
+source: /source
+destination: /destination
+plugins_dir: /plugins
+host: 0.0.0.0
 
 # Build settings
 theme: minima
 plugins:
-  - jekyll-feed
   - jekyll-spaceship
 
 kramdown:
