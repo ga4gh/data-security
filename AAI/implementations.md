@@ -12,6 +12,10 @@ permalink: aai-implementations
 
 ![this](AAI/nih-ras.drawio.svg)
 
+## Trust
+
+![this](AAI/trust.drawio.svg)
+
 ## GA4GH driver projects implementing AAI and Passports
 
 As of November 2023, the following driver projects implement AAI / Passports:
