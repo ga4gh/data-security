@@ -55,6 +55,27 @@
   <li><a href="/data-security/draft-diagrams/aai-implementations">Implementations</a></li>
   <li><a href="/data-security/draft-diagrams/versions">Changes</a></li>
 </ul>
+
+<p>GA4GH AAI and Passports provide secure, standards-based data access in cases where the data access committee / data steward is not tightly coupled with the data holder.</p>
+
+<p><img title="lifecycle" alt="lifecycle" width="50%" src="AAI/assets/network-of-standards-detailed.svg"></p>
+
+<p>When the data access approval system, data analysis system, and data repository system are all tightly integrated and are running in the same infrastructure, secure data access is simpler. When the data holder and access authorization systems are operated separately, then it becomes harder to meet two fundamental needs:</p>
+
+<ul>
+  <li>unlock data access for the researcher</li>
+  <li>uphold the authority of the data custodian</li>
+</ul>
+
+<p>GA4GH AAI and Passports make it easier to solve both problems by communicating the access grants (authorizations) in a JWT token accessed via OAuth2. This mechanism is easy to implement and secure because it uses standard and secure means including the OIDC, OAuth2, and JWT standards, as well as approved cryptography algorithms.</p>
+
+<p>AAI and Passports minimize risk and cost by:</p>
+
+<ul>
+  <li>reusing existing and familiar libraries and tools</li>
+  <li>leveraging existing security regimens</li>
+  <li>simplifying compliance and system interconnection approvals</li>
+</ul>
 </div>
 
       </div>
