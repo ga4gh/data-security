@@ -256,6 +256,9 @@ Internet Assigned Numbers Authority
         Current Practices", BCP 225, RFC 8725,
         DOI 10.17487/RFC8725, February 2020.
 
+<a name="ref-draft-ietf-oauth-security-topics"></a>
+[[OAuth-Security-BCP]](https://datatracker.ietf.org/doc/html/draft-ietf-oauth-security-topics) - Lodderstedt,  T., Bradley, J., Labunets, A., Fett, D., "OAuth 2.0 Security Best Current Practice", draft-ietf-oauth-security-topics-29, June 2024.
+
 <a name="ref-rfc9068">
 [[RFC9068]](https://datatracker.ietf.org/doc/html/rfc9068) --  JWT Profile for OAuth 2.0 Access Tokens
 
