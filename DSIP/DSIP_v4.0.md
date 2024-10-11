@@ -47,7 +47,7 @@ stakeholders in the *Global Alliance for Genomics and
 Health* (GA4GH) community. This is not meant to be a normative document, but it should be framed as a set of recommendations and best practices to enable a secure data sharing and processing ecosystem. However, it does not claim to be exhaustive, and additional  precautions other than the ones collected herein might have to be taken to be compliant with  national / regional legislations. As a living document, the *Data Security
 Infrastructure Policy* will be revised and updated over time, in response to changes in
 the [GA4GH Privacy and Security
-Policy](https://www.ga4gh.org/wp-content/uploads/Privacy-and-Security-Policy.pdf)
+Policy](https://www.ga4gh.org/product/data-privacy-and-security-policy/)
 [1], and as technology and biomedical science continue to advance.
 
 The GA4GH is an unincorporated collaboration among entities and individuals
@@ -56,12 +56,12 @@ health by advancing a common infrastructure of harmonized approaches to enable
 effective and responsible processing of clinical and genomic data. Towards that
 end, the GA4GH develops standards aiming to enable responsible genomic data
 processing within a [human rights
-framework](https://www.ga4gh.org/genomic-data-toolkit/regulatory-ethics-toolkit/framework-for-responsible-sharing-of-genomic-and-health-related-data/).
+framework](https://www.ga4gh.org/product/framework-for-responsible-sharing-of-genomic-and-health-related-data/).
 
 All of these standards depend upon a safe, robust, and trustworthy technology
 infrastructure that, along with a set of common values and expectations set
 forth in the [Framework for Responsible Sharing of Genomic and Health-Related
-Data](https://www.ga4gh.org/genomic-data-toolkit/regulatory-ethics-toolkit/framework-for-responsible-sharing-of-genomic-and-health-related-data/)
+Data](https://www.ga4gh.org/product/framework-for-responsible-sharing-of-genomic-and-health-related-data/)
 [2], provide the foundation for the GA4GH ecosystem. The viability and success
 of the envisioned GA4GH ecosystem are directly dependent upon *trust* – the
 ability of Alliance stakeholders to trust each other, the ability of users to
@@ -176,9 +176,9 @@ sub-section.
 
 The *Data Security Infrastructure Policy* is consistent with the [Framework for
 Responsible Sharing of Genomic and Health-Related
-Data](https://www.ga4gh.org/ga4ghtoolkit/regulatoryandethics/framework-for-responsible-sharing-genomic-and-health-related-data/),
+Data](https://www.ga4gh.org/product/framework-for-responsible-sharing-of-genomic-and-health-related-data/),
 and seeks to enforce the policy articulated in the [GA4GH Privacy and Security
-Policy](https://www.ga4gh.org/docs/ga4ghtoolkit/data-security/Privacy-and-Security-Policy.pdf)*.*
+Policy](https://www.ga4gh.org/product/data-privacy-and-security-policy/)*.*
 
 ### 2.4 Data Security Stakeholders
 
