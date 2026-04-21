@@ -9,6 +9,19 @@ A collection of questions (and hopefully useful answers).
 {% hr2 %}
 ## Background
 
+### Do passports capture details of access grants, such as data use and required vetting?
+
+Passports convey a grant to access data. They do not currently attempt to communicate any conditions or details of the approval process.
+
+Authorizations for researcher identities ("the collection of researchers that may access the dataset" as described in the DURI vision statement) are approved by a data custodian or data access committee (sometimes using an approval management system like DUOS or REMS). The approvals can be contingent on factors such as:
+
+* intended data use (in data access request) matches permitted data use (in data set metadata)
+* researcher reputation
+* identity proofing (verification)
+* etc.
+
+Some of these details could, in a future revision, be communicated in the passport for enforcement by the passport clearinghouse.
+
 ### Why Brokers?
 
 We have found that there are widely used Identity Providers (IdP).
