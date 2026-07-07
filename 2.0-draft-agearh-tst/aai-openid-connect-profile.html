@@ -362,11 +362,15 @@ Internet Assigned Numbers Authority</p>
 
 <h2 id="overview-of-interactions">Overview of Interactions</h2>
 
-<p>In the flow recommended in this document, the client does not ever distribute an initial
+<p>In the flow recommended in this document, the Client does not ever distribute an initial
 <em>Passport-Scoped Access Token</em> to other services. A token exchange operation is executed by the client, in
-exchange for a <em>Passport</em> JWT that may be either (1) used directly downstream to access resources or (2) exchanged for a
-<em>Task-Specific Token</em> that represents a potentially de-scoped set of authorizations within the Passport. A Passport may also
-be exchanged for another Passport that only includes a subset of the Visas, as well.</p>
+exchange for a <em>Passport</em> JWT that may be either (1) forwarded downstream to access resources or (2) exchanged for an opaque
+<em>Task-Specific Token</em>. In either case, the Client may choose for a subset of Visas to be sent to downstream services–directly via forwarding of a de-scoped Passport JWT, or indirectly
+through a Task-Specific Token that only enables access to a subset of Visas.</p>
+<ul>
+  <li>NOTE: We assume that the Broker and Passport Issuer are the same in this section (the “Broker”). In general, this may
+not be the case but simplifies the exposition. The Profile Requirements Section differentiates requirements for the two roles.</li>
+</ul>
 
 <h3 id="direct-forwarding-of-passports">Direct Forwarding of Passports</h3>
 
@@ -377,7 +381,7 @@ be exchanged for another Passport that only includes a subset of the Visas, as w
   <g>
     <rect fill="#EEEEEE" height="719.9219" style="stroke:#181818;stroke-width:0.5;" width="340" x="11" y="6"></rect>
     <text fill="#000000" font-family="sans-serif" font-size="13" font-weight="bold" lengthadjust="spacing" textlength="83" x="139.5" y="18.0669">Researcher</text>
-    <rect fill="#DDDDDD" height="719.9219" style="stroke:#181818;stroke-width:0.5;" width="249" x="660" y="6"></rect>
+    <rect fill="#DDDDDD" height="719.9219" style="stroke:#181818;stroke-width:0.5;" width="259" x="655" y="6"></rect>
     <text fill="#000000" font-family="sans-serif" font-size="13" font-weight="bold" lengthadjust="spacing" textlength="24" x="772.5" y="18.0669">AAI</text>
     <rect fill="#DDDDDD" height="719.9219" style="stroke:#181818;stroke-width:0.5;" width="183" x="1063.5" y="6"></rect>
     <text fill="#000000" font-family="sans-serif" font-size="13" font-weight="bold" lengthadjust="spacing" textlength="177" x="1066.5" y="18.0669">Data Access Committee</text>
@@ -393,8 +397,8 @@ be exchanged for another Passport that only includes a subset of the Visas, as w
     <path d="M56.5,41.6328 L56.5,68.6328 M43.5,49.6328 L69.5,49.6328 M56.5,68.6328 L43.5,83.6328 M56.5,68.6328 L69.5,83.6328 " fill="none" style="stroke:#181818;stroke-width:0.5;"></path>
     <rect fill="#E2E2F0" height="30.2969" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="53" x="274" y="70.1328"></rect>
     <text fill="#000000" font-family="sans-serif" font-size="14" lengthadjust="spacing" textlength="39" x="281" y="90.1279">Client</text>
-    <rect fill="#E2E2F0" height="30.2969" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="201" x="684" y="70.1328"></rect>
-    <text fill="#000000" font-family="sans-serif" font-size="14" lengthadjust="spacing" textlength="187" x="691" y="90.1279">Broker and Passport Issuer</text>
+    <rect fill="#E2E2F0" height="30.2969" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="211" x="679" y="70.1328"></rect>
+    <text fill="#000000" font-family="sans-serif" font-size="14" lengthadjust="spacing" textlength="197" x="686" y="90.1279">Broker (and Passport Issuer)</text>
     <rect fill="#E2E2F0" height="30.2969" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="88" x="1111" y="70.1328"></rect>
     <text fill="#000000" font-family="sans-serif" font-size="14" lengthadjust="spacing" textlength="74" x="1118" y="90.1279">Visa Issuer</text>
     <rect fill="#E2E2F0" height="30.2969" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="179" x="1292.5" y="70.1328"></rect>
@@ -413,10 +417,10 @@ be exchanged for another Passport that only includes a subset of the Visas, as w
     <polygon fill="#181818" points="772.5,229.9609,782.5,233.9609,772.5,237.9609,776.5,233.9609" style="stroke:#181818;stroke-width:1.0;"></polygon>
     <line style="stroke:#181818;stroke-width:1.0;" x1="56.5" x2="778.5" y1="233.9609" y2="233.9609"></line>
     <text fill="#000000" font-family="sans-serif" font-size="13" lengthadjust="spacing" textlength="98" x="63.5" y="228.895">Follow redirects</text>
-    <rect fill="none" height="39.1016" style="stroke:#000000;stroke-width:1.5;" width="896" x="12" y="241.9609"></rect>
+    <rect fill="none" height="39.1016" style="stroke:#000000;stroke-width:1.5;" width="901" x="12" y="241.9609"></rect>
     <path d="M12,241.9609 L78,241.9609 L78,248.9609 L68,258.9609 L12,258.9609 L12,241.9609 " fill="#EEEEEE" style="stroke:#000000;stroke-width:2.0;"></path>
     <text fill="#000000" font-family="sans-serif" font-size="13" font-weight="bold" lengthadjust="spacing" textlength="21" x="25" y="256.0278">ref</text>
-    <text fill="#000000" font-family="sans-serif" font-size="12" lengthadjust="spacing" textlength="351" x="284.5" y="274.0996">Broker authenticates user (potentially with external IdP)</text>
+    <text fill="#000000" font-family="sans-serif" font-size="12" lengthadjust="spacing" textlength="351" x="287" y="274.0996">Broker authenticates user (potentially with external IdP)</text>
     <polygon fill="#181818" points="67.5,303.1953,57.5,307.1953,67.5,311.1953,63.5,307.1953" style="stroke:#181818;stroke-width:1.0;"></polygon>
     <line style="stroke:#181818;stroke-width:1.0;" x1="61.5" x2="783.5" y1="307.1953" y2="307.1953"></line>
     <text fill="#000000" font-family="sans-serif" font-size="13" lengthadjust="spacing" textlength="293" x="73.5" y="302.1294">Send redirect to client with authorization code</text>
@@ -464,11 +468,11 @@ be exchanged for another Passport that only includes a subset of the Visas, as w
     <polygon fill="#181818" points="311.5,709.9219,301.5,713.9219,311.5,717.9219,307.5,713.9219" style="stroke:#181818;stroke-width:1.0;"></polygon>
     <line style="stroke:#181818;stroke-width:1.0;" x1="305.5" x2="1381" y1="713.9219" y2="713.9219"></line>
     <text fill="#000000" font-family="sans-serif" font-size="13" lengthadjust="spacing" textlength="216" x="317.5" y="708.856">Clearinghouse responds with data</text>
-    <!--SRC=[VLHDZnen3BtdLrZJIrS2QTlZQgd4GgjoAbhQtaF6mqI4U1e75lhhwybyCB2KkKty_Fpyx8ItrbSww9qZiyKS-B2PsnrwjkHNyUGG2kqObLAbpUM7AAxfgBXBWnSwBdMUMx-1Ju-3ywKEqHfRQH-x-ET7fIGPibTarC6K63A03uYej8aKeFcoNum1fXlqCOEhJpFi9QggCplCd1KetFm4Rr9OeS-XLjuec4uNsGL9zX9eAsMrm9QQkQ8GOS6yJnh_GxrEELVKSnqrJ8r1PfZHRcTZHBmgzjkoliKkd3QTtkByJYuN_2LJhtNcn59nkIGnA7ldGHCyqqucFnRpsMIYLEqdZB-qFi4JBBoDLaTaSBInNhK1WIJe4wngbe2v3MWYH8B6kvwfiKM0tyWvUkkXh08MG0U9rT1HMtBK-TYDO1zBEROcQKYa7okAzP5sxWHlDfQ0nuZ1QmUBVFcW6a65QYlVaTesapZgGXJiNnrbsS5GZk_Dk6gXIKpGiorzlw_uPuyS-mKQhmnLSgdQRVWfC7zcIBlMiXWfq3J8WoPw5N9XAX9qoht7NW_swz6Ksc-m7kuTaM86jiZxWWkvcHsW4_SiZCsc2cDN4AY0WsmsZy0Mu55QocLqWI8PSh3tNA6nXSNyeHFsF1uAgvjalEooxaWUX9kRcXuAsw-hF2Br88CqQEjjXrokpS22xXP8PljcXCOBJiYhkZrws6fdNhLVEsjWYoTMRV2omCN4XkXpunTo1fTNLALSRf9J4-eV]-->
+    <!--SRC=[VLHDRnen4BtxLuosbo0HAUqn2fK8QLLEHQ7jtNXdmS9ujXwJG7zznzuF5fAmj_MyUVFcpTYyjRxMGUyScIsMm2_h9xj3pvRyCXuTGgKTer9gOqlv8OehEYZkqk2H3WjTbjQluVFTu7oXGxJ6rjh7BlxbJYb9Xk8P6NKm6mm5m2T4LDf42j1ynM_60DCr-bZ0nQSPzX9LzOaTPiuA5Dxz16zoMA4l8Ibl54ody-ACf7WCj9MoDrfm2yrSKuWmPzvZ61KVagzorWNvauuQfiOWCynejxCn8bwK-sDPj_J51QVDf-zn_Y1N2lwSgHSxSsAg-BmXiQXuuq8JFD5E9Z_dJxF9HAdaADn-RPs2UvXx6wsEoE1eRRrg0mB9q7jO9fQ0fGre8aI2nhsUgR55WD_9ENhjeQm2La0l4alGSLjotFdO3a7luqQEhSaQCkbDJJ4TQUUEy6hZ1l0GCNZjO5ukHgeHLAcsyXMfRJEP8nMYOF_fAEiEXafyQyP52qrYXfviwVjznhzxvDXlqEtIK2tNgjs6NmBp9mP8ozQo62dGDCY39deLScLg4dJElSQU1lljO3RQhp4Dzuf8CGDRv7N1bTpD3j29Un36PbE5iIi8LC6BR3QFmLRWKLegPNI18XboiFTSex6LnNBK2Nku7GfBJJAUTvawaYVXtKtDJuNjrrMUaJJ880tQjErGohKPMD3T0ibiNutGUC4PUL6tHmzRxSohzojd3MpnoAeDdXSuczWGVMhyJCxWyeggdCjDScv2_GS0]-->
   </g>
 </svg>
 
-<p>The Client may also exchange a Passport-Scoped Access Token for aa Passport that contains a subset of Visas. For example, it may submit the following request to the Broker’s /token endpoint:</p>
+<p>The Client may also exchange a Passport-Scoped Access Token for aa Passport that contains a subset of Visas. For example, it may submit the following request to the Broker and Passport Issuer’s /token endpoint:</p>
 
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>POST https://broker.example.org/token
 Content-Type: application/x-www-form-urlencoded
@@ -502,11 +506,11 @@ and Visa signing keys and the various expiration times.</p>
 a Passport. This necessarily shifts additional communication burden back to the Broker (similar to AAI v1.0, where a Passport Clearinghouse retrieved a list of Visas from the Broker) as the services that receive a token
 must communicate with the Broker to introspect the token to determine (1) token validity and (2) the set of Visas associated with the token.</p>
 
-<p>As a motivating example, consider the situation where a Client would like to instantiate a workflow on behalf of a user.</p>
+<p>As a motivating example, consider the situation where a Client would like to instantiate a workflow on behalf of a user:</p>
 
 <p><img class="plantuml" src="http://www.plantuml.com/plantuml/svg/~h407374617274756d6c0a736b696e706172616d20636f6d706f6e656e745374796c652072656374616e676c650a6c65667420746f20726967687420646972656374696f6e0a0a7061636b6167652022457865637574696e67206120576f726b666c6f77207769746820474134474820536572766963657322207b0a636f6d706f6e656e7420223c623e436c69656e743c2f623e5c6e6170706c69636174696f6e2220617320436c69656e740a636f6d706f6e656e7420223c623e4741344748205745533c2f623e5c6e7365727669636522206173205745530a636f6d706f6e656e7420223c623e47413447482054455320313c2f623e5c6e736572766963652220617320544553310a636f6d706f6e656e7420223c623e47413447482054455320323c2f623e5c6e736572766963652220617320544553320a636f6d706f6e656e7420223c623e474134474820445253203120772f3c2f623e5c6e3c623e50617373706f727420436c656172696e67686f7573653c2f623e5c6e736572766963652220617320445253310a636f6d706f6e656e7420223c623e474134474820445253203220772f3c2f623e5c6e3c623e50617373706f727420436c656172696e67686f7573653c2f623e5c6e736572766963652220617320445253320a7d0a0a436c69656e74202d2d3e205745530a574553202d2d3e20544553310a574553202d2d3e20544553320a54455331202d2d3e20445253310a54455332202d2d3e20445253320a40656e64756d6c"></p>
 
-<p>In the above example, the Client send a request to start a workflow to a <a href="https://www.ga4gh.org/product/workflow-execution-service-wes/">GA4GH Workflow Execution Service (WES)</a> endpoint.
+<p>In the above example, the Clients send a request to start a workflow to a <a href="https://www.ga4gh.org/product/workflow-execution-service-wes/">GA4GH Workflow Execution Service (WES)</a> endpoint.
 The WES server, in turn, sends two workflow tasks to different <a href="https://www.ga4gh.org/product/task-execution-service-tes/">GA4GH Task Execution Service (TES)</a> endpoints.
 Finally, to finish their tasks the TES servers access data through two <a href="https://www.ga4gh.org/product/data-repository-service-drs/">GA4GH Data Repository Service (DRS)</a> endpoints that have
 associated Passport Clearinghouses that are used to make access decisions to specific datasets based on Visas within the user’s Passport. Note there are two different types of services in this flow:
@@ -530,8 +534,7 @@ grant_type=urn:ietf:params:oauth:grant-type:token-exchange
 &amp;requested_visa_jti=d4e5f6
 &amp;requested_visa_iss=https%3A%2F%2Fras.nih.gov
 </code></pre></div></div>
-<p>Note that this example also assumes that a Client has already received a user’s Passport to be able to identify specific Visas, similar to the situation of obtaining a de-scoped Passport in the Direct Forwarding interaction. In this situation, however,
-the Client receives an opaque token as a response from the Broker:</p>
+<p>Note that this example also assumes that a Client has already received a user’s Passport to be able to identify specific Visas, similar to the situation of obtaining a de-scoped Passport in the Direct Forwarding interaction. In this situation, however, the Client receives an opaque token (i.e., of fixed size and of no inherent informational value to the Client) as a response from the Broker:</p>
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>{
   "access_token": "uY29ssbFm3_Kq7Pk2zH8dR4tNwXvL6aE",
   "token_type": "Bearer",
@@ -544,11 +547,108 @@ the Client receives an opaque token as a response from the Broker:</p>
 <ul>
   <li>The Client specifies the specific <em>audience</em> for the token, such as the hostname of the WES server. According to RFX 8693, the <em>resource</em> claim may be used in a similar
 manner for URIs (e.g., the actual URI of the WES endpoint). As we will see, this audience information will be stored by the Broker and used to make introspection decisions.</li>
+  <li>Note that the Broker must have some method of identifying a particular service as identified via <em>audience</em> or <em>resource</em> so as to enforce use of a Task-Specific Token only
+ by intended services. This could be implemented via the client credentials flow (RFC 6749, Section 4.4) as shown in the example below. We regard the details of realizing client credentials
+ within a particular ecosystem, e.g., managing service registration and key management, as implementation decisions that are outside of this specification.</li>
   <li>We see a new value of <em>requested_token_type</em>, <em>task_specific</em>.</li>
   <li>The Client is explicitly allowing the audience to exchange the token for other tokens via the <em>allow_delegation</em> claim, either with different audiences or for fewer Visas. We recommend that the behavior of this
 flag be such that it is consumed at each step–i.e,. each token exchange MUST set <em>allow_delegation</em> to be true for the receiving service to be able to perform a downstream token
 exchange.</li>
 </ul>
+
+<p>After receiving the Task-Specific Token, the Client (or another downstream service) is also to send API requests using the Task-Specific Token as bearer token within the Authorization field of the HTTP header. The receiving service must then verify the Task-Specific Token via the Broker’s /introspect endpoint (see RFC 7662 for OAuth2.0 token introspection). An example request is as follows:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>POST https://broker.example.org/introspect
+Content-Type: application/x-www-form-urlencoded
+
+token=&lt;task-specific-token&gt;
+claims=false
+client_assertion_type=urn:ietf:params:oauth:client-assertion-type:jwt-bearer
+client_assertion=&lt;signed-jwt&gt;
+</code></pre></div></div>
+<p>where the <em>client_assertion</em> JWT is</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>{
+  "iss": "https://wes.example.org",
+  "sub": "https://wes.example.org",
+  "aud": "https://broker.example.org/introspect",
+  "iat": 1234567900,
+  "exp": 1234567960,
+  "jti": "&lt;unique id&gt;"
+}
+</code></pre></div></div>
+<p>Assuming that the ecosystem uses client credentials, the Broker is able to retrieve the service’s public key and verify the signature on the <em>client_assertion</em> JWT and also determine that
+the holder of the Task-Specific Token aligns with the specific <em>audience</em>/<em>resource</em> requirements of the token creation request. The <em>claims</em> key in the introspection request indicates
+if the requestor is an orchestrating intermediary (if <em>claims</em> is false) or an authorization consumer that would require the GA4GH Visas to make authorization decisions. In the former case,
+the /introspect endpoint returns</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>{
+  "active": true,
+  "sub": "user-id",
+  "client_id": "https://client.example.org",
+  "aud": "https://wes.example.org",
+  "token_type": "Bearer",
+  "exp": 1234571490,
+  "iat": 1234567890,
+  "issued_token_type": "urn:ga4gh:params:oauth:token-type:task_specific",
+  "act": {
+    "sub": "https://client.example.org"
+  }
+}
+</code></pre></div></div>
+<p>If Visa are required, the introspection request returns</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>{
+  "active": true,
+  "sub": "user-id",
+  "aud": "https://drs1.example.org",
+  "act": {
+    "sub": "https://tes1.example.org",
+    "act": {
+      "sub": "https://wes.example.org",
+      "act": {
+        "sub": "https://client.example.org"
+      }
+    }
+  },
+  "ga4gh_passport_v1": [
+    "&lt;visa-jwt-1&gt;",
+    "&lt;visa-jwt-2&gt;"
+  ]
+}
+</code></pre></div></div>
+<p>For this final example, we assume that a chain of token exchanges has taken place and is tracked by the Broker (as indicated by the <em>aud</em> claim). As defined within RFC 8693 (OAuth 2.0 Token Exchange), <em>act</em> allows a service to trace the chain of delegation back through a set of services. In this example,</p>
+
+<p>TBD: SEQUENCE DIAGRAM</p>
+<ul>
+  <li>User authenticates with the Client and consents to delegation of their role to the Client (and potentially downstream services as well, see discussion later)</li>
+  <li>The Client obtains the Passport-Scoped Access Token and uses token exchange to obtain the user’s Passport</li>
+  <li>The Client exchanges the Passport-Scoped Access Token for a Task-Specific Token with <em>audience</em> set to the WES server and <em>allow_delegation=true</em>
+</li>
+  <li>The WES server receives the Task-Specific Token from the Client and exchanges it with another token with <em>audience</em> set to TES1 and <em>allow_delegation=true</em>
+</li>
+  <li>The TES1 server receives the Task-Specific Token from WES and exchanges it with another token with <em>audience</em> set to DRS1 and <em>allow_delegation=false</em>
+</li>
+  <li>The DRS1 server receives the Task-Specific Token from TES1, receives Visas via introspection, and makes access decisions.</li>
+</ul>
+
+<p>At each step of this process, the Broker updates <em>act</em> internally to reflect the chain of delegation. Some additional points:</p>
+<ul>
+  <li>If an orchestrating intermediary is only creating a new token from downstream use (e.g., to update the audience and <em>aud</em>), it does not need to make an explicit introspection request prior to a token exchange. Instead, it could submit a token exchange
+request directly (likely relying on client credentials or an allowlist for client authentication) knowing that the exchange request will be rejected for an invalid token or service.
+The intermediary cannot skip introspection, however, if it needs to dynamically determine the set of Visas within the request for further de-scoping, to reason about the delegation chain in <em>aud</em>, or to debug a failed token exchange.</li>
+  <li>Internally, the Broker may maintain its own mapping between Task-Specific Token requests, Visas, and registered services.</li>
+  <li>TBD: Using Rich Authorization Requests (RAR, RFC 9396) to link explicit participant consent to the act chain.</li>
+</ul>
+
+<p>TBD: ABSTRACT FLOW SEQUENCE DIAGRAM</p>
+<ul>
+  <li>Compress steps: Client obtains Passport-Scoped Access Token</li>
+  <li>Client obtains Passport via Token Exchange</li>
+  <li>Client exchanges Passport-Scoped Access Token for Task-Specific Token with audience=intermediary, allow_delegation=true</li>
+  <li>Intermediary exchanges Task-Specific Token with another TST with audience=clearinghouse, allow_delegation=false</li>
+  <li>Passport Clearinghouse sends introspection request to the Broker to receive Visas</li>
+  <li>Clearinghouse gets public keys from Data Access Committee</li>
+  <li>Clearinghouse makes access decision, responds with data</li>
+</ul>
+
+<p>TBD: Wrap-up discussion about tradeoffs between the two styles of interactions.</p>
 
 <h2 id="flow-of-assertions">Flow of Assertions</h2>
 
