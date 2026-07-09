@@ -556,7 +556,7 @@ flag be such that it is consumed at each step–i.e,. each token exchange MUST s
 exchange.</li>
 </ul>
 
-<p>After receiving the Task-Specific Token, the Client (or another downstream service) is also to send API requests using the Task-Specific Token as bearer token within the Authorization field of the HTTP header. The receiving service must then verify the Task-Specific Token via the Broker’s /introspect endpoint (see RFC 7662 for OAuth2.0 token introspection). An example request is as follows:</p>
+<p>After receiving the Task-Specific Token, the Client (or another downstream service) is also to send API requests using the Task-Specific Token as bearer token within the Authorization field of the HTTP header. The receiving service can then verify the Task-Specific Token via the Broker’s /introspect endpoint (see RFC 7662 for OAuth2.0 token introspection). An example request is as follows:</p>
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>POST https://broker.example.org/introspect
 Content-Type: application/x-www-form-urlencoded
 
@@ -593,7 +593,7 @@ the /introspect endpoint returns</p>
   }
 }
 </code></pre></div></div>
-<p>If Visa are required, the introspection request returns</p>
+<p>If Visas are required, the introspection request returns:</p>
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>{
   "active": true,
   "sub": "user-id",
@@ -613,42 +613,183 @@ the /introspect endpoint returns</p>
   ]
 }
 </code></pre></div></div>
-<p>For this final example, we assume that a chain of token exchanges has taken place and is tracked by the Broker (as indicated by the <em>aud</em> claim). As defined within RFC 8693 (OAuth 2.0 Token Exchange), <em>act</em> allows a service to trace the chain of delegation back through a set of services. In this example,</p>
+<p>Note that this response includes an <em>act</em> claim that indicates a chain of token exchanges (see sequence diagram, below).</p>
 
-<p>TBD: SEQUENCE DIAGRAM</p>
-<ul>
-  <li>User authenticates with the Client and consents to delegation of their role to the Client (and potentially downstream services as well, see discussion later)</li>
-  <li>The Client obtains the Passport-Scoped Access Token and uses token exchange to obtain the user’s Passport</li>
-  <li>The Client exchanges the Passport-Scoped Access Token for a Task-Specific Token with <em>audience</em> set to the WES server and <em>allow_delegation=true</em>
-</li>
-  <li>The WES server receives the Task-Specific Token from the Client and exchanges it with another token with <em>audience</em> set to TES1 and <em>allow_delegation=true</em>
-</li>
-  <li>The TES1 server receives the Task-Specific Token from WES and exchanges it with another token with <em>audience</em> set to DRS1 and <em>allow_delegation=false</em>
-</li>
-  <li>The DRS1 server receives the Task-Specific Token from TES1, receives Visas via introspection, and makes access decisions.</li>
-</ul>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" contentstyletype="text/css" preserveaspectratio="none" version="1.1" viewbox="0 0 1997 754" zoomandpan="magnify">
+  <defs></defs>
+  <g>
+    <rect fill="#EEEEEE" height="735.0547" style="stroke:#181818;stroke-width:0.5;" width="227" x="11" y="6"></rect>
+    <text fill="#000000" font-family="sans-serif" font-size="13" font-weight="bold" lengthadjust="spacing" textlength="83" x="83" y="18.0669">Researcher</text>
+    <rect fill="#DDDDDD" height="735.0547" style="stroke:#181818;stroke-width:0.5;" width="259" x="640" y="6"></rect>
+    <text fill="#000000" font-family="sans-serif" font-size="13" font-weight="bold" lengthadjust="spacing" textlength="24" x="757.5" y="18.0669">AAI</text>
+    <rect fill="#DDDDDD" height="735.0547" style="stroke:#181818;stroke-width:0.5;" width="294" x="1197" y="6"></rect>
+    <text fill="#000000" font-family="sans-serif" font-size="13" font-weight="bold" lengthadjust="spacing" textlength="213" x="1237.5" y="18.0669">Orchestrating Intermediaries</text>
+    <rect fill="#DDDDDD" height="735.0547" style="stroke:#181818;stroke-width:0.5;" width="227" x="1752" y="6"></rect>
+    <text fill="#000000" font-family="sans-serif" font-size="13" font-weight="bold" lengthadjust="spacing" textlength="136" x="1797.5" y="18.0669">Data Holder (DRS)</text>
+    <line style="stroke:#181818;stroke-width:0.5;stroke-dasharray:5.0,5.0;" x1="56" x2="56" y1="101.4297" y2="747.0547"></line>
+    <line style="stroke:#181818;stroke-width:0.5;stroke-dasharray:5.0,5.0;" x1="187" x2="187" y1="101.4297" y2="747.0547"></line>
+    <line style="stroke:#181818;stroke-width:0.5;stroke-dasharray:5.0,5.0;" x1="769" x2="769" y1="101.4297" y2="747.0547"></line>
+    <line style="stroke:#181818;stroke-width:0.5;stroke-dasharray:5.0,5.0;" x1="1243" x2="1243" y1="101.4297" y2="747.0547"></line>
+    <line style="stroke:#181818;stroke-width:0.5;stroke-dasharray:5.0,5.0;" x1="1446" x2="1446" y1="101.4297" y2="747.0547"></line>
+    <line style="stroke:#181818;stroke-width:0.5;stroke-dasharray:5.0,5.0;" x1="1865" x2="1865" y1="101.4297" y2="747.0547"></line>
+    <text fill="#000000" font-family="sans-serif" font-size="14" lengthadjust="spacing" textlength="77" x="15" y="98.1279">User Agent</text>
+    <ellipse cx="56.5" cy="33.6328" fill="#E2E2F0" rx="8" ry="8" style="stroke:#181818;stroke-width:0.5;"></ellipse>
+    <path d="M56.5,41.6328 L56.5,68.6328 M43.5,49.6328 L69.5,49.6328 M56.5,68.6328 L43.5,83.6328 M56.5,68.6328 L69.5,83.6328 " fill="none" style="stroke:#181818;stroke-width:0.5;"></path>
+    <rect fill="#E2E2F0" height="30.2969" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="53" x="161" y="70.1328"></rect>
+    <text fill="#000000" font-family="sans-serif" font-size="14" lengthadjust="spacing" textlength="39" x="168" y="90.1279">Client</text>
+    <rect fill="#E2E2F0" height="30.2969" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="211" x="664" y="70.1328"></rect>
+    <text fill="#000000" font-family="sans-serif" font-size="14" lengthadjust="spacing" textlength="197" x="671" y="90.1279">Broker (and Passport Issuer)</text>
+    <rect fill="#E2E2F0" height="30.2969" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="45" x="1221" y="70.1328"></rect>
+    <text fill="#000000" font-family="sans-serif" font-size="14" lengthadjust="spacing" textlength="31" x="1228" y="90.1279">WES</text>
+    <rect fill="#E2E2F0" height="30.2969" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="41" x="1426" y="70.1328"></rect>
+    <text fill="#000000" font-family="sans-serif" font-size="14" lengthadjust="spacing" textlength="27" x="1433" y="90.1279">TES</text>
+    <rect fill="#E2E2F0" height="30.2969" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="179" x="1776" y="70.1328"></rect>
+    <text fill="#000000" font-family="sans-serif" font-size="14" lengthadjust="spacing" textlength="165" x="1783" y="90.1279">Passport Clearinghouse</text>
+    <rect fill="#EEEEEE" height="3" style="stroke:#EEEEEE;stroke-width:1.0;" width="1990" x="0" y="131.9961"></rect>
+    <line style="stroke:#000000;stroke-width:1.0;" x1="0" x2="1990" y1="131.9961" y2="131.9961"></line>
+    <line style="stroke:#000000;stroke-width:1.0;" x1="0" x2="1990" y1="134.9961" y2="134.9961"></line>
+    <rect fill="#EEEEEE" height="23.1328" style="stroke:#000000;stroke-width:2.0;" width="208" x="891" y="121.4297"></rect>
+    <text fill="#000000" font-family="sans-serif" font-size="13" font-weight="bold" lengthadjust="spacing" textlength="194" x="897" y="137.4966">OIDC and Obtain Passport</text>
+    <polygon fill="#181818" points="175.5,171.6953,185.5,175.6953,175.5,179.6953,179.5,175.6953" style="stroke:#181818;stroke-width:1.0;"></polygon>
+    <line style="stroke:#181818;stroke-width:1.0;" x1="56.5" x2="181.5" y1="175.6953" y2="175.6953"></line>
+    <text fill="#000000" font-family="sans-serif" font-size="13" lengthadjust="spacing" textlength="84" x="63.5" y="170.6294">Initiates login</text>
+    <rect fill="none" height="39.1016" style="stroke:#000000;stroke-width:1.5;" width="886" x="12" y="183.6953"></rect>
+    <path d="M12,183.6953 L78,183.6953 L78,190.6953 L68,200.6953 L12,200.6953 L12,183.6953 " fill="#EEEEEE" style="stroke:#000000;stroke-width:2.0;"></path>
+    <text fill="#000000" font-family="sans-serif" font-size="13" font-weight="bold" lengthadjust="spacing" textlength="21" x="25" y="197.7622">ref</text>
+    <text fill="#000000" font-family="sans-serif" font-size="12" lengthadjust="spacing" textlength="377" x="266.5" y="215.834">OIDC flow to authenticate user (potentially with external IdP)</text>
+    <polygon fill="#181818" points="198.5,244.9297,188.5,248.9297,198.5,252.9297,194.5,248.9297" style="stroke:#181818;stroke-width:1.0;"></polygon>
+    <line style="stroke:#181818;stroke-width:1.0;" x1="192.5" x2="768.5" y1="248.9297" y2="248.9297"></line>
+    <text fill="#000000" font-family="sans-serif" font-size="13" lengthadjust="spacing" textlength="335" x="204.5" y="243.8638">Respond with Passport-Scoped Access Token (PSAT)</text>
+    <polygon fill="#181818" points="757.5,274.0625,767.5,278.0625,757.5,282.0625,761.5,278.0625" style="stroke:#181818;stroke-width:1.0;"></polygon>
+    <line style="stroke:#181818;stroke-width:1.0;" x1="187.5" x2="763.5" y1="278.0625" y2="278.0625"></line>
+    <text fill="#000000" font-family="sans-serif" font-size="13" lengthadjust="spacing" textlength="253" x="194.5" y="272.9966">Request to exchange PSAT for Passport</text>
+    <polygon fill="#181818" points="198.5,303.1953,188.5,307.1953,198.5,311.1953,194.5,307.1953" style="stroke:#181818;stroke-width:1.0;"></polygon>
+    <line style="stroke:#181818;stroke-width:1.0;" x1="192.5" x2="768.5" y1="307.1953" y2="307.1953"></line>
+    <text fill="#000000" font-family="sans-serif" font-size="13" lengthadjust="spacing" textlength="151" x="204.5" y="302.1294">Response with Passport</text>
+    <rect fill="#EEEEEE" height="3" style="stroke:#EEEEEE;stroke-width:1.0;" width="1990" x="0" y="335.7617"></rect>
+    <line style="stroke:#000000;stroke-width:1.0;" x1="0" x2="1990" y1="335.7617" y2="335.7617"></line>
+    <line style="stroke:#000000;stroke-width:1.0;" x1="0" x2="1990" y1="338.7617" y2="338.7617"></line>
+    <rect fill="#EEEEEE" height="23.1328" style="stroke:#000000;stroke-width:2.0;" width="168" x="911" y="325.1953"></rect>
+    <text fill="#000000" font-family="sans-serif" font-size="13" font-weight="bold" lengthadjust="spacing" textlength="154" x="917" y="341.2622">Task-Specific Tokens</text>
+    <polygon fill="#181818" points="175.5,375.4609,185.5,379.4609,175.5,383.4609,179.5,379.4609" style="stroke:#181818;stroke-width:1.0;"></polygon>
+    <line style="stroke:#181818;stroke-width:1.0;" x1="56.5" x2="181.5" y1="379.4609" y2="379.4609"></line>
+    <text fill="#000000" font-family="sans-serif" font-size="13" lengthadjust="spacing" textlength="107" x="63.5" y="374.395">Initiates workflow</text>
+    <polygon fill="#181818" points="757.5,404.5938,767.5,408.5938,757.5,412.5938,761.5,408.5938" style="stroke:#181818;stroke-width:1.0;"></polygon>
+    <line style="stroke:#181818;stroke-width:1.0;" x1="187.5" x2="763.5" y1="408.5938" y2="408.5938"></line>
+    <text fill="#000000" font-family="sans-serif" font-size="13" lengthadjust="spacing" textlength="558" x="194.5" y="403.5278">Exchange PSAT for Task-Specific Token (TST) with audience=WES, allow_delgation=true</text>
+    <polygon fill="#181818" points="198.5,433.7266,188.5,437.7266,198.5,441.7266,194.5,437.7266" style="stroke:#181818;stroke-width:1.0;"></polygon>
+    <line style="stroke:#181818;stroke-width:1.0;" x1="192.5" x2="768.5" y1="437.7266" y2="437.7266"></line>
+    <text fill="#000000" font-family="sans-serif" font-size="13" lengthadjust="spacing" textlength="118" x="204.5" y="432.6606">Response with TST</text>
+    <polygon fill="#181818" points="1231.5,462.8594,1241.5,466.8594,1231.5,470.8594,1235.5,466.8594" style="stroke:#181818;stroke-width:1.0;"></polygon>
+    <line style="stroke:#181818;stroke-width:1.0;" x1="187.5" x2="1237.5" y1="466.8594" y2="466.8594"></line>
+    <text fill="#000000" font-family="sans-serif" font-size="13" lengthadjust="spacing" textlength="205" x="194.5" y="461.7935">Sends workflow request and TST</text>
+    <polygon fill="#181818" points="780.5,491.9922,770.5,495.9922,780.5,499.9922,776.5,495.9922" style="stroke:#181818;stroke-width:1.0;"></polygon>
+    <line style="stroke:#181818;stroke-width:1.0;" x1="774.5" x2="1242.5" y1="495.9922" y2="495.9922"></line>
+    <text fill="#000000" font-family="sans-serif" font-size="13" lengthadjust="spacing" textlength="450" x="786.5" y="490.9263">Exchange TST for new TST with audience=TES1, allow_delegation=true</text>
+    <polygon fill="#181818" points="1231.5,521.125,1241.5,525.125,1231.5,529.125,1235.5,525.125" style="stroke:#181818;stroke-width:1.0;"></polygon>
+    <line style="stroke:#181818;stroke-width:1.0;" x1="769.5" x2="1237.5" y1="525.125" y2="525.125"></line>
+    <text fill="#000000" font-family="sans-serif" font-size="13" lengthadjust="spacing" textlength="118" x="776.5" y="520.0591">Response with TST</text>
+    <polygon fill="#181818" points="1434.5,550.2578,1444.5,554.2578,1434.5,558.2578,1438.5,554.2578" style="stroke:#181818;stroke-width:1.0;"></polygon>
+    <line style="stroke:#181818;stroke-width:1.0;" x1="1243.5" x2="1440.5" y1="554.2578" y2="554.2578"></line>
+    <text fill="#000000" font-family="sans-serif" font-size="13" lengthadjust="spacing" textlength="179" x="1250.5" y="549.1919">Sends task request and TST</text>
+    <polygon fill="#181818" points="780.5,579.3906,770.5,583.3906,780.5,587.3906,776.5,583.3906" style="stroke:#181818;stroke-width:1.0;"></polygon>
+    <line style="stroke:#181818;stroke-width:1.0;" x1="774.5" x2="1445.5" y1="583.3906" y2="583.3906"></line>
+    <text fill="#000000" font-family="sans-serif" font-size="13" lengthadjust="spacing" textlength="457" x="786.5" y="578.3247">Exchange TST for new TST with audience=DRS1, allow_delegation=false</text>
+    <polygon fill="#181818" points="1434.5,608.5234,1444.5,612.5234,1434.5,616.5234,1438.5,612.5234" style="stroke:#181818;stroke-width:1.0;"></polygon>
+    <line style="stroke:#181818;stroke-width:1.0;" x1="769.5" x2="1440.5" y1="612.5234" y2="612.5234"></line>
+    <text fill="#000000" font-family="sans-serif" font-size="13" lengthadjust="spacing" textlength="118" x="776.5" y="607.4575">Response with TST</text>
+    <polygon fill="#181818" points="1853.5,637.6563,1863.5,641.6563,1853.5,645.6563,1857.5,641.6563" style="stroke:#181818;stroke-width:1.0;"></polygon>
+    <line style="stroke:#181818;stroke-width:1.0;" x1="1446.5" x2="1859.5" y1="641.6563" y2="641.6563"></line>
+    <text fill="#000000" font-family="sans-serif" font-size="13" lengthadjust="spacing" textlength="148" x="1453.5" y="636.5903">Requests data with TST</text>
+    <polygon fill="#181818" points="780.5,666.7891,770.5,670.7891,780.5,674.7891,776.5,670.7891" style="stroke:#181818;stroke-width:1.0;"></polygon>
+    <line style="stroke:#181818;stroke-width:1.0;" x1="774.5" x2="1864.5" y1="670.7891" y2="670.7891"></line>
+    <text fill="#000000" font-family="sans-serif" font-size="13" lengthadjust="spacing" textlength="236" x="786.5" y="665.7231">Sends introspection request with TST</text>
+    <polygon fill="#181818" points="1853.5,695.9219,1863.5,699.9219,1853.5,703.9219,1857.5,699.9219" style="stroke:#181818;stroke-width:1.0;"></polygon>
+    <line style="stroke:#181818;stroke-width:1.0;" x1="769.5" x2="1859.5" y1="699.9219" y2="699.9219"></line>
+    <text fill="#000000" font-family="sans-serif" font-size="13" lengthadjust="spacing" textlength="87" x="776.5" y="694.856">Returns Visas</text>
+    <polygon fill="#181818" points="1457.5,725.0547,1447.5,729.0547,1457.5,733.0547,1453.5,729.0547" style="stroke:#181818;stroke-width:1.0;"></polygon>
+    <line style="stroke:#181818;stroke-width:1.0;" x1="1451.5" x2="1864.5" y1="729.0547" y2="729.0547"></line>
+    <text fill="#000000" font-family="sans-serif" font-size="13" lengthadjust="spacing" textlength="395" x="1463.5" y="723.9888">Clearinghouse makes access decision and responds with data</text>
+    <!--SRC=[dPLFRnen4CNl_XIZxGKaa98UgrA9GAHo2ihIzbXDl0DOBFRMumtastUyVs0NQ29rJu3VlFdvURpmpjW2FUvpftUK0RzkvcPFbespQNZB2TQOCocbjYQJByw55tTKt9R1WpikCSkCtS3zNUVt9VfWj2dGXdRzyvrIKWp9Cp6Xrrlo2S0d8bAeW_DGFyaF9W_J3TcGmCM33AMigkBi3hFSY1HkFgBNrR8Ycq4ahmccqqNICqaUlDj9sm6ARedCXVC15imb-M7oJ_ENgkh2_2bkZOF747Uzi87ydZA3tX1VTFtrc2ONbWVYlcRLruWaYAJVSeu1uRlBixY5-NCwlEXpsj4ib-G5Q-ian-GggdhnR3wPF2tcCuYXFBq4DFQKpMIYL3mA67zh8eOlibSJ30eUv6vZhFAq1lSgegWSDRfHcrfblSxT0O83BCDM5esMyaeEWyA5-0lc-HiSJDW27ILAYpaiikMmWfG6gdRhSSY05KwMgwgMU9ngLyY8JxKcPbX9bON1CfskXggf58_6BNhyAUKK8niTzHRjXY2AvGxuasTR-7NSBOpDcVhTOvOhvDquBKYRjT4r04kExyHuS7uN4xe5-7X5TSCV1gjqDQnHiCp4HDD4fcu44gix_CuetyYSEZi9lgIFjoDk7HQPLL6aSX9dL3cJEhWuD56kekeckAnMt9OErUS-fSpzVGUJkfpHydt8fcde40Q9vvek_1-TNB9RTFNRCdo8rtHjRznvtXYoU9SxOJUABcEz7sE3Top77JkVDdPTsIS9fRSCFmqZjvmTYjxx0VQu4mNM5oQJkOf_2rLqlhvXNBUBo4hz1G00]-->
+  </g>
+</svg>
 
-<p>At each step of this process, the Broker updates <em>act</em> internally to reflect the chain of delegation. Some additional points:</p>
+<p>Each exchange is tracked by the Broker as indicated by the <em>aud</em> claim–showing a chain of delegation from the client to a TES server, which uses the final Task-Specific Token to access data via DRS. See RFC 8693 (OAuth 2.0 Token Exchange) for details on the use of <em>aud</em>.  Some additional points:</p>
 <ul>
-  <li>If an orchestrating intermediary is only creating a new token from downstream use (e.g., to update the audience and <em>aud</em>), it does not need to make an explicit introspection request prior to a token exchange. Instead, it could submit a token exchange
-request directly (likely relying on client credentials or an allowlist for client authentication) knowing that the exchange request will be rejected for an invalid token or service.
+  <li>If an orchestrating intermediary is only creating a new token for downstream use (e.g., to update the audience and <em>aud</em>), it does not need to make an explicit introspection request prior to a token exchange. Instead, it could submit a token exchange request directly (likely relying on client credentials or an allowlist for client authentication) knowing that the exchange request will be rejected for an invalid token or service. This is shown in the above diagram.
 The intermediary cannot skip introspection, however, if it needs to dynamically determine the set of Visas within the request for further de-scoping, to reason about the delegation chain in <em>aud</em>, or to debug a failed token exchange.</li>
+  <li>The above example, with multiple token exchanges used to establish a chain of delegation, could be simplified by the Client including the required TES and DRS servers in <em>audience</em> during the first token exchange request. In that case, the
+Task-Specific Token could be forwarded through the intermediaries to the DRS server with fewer Broker interactions–at the cost of being able to analyze the chain of delegation. If token verification is desired, WES and TES have the opportunity to introspect the token via the Broker.</li>
   <li>Internally, the Broker may maintain its own mapping between Task-Specific Token requests, Visas, and registered services.</li>
-  <li>TBD: Using Rich Authorization Requests (RAR, RFC 9396) to link explicit participant consent to the act chain.</li>
+  <li>In theory, the chain of delegation shown via <em>act</em> has been explicitly consented by the user. Future work may explore the use of Rich Authorization Requests (RAR, RFC 9396) to do this, where a set of authorized services is included
+in the initial OIDC authorization request to the Broker:
+    <div class="language-plaintext highlighter-rouge">
+<div class="highlight"><pre class="highlight"><code>{
+"authorization_details": [
+  {
+    "type": "ga4gh_workflow_delegation",
+    "workflow_services": [
+      "https://wes.example.org",
+      "https://tes.example.org",
+      "https://drs.example.org"
+    ]
+  }
+]
+}
+</code></pre></div>    </div>
+    <p>This set of services could be cached by the Broker, used to authorize token exchanges, and then returned via introspection requests for use by the Clearinghouse:</p>
+    <div class="language-plaintext highlighter-rouge">
+<div class="highlight"><pre class="highlight"><code>{
+"active": true,
+"sub": "user-id",
+"aud": "https://drs.example.org",
+"act": {
+  "sub": "https://tes.example.org",
+  "act": {
+    "sub": "https://wes.example.org",
+    "act": {
+      "sub": "https://rp.example.org"
+    }
+  }
+},
+"consented_workflow": {
+  "workflow_services": [
+    "https://wes.example.org",
+    "https://tes.example.org",
+    "https://drs.example.org"
+  ],
+  "consented_at": 1234567880
+},
+"ga4gh_passport_v1": [
+  "&lt;visa-jwt-1&gt;",
+  "&lt;visa-jwt-2&gt;"
+]
+}
+</code></pre></div>    </div>
+    <p>Note that even with the use of RAR, the user is still trusting the Client to perform actions correctly on their behalf, the Broker to respect consent and <em>audience</em>, and on Clearinghouses to
+make proper access decisions. As mentioned earlier within the discussion regarding client credentials, this suggests that a robust method of registering trusted services be part of any production
+AAI implementation.</p>
+  </li>
+  <li>Finally, future extensions may also consider the use of Distributed Proof of Possession (DPoP) to allow token holders to demonstrate to receivers that they were the service that was
+actually issued the token. This extends the protection of client credentials, which only suffice to confirm the identity of a service in a manner that is not tied to a particular token.</li>
 </ul>
 
-<p>TBD: ABSTRACT FLOW SEQUENCE DIAGRAM</p>
+<p>In AAI v1.1, a Passport holder directly <em>pushes</em> visas to the Clearinghouse, bypassing the Broker.  As noted previously, the inclusion of Task-Specific Tokens in AAI v2.0 represents a shift
+back toward the AAI v1.0 architecture–where a Clearinghouse <em>pulls</em> visas from the Broker prior to making a decision. A key design decision for AAI v2.0, however, is that the Task-Specific Token
+may be scoped to the specific subset of Visas required for a particular task–reducing disclosure of user information to downstream services while shifting the burden of transferring a potentially
+large set of Visas to backend communications that do not require fundamental changes to user-facing APIs. In other words, a Task-Specific Token would allow use of GET-based API requests even when many Visas
+are needed to complete the request.</p>
+
+<p>An ecosystem that relies heavily on Task-Specific Tokens will necessarily include additional interactions with the Broker. This additional load can be mitigated via several implementation strategies:</p>
 <ul>
-  <li>Compress steps: Client obtains Passport-Scoped Access Token</li>
-  <li>Client obtains Passport via Token Exchange</li>
-  <li>Client exchanges Passport-Scoped Access Token for Task-Specific Token with audience=intermediary, allow_delegation=true</li>
-  <li>Intermediary exchanges Task-Specific Token with another TST with audience=clearinghouse, allow_delegation=false</li>
-  <li>Passport Clearinghouse sends introspection request to the Broker to receive Visas</li>
-  <li>Clearinghouse gets public keys from Data Access Committee</li>
-  <li>Clearinghouse makes access decision, responds with data</li>
+  <li>Brokers should be deployed as highly-available resources–horizonally-scaled and behind a load balancer, with token bindings and Visas cached in a replicated backend store.</li>
+  <li>Introspection responses (including Visas) could be intelligently cached by services, reducing the need for repeated introspection requests. This approach would likely require careful attention to
+introspection expiration times and would involve some associated reduction in the Broker’s ability to communicate Visa invalidations to downstream services.</li>
+  <li>Brokers may also be federated, separating the tasks of Visa collection and Passport Issuance from that of Task-Specific Token management. This may be especially effective in situations where a Broker is able to delegate
+Task-Specific Token management to a trusted service associated with a particular ecosystem (e.g., NIH’s Cancer Data Commons, which is a number of separate data repositories and services under the ownership of the National
+Cancer Institute). This token management service would then issue and allow for introspection of tokens on behalf of the Broker, greatly reducing individual Broker communications at the cost of some degree of state
+synchronization between the Broker and token management service.</li>
 </ul>
-
-<p>TBD: Wrap-up discussion about tradeoffs between the two styles of interactions.</p>
 
 <h2 id="flow-of-assertions">Flow of Assertions</h2>
 
