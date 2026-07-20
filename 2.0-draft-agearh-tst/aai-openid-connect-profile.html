@@ -506,6 +506,8 @@ and Visa signing keys and the various expiration times.</p>
 a Passport. This necessarily shifts additional communication burden back to the Broker (similar to AAI v1.0, where a Passport Clearinghouse retrieved a list of Visas from the Broker) as the services that receive a token
 must communicate with the Broker to introspect the token to determine (1) token validity and (2) the set of Visas associated with the token.</p>
 
+<p><img title="lifecycle" alt="lifecycle" width="50%" src="AAI/assets/TSTs_basic_example.png"></p>
+
 <p>As a motivating example, consider the situation where a Client would like to instantiate a workflow on behalf of a user:</p>
 
 <p><img class="plantuml" src="http://www.plantuml.com/plantuml/svg/~h407374617274756d6c0a736b696e706172616d20636f6d706f6e656e745374796c652072656374616e676c650a6c65667420746f20726967687420646972656374696f6e0a0a7061636b6167652022457865637574696e67206120576f726b666c6f77207769746820474134474820536572766963657322207b0a636f6d706f6e656e7420223c623e436c69656e743c2f623e5c6e6170706c69636174696f6e2220617320436c69656e740a636f6d706f6e656e7420223c623e4741344748205745533c2f623e5c6e7365727669636522206173205745530a636f6d706f6e656e7420223c623e47413447482054455320313c2f623e5c6e736572766963652220617320544553310a636f6d706f6e656e7420223c623e47413447482054455320323c2f623e5c6e736572766963652220617320544553320a636f6d706f6e656e7420223c623e474134474820445253203120772f3c2f623e5c6e3c623e50617373706f727420436c656172696e67686f7573653c2f623e5c6e736572766963652220617320445253310a636f6d706f6e656e7420223c623e474134474820445253203220772f3c2f623e5c6e3c623e50617373706f727420436c656172696e67686f7573653c2f623e5c6e736572766963652220617320445253320a7d0a0a436c69656e74202d2d3e205745530a574553202d2d3e20544553310a574553202d2d3e20544553320a54455331202d2d3e20445253310a54455332202d2d3e20445253320a40656e64756d6c"></p>
@@ -556,7 +558,11 @@ flag be such that it is consumed at each step–i.e,. each token exchange MUST s
 exchange.</li>
 </ul>
 
-<p>After receiving the Task-Specific Token, the Client (or another downstream service) is also to send API requests using the Task-Specific Token as bearer token within the Authorization field of the HTTP header. The receiving service can then verify the Task-Specific Token via the Broker’s /introspect endpoint (see RFC 7662 for OAuth2.0 token introspection). An example request is as follows:</p>
+<p>After receiving the Task-Specific Token, the Client (or another downstream service) is also to send API requests using the Task-Specific Token as bearer token within the Authorization field of the HTTP header. The receiving service can then verify the Task-Specific Token via the Broker’s /introspect endpoint (see RFC 7662 for OAuth2.0 token introspection) or simply forward it along without introspection. The following figure illustrates a scenario where WES, TES, and DRS are used to execute a federated learning workflow by passing along a TST. As we note later, this TST may be the original one issued to the client, or a TST what was issued to a downstream service (e.g., WES or TES) that reduces the scope of the token (either Visas or <em>audience</em>/<em>resources</em>) further.</p>
+
+<p><img title="lifecycle" alt="lifecycle" width="70%" src="AAI/assets/federated_learning_w_TSTs.png"></p>
+
+<p>An example introspection request is as follows:</p>
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>POST https://broker.example.org/introspect
 Content-Type: application/x-www-form-urlencoded
 
@@ -576,7 +582,7 @@ client_assertion=&lt;signed-jwt&gt;
 }
 </code></pre></div></div>
 <p>Assuming that the ecosystem uses client credentials, the Broker is able to retrieve the service’s public key and verify the signature on the <em>client_assertion</em> JWT and also determine that
-the holder of the Task-Specific Token aligns with the specific <em>audience</em>/<em>resource</em> requirements of the token creation request. The <em>claims</em> key in the introspection request indicates
+the holder of the Task-Specific Token aligns with the specific <em>audience</em>/<em>resources</em> requirements of the token creation request. The <em>claims</em> key in the introspection request indicates
 if the requestor is an orchestrating intermediary (if <em>claims</em> is false) or an authorization consumer that would require the GA4GH Visas to make authorization decisions. In the former case,
 the /introspect endpoint returns</p>
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>{
@@ -613,7 +619,7 @@ the /introspect endpoint returns</p>
   ]
 }
 </code></pre></div></div>
-<p>Note that this response includes an <em>act</em> claim that indicates a chain of token exchanges (see sequence diagram, below).</p>
+<p>Note that this response includes an <em>act</em> claim that implies a chain of token exchanges (see sequence diagram, below).</p>
 
 <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" contentstyletype="text/css" preserveaspectratio="none" version="1.1" viewbox="0 0 1997 754" zoomandpan="magnify">
   <defs></defs>
