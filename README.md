@@ -24,7 +24,7 @@ or alternatively run the simple `docker` command shown in the Makefile (runs Jek
 The local copy can then be browsed at
 
 ```
-http://localhost:4000/local/
+http://localhost:8400/local/
 ```
 
 ### Use of Jekyll
