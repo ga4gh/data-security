@@ -1,5 +1,5 @@
 title: GA4GH Data Security
-description: AAI
+description: Data Security Work Stream
 # set to /local for local builds.. will be overridden in Github Action builds
 baseurl: "/local"
 url: "" # the base hostname & protocol for your site, e.g. http://example.com
@@ -14,14 +14,14 @@ plugins:
 kramdown:
   auto_ids: true
 
-# Limit the header pages to those we want top at top level, this also controls ordering
-header_pages:
-  - AAI/AAIConnectProfile.md
-  - AAI/ga4gh_passport_v1.md
-  - AAI/ga4gh_custom_visas.md
-  - AAI/FAQ.md
-  - AAI/implementations.md
-  - AAI/VERSIONS.md
+include:
+  - DSIP/
+
+defaults:
+  - scope:
+      path: "DSIP/DSIP_v4.0.md"
+    values:
+      permalink: /dsip/
 
 # Due to the way we publish to github pages - it is useful that Jekyll keeps any .git in the destination around
 keep_files: [.git]
@@ -34,9 +34,6 @@ exclude:
   - jekyll-builder-local/
   - Makefile
   - uml/
-  - DSIP/
   - README.md
   - S*.png
   - S*.jpg
-  - AAI/AccessProductBackground.md
-  - AAI/MAINTAINER.md
