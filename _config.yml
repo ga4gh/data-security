@@ -11,17 +11,21 @@ plugins:
   - jekyll-feed
   - jekyll-spaceship
 
+markdown: kramdown
+
 kramdown:
   auto_ids: true
 
 include:
   - DSIP/
+  - DSIP/DSIP_v4.0.md
 
 defaults:
   - scope:
       path: "DSIP/DSIP_v4.0.md"
     values:
-      permalink: /dsip/
+        layout: page
+        permalink: /dsip/
 
 # Due to the way we publish to github pages - it is useful that Jekyll keeps any .git in the destination around
 keep_files: [.git]
